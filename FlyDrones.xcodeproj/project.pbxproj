@@ -27,6 +27,8 @@
 		37431F661A7A5A49007CDD6F /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F651A7A5A49007CDD6F /* libiconv.2.4.0.dylib */; };
 		37431F9C1A7A71C6007CDD6F /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F9A1A7A71C6007CDD6F /* GLKit.framework */; };
 		37431F9D1A7A71C6007CDD6F /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */; };
+		37AAB9751A7BAB66000544CE /* FDFFmpegWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */; };
+		37AAB9781A7BADFA000544CE /* FDFFmpegFrameEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB9771A7BADFA000544CE /* FDFFmpegFrameEntity.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -148,6 +150,10 @@
 		37431F991A7A65F5007CDD6F /* FlyDrones-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FlyDrones-Prefix.pch"; sourceTree = "<group>"; };
 		37431F9A1A7A71C6007CDD6F /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		37AAB9731A7BAB66000544CE /* FDFFmpegWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFFmpegWrapper.h; sourceTree = "<group>"; };
+		37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFFmpegWrapper.m; sourceTree = "<group>"; };
+		37AAB9761A7BADFA000544CE /* FDFFmpegFrameEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFFmpegFrameEntity.h; sourceTree = "<group>"; };
+		37AAB9771A7BADFA000544CE /* FDFFmpegFrameEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFFmpegFrameEntity.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,6 +249,8 @@
 			children = (
 				37431EDB1A7A57C0007CDD6F /* Controller */,
 				37431EE01A7A57C0007CDD6F /* Libs */,
+				37AAB96F1A7B9FF0000544CE /* Misc */,
+				37AAB9701A7B9FF0000544CE /* Models */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -492,6 +500,42 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
+		37AAB96F1A7B9FF0000544CE /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Misc;
+			path = FlyDrones/Misc;
+			sourceTree = SOURCE_ROOT;
+		};
+		37AAB9701A7B9FF0000544CE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				37AAB9711A7B9FF0000544CE /* Data models */,
+				37AAB9721A7B9FF0000544CE /* Wrapper */,
+			);
+			name = Models;
+			path = FlyDrones/Models;
+			sourceTree = SOURCE_ROOT;
+		};
+		37AAB9711A7B9FF0000544CE /* Data models */ = {
+			isa = PBXGroup;
+			children = (
+				37AAB9761A7BADFA000544CE /* FDFFmpegFrameEntity.h */,
+				37AAB9771A7BADFA000544CE /* FDFFmpegFrameEntity.m */,
+			);
+			path = "Data models";
+			sourceTree = "<group>";
+		};
+		37AAB9721A7B9FF0000544CE /* Wrapper */ = {
+			isa = PBXGroup;
+			children = (
+				37AAB9731A7BAB66000544CE /* FDFFmpegWrapper.h */,
+				37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */,
+			);
+			path = Wrapper;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -562,6 +606,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37AAB9751A7BAB66000544CE /* FDFFmpegWrapper.m in Sources */,
+				37AAB9781A7BADFA000544CE /* FDFFmpegFrameEntity.m in Sources */,
 				37431F561A7A57C0007CDD6F /* MainViewController.m in Sources */,
 				37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */,
 				371525F11A77B28A00F885B8 /* main.m in Sources */,
