@@ -9,4 +9,15 @@
 
 @interface FDFFmpegFrameEntity : NSObject
 
+#pragma mark - Properties
+
+@property (nonatomic, strong) NSMutableData *colorPlane0;
+@property (nonatomic, strong) NSMutableData *colorPlane1;
+@property (nonatomic, strong) NSMutableData *colorPlane2;
+@property (nonatomic, strong) NSNumber *lineSize0;
+@property (nonatomic, strong) NSNumber *lineSize1;
+@property (nonatomic, strong) NSNumber *lineSize2;
+@property (nonatomic, strong) NSNumber *width;
+@property (nonatomic, strong) NSNumber *height;
+
 @end

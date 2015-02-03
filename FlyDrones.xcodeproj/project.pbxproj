@@ -150,6 +150,7 @@
 		37431F991A7A65F5007CDD6F /* FlyDrones-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FlyDrones-Prefix.pch"; sourceTree = "<group>"; };
 		37431F9A1A7A71C6007CDD6F /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		37727A311A7F8CE100F4403E /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		37AAB9731A7BAB66000544CE /* FDFFmpegWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFFmpegWrapper.h; sourceTree = "<group>"; };
 		37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFFmpegWrapper.m; sourceTree = "<group>"; };
 		37AAB9761A7BADFA000544CE /* FDFFmpegFrameEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFFmpegFrameEntity.h; sourceTree = "<group>"; };
@@ -503,6 +504,7 @@
 		37AAB96F1A7B9FF0000544CE /* Misc */ = {
 			isa = PBXGroup;
 			children = (
+				37727A311A7F8CE100F4403E /* Constants.h */,
 			);
 			name = Misc;
 			path = FlyDrones/Misc;

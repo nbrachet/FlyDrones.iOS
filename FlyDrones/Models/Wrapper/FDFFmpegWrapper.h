@@ -12,6 +12,7 @@
 #pragma mark - Instance methods
 
 - (instancetype)init;
+- (int)openURLPath:(NSString *)urlPath;
 
 #pragma mark -
 
