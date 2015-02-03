@@ -29,6 +29,10 @@
 		37431F9D1A7A71C6007CDD6F /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */; };
 		37AAB9751A7BAB66000544CE /* FDFFmpegWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */; };
 		37AAB9781A7BADFA000544CE /* FDFFmpegFrameEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB9771A7BADFA000544CE /* FDFFmpegFrameEntity.m */; };
+		37B0AF531A80CA6B005B2D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */; };
+		37B0AF561A80CAA3005B2D8D /* FDVideoStreamingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B0AF551A80CAA3005B2D8D /* FDVideoStreamingController.m */; };
+		37B0AF5B1A8106B5005B2D8D /* NSBundle+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */; };
+		37B0AF601A8108BC005B2D8D /* test.h264 in Resources */ = {isa = PBXBuildFile; fileRef = 37B0AF5E1A8108BC005B2D8D /* test.h264 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -155,6 +159,13 @@
 		37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFFmpegWrapper.m; sourceTree = "<group>"; };
 		37AAB9761A7BADFA000544CE /* FDFFmpegFrameEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFFmpegFrameEntity.h; sourceTree = "<group>"; };
 		37AAB9771A7BADFA000544CE /* FDFFmpegFrameEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFFmpegFrameEntity.m; sourceTree = "<group>"; };
+		37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		37B0AF541A80CAA3005B2D8D /* FDVideoStreamingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDVideoStreamingController.h; sourceTree = "<group>"; };
+		37B0AF551A80CAA3005B2D8D /* FDVideoStreamingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDVideoStreamingController.m; sourceTree = "<group>"; };
+		37B0AF571A80E279005B2D8D /* FDTypesAndStructures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDTypesAndStructures.h; sourceTree = "<group>"; };
+		37B0AF591A8106B5005B2D8D /* NSBundle+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+Utils.h"; sourceTree = "<group>"; };
+		37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+Utils.m"; sourceTree = "<group>"; };
+		37B0AF5E1A8108BC005B2D8D /* test.h264 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.h264; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +173,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37B0AF531A80CA6B005B2D8D /* QuartzCore.framework in Frameworks */,
 				37431F9C1A7A71C6007CDD6F /* GLKit.framework in Frameworks */,
 				37431F9D1A7A71C6007CDD6F /* OpenGLES.framework in Frameworks */,
 				37431F661A7A5A49007CDD6F /* libiconv.2.4.0.dylib in Frameworks */,
@@ -221,6 +233,7 @@
 		371526191A77B59E00F885B8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				37B0AF5C1A8108BC005B2D8D /* Video */,
 				371525FB1A77B28A00F885B8 /* Images.xcassets */,
 				3715261A1A77B59E00F885B8 /* General */,
 				3715261C1A77B59E00F885B8 /* Storyboard */,
@@ -259,6 +272,7 @@
 		37431EDB1A7A57C0007CDD6F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				37B0AF511A80CA16005B2D8D /* Video Streaming */,
 				37431EDC1A7A57C0007CDD6F /* AppDelegate.h */,
 				37431EDD1A7A57C0007CDD6F /* AppDelegate.m */,
 				37431EDE1A7A57C0007CDD6F /* MainViewController.h */,
@@ -491,6 +505,7 @@
 		37431F621A7A59D7007CDD6F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */,
 				37431F9A1A7A71C6007CDD6F /* GLKit.framework */,
 				37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */,
 				37431F651A7A5A49007CDD6F /* libiconv.2.4.0.dylib */,
@@ -504,7 +519,9 @@
 		37AAB96F1A7B9FF0000544CE /* Misc */ = {
 			isa = PBXGroup;
 			children = (
+				37B0AF581A810682005B2D8D /* Categories */,
 				37727A311A7F8CE100F4403E /* Constants.h */,
+				37B0AF571A80E279005B2D8D /* FDTypesAndStructures.h */,
 			);
 			name = Misc;
 			path = FlyDrones/Misc;
@@ -536,6 +553,32 @@
 				37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */,
 			);
 			path = Wrapper;
+			sourceTree = "<group>";
+		};
+		37B0AF511A80CA16005B2D8D /* Video Streaming */ = {
+			isa = PBXGroup;
+			children = (
+				37B0AF541A80CAA3005B2D8D /* FDVideoStreamingController.h */,
+				37B0AF551A80CAA3005B2D8D /* FDVideoStreamingController.m */,
+			);
+			path = "Video Streaming";
+			sourceTree = "<group>";
+		};
+		37B0AF581A810682005B2D8D /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				37B0AF591A8106B5005B2D8D /* NSBundle+Utils.h */,
+				37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		37B0AF5C1A8108BC005B2D8D /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				37B0AF5E1A8108BC005B2D8D /* test.h264 */,
+			);
+			path = Video;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -597,6 +640,7 @@
 			files = (
 				371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */,
 				371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */,
+				37B0AF601A8108BC005B2D8D /* test.h264 in Resources */,
 				371526251A77B59E00F885B8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -608,6 +652,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37B0AF5B1A8106B5005B2D8D /* NSBundle+Utils.m in Sources */,
+				37B0AF561A80CAA3005B2D8D /* FDVideoStreamingController.m in Sources */,
 				37AAB9751A7BAB66000544CE /* FDFFmpegWrapper.m in Sources */,
 				37AAB9781A7BADFA000544CE /* FDFFmpegFrameEntity.m in Sources */,
 				37431F561A7A57C0007CDD6F /* MainViewController.m in Sources */,

@@ -45,6 +45,22 @@
 
 @implementation FDFFmpegWrapper
 
+#pragma mark - Class methods
+
++ (FDFFmpegWrapper *)sharedInstance
+{
+    static FDFFmpegWrapper *sharedInstance;
+    static dispatch_once_t onceToken;
+    
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[[self class] alloc] init];
+    });
+    
+    
+    return sharedInstance;
+}
+
+
 #pragma mark - Instance methods
 
 - (instancetype)init
@@ -143,11 +159,11 @@
     return 0;
 }
 
--(FDFFmpegFrameEntity *)createFrameData: (AVFrame *) frame trimPadding: (BOOL) trim
+-(FDFFmpegFrameEntity *)createFrameData:(AVFrame *)frame trimPadding:(BOOL)trimState
 {
     FDFFmpegFrameEntity *frameData = [[FDFFmpegFrameEntity alloc] init];
     
-    if (trim)
+    if (trimState)
     {
         frameData.colorPlane0 = [NSMutableData new];
         frameData.colorPlane1 = [NSMutableData new];
@@ -188,11 +204,6 @@
     
     
     return frameData;
-}
-
-- (void)stopDecoding
-{
-    self.stopDecode = true;
 }
 
 - (int)startDecodingWithCallbackBlock:(void(^)(FDFFmpegFrameEntity *frameEntity))frameCallbackBlock
@@ -241,6 +252,11 @@
     
     
     return 0;
+}
+
+- (void)stopDecoding
+{
+    self.stopDecode = true;
 }
 
 + (UIImage *)imageFromAVPicture:(unsigned char **)picData lineSize:(int *)linesize width:(int)width height:(int)height
@@ -318,7 +334,6 @@
     [self stopDecoding];
     sleep(1);
     [self dealloc_helper];
-    NSLog(@"Cleaned up...");
 }
 
 #pragma mark -

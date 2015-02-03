@@ -7,12 +7,26 @@
 //
 
 
+#pragma mark - Class forward
+
+@class FDFFmpegFrameEntity;
+
+
 @interface FDFFmpegWrapper : NSObject
+
+#pragma mark - Class methods
+
++ (FDFFmpegWrapper *)sharedInstance;
+
 
 #pragma mark - Instance methods
 
 - (instancetype)init;
 - (int)openURLPath:(NSString *)urlPath;
+- (int)startDecodingWithCallbackBlock:(void(^)(FDFFmpegFrameEntity *frameEntity))frameCallbackBlock
+                      waitForConsumer:(BOOL)wait
+                   completionCallback:(void(^)())completion;
+- (void)stopDecoding;
 
 #pragma mark -
 
