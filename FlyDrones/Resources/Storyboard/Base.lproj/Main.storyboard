@@ -25,17 +25,12 @@
                                     <constraint firstAttribute="height" constant="625" id="VS2-Yz-lUw"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eSk-mZ-agL">
-                                <rect key="frame" x="314" y="652" width="55" height="30"/>
-                                <state key="normal" title="Play">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="onPlayButtonTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="C9I-dQ-L9t"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1fw-fF-vjZ">
-                                <rect key="frame" x="405" y="652" width="50" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1fw-fF-vjZ">
+                                <rect key="frame" x="357" y="707" width="55" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Tew-h5-5np"/>
+                                    <constraint firstAttribute="width" constant="55" id="zk9-cr-XLq"/>
+                                </constraints>
                                 <state key="normal" title="Stop">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -43,12 +38,30 @@
                                     <action selector="onStopButtonTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aRJ-TH-RFg"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eSk-mZ-agL">
+                                <rect key="frame" x="357" y="669" width="55" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="55" id="BYp-20-c6m"/>
+                                    <constraint firstAttribute="height" constant="30" id="NbX-98-Tsk"/>
+                                </constraints>
+                                <state key="normal" title="Play">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onPlayButtonTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="C9I-dQ-L9t"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="centerY" secondItem="1fw-fF-vjZ" secondAttribute="centerY" constant="-210" id="1YG-l3-b3r"/>
                             <constraint firstAttribute="trailingMargin" secondItem="wPb-4o-xKn" secondAttribute="trailing" constant="-16" id="6Bj-5Y-0uS"/>
+                            <constraint firstAttribute="centerX" secondItem="eSk-mZ-agL" secondAttribute="centerX" constant="-0.5" id="9Re-kF-kdM"/>
+                            <constraint firstItem="1fw-fF-vjZ" firstAttribute="top" secondItem="eSk-mZ-agL" secondAttribute="bottom" constant="8" id="V0z-ni-WSL"/>
                             <constraint firstItem="wPb-4o-xKn" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="X5G-6Z-yt7"/>
                             <constraint firstItem="wPb-4o-xKn" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="bE1-Ct-OhW"/>
+                            <constraint firstItem="1fw-fF-vjZ" firstAttribute="top" secondItem="wPb-4o-xKn" secondAttribute="bottom" constant="62" id="pbY-G9-Gvg"/>
+                            <constraint firstAttribute="centerX" secondItem="1fw-fF-vjZ" secondAttribute="centerX" constant="-0.5" id="wq6-uI-vBZ"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
