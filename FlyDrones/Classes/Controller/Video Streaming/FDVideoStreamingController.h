@@ -15,6 +15,7 @@
 #pragma mark - Instance methods
 
 - (int)loadVideoEntity:(FDFFmpegFrameEntity *)videoEntity;
+- (void)resizeToFrame:(CGRect )frame;
 
 #pragma mark -
 

@@ -11,56 +11,14 @@
 
 #import "FDTypesAndStructures.h"
 
+#import "UIView+Utils.h"
+#import "FDMacro.h"
+
 
 #pragma mark - Static
 
 static CGFloat const kFDScreenWidth = 1280.0f;
 static CGFloat const kFDScreenHeight = 720.0f;
-
-
-#pragma mark - Shaders section
-
-#define STRINGIZE(x) #x
-#define STRINGIZE2(x) STRINGIZE(x)
-#define SHADER_STRING(text) @ STRINGIZE2(text)
-
-NSString *const vertexShaderString = SHADER_STRING
-(
- attribute vec4 Position; // 1
- attribute vec4 SourceColor; // 2
- 
- varying vec4 DestinationColor; // 3
- 
- attribute vec2 TexCoordIn;
- varying vec2 TexCoordOut;
- 
- void main(void) { // 4
-     DestinationColor = SourceColor; // 5
-     gl_Position = Position; // 6
-     TexCoordOut = TexCoordIn; // New
- }
- );
-
-NSString *const rgbFragmentShaderString = SHADER_STRING
-(
- varying highp vec2 TexCoordOut;
- uniform sampler2D s_texture_y;
- uniform sampler2D s_texture_u;
- uniform sampler2D s_texture_v;
- 
- void main()
- {
-     highp float y = texture2D(s_texture_y, TexCoordOut).r;
-     highp float u = texture2D(s_texture_u, TexCoordOut).r - 0.5;
-     highp float v = texture2D(s_texture_v, TexCoordOut).r - 0.5;
-     
-     highp float r = y +             1.402 * v;
-     highp float g = y - 0.344 * u - 0.714 * v;
-     highp float b = y + 1.772 * u;
-     
-     gl_FragColor = vec4(r,g,b,1.0);
- }
- );
 
 
 #pragma mark - Private itnerface methods
@@ -87,15 +45,12 @@ NSString *const rgbFragmentShaderString = SHADER_STRING
     GLuint _vTextureUniform;
     
     dispatch_semaphore_t _textureUpdateRenderSemaphore;
-    
-    BOOL _shouldHideMaster;
 }
 
 
 #pragma mark - Properties
 
 @property (nonatomic, strong) EAGLContext *context;
-@property (nonatomic, strong) NSData *testYUVInputData;
 
 @end
 
@@ -144,7 +99,6 @@ NSString *const rgbFragmentShaderString = SHADER_STRING
 
 - (void)intefaceInitialization
 {
-    
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
     if (!self.context)
@@ -172,6 +126,12 @@ NSString *const rgbFragmentShaderString = SHADER_STRING
     _textureUpdateRenderSemaphore = dispatch_semaphore_create((long)1);
 }
 
+- (void)resizeToFrame:(CGRect )frame
+{
+    [self.view updateWidth:CGRectGetWidth(frame)];
+    [self.view updateHeight:CGRectGetHeight(frame)];
+}
+
 
 #pragma mark - Misc methods
 
@@ -182,36 +142,39 @@ NSString *const rgbFragmentShaderString = SHADER_STRING
     _yTexture = [self setupTexture:nil width:_textureWidth height:_textureHeight textureIndex:0];
     _uTexture = [self setupTexture:nil width:_textureWidth/2 height:_textureHeight/2 textureIndex:1];
     _vTexture = [self setupTexture:nil width:_textureWidth/2 height:_textureHeight/2 textureIndex:2];
-    
-    _shouldHideMaster = NO;
 }
 
 
-#pragma mark - texture setup
+#pragma mark - Texture setup
 
-- (void) updateTexture: (NSData*)textureData width:(uint) width height:(uint) height textureIndex:(GLuint)index
+- (void)updateTexture:(NSData *)textureData width:(uint)width height:(uint)height textureIndex:(GLuint)index
 {
     long renderStatus = dispatch_semaphore_wait(_textureUpdateRenderSemaphore, DISPATCH_TIME_NOW);
-    if (renderStatus==0){
+    if (renderStatus==0)
+    {
         GLubyte *glTextureData;
-        if (textureData){
+        if (textureData)
+        {
             glTextureData = (GLubyte*)(textureData.bytes);
-        }else{
+        }
+        else
+        {
             glTextureData = (GLubyte *) malloc(width*height);
             memset(glTextureData, 0, width*height);
         }
+        
         glActiveTexture(GL_TEXTURE0+index);
-        //        glBindTexture(GL_TEXTURE_2D, texName);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, glTextureData);
         
-        if (!textureData){
+        if (!textureData)
+        {
             free(glTextureData);
         }
         dispatch_semaphore_signal(_textureUpdateRenderSemaphore);
     }
 }
 
-- (GLuint)setupTexture:(NSData *)textureData width:(uint) width height:(uint) height textureIndex:(GLuint) index
+- (GLuint)setupTexture:(NSData *)textureData width:(uint)width height:(uint)height textureIndex:(GLuint)index
 {
     GLuint texName;
     
@@ -226,13 +189,14 @@ NSString *const rgbFragmentShaderString = SHADER_STRING
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
+    
     return texName;
 }
 
 
 #pragma mark - compile and load shaders
 
-- (GLuint)compileShader:(NSString*)shaderString withType:(GLenum)shaderType
+- (GLuint)compileShader:(NSString *)shaderString withType:(GLenum)shaderType
 {
     GLuint shaderHandle = glCreateShader(shaderType);
     
@@ -241,15 +205,13 @@ NSString *const rgbFragmentShaderString = SHADER_STRING
         NSLog(@"Failed to create shader %d", shaderType);
         exit(1);
     }
-    // 3
+
     const char * shaderStringUTF8 = shaderString.UTF8String;
-    int shaderStringLength = shaderString.length;
+    int shaderStringLength = (int)shaderString.length;
     glShaderSource(shaderHandle, 1, &shaderStringUTF8, &shaderStringLength);
     
-    // 4
     glCompileShader(shaderHandle);
     
-    // 5
     GLint compileSuccess;
     glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &compileSuccess);
     
@@ -262,10 +224,11 @@ NSString *const rgbFragmentShaderString = SHADER_STRING
         exit(1);
     }
     
+    
     return shaderHandle;
 }
 
-- (void) compileShaders
+- (void)compileShaders
 {
     GLuint vertexShader = [self compileShader:vertexShaderString withType:GL_VERTEX_SHADER];
     GLuint fragmentShader = [self compileShader:rgbFragmentShaderString withType:GL_FRAGMENT_SHADER];
@@ -304,8 +267,10 @@ NSString *const rgbFragmentShaderString = SHADER_STRING
     _vTexture = 0;
 }
 
-#pragma mark - render code
-- (void) setGLViewportToScale
+
+#pragma mark - Render code
+
+- (void)setGLViewportToScale
 {
     CGFloat scaleFactor = [UIScreen mainScreen].scale;
     
@@ -317,24 +282,25 @@ NSString *const rgbFragmentShaderString = SHADER_STRING
        
         if (targetRatio > viewRatio)
         {
-            width=self.view.bounds.size.width*scaleFactor;
-            height=width/targetRatio;
-            x=0;
-            y=(self.view.bounds.size.height*scaleFactor-height)/2;
+            width = self.view.bounds.size.width * scaleFactor;
+            height = width/targetRatio;
+            x = 0;
+            y = (self.view.bounds.size.height * scaleFactor - height)/2;
             
         }
         else
         {
-            height=self.view.bounds.size.height*scaleFactor;
-            width = height*targetRatio;
-            y=0;
-            x=(self.view.bounds.size.width*scaleFactor-width)/2;
+            height = self.view.bounds.size.height*scaleFactor;
+            width = height * targetRatio;
+            y = 0;
+            x = (self.view.bounds.size.width*scaleFactor - width)/2;
         }
         glViewport(x,y,width,height);
     }
     else
     {
-        glViewport(self.view.bounds.origin.x, self.view.bounds.origin.y, self.view.bounds.size.width*scaleFactor, self.view.bounds.size.height*scaleFactor);
+        glViewport(self.view.bounds.origin.x, self.view.bounds.origin.y,
+                   self.view.bounds.size.width * scaleFactor, self.view.bounds.size.height * scaleFactor);
     }
 }
 

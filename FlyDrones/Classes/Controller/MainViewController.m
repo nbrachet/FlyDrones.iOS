@@ -21,7 +21,9 @@
 #pragma mark - Properties
 
 @property (nonatomic, strong) FDFFmpegWrapper *h264Wrapper;
+
 @property (nonatomic, strong) FDVideoStreamingController *videoStreamingController;
+@property (nonatomic, weak) IBOutlet UIView *playerView;
 
 @end
 
@@ -29,6 +31,8 @@
 #pragma mark - Public interface methods
 
 @implementation MainViewController
+
+@synthesize h264Wrapper = _h264Wrapper;
 
 #pragma mark - Instance methods
 
@@ -44,8 +48,31 @@
 - (void)performVideoController
 {
     self.videoStreamingController = [self.storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([FDVideoStreamingController class])];
-    self.videoStreamingController.view.frame = CGRectMake(20, 50, 600, 600);
-    [self.view addSubview:self.videoStreamingController.view];
+    [self.videoStreamingController resizeToFrame:self.playerView.frame];
+    [self.playerView addSubview:self.videoStreamingController.view];
+}
+
+
+#pragma mark - Getter/Setter methods
+
+- (void)setH264Wrapper:(FDFFmpegWrapper *)h264Wrapper
+{
+    if(h264Wrapper != _h264Wrapper)
+    {
+        [_h264Wrapper stopDecoding];
+        _h264Wrapper = h264Wrapper;
+    }
+}
+
+- (FDFFmpegWrapper *)h264Wrapper
+{
+    if(!_h264Wrapper)
+    {
+        _h264Wrapper = [[FDFFmpegWrapper alloc] init];
+    }
+    
+    
+    return _h264Wrapper;
 }
 
 
@@ -53,7 +80,7 @@
 
 - (void)startDecoding
 {
-    self.h264Wrapper = [FDFFmpegWrapper sharedInstance];
+    self.h264Wrapper = nil;
     int status = [self.h264Wrapper openURLPath:[[NSBundle mainBundle] pathOfVideoFile]];
     
     if (status == 0)

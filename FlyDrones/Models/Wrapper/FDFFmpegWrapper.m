@@ -211,7 +211,7 @@
                    completionCallback:(void(^)())completion
 {
     OSMemoryBarrier();
-    self.stopDecode=false;
+    self.stopDecode = false;
     dispatch_queue_t decodeQueue = dispatch_queue_create("decodeQueue", NULL);
     
     dispatch_async(decodeQueue, ^{
@@ -219,7 +219,7 @@
         int frameFinished;
         OSMemoryBarrier();
         
-        while (self->_stopDecode == false)
+        while (self.stopDecode == false)
         {
             @autoreleasepool
             {
