@@ -81,7 +81,7 @@
 - (void)startDecoding
 {
     self.h264Wrapper = nil;
-    int status = [self.h264Wrapper openURLPath:[[NSBundle mainBundle] pathOfVideoFile]];
+    int status = [self.h264Wrapper openURLPath:@"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov"];
     
     if (status == 0)
     {

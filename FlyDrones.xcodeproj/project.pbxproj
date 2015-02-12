@@ -237,8 +237,8 @@
 		371526191A77B59E00F885B8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				37B0AF5C1A8108BC005B2D8D /* Video */,
 				371525FB1A77B28A00F885B8 /* Images.xcassets */,
+				37B0AF5C1A8108BC005B2D8D /* Video */,
 				3715261A1A77B59E00F885B8 /* General */,
 				3715261C1A77B59E00F885B8 /* Storyboard */,
 			);

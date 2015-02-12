@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Main View Controller-->
@@ -18,31 +17,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wPb-4o-xKn" userLabel="PlayerView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wPb-4o-xKn" userLabel="PlayerView">
                                 <rect key="frame" x="0.0" y="20" width="768" height="625"/>
                                 <color key="backgroundColor" red="0.57749495969999998" green="0.14034148190000001" blue="0.138671875" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="625" id="VS2-Yz-lUw"/>
+                                    <constraint firstAttribute="height" constant="625" id="Wrg-Lc-nZK"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1fw-fF-vjZ">
-                                <rect key="frame" x="357" y="707" width="55" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Tew-h5-5np"/>
-                                    <constraint firstAttribute="width" constant="55" id="zk9-cr-XLq"/>
-                                </constraints>
-                                <state key="normal" title="Stop">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="onStopButtonTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aRJ-TH-RFg"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eSk-mZ-agL">
-                                <rect key="frame" x="357" y="669" width="55" height="30"/>
+                                <rect key="frame" x="321" y="662" width="55" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="55" id="BYp-20-c6m"/>
-                                    <constraint firstAttribute="height" constant="30" id="NbX-98-Tsk"/>
+                                    <constraint firstAttribute="height" constant="30" id="4Mw-OX-ebT"/>
+                                    <constraint firstAttribute="width" constant="55" id="knt-jr-oVw"/>
                                 </constraints>
                                 <state key="normal" title="Play">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -51,17 +37,31 @@
                                     <action selector="onPlayButtonTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="C9I-dQ-L9t"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1fw-fF-vjZ">
+                                <rect key="frame" x="393" y="662" width="55" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="4IS-qz-kxo"/>
+                                    <constraint firstAttribute="width" constant="55" id="9Zc-9Q-sRk"/>
+                                </constraints>
+                                <state key="normal" title="Stop">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onStopButtonTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aRJ-TH-RFg"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="1fw-fF-vjZ" secondAttribute="centerY" constant="-210" id="1YG-l3-b3r"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="wPb-4o-xKn" secondAttribute="trailing" constant="-16" id="6Bj-5Y-0uS"/>
-                            <constraint firstAttribute="centerX" secondItem="eSk-mZ-agL" secondAttribute="centerX" constant="-0.5" id="9Re-kF-kdM"/>
-                            <constraint firstItem="1fw-fF-vjZ" firstAttribute="top" secondItem="eSk-mZ-agL" secondAttribute="bottom" constant="8" id="V0z-ni-WSL"/>
-                            <constraint firstItem="wPb-4o-xKn" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="X5G-6Z-yt7"/>
-                            <constraint firstItem="wPb-4o-xKn" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="bE1-Ct-OhW"/>
-                            <constraint firstItem="1fw-fF-vjZ" firstAttribute="top" secondItem="wPb-4o-xKn" secondAttribute="bottom" constant="62" id="pbY-G9-Gvg"/>
-                            <constraint firstAttribute="centerX" secondItem="1fw-fF-vjZ" secondAttribute="centerX" constant="-0.5" id="wq6-uI-vBZ"/>
+                            <constraint firstItem="wPb-4o-xKn" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="0ct-Yc-5cc"/>
+                            <constraint firstItem="1fw-fF-vjZ" firstAttribute="leading" secondItem="eSk-mZ-agL" secondAttribute="trailing" constant="17" id="265-1o-gdv"/>
+                            <constraint firstItem="1fw-fF-vjZ" firstAttribute="width" secondItem="eSk-mZ-agL" secondAttribute="width" id="3R2-Jt-bz7"/>
+                            <constraint firstItem="1fw-fF-vjZ" firstAttribute="top" secondItem="wPb-4o-xKn" secondAttribute="bottom" constant="17" id="9dI-ue-D5l"/>
+                            <constraint firstItem="1fw-fF-vjZ" firstAttribute="baseline" secondItem="eSk-mZ-agL" secondAttribute="baseline" id="EjW-r0-dto"/>
+                            <constraint firstItem="wPb-4o-xKn" firstAttribute="centerX" secondItem="1fw-fF-vjZ" secondAttribute="centerX" constant="-36.5" id="KPz-GX-uSX"/>
+                            <constraint firstItem="wPb-4o-xKn" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="hcg-ef-rIa"/>
+                            <constraint firstItem="1fw-fF-vjZ" firstAttribute="height" secondItem="eSk-mZ-agL" secondAttribute="height" id="q62-Yh-lIW"/>
+                            <constraint firstAttribute="trailing" secondItem="wPb-4o-xKn" secondAttribute="trailing" id="sN4-2q-OKz"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
