@@ -12,6 +12,13 @@
 #import "FDFFmpegWrapper.h"
 
 #import "NSBundle+Utils.h"
+#import "NSString+Network.h"
+
+
+#pragma mark - Static
+
+static NSString * const kFDNetworkPort = @"5555";
+
 
 
 #pragma mark - Private interface methods
@@ -81,7 +88,9 @@
 - (void)startDecoding
 {
     self.h264Wrapper = nil;
-    int status = [self.h264Wrapper openURLPath:@"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov"];
+    NSString *rtpPath = [NSString stringWithFormat:@"rtp://%@:%@", [NSString getIPAddress], kFDNetworkPort];
+    
+    int status = [self.h264Wrapper openURLPath:rtpPath];
     
     if (status == 0)
     {
