@@ -94,21 +94,17 @@
 {
     if (self.formatCtx != NULL || self.codec != NULL)
         return -1;
-
-    AVDictionary *serverOpt = NULL;
-    av_dict_set(&serverOpt, "rtsp_transport", "tcp", 0);
     
-    if (avformat_open_input(&self->_formatCtx, urlPath.UTF8String, NULL, &serverOpt) != 0)
+    int open_status = avformat_open_input(&self->_formatCtx, urlPath.UTF8String, NULL, NULL);
+    if (open_status != 0)
     {
         NSLog(@"error opening stream");
         [self dealloc_helper];
         return -1;
     }
     
-    AVDictionary * options = NULL;
-    av_dict_set(&options, "analyzeduration", "1000000", 0);
-    
-    if(avformat_find_stream_info(self.formatCtx, &options) < 0)
+    int stream_info_status = avformat_find_stream_info(self.formatCtx, NULL);
+    if(stream_info_status < 0)
     {
         [self dealloc_helper];
         return -1;
@@ -117,7 +113,7 @@
     av_dump_format(self.formatCtx, 0, urlPath.UTF8String, 0);
     self.videoStream = -1;
     
-    for(int i=0; i<self.formatCtx->nb_streams; i++)
+    for(int i = 0; i < self.formatCtx->nb_streams; i++)
     {
         if(self.formatCtx->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO)
         {
@@ -286,7 +282,7 @@
     int numBytes = avpicture_get_size(PIX_FMT_RGB24, avFrameData.width.intValue, avFrameData.height.intValue);
     uint8_t *buffer = av_malloc(numBytes*sizeof(uint8_t));
     struct SwsContext *sws_ctx = sws_getContext(avFrameData.width.intValue, avFrameData.height.intValue, PIX_FMT_YUV420P,
-                                                avFrameData.width.intValue, avFrameData.height.intValue, PIX_FMT_RGB24, SWS_BILINEAR, NULL, NULL, NULL);
+                                                avFrameData.width.intValue, avFrameData.height.intValue, PIX_FMT_YUVJ444P, SWS_BILINEAR, NULL, NULL, NULL);
 
     avpicture_fill((AVPicture *)pFrameRGB, buffer, PIX_FMT_RGB24, avFrameData.width.intValue, avFrameData.height.intValue);
     

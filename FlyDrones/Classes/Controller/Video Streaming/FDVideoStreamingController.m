@@ -341,7 +341,7 @@ static CGFloat const kFDScreenHeight = 720.0f;
 
 #pragma mark - GLKViewControllerDelegate
 
-- (void) update
+- (void)update
 {
     if (_increasing)
     {
