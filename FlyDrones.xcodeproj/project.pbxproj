@@ -12,6 +12,7 @@
 		371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3715261D1A77B59E00F885B8 /* LaunchScreen.xib */; };
 		371526251A77B59E00F885B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3715261F1A77B59E00F885B8 /* Main.storyboard */; };
 		371598EC1A837E0E000DB8EA /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 371598EB1A837E0E000DB8EA /* UIView+Utils.m */; };
+		372F290F1A9DC5C200A9FCFB /* 2014-12-05_13-17-23.h264 in Resources */ = {isa = PBXBuildFile; fileRef = 372F290E1A9DC5C200A9FCFB /* 2014-12-05_13-17-23.h264 */; };
 		37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431EDD1A7A57C0007CDD6F /* AppDelegate.m */; };
 		37431F561A7A57C0007CDD6F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431EDF1A7A57C0007CDD6F /* MainViewController.m */; };
 		37431F571A7A57C0007CDD6F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F471A7A57C0007CDD6F /* libavcodec.a */; };
@@ -33,7 +34,6 @@
 		37B0AF531A80CA6B005B2D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */; };
 		37B0AF561A80CAA3005B2D8D /* FDVideoStreamingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B0AF551A80CAA3005B2D8D /* FDVideoStreamingController.m */; };
 		37B0AF5B1A8106B5005B2D8D /* NSBundle+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */; };
-		37B0AF601A8108BC005B2D8D /* test.h264 in Resources */ = {isa = PBXBuildFile; fileRef = 37B0AF5E1A8108BC005B2D8D /* test.h264 */; };
 		A59E43F21A8E549C0089E339 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A59E43F11A8E549C0089E339 /* NSString+Network.m */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +47,7 @@
 		371598EA1A837E0E000DB8EA /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
 		371598EB1A837E0E000DB8EA /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
 		371598ED1A838B11000DB8EA /* FDMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDMacro.h; sourceTree = "<group>"; };
+		372F290E1A9DC5C200A9FCFB /* 2014-12-05_13-17-23.h264 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "2014-12-05_13-17-23.h264"; sourceTree = "<group>"; };
 		37431EDC1A7A57C0007CDD6F /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		37431EDD1A7A57C0007CDD6F /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		37431EDE1A7A57C0007CDD6F /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -170,7 +171,6 @@
 		37B0AF571A80E279005B2D8D /* FDTypesAndStructures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDTypesAndStructures.h; sourceTree = "<group>"; };
 		37B0AF591A8106B5005B2D8D /* NSBundle+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+Utils.h"; sourceTree = "<group>"; };
 		37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+Utils.m"; sourceTree = "<group>"; };
-		37B0AF5E1A8108BC005B2D8D /* test.h264 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.h264; sourceTree = "<group>"; };
 		A59E43F01A8E549C0089E339 /* NSString+Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Network.h"; sourceTree = "<group>"; };
 		A59E43F11A8E549C0089E339 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -575,12 +575,12 @@
 		37B0AF581A810682005B2D8D /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				A59E43F01A8E549C0089E339 /* NSString+Network.h */,
+				A59E43F11A8E549C0089E339 /* NSString+Network.m */,
 				37B0AF591A8106B5005B2D8D /* NSBundle+Utils.h */,
 				37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */,
 				371598EA1A837E0E000DB8EA /* UIView+Utils.h */,
 				371598EB1A837E0E000DB8EA /* UIView+Utils.m */,
-				A59E43F01A8E549C0089E339 /* NSString+Network.h */,
-				A59E43F11A8E549C0089E339 /* NSString+Network.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -588,7 +588,7 @@
 		37B0AF5C1A8108BC005B2D8D /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				37B0AF5E1A8108BC005B2D8D /* test.h264 */,
+				372F290E1A9DC5C200A9FCFB /* 2014-12-05_13-17-23.h264 */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -651,8 +651,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */,
+				372F290F1A9DC5C200A9FCFB /* 2014-12-05_13-17-23.h264 in Resources */,
 				371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */,
-				37B0AF601A8108BC005B2D8D /* test.h264 in Resources */,
 				371526251A77B59E00F885B8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

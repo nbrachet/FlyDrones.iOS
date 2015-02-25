@@ -9,6 +9,6 @@
 
 @interface NSBundle (Utils)
 
-- (NSString *)pathOfVideoFile;
+- (NSString *)pathToFile:(NSString *)filename;
 
 @end

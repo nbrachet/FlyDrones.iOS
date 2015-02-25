@@ -8,14 +8,26 @@
 
 #import "AppDelegate.h"
 
-@interface AppDelegate ()
+#define MEASURE_LAUNCH_TIME 1
 
-@end
+extern CFAbsoluteTime StartTime;
+
+
+#pragma mark - Public interface methods
 
 @implementation AppDelegate
 
+#pragma mark - UIApplication delegate methods
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    #if MEASURE_LAUNCH_TIME
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"Finish Launched in %f sec", CFAbsoluteTimeGetCurrent() - StartTime);
+        });
+    #endif
+    
     return YES;
 }
 

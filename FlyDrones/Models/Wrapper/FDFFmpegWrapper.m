@@ -128,8 +128,14 @@
         return -1;
     }
     
-    self.codecCtx = self.formatCtx->streams[self.videoStream]->codec;
+    AVStream *st =self.formatCtx->streams[self.videoStream];
+//    AVRational r = {1, 25};
+//    av_stream_set_r_frame_rate(st, r);
+    self.codecCtx = st->codec;
     self.codec = avcodec_find_decoder(self.codecCtx->codec_id);
+//    self.codecCtx->ticks_per_frame = 25;
+//    self.codecCtx->timecode_frame_start = 25;
+//    self.codecCtx->ticks_per_frame = 25;
     
     if(self.codec == NULL)
     {
@@ -155,7 +161,7 @@
     return 0;
 }
 
--(FDFFmpegFrameEntity *)createFrameData:(AVFrame *)frame trimPadding:(BOOL)trimState
+- (FDFFmpegFrameEntity *)createFrameData:(AVFrame *)frame trimPadding:(BOOL)trimState
 {
     FDFFmpegFrameEntity *frameData = [[FDFFmpegFrameEntity alloc] init];
     
@@ -227,6 +233,11 @@
                     {
                         avcodec_decode_video2(self.codecCtx, self.frame, &frameFinished, &_packet);
                         
+                        self.frame->width = 864;
+                        self.frame->height = 480;
+
+//                        av_frame_set_pkt_size(self.frame, 2500);
+                        
                         if(frameFinished)
                         {
                             FDFFmpegFrameEntity *entity = [self createFrameData:self.frame trimPadding:YES];
@@ -238,7 +249,7 @@
                 }
                 else
                 {
-                    usleep(1000);
+//                    usleep(1000);
                 }
             }
         }

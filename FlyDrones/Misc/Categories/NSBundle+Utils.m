@@ -10,9 +10,9 @@
 
 @implementation NSBundle (Utils)
 
-- (NSString *)pathOfVideoFile
+- (NSString *)pathToFile:(NSString *)filename
 {
-    return [self pathForResource:@"test" ofType:@"h264"];
+    return [[self bundlePath] stringByAppendingPathComponent:filename];
 }
 
 @end
