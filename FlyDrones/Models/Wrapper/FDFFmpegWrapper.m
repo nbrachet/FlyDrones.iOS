@@ -128,14 +128,8 @@
         return -1;
     }
     
-    AVStream *st =self.formatCtx->streams[self.videoStream];
-//    AVRational r = {1, 25};
-//    av_stream_set_r_frame_rate(st, r);
-    self.codecCtx = st->codec;
+    self.codecCtx = self.formatCtx->streams[self.videoStream]->codec;
     self.codec = avcodec_find_decoder(self.codecCtx->codec_id);
-//    self.codecCtx->ticks_per_frame = 25;
-//    self.codecCtx->timecode_frame_start = 25;
-//    self.codecCtx->ticks_per_frame = 25;
     
     if(self.codec == NULL)
     {
@@ -226,18 +220,31 @@
             @autoreleasepool
             {
                 CFTimeInterval currentTime = CACurrentMediaTime();
+                
                 if ((currentTime - self.previousDecodedFrameTime) > kFDMinimalFrameInterval && av_read_frame(self.formatCtx, &_packet) >= 0)
                 {
                     _previousDecodedFrameTime = currentTime;
                     if(self.packet.stream_index == self.videoStream)
                     {
-                        avcodec_decode_video2(self.codecCtx, self.frame, &frameFinished, &_packet);
+                        self->_packet.pts = 0x8000000000000000;
+                        self->_packet.dts = 0x8000000000000000;
                         
-                        self.frame->width = 864;
-                        self.frame->height = 480;
-
-//                        av_frame_set_pkt_size(self.frame, 2500);
+                        int res = avcodec_decode_video2(self.codecCtx, self.frame, &frameFinished, &self->_packet);
                         
+                        AVStream *st = self.formatCtx->streams[self.videoStream];
+//                        st->time_base.num = 1;
+//                        st->time_base.den = 25;
+//                        self.formatCtx->streams[self.videoStream] = st;
+//                        
+//                        AVRational r = {1, 25};
+//                        av_stream_set_r_frame_rate(st, r);
+                        
+                        
+                        AVRational fr = av_stream_get_r_frame_rate(st);
+                        
+                        NSLog(@"Framerate:  num - %d; den - %d", fr.num, fr.den);
+//                        self.frame->width = self.codecCtx->coded_width;
+                        self.frame = self.codecCtx->coded_frame;
                         if(frameFinished)
                         {
                             FDFFmpegFrameEntity *entity = [self createFrameData:self.frame trimPadding:YES];
@@ -247,10 +254,10 @@
                     
                     av_free_packet(&_packet);
                 }
-                else
-                {
+//                else
+//                {
 //                    usleep(1000);
-                }
+//                }
             }
         }
         
@@ -266,64 +273,6 @@
     self.stopDecode = true;
 }
 
-+ (UIImage *)imageFromAVPicture:(unsigned char **)picData lineSize:(int *)linesize width:(int)width height:(int)height
-{
-    CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
-    CFDataRef data = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, picData[0], linesize[0]*height, kCFAllocatorNull);
-    CGDataProviderRef provider = CGDataProviderCreateWithCFData(data);
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGImageRef cgImage = CGImageCreate(width, height, 8, 24, linesize[0], colorSpace, bitmapInfo, provider, NULL, NO, kCGRenderingIntentDefault);
-    CGColorSpaceRelease(colorSpace);
-    UIImage *image = [UIImage imageWithCGImage:cgImage];
-    CGImageRelease(cgImage);
-    CGDataProviderRelease(provider);
-    CFRelease(data);
-    
-    
-    return image;
-}
-
-+ (UIImage *)convertFrameDataToImage:(FDFFmpegFrameEntity *)avFrameData
-{
-    AVFrame *pFrameRGB = av_frame_alloc();
-    
-    if(pFrameRGB == NULL)
-        return nil;
-    
-    int numBytes = avpicture_get_size(PIX_FMT_RGB24, avFrameData.width.intValue, avFrameData.height.intValue);
-    uint8_t *buffer = av_malloc(numBytes*sizeof(uint8_t));
-    struct SwsContext *sws_ctx = sws_getContext(avFrameData.width.intValue, avFrameData.height.intValue, PIX_FMT_YUV420P,
-                                                avFrameData.width.intValue, avFrameData.height.intValue, PIX_FMT_YUVJ444P, SWS_BILINEAR, NULL, NULL, NULL);
-
-    avpicture_fill((AVPicture *)pFrameRGB, buffer, PIX_FMT_RGB24, avFrameData.width.intValue, avFrameData.height.intValue);
-    
-    uint8_t *data[AV_NUM_DATA_POINTERS];
-    int linesize[AV_NUM_DATA_POINTERS];
-    
-    for (int i = 0; i < AV_NUM_DATA_POINTERS; i++)
-    {
-        data[i] = NULL;
-        linesize[i] = 0;
-    }
-    
-    data[0] = (uint8_t *)(avFrameData.colorPlane0.bytes);
-    data[1] = (uint8_t *)(avFrameData.colorPlane1.bytes);
-    data[2] = (uint8_t *)(avFrameData.colorPlane2.bytes);
-    
-    linesize[0] = avFrameData.lineSize0.intValue;
-    linesize[1] = avFrameData.lineSize1.intValue;
-    linesize[2] = avFrameData.lineSize2.intValue;
-    
-    sws_scale(sws_ctx, (uint8_t const * const *)data, linesize, 0, avFrameData.width.intValue, pFrameRGB->data, pFrameRGB->linesize);
-    UIImage *image = [self imageFromAVPicture:pFrameRGB->data lineSize:pFrameRGB->linesize width:avFrameData.width.intValue height:avFrameData.height.intValue];
-    
-    av_free(buffer);
-    av_free(pFrameRGB);
-    
-    
-    return image;
-}
-
 - (void)dealloc_helper
 {
     if (self.frame)
@@ -336,7 +285,7 @@
         avformat_close_input(&self->_formatCtx);
 }
 
--(void)dealloc
+- (void)dealloc
 {
     [self stopDecoding];
     sleep(1);

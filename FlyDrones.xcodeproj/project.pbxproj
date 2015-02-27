@@ -12,7 +12,6 @@
 		371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3715261D1A77B59E00F885B8 /* LaunchScreen.xib */; };
 		371526251A77B59E00F885B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3715261F1A77B59E00F885B8 /* Main.storyboard */; };
 		371598EC1A837E0E000DB8EA /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 371598EB1A837E0E000DB8EA /* UIView+Utils.m */; };
-		372F290F1A9DC5C200A9FCFB /* 2014-12-05_13-17-23.h264 in Resources */ = {isa = PBXBuildFile; fileRef = 372F290E1A9DC5C200A9FCFB /* 2014-12-05_13-17-23.h264 */; };
 		37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431EDD1A7A57C0007CDD6F /* AppDelegate.m */; };
 		37431F561A7A57C0007CDD6F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431EDF1A7A57C0007CDD6F /* MainViewController.m */; };
 		37431F571A7A57C0007CDD6F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F471A7A57C0007CDD6F /* libavcodec.a */; };
@@ -29,6 +28,7 @@
 		37431F661A7A5A49007CDD6F /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F651A7A5A49007CDD6F /* libiconv.2.4.0.dylib */; };
 		37431F9C1A7A71C6007CDD6F /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F9A1A7A71C6007CDD6F /* GLKit.framework */; };
 		37431F9D1A7A71C6007CDD6F /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */; };
+		379A98211AA0828C00B4A5D1 /* 2014-12-19.h264 in Resources */ = {isa = PBXBuildFile; fileRef = 379A98201AA0828C00B4A5D1 /* 2014-12-19.h264 */; };
 		37AAB9751A7BAB66000544CE /* FDFFmpegWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */; };
 		37AAB9781A7BADFA000544CE /* FDFFmpegFrameEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB9771A7BADFA000544CE /* FDFFmpegFrameEntity.m */; };
 		37B0AF531A80CA6B005B2D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */; };
@@ -47,7 +47,6 @@
 		371598EA1A837E0E000DB8EA /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
 		371598EB1A837E0E000DB8EA /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
 		371598ED1A838B11000DB8EA /* FDMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDMacro.h; sourceTree = "<group>"; };
-		372F290E1A9DC5C200A9FCFB /* 2014-12-05_13-17-23.h264 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "2014-12-05_13-17-23.h264"; sourceTree = "<group>"; };
 		37431EDC1A7A57C0007CDD6F /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		37431EDD1A7A57C0007CDD6F /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		37431EDE1A7A57C0007CDD6F /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -161,6 +160,7 @@
 		37431F9A1A7A71C6007CDD6F /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		37727A311A7F8CE100F4403E /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		379A98201AA0828C00B4A5D1 /* 2014-12-19.h264 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "2014-12-19.h264"; sourceTree = "<group>"; };
 		37AAB9731A7BAB66000544CE /* FDFFmpegWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFFmpegWrapper.h; sourceTree = "<group>"; };
 		37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFFmpegWrapper.m; sourceTree = "<group>"; };
 		37AAB9761A7BADFA000544CE /* FDFFmpegFrameEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFFmpegFrameEntity.h; sourceTree = "<group>"; };
@@ -588,7 +588,7 @@
 		37B0AF5C1A8108BC005B2D8D /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				372F290E1A9DC5C200A9FCFB /* 2014-12-05_13-17-23.h264 */,
+				379A98201AA0828C00B4A5D1 /* 2014-12-19.h264 */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -651,9 +651,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */,
-				372F290F1A9DC5C200A9FCFB /* 2014-12-05_13-17-23.h264 in Resources */,
 				371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */,
 				371526251A77B59E00F885B8 /* Main.storyboard in Resources */,
+				379A98211AA0828C00B4A5D1 /* 2014-12-19.h264 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
