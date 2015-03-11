@@ -128,8 +128,7 @@ static CGFloat const kFDScreenHeight = 720.0f;
 
 - (void)resizeToFrame:(CGRect )frame
 {
-    [self.view updateWidth:CGRectGetWidth(frame)];
-    [self.view updateHeight:CGRectGetHeight(frame)];
+    [self.view updateSize:frame.size];
 }
 
 

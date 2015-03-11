@@ -9,10 +9,11 @@
 #import "MainViewController.h"
 #import "FDVideoStreamingController.h"
 
+#import "FDDisplayInfoView.h"
+
 #import "FDFFmpegWrapper.h"
 
 #import "NSBundle+Utils.h"
-#import "NSString+Network.h"
 
 
 #pragma mark - Static
@@ -31,6 +32,7 @@ static NSString * const kFDNetworkPort = @"5555";
 
 @property (nonatomic, strong) FDVideoStreamingController *videoStreamingController;
 @property (nonatomic, weak) IBOutlet UIView *playerView;
+@property (nonatomic, weak) IBOutlet FDDisplayInfoView *backgroundView;
 
 @end
 
@@ -46,17 +48,28 @@ static NSString * const kFDNetworkPort = @"5555";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self performVideoController];
+    [self interfaceInitialization];
 }
 
 
 #pragma mark - Interface initialization methods
+
+- (void)interfaceInitialization
+{
+    [self performVideoController];
+    [self showDisplayInfo];
+}
 
 - (void)performVideoController
 {
     self.videoStreamingController = [self.storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([FDVideoStreamingController class])];
     [self.videoStreamingController resizeToFrame:self.playerView.frame];
     [self.playerView addSubview:self.videoStreamingController.view];
+}
+
+- (void)showDisplayInfo
+{
+    [self.backgroundView showDisplayInfo];
 }
 
 

@@ -34,6 +34,8 @@
 		37B0AF531A80CA6B005B2D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */; };
 		37B0AF561A80CAA3005B2D8D /* FDVideoStreamingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B0AF551A80CAA3005B2D8D /* FDVideoStreamingController.m */; };
 		37B0AF5B1A8106B5005B2D8D /* NSBundle+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */; };
+		37ED58361AB0787500C10DFD /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ED58351AB0787500C10DFD /* NSString+Datetime.m */; };
+		37ED583A1AB0A07F00C10DFD /* FDDisplayInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ED58391AB0A07F00C10DFD /* FDDisplayInfoView.m */; };
 		A59E43F21A8E549C0089E339 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A59E43F11A8E549C0089E339 /* NSString+Network.m */; };
 /* End PBXBuildFile section */
 
@@ -171,6 +173,10 @@
 		37B0AF571A80E279005B2D8D /* FDTypesAndStructures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDTypesAndStructures.h; sourceTree = "<group>"; };
 		37B0AF591A8106B5005B2D8D /* NSBundle+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+Utils.h"; sourceTree = "<group>"; };
 		37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+Utils.m"; sourceTree = "<group>"; };
+		37ED58341AB0787500C10DFD /* NSString+Datetime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Datetime.h"; sourceTree = "<group>"; };
+		37ED58351AB0787500C10DFD /* NSString+Datetime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Datetime.m"; sourceTree = "<group>"; };
+		37ED58381AB0A07F00C10DFD /* FDDisplayInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDisplayInfoView.h; sourceTree = "<group>"; };
+		37ED58391AB0A07F00C10DFD /* FDDisplayInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDisplayInfoView.m; sourceTree = "<group>"; };
 		A59E43F01A8E549C0089E339 /* NSString+Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Network.h"; sourceTree = "<group>"; };
 		A59E43F11A8E549C0089E339 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -270,6 +276,7 @@
 			children = (
 				37431EDB1A7A57C0007CDD6F /* Controller */,
 				37AAB96F1A7B9FF0000544CE /* Misc */,
+				37ED58371AB0A04800C10DFD /* View */,
 				37AAB9701A7B9FF0000544CE /* Models */,
 				37431EE01A7A57C0007CDD6F /* Libs */,
 			);
@@ -575,6 +582,8 @@
 		37B0AF581A810682005B2D8D /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				37ED58341AB0787500C10DFD /* NSString+Datetime.h */,
+				37ED58351AB0787500C10DFD /* NSString+Datetime.m */,
 				A59E43F01A8E549C0089E339 /* NSString+Network.h */,
 				A59E43F11A8E549C0089E339 /* NSString+Network.m */,
 				37B0AF591A8106B5005B2D8D /* NSBundle+Utils.h */,
@@ -591,6 +600,15 @@
 				379A98201AA0828C00B4A5D1 /* 2014-12-19.h264 */,
 			);
 			path = Video;
+			sourceTree = "<group>";
+		};
+		37ED58371AB0A04800C10DFD /* View */ = {
+			isa = PBXGroup;
+			children = (
+				37ED58381AB0A07F00C10DFD /* FDDisplayInfoView.h */,
+				37ED58391AB0A07F00C10DFD /* FDDisplayInfoView.m */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -669,10 +687,12 @@
 				A59E43F21A8E549C0089E339 /* NSString+Network.m in Sources */,
 				37AAB9751A7BAB66000544CE /* FDFFmpegWrapper.m in Sources */,
 				37AAB9781A7BADFA000544CE /* FDFFmpegFrameEntity.m in Sources */,
+				37ED583A1AB0A07F00C10DFD /* FDDisplayInfoView.m in Sources */,
 				37431F561A7A57C0007CDD6F /* MainViewController.m in Sources */,
 				37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */,
 				371598EC1A837E0E000DB8EA /* UIView+Utils.m in Sources */,
 				371525F11A77B28A00F885B8 /* main.m in Sources */,
+				37ED58361AB0787500C10DFD /* NSString+Datetime.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

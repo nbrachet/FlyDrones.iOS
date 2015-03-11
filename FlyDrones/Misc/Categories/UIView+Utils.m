@@ -37,6 +37,13 @@
     self.frame = frame;
 }
 
+- (void)updateSize:(CGSize )size
+{
+    CGRect frame = self.frame;
+    frame.size = size;
+    self.frame = frame;
+}
+
 - (void)offsetByX:(CGFloat)offsetValue
 {
     CGRect frame = self.frame;

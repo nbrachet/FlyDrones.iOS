@@ -13,6 +13,7 @@
 
 - (CGFloat)width;
 - (CGFloat)height;
+- (void)updateSize:(CGSize )size;
 - (void)updateHeight:(CGFloat)height;
 - (void)updateWidth:(CGFloat)width;
 - (void)offsetByX:(CGFloat)offsetValue;
