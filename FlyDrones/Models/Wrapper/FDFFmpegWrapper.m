@@ -103,6 +103,8 @@
         return -1;
     }
     
+    self.formatCtx->fps_probe_size = -1;
+    
     int stream_info_status = avformat_find_stream_info(self.formatCtx, NULL);
     if(stream_info_status < 0)
     {
@@ -110,7 +112,6 @@
         return -1;
     }
     
-    av_dump_format(self.formatCtx, 0, urlPath.UTF8String, 0);
     self.videoStream = -1;
     
     for(int i = 0; i < self.formatCtx->nb_streams; i++)
@@ -130,13 +131,15 @@
     
     self.codecCtx = self.formatCtx->streams[self.videoStream]->codec;
     self.codec = avcodec_find_decoder(self.codecCtx->codec_id);
-    
+
     if(self.codec == NULL)
     {
         NSLog(@"Unsupported codec!\n");
         [self dealloc_helper];
         return -1;
     }
+    
+    av_dump_format(self.formatCtx, 0, urlPath.UTF8String, 0);
     
     if(avcodec_open2(self.codecCtx, self.codec, &self->_optionsDict) < 0)
     {
@@ -153,6 +156,73 @@
     
     
     return 0;
+}
+
+
+#pragma mark - Start/Stop stream/file
+
+- (int)startDecodingWithCallbackBlock:(void(^)(FDFFmpegFrameEntity *frameEntity))frameCallbackBlock
+                      waitForConsumer:(BOOL)wait
+                   completionCallback:(void(^)())completion
+{
+    OSMemoryBarrier();
+    self.stopDecode = false;
+    dispatch_queue_t decodeQueue = dispatch_queue_create("decodeQueue", NULL);
+    
+    dispatch_async(decodeQueue, ^{
+    
+        int frameFinished;
+        OSMemoryBarrier();
+        
+        while (self.stopDecode == false)
+        {
+            @autoreleasepool
+            {
+                av_init_packet(&_packet);
+                _packet.data = NULL;
+                _packet.size = 0;
+                
+                AVStream *stream = self.formatCtx->streams[0];
+                av_stream_set_r_frame_rate(stream, (AVRational){25,1});
+                self.formatCtx->streams[0] = stream;
+                
+                self.codecCtx->framerate = (AVRational){25,1};
+                if (av_read_frame(self.formatCtx, &self->_packet) >= 0)
+                {
+                    if(self.packet.stream_index == self.videoStream)
+                    {
+                        avcodec_decode_video2(self.codecCtx, self.frame, &frameFinished, &self->_packet);
+                        
+                        // Setup picture width and height
+                        self.frame->width = self.codecCtx->coded_width;
+                        self.frame->height = self.codecCtx->coded_height;
+                        
+                        if(frameFinished)
+                        {
+                            FDFFmpegFrameEntity *entity = [self createFrameData:self.frame trimPadding:YES];
+                            frameCallbackBlock(entity);
+                        }
+                    }
+                    
+                    av_free_packet(&_packet);
+                }
+                else
+                {
+                    usleep(1000);
+                }
+            }
+        }
+        
+        completion();
+    });
+    
+    
+    return 0;
+}
+
+- (void)stopDecoding
+{
+    self.stopDecode = true;
 }
 
 - (FDFFmpegFrameEntity *)createFrameData:(AVFrame *)frame trimPadding:(BOOL)trimState
@@ -175,7 +245,7 @@
         {
             [frameData.colorPlane1 appendBytes:(void *)(frame->data[1] + i * frame->linesize[1])
                                         length:frame->width/2];
-        
+            
             [frameData.colorPlane2 appendBytes:(void *)(frame->data[2] + i * frame->linesize[2])
                                         length:frame->width/2];
         }
@@ -202,76 +272,8 @@
     return frameData;
 }
 
-- (int)startDecodingWithCallbackBlock:(void(^)(FDFFmpegFrameEntity *frameEntity))frameCallbackBlock
-                      waitForConsumer:(BOOL)wait
-                   completionCallback:(void(^)())completion
-{
-    OSMemoryBarrier();
-    self.stopDecode = false;
-    dispatch_queue_t decodeQueue = dispatch_queue_create("decodeQueue", NULL);
-    
-    dispatch_async(decodeQueue, ^{
-    
-        int frameFinished;
-        OSMemoryBarrier();
-        
-        while (self.stopDecode == false)
-        {
-            @autoreleasepool
-            {
-                CFTimeInterval currentTime = CACurrentMediaTime();
-                
-                if ((currentTime - self.previousDecodedFrameTime) > kFDMinimalFrameInterval && av_read_frame(self.formatCtx, &_packet) >= 0)
-                {
-                    _previousDecodedFrameTime = currentTime;
-                    if(self.packet.stream_index == self.videoStream)
-                    {
-                        self->_packet.pts = 0x8000000000000000;
-                        self->_packet.dts = 0x8000000000000000;
-                        
-                        int res = avcodec_decode_video2(self.codecCtx, self.frame, &frameFinished, &self->_packet);
-                        
-                        AVStream *st = self.formatCtx->streams[self.videoStream];
-//                        st->time_base.num = 1;
-//                        st->time_base.den = 25;
-//                        self.formatCtx->streams[self.videoStream] = st;
-//                        
-//                        AVRational r = {1, 25};
-//                        av_stream_set_r_frame_rate(st, r);
-                        
-                        
-                        AVRational fr = av_stream_get_r_frame_rate(st);
-                        
-                        NSLog(@"Framerate:  num - %d; den - %d", fr.num, fr.den);
-//                        self.frame->width = self.codecCtx->coded_width;
-                        self.frame = self.codecCtx->coded_frame;
-                        if(frameFinished)
-                        {
-                            FDFFmpegFrameEntity *entity = [self createFrameData:self.frame trimPadding:YES];
-                            frameCallbackBlock(entity);
-                        }
-                    }
-                    
-                    av_free_packet(&_packet);
-                }
-//                else
-//                {
-//                    usleep(1000);
-//                }
-            }
-        }
-        
-        completion();
-    });
-    
-    
-    return 0;
-}
 
-- (void)stopDecoding
-{
-    self.stopDecode = true;
-}
+#pragma mark - Memory management methods
 
 - (void)dealloc_helper
 {
