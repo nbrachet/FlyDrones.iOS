@@ -58,7 +58,6 @@ static NSString * const kFDNetworkPort = @"5555";
 - (void)interfaceInitialization
 {
     [self performVideoController];
-    [self showDisplayInfo];
 }
 
 - (void)performVideoController
@@ -71,6 +70,10 @@ static NSString * const kFDNetworkPort = @"5555";
 - (void)showDisplayInfo
 {
     [self.backgroundView showDisplayInfo];
+}
+- (void)hideDisplayInfo
+{
+    [self.backgroundView hideDisplayInfo];
 }
 
 
@@ -102,28 +105,30 @@ static NSString * const kFDNetworkPort = @"5555";
 - (void)startDecoding
 {
     self.h264Wrapper = nil;
-//    NSString *path = [[NSBundle mainBundle] pathToFile:@"2014-12-19.h264"];
-    NSString *path = [NSString stringWithFormat:@"udp://%@:%@", [NSString getIPAddress], kFDNetworkPort];
+    NSString *path = [[NSBundle mainBundle] pathToFile:@"2014-12-19.h264"];
+//    NSString *path = [NSString stringWithFormat:@"udp://%@:%@", [NSString getIPAddress], kFDNetworkPort];
     
     int status = [self.h264Wrapper openURLPath:path];
     
     if (status == 0)
     {
+        [self showDisplayInfo];
+        
         [self.h264Wrapper startDecodingWithCallbackBlock:^(FDFFmpegFrameEntity *frameEntity) {
             [self.videoStreamingController loadVideoEntity:frameEntity];
         } waitForConsumer:NO completionCallback:^{
-            NSLog(@"Decode complete.");
+            [self hideDisplayInfo];
         }];
     }
     else
     {
-        NSLog(@"Failed");
         self.h264Wrapper = nil;
     }
 }
 
 - (void)stopDecoding
 {
+    [self hideDisplayInfo];
     [self.h264Wrapper stopDecoding];
     self.h264Wrapper = nil;
 }

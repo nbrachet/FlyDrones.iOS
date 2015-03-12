@@ -20,6 +20,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *dateLabel;
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 
+@property (nonatomic, strong) NSTimer *timer;
+
 @end
 
 
@@ -37,16 +39,25 @@
     });
 }
 
+- (void)hideDisplayInfo
+{
+    self.dateLabel.text = @"";
+    self.timeLabel.text = @"";
+    
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
 - (void)runTimer
 {
-    NSTimer *timer = [[NSTimer alloc] initWithFireDate:[NSDate date]
+    self.timer = [[NSTimer alloc] initWithFireDate:[NSDate date]
                                           interval:1
                                             target:self
                                           selector:@selector(updateDateTime)
                                           userInfo:nil
                                            repeats:YES];
     NSRunLoop *runner = [NSRunLoop currentRunLoop];
-    [runner addTimer:timer forMode: NSDefaultRunLoopMode];
+    [runner addTimer:self.timer forMode: NSDefaultRunLoopMode];
 }
 
 - (void)updateDateTime

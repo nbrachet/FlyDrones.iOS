@@ -103,7 +103,7 @@
         return -1;
     }
     
-    self.formatCtx->fps_probe_size = -1;
+//    self.formatCtx->fps_probe_size = 25;
     
     int stream_info_status = avformat_find_stream_info(self.formatCtx, NULL);
     if(stream_info_status < 0)
