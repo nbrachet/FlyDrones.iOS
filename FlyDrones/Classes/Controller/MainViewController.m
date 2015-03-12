@@ -14,6 +14,7 @@
 #import "FDFFmpegWrapper.h"
 
 #import "NSBundle+Utils.h"
+#import "NSString+Network.h"
 
 
 #pragma mark - Static
@@ -101,8 +102,8 @@ static NSString * const kFDNetworkPort = @"5555";
 - (void)startDecoding
 {
     self.h264Wrapper = nil;
-    NSString *path = [[NSBundle mainBundle] pathToFile:@"2014-12-19.h264"];
-//    NSString *path = [NSString stringWithFormat:@"udp://%@:%@", [NSString getIPAddress], kFDNetworkPort];
+//    NSString *path = [[NSBundle mainBundle] pathToFile:@"2014-12-19.h264"];
+    NSString *path = [NSString stringWithFormat:@"udp://%@:%@", [NSString getIPAddress], kFDNetworkPort];
     
     int status = [self.h264Wrapper openURLPath:path];
     

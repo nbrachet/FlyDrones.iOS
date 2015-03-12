@@ -31,6 +31,26 @@
 
 - (void)showDisplayInfo
 {
+    __block FDDisplayInfoView *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakSelf runTimer];
+    });
+}
+
+- (void)runTimer
+{
+    NSTimer *timer = [[NSTimer alloc] initWithFireDate:[NSDate date]
+                                          interval:1
+                                            target:self
+                                          selector:@selector(updateDateTime)
+                                          userInfo:nil
+                                           repeats:YES];
+    NSRunLoop *runner = [NSRunLoop currentRunLoop];
+    [runner addTimer:timer forMode: NSDefaultRunLoopMode];
+}
+
+- (void)updateDateTime
+{
     self.dateLabel.text = [NSString currentDate];
     self.timeLabel.text = [NSString currentTime];
 }
