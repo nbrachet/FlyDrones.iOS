@@ -16,6 +16,8 @@
 #import "NSBundle+Utils.h"
 #import "NSString+Network.h"
 
+#import "avio.h"
+
 
 #pragma mark - Static
 
@@ -51,7 +53,6 @@ static NSString * const kFDNetworkPort = @"5555";
     [super viewDidLoad];
     [self interfaceInitialization];
 }
-
 
 #pragma mark - Interface initialization methods
 

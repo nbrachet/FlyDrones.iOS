@@ -9,6 +9,7 @@
 #import "FDFFmpegWrapper.h"
 
 #import "FDFFmpegFrameEntity.h"
+#import "FDContextWrapper.h"
 
 #import "Constants.h"
 
@@ -95,7 +96,24 @@
     if (self.formatCtx != NULL || self.codec != NULL)
         return -1;
     
-    int open_status = avformat_open_input(&self->_formatCtx, urlPath.UTF8String, NULL, NULL);
+    
+//    unsigned char *buffer;
+//    AVIOContext *context = avio_alloc_context(buffer, 2048, AVIO_FLAG_READ, NULL, NULL, NULL, NULL);
+//    
+//    int status_code = avio_open(&context, urlPath.UTF8String, AVIO_FLAG_READ);
+//    NSLog(@"Status code: %d", status_code);
+//    
+//    self.formatCtx = avformat_alloc_context();
+//    self.formatCtx->pb = context;
+//    self.formatCtx->video_codec = avcodec_find_decoder(AV_CODEC_ID_H264);
+//    self.formatCtx->fps_probe_size = 25;
+    
+    self->_formatCtx = avformat_alloc_context();
+    FDContextWrapper *context = [[FDContextWrapper alloc] initWithSourcePath:urlPath];
+    [context initAVFormatContext:self->_formatCtx];
+    
+//    int open_status = avformat_open_input(&self->_formatCtx, urlPath.UTF8String, NULL, NULL); //from file
+    int open_status = avformat_open_input(&self->_formatCtx, "", NULL, NULL); // from buffer
     if (open_status != 0)
     {
         NSLog(@"error opening stream");
@@ -103,7 +121,7 @@
         return -1;
     }
     
-//    self.formatCtx->fps_probe_size = 25;
+    self.formatCtx->fps_probe_size = 25;
     
     int stream_info_status = avformat_find_stream_info(self.formatCtx, NULL);
     if(stream_info_status < 0)
@@ -141,7 +159,7 @@
     
     av_dump_format(self.formatCtx, 0, urlPath.UTF8String, 0);
     
-    if(avcodec_open2(self.codecCtx, self.codec, &self->_optionsDict) < 0)
+    if(avcodec_open2(self.codecCtx, self.codec, NULL) < 0)
     {
         [self dealloc_helper];
         return -1;
@@ -178,19 +196,11 @@
         {
             @autoreleasepool
             {
-                av_init_packet(&_packet);
-                _packet.data = NULL;
-                _packet.size = 0;
-                
-                AVStream *stream = self.formatCtx->streams[0];
-                av_stream_set_r_frame_rate(stream, (AVRational){25,1});
-                self.formatCtx->streams[0] = stream;
-                
-                self.codecCtx->framerate = (AVRational){25,1};
                 if (av_read_frame(self.formatCtx, &self->_packet) >= 0)
                 {
                     if(self.packet.stream_index == self.videoStream)
                     {
+                        self.frame->coded_picture_number++;
                         avcodec_decode_video2(self.codecCtx, self.frame, &frameFinished, &self->_packet);
                         
                         // Setup picture width and height

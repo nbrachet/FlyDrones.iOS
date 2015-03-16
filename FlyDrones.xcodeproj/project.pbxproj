@@ -12,6 +12,8 @@
 		371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3715261D1A77B59E00F885B8 /* LaunchScreen.xib */; };
 		371526251A77B59E00F885B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3715261F1A77B59E00F885B8 /* Main.storyboard */; };
 		371598EC1A837E0E000DB8EA /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 371598EB1A837E0E000DB8EA /* UIView+Utils.m */; };
+		37373CA91AB3388400C98B12 /* ipad_video.mov in Resources */ = {isa = PBXBuildFile; fileRef = 37373CA81AB3388400C98B12 /* ipad_video.mov */; };
+		3742248B1AB7391400B0B906 /* FDContextWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3742248A1AB7391400B0B906 /* FDContextWrapper.m */; };
 		37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431EDD1A7A57C0007CDD6F /* AppDelegate.m */; };
 		37431F561A7A57C0007CDD6F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431EDF1A7A57C0007CDD6F /* MainViewController.m */; };
 		37431F571A7A57C0007CDD6F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F471A7A57C0007CDD6F /* libavcodec.a */; };
@@ -49,6 +51,9 @@
 		371598EA1A837E0E000DB8EA /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
 		371598EB1A837E0E000DB8EA /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
 		371598ED1A838B11000DB8EA /* FDMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDMacro.h; sourceTree = "<group>"; };
+		37373CA81AB3388400C98B12 /* ipad_video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = ipad_video.mov; sourceTree = "<group>"; };
+		374224891AB7391400B0B906 /* FDContextWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDContextWrapper.h; sourceTree = "<group>"; };
+		3742248A1AB7391400B0B906 /* FDContextWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDContextWrapper.m; sourceTree = "<group>"; };
 		37431EDC1A7A57C0007CDD6F /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		37431EDD1A7A57C0007CDD6F /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		37431EDE1A7A57C0007CDD6F /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -566,6 +571,8 @@
 			children = (
 				37AAB9731A7BAB66000544CE /* FDFFmpegWrapper.h */,
 				37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */,
+				374224891AB7391400B0B906 /* FDContextWrapper.h */,
+				3742248A1AB7391400B0B906 /* FDContextWrapper.m */,
 			);
 			path = Wrapper;
 			sourceTree = "<group>";
@@ -597,6 +604,7 @@
 		37B0AF5C1A8108BC005B2D8D /* Video */ = {
 			isa = PBXGroup;
 			children = (
+				37373CA81AB3388400C98B12 /* ipad_video.mov */,
 				379A98201AA0828C00B4A5D1 /* 2014-12-19.h264 */,
 			);
 			path = Video;
@@ -669,6 +677,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */,
+				37373CA91AB3388400C98B12 /* ipad_video.mov in Resources */,
 				371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */,
 				371526251A77B59E00F885B8 /* Main.storyboard in Resources */,
 				379A98211AA0828C00B4A5D1 /* 2014-12-19.h264 in Resources */,
@@ -683,6 +692,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37B0AF5B1A8106B5005B2D8D /* NSBundle+Utils.m in Sources */,
+				3742248B1AB7391400B0B906 /* FDContextWrapper.m in Sources */,
 				37B0AF561A80CAA3005B2D8D /* FDVideoStreamingController.m in Sources */,
 				A59E43F21A8E549C0089E339 /* NSString+Network.m in Sources */,
 				37AAB9751A7BAB66000544CE /* FDFFmpegWrapper.m in Sources */,
@@ -755,7 +765,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "0cbbc996-15d8-493c-a2ec-bc9e7a88b048";
+				PROVISIONING_PROFILE = "461dbd2b-d08f-48d7-9bfa-e83f83656eda";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -791,7 +801,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "0cbbc996-15d8-493c-a2ec-bc9e7a88b048";
+				PROVISIONING_PROFILE = "461dbd2b-d08f-48d7-9bfa-e83f83656eda";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
