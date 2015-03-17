@@ -15,7 +15,6 @@
 
 #import "avformat.h"
 #import "avcodec.h"
-#import "swscale.h"
 #import <libkern/OSAtomic.h>
 
 
@@ -209,7 +208,7 @@
                         
                         if(frameFinished)
                         {
-                            FDFFmpegFrameEntity *entity = [self createFrameData:self.frame trimPadding:YES];
+                            FDFFmpegFrameEntity *entity = [[FDFFmpegFrameEntity alloc] initEntityFrame:self.frame];
                             frameCallbackBlock(entity);
                         }
                     }
@@ -233,53 +232,6 @@
 - (void)stopDecoding
 {
     self.stopDecode = true;
-}
-
-- (FDFFmpegFrameEntity *)createFrameData:(AVFrame *)frame trimPadding:(BOOL)trimState
-{
-    FDFFmpegFrameEntity *frameData = [[FDFFmpegFrameEntity alloc] init];
-    
-    if (trimState)
-    {
-        frameData.colorPlane0 = [NSMutableData new];
-        frameData.colorPlane1 = [NSMutableData new];
-        frameData.colorPlane2 = [NSMutableData new];
-        
-        for (int i = 0; i < frame->height; i++)
-        {
-            [frameData.colorPlane0 appendBytes:(void *)(frame->data[0] + i * frame->linesize[0])
-                                        length:frame->width];
-        }
-        
-        for (int i = 0; i < frame->height/2; i++)
-        {
-            [frameData.colorPlane1 appendBytes:(void *)(frame->data[1] + i * frame->linesize[1])
-                                        length:frame->width/2];
-            
-            [frameData.colorPlane2 appendBytes:(void *)(frame->data[2] + i * frame->linesize[2])
-                                        length:frame->width/2];
-        }
-        
-        frameData.lineSize0 = @(frame->width);
-        frameData.lineSize1 = @(frame->width/2);
-        frameData.lineSize2 = @(frame->width/2);
-    }
-    else
-    {
-        frameData.colorPlane0 = [[NSMutableData alloc] initWithBytes:frame->data[0] length:frame->linesize[0] * frame->height];
-        frameData.colorPlane1 = [[NSMutableData alloc] initWithBytes:frame->data[1] length:frame->linesize[1] * frame->height/2];
-        frameData.colorPlane2 = [[NSMutableData alloc] initWithBytes:frame->data[2] length:frame->linesize[2] * frame->height/2];
-        
-        frameData.lineSize0 = @(frame->linesize[0]);
-        frameData.lineSize1 = @(frame->linesize[1]);
-        frameData.lineSize2 = @(frame->linesize[2]);
-    }
-    
-    frameData.width = @(frame->width);
-    frameData.height = @(frame->height);
-    
-    
-    return frameData;
 }
 
 

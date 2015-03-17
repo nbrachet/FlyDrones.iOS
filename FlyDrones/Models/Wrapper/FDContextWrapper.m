@@ -11,16 +11,14 @@
 #import "avio.h"
 #import "stdio.h"
 
+
 #pragma mark - Private interface methods
 
 @interface FDContextWrapper ()
-{
-    
-}
 #pragma mark - Properties
 
 @property (nonatomic, weak) NSString *sourcePath;
-@property (nonatomic, assign) uint8_t *buffer; // internal buffer for ffmpeg
+@property (nonatomic, assign) uint8_t *buffer; 
 @property (nonatomic, assign) int bufferSize;
 @property (nonatomic, assign) FILE *fh;
 @property (nonatomic, assign) AVIOContext* ioCtx;
@@ -72,7 +70,8 @@
     
     // or read some of the file and let ffmpeg do the guessing
     size_t len = fread(_buffer, 1, _bufferSize, _fh);
-    if (len == 0) return;
+    if (len == 0)
+        return;
     fseek(_fh, 0, SEEK_SET); // reset to beginning of file
     
     AVProbeData probeData;
@@ -87,7 +86,8 @@ static int IOReadFunc(void *data, uint8_t *buf, int buf_size)
 {
     FDContextWrapper *hctx = (__bridge FDContextWrapper*)data;
     size_t len = fread(buf, 1, buf_size, hctx->_fh);
-    if (len == 0) {
+    if (len == 0)
+    {
         // Let FFmpeg know that we have reached EOF, or do something else
         return AVERROR_EOF;
     }
@@ -119,7 +119,6 @@ static int64_t IOSeekFunc(void *data, int64_t pos, int whence)
     self.ioCtx->buffer = NULL;
     av_free(self.ioCtx);
 }
-
 
 #pragma mark -
 

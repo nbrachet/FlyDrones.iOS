@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Sergey Galagan. All rights reserved.
 //
 
+#import "frame.h"
+
 
 @interface FDFFmpegFrameEntity : NSObject
 
@@ -19,5 +21,12 @@
 @property (nonatomic, strong) NSNumber *lineSize2;
 @property (nonatomic, strong) NSNumber *width;
 @property (nonatomic, strong) NSNumber *height;
+
+
+#pragma mark - Instance methods
+
+- (instancetype)initEntityFrame:(AVFrame *)frame;
+
+#pragma mark - 
 
 @end
