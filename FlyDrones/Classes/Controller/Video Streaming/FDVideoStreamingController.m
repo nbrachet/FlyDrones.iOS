@@ -13,12 +13,7 @@
 
 #import "UIView+Utils.h"
 #import "FDMacro.h"
-
-
-#pragma mark - Static
-
-static CGFloat const kFDScreenWidth = 1280.0f;
-static CGFloat const kFDScreenHeight = 720.0f;
+#import "FDDisplayInfoView.h"
 
 
 #pragma mark - Private itnerface methods
@@ -51,6 +46,7 @@ static CGFloat const kFDScreenHeight = 720.0f;
 #pragma mark - Properties
 
 @property (nonatomic, strong) EAGLContext *context;
+@property (nonatomic, weak) IBOutlet FDDisplayInfoView *infoView;
 
 @end
 
@@ -83,13 +79,14 @@ static CGFloat const kFDScreenHeight = 720.0f;
            
             _textureWidth = videoEntity.width.intValue;
             _textureHeight = videoEntity.height.intValue;
+            
+            [self showInfoViewIfNeeds];
         }
     }
     else
     {
         statusCode = -1;
     }
-    
     
     return statusCode;
 }
@@ -131,16 +128,33 @@ static CGFloat const kFDScreenHeight = 720.0f;
     [self.view updateSize:frame.size];
 }
 
+- (void)showInfoViewIfNeeds
+{
+    if(self.infoView.hidden) {
+        self.infoView.hidden = NO;
+    }
+}
+
 
 #pragma mark - Misc methods
 
 - (void)performData
 {
-    _textureWidth = kFDScreenWidth;
-    _textureHeight = kFDScreenHeight;
     _yTexture = [self setupTexture:nil width:_textureWidth height:_textureHeight textureIndex:0];
     _uTexture = [self setupTexture:nil width:_textureWidth/2 height:_textureHeight/2 textureIndex:1];
     _vTexture = [self setupTexture:nil width:_textureWidth/2 height:_textureHeight/2 textureIndex:2];
+}
+
+
+#pragma mark - Handler methods
+
+- (void)showDisplayInfo
+{
+    [self.infoView showDisplayInfo];
+}
+- (void)hideDisplayInfo
+{
+    [self.infoView hideDisplayInfo];
 }
 
 
@@ -154,7 +168,7 @@ static CGFloat const kFDScreenHeight = 720.0f;
         GLubyte *glTextureData;
         if (textureData)
         {
-            glTextureData = (GLubyte*)(textureData.bytes);
+            glTextureData = (GLubyte *)(textureData.bytes);
         }
         else
         {
@@ -164,7 +178,6 @@ static CGFloat const kFDScreenHeight = 720.0f;
         
         glActiveTexture(GL_TEXTURE0+index);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, glTextureData);
-        
         if (!textureData)
         {
             free(glTextureData);
@@ -187,7 +200,6 @@ static CGFloat const kFDScreenHeight = 720.0f;
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    
     
     return texName;
 }
@@ -222,7 +234,6 @@ static CGFloat const kFDScreenHeight = 720.0f;
         NSLog(@"%@", messageString);
         exit(1);
     }
-    
     
     return shaderHandle;
 }
@@ -272,7 +283,6 @@ static CGFloat const kFDScreenHeight = 720.0f;
 - (void)setGLViewportToScale
 {
     CGFloat scaleFactor = [UIScreen mainScreen].scale;
-    
     if (_textureHeight != 0 && _textureWidth != 0)
     {
         float targetRatio = _textureWidth/(_textureHeight*1.0);
@@ -289,12 +299,16 @@ static CGFloat const kFDScreenHeight = 720.0f;
         }
         else
         {
-            height = self.view.bounds.size.height*scaleFactor;
+            height = self.view.bounds.size.height * scaleFactor;
             width = height * targetRatio;
             y = 0;
-            x = (self.view.bounds.size.width*scaleFactor - width)/2;
+            x = (self.view.bounds.size.width * scaleFactor - width)/2;
         }
-        glViewport(x,y,width,height);
+        glViewport(x, y, width, height);
+        
+        self.infoView.frame = CGRectMake(x, y/2, width/2, height/2);
+        [self.infoView setNeedsLayout];
+
     }
     else
     {

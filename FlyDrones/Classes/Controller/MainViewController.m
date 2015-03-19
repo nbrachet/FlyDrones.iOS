@@ -9,8 +9,6 @@
 #import "MainViewController.h"
 #import "FDVideoStreamingController.h"
 
-#import "FDDisplayInfoView.h"
-
 #import "FDFFmpegWrapper.h"
 
 #import "NSBundle+Utils.h"
@@ -33,7 +31,6 @@ static NSString * const kFDNetworkPort = @"5555";
 
 @property (nonatomic, strong) FDVideoStreamingController *videoStreamingController;
 @property (nonatomic, weak) IBOutlet UIView *playerView;
-@property (nonatomic, weak) IBOutlet FDDisplayInfoView *backgroundView;
 
 @end
 
@@ -67,15 +64,6 @@ static NSString * const kFDNetworkPort = @"5555";
     [self.playerView addSubview:self.videoStreamingController.view];
 }
 
-- (void)showDisplayInfo
-{
-    [self.backgroundView showDisplayInfo];
-}
-- (void)hideDisplayInfo
-{
-    [self.backgroundView hideDisplayInfo];
-}
-
 
 #pragma mark - Getter/Setter methods
 
@@ -95,7 +83,6 @@ static NSString * const kFDNetworkPort = @"5555";
         _h264Wrapper = [[FDFFmpegWrapper alloc] init];
     }
     
-    
     return _h264Wrapper;
 }
 
@@ -112,12 +99,12 @@ static NSString * const kFDNetworkPort = @"5555";
     
     if (status == 0)
     {
-        [self showDisplayInfo];
+        [self.videoStreamingController showDisplayInfo];
         
         [self.h264Wrapper startDecodingWithCallbackBlock:^(FDFFmpegFrameEntity *frameEntity) {
             [self.videoStreamingController loadVideoEntity:frameEntity];
         } waitForConsumer:NO completionCallback:^{
-            [self hideDisplayInfo];
+            [self.videoStreamingController hideDisplayInfo];
         }];
     }
     else
@@ -128,7 +115,7 @@ static NSString * const kFDNetworkPort = @"5555";
 
 - (void)stopDecoding
 {
-    [self hideDisplayInfo];
+    [self.videoStreamingController hideDisplayInfo];
     [self.h264Wrapper stopDecoding];
     self.h264Wrapper = nil;
 }
