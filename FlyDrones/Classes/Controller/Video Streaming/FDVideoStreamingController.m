@@ -13,7 +13,6 @@
 
 #import "UIView+Utils.h"
 #import "FDMacro.h"
-#import "FDDisplayInfoView.h"
 
 
 #pragma mark - Private itnerface methods
@@ -46,7 +45,6 @@
 #pragma mark - Properties
 
 @property (nonatomic, strong) EAGLContext *context;
-@property (nonatomic, weak) IBOutlet FDDisplayInfoView *infoView;
 
 @end
 
@@ -79,8 +77,6 @@
            
             _textureWidth = videoEntity.width.intValue;
             _textureHeight = videoEntity.height.intValue;
-            
-            [self showInfoViewIfNeeds];
         }
     }
     else
@@ -128,13 +124,6 @@
     [self.view updateSize:frame.size];
 }
 
-- (void)showInfoViewIfNeeds
-{
-    if(self.infoView.hidden) {
-        self.infoView.hidden = NO;
-    }
-}
-
 
 #pragma mark - Misc methods
 
@@ -143,18 +132,6 @@
     _yTexture = [self setupTexture:nil width:_textureWidth height:_textureHeight textureIndex:0];
     _uTexture = [self setupTexture:nil width:_textureWidth/2 height:_textureHeight/2 textureIndex:1];
     _vTexture = [self setupTexture:nil width:_textureWidth/2 height:_textureHeight/2 textureIndex:2];
-}
-
-
-#pragma mark - Handler methods
-
-- (void)showDisplayInfo
-{
-    [self.infoView showDisplayInfo];
-}
-- (void)hideDisplayInfo
-{
-    [self.infoView hideDisplayInfo];
 }
 
 
@@ -304,11 +281,8 @@
             y = 0;
             x = (self.view.bounds.size.width * scaleFactor - width)/2;
         }
-        glViewport(x, y, width, height);
         
-        self.infoView.frame = CGRectMake(x, y/2, width/2, height/2);
-        [self.infoView setNeedsLayout];
-
+        glViewport(x, y, width, height);
     }
     else
     {

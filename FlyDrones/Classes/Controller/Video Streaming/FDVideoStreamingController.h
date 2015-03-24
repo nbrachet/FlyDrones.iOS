@@ -21,12 +21,6 @@
 - (int)loadVideoEntity:(FDFFmpegFrameEntity *)videoEntity;
 - (void)resizeToFrame:(CGRect )frame;
 
-
-#pragma mark - Handler methods
-
-- (void)showDisplayInfo;
-- (void)hideDisplayInfo;
-
 #pragma mark -
 
 @end

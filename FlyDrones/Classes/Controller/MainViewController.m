@@ -8,8 +8,10 @@
 
 #import "MainViewController.h"
 #import "FDVideoStreamingController.h"
+#import "FDDisplayInfoView.h"
 
 #import "FDFFmpegWrapper.h"
+#import "FDFFmpegFrameEntity.h"
 
 #import "NSBundle+Utils.h"
 #import "NSString+Network.h"
@@ -30,7 +32,10 @@ static NSString * const kFDNetworkPort = @"5555";
 @property (nonatomic, strong) FDFFmpegWrapper *h264Wrapper;
 
 @property (nonatomic, strong) FDVideoStreamingController *videoStreamingController;
+@property (nonatomic, weak) IBOutlet FDDisplayInfoView *infoView;
 @property (nonatomic, weak) IBOutlet UIView *playerView;
+
+@property (nonatomic, assign) BOOL isNeedToChange;
 
 @end
 
@@ -47,6 +52,7 @@ static NSString * const kFDNetworkPort = @"5555";
 {
     [super viewDidLoad];
     [self interfaceInitialization];
+    self.isNeedToChange = YES;
 }
 
 
@@ -99,12 +105,16 @@ static NSString * const kFDNetworkPort = @"5555";
     
     if (status == 0)
     {
-        [self.videoStreamingController showDisplayInfo];
+        [self.infoView showDisplayInfo];
         
         [self.h264Wrapper startDecodingWithCallbackBlock:^(FDFFmpegFrameEntity *frameEntity) {
             [self.videoStreamingController loadVideoEntity:frameEntity];
+            dispatch_async(dispatch_get_main_queue(), ^{
+            [self calculateBounds:frameEntity];
+            });
+            
         } waitForConsumer:NO completionCallback:^{
-            [self.videoStreamingController hideDisplayInfo];
+            [self.infoView hideDisplayInfo];
         }];
     }
     else
@@ -113,9 +123,39 @@ static NSString * const kFDNetworkPort = @"5555";
     }
 }
 
+- (void)calculateBounds:(FDFFmpegFrameEntity *)entity
+{
+    CGFloat scaleFactor = [UIScreen mainScreen].scale;
+    if (entity.width != 0 && entity.height != 0)
+    {
+        float targetRatio = entity.width.floatValue/(entity.height.floatValue*1.0);
+        float viewRatio = self.playerView.bounds.size.width/(self.playerView.bounds.size.height*1.0);
+        uint16_t x, y, width, height;
+        
+        if (targetRatio > viewRatio)
+        {
+            width = self.playerView.bounds.size.width * scaleFactor;
+            height = width/targetRatio;
+            x = 0;
+            y = (self.playerView.bounds.size.height * scaleFactor - height)/2+40;
+            
+        }
+        else
+        {
+            height = self.playerView.bounds.size.height * scaleFactor;
+            width = height * targetRatio;
+            y = 20;
+            x = (self.playerView.bounds.size.width * scaleFactor - width)/2+10;
+        }
+        
+        self.infoView.frame = CGRectMake(x, y/2, width/2, height/2);
+    }
+    [self.infoView setNeedsLayout];
+}
+
 - (void)stopDecoding
 {
-    [self.videoStreamingController hideDisplayInfo];
+    [self.infoView hideDisplayInfo];
     [self.h264Wrapper stopDecoding];
     self.h264Wrapper = nil;
 }

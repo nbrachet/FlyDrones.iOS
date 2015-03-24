@@ -57,13 +57,13 @@
                                           userInfo:nil
                                            repeats:YES];
     NSRunLoop *runner = [NSRunLoop currentRunLoop];
-    [runner addTimer:self.timer forMode: NSDefaultRunLoopMode];
+    [runner addTimer:self.timer forMode:NSDefaultRunLoopMode];
 }
 
 - (void)updateDateTime
 {
     self.dateLabel.text = [NSString currentDate];
-    self.timeLabel.text = [NSString currentTime];
+//    self.timeLabel.text = [NSString currentTime];
 }
 
 #pragma mark -
