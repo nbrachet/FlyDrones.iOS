@@ -32,11 +32,8 @@
 #pragma mark - Instance methods
 
 - (void)showDisplayInfo
-{
-    __block FDDisplayInfoView *weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf runTimer];
-    });
+{    
+    [self runTimer];
 }
 
 - (void)hideDisplayInfo
@@ -63,7 +60,7 @@
 - (void)updateDateTime
 {
     self.dateLabel.text = [NSString currentDate];
-//    self.timeLabel.text = [NSString currentTime];
+    self.timeLabel.text = [NSString currentTime];
 }
 
 #pragma mark -

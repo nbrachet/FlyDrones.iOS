@@ -68,6 +68,7 @@ static NSString * const kFDNetworkPort = @"5555";
     self.videoStreamingController = [self.storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([FDVideoStreamingController class])];
     [self.videoStreamingController resizeToFrame:self.playerView.frame];
     [self.playerView addSubview:self.videoStreamingController.view];
+    [self.playerView bringSubviewToFront:self.infoView];
 }
 
 
@@ -110,7 +111,7 @@ static NSString * const kFDNetworkPort = @"5555";
         [self.h264Wrapper startDecodingWithCallbackBlock:^(FDFFmpegFrameEntity *frameEntity) {
             [self.videoStreamingController loadVideoEntity:frameEntity];
             dispatch_async(dispatch_get_main_queue(), ^{
-            [self calculateBounds:frameEntity];
+                [self calculateBounds:frameEntity];
             });
             
         } waitForConsumer:NO completionCallback:^{
@@ -137,7 +138,7 @@ static NSString * const kFDNetworkPort = @"5555";
             width = self.playerView.bounds.size.width * scaleFactor;
             height = width/targetRatio;
             x = 0;
-            y = (self.playerView.bounds.size.height * scaleFactor - height)/2+40;
+            y = (self.playerView.bounds.size.height * scaleFactor - height)/2;
             
         }
         else
@@ -145,12 +146,11 @@ static NSString * const kFDNetworkPort = @"5555";
             height = self.playerView.bounds.size.height * scaleFactor;
             width = height * targetRatio;
             y = 20;
-            x = (self.playerView.bounds.size.width * scaleFactor - width)/2+10;
+            x = (self.playerView.bounds.size.width * scaleFactor - width)/2;
         }
         
         self.infoView.frame = CGRectMake(x, y/2, width/2, height/2);
     }
-    [self.infoView setNeedsLayout];
 }
 
 - (void)stopDecoding
