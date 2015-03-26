@@ -11,19 +11,28 @@
 #import "avio.h"
 #import "stdio.h"
 
+#include "avcodec.h"
+#include "avformat.h"
+#include "avio.h"
+#include "file.h"
+
 
 #pragma mark - Private interface methods
 
 @interface FDContextWrapper ()
+
 #pragma mark - Properties
 
-@property (nonatomic, weak) NSString *sourcePath;
-@property (nonatomic, assign) uint8_t *buffer; 
-@property (nonatomic, assign) int bufferSize;
 @property (nonatomic, assign) FILE *fh;
 @property (nonatomic, assign) AVIOContext* ioCtx;
 
 @end
+
+
+struct buffer_data {
+    uint8_t *ptr;
+    size_t size; ///< size left in the buffer
+};
 
 
 #pragma mark - Public interface methods
@@ -37,51 +46,121 @@
     self = [self init];
     if(self)
     {
-        _sourcePath = path;
+        uint8_t *buffer = NULL,
+        *avio_ctx_buffer = NULL;
+        size_t buffer_size, avio_ctx_buffer_size = 4096;
         
-        // open file
-        _fh = fopen(self.sourcePath.UTF8String, "rb");
+        _fh = fopen(path.UTF8String, "rb");
         if (!_fh) {
-            NSLog(@"Failed to open file %@\n", _sourcePath);
+            NSLog(@"Failed to open file %@\n", path);
         }
         
-        _bufferSize = ftell(_fh);
-        _buffer = (uint8_t *)av_malloc(_bufferSize);
+        fseek (_fh, 0, SEEK_END);
+        buffer_size = ftell(_fh);
+        fseek(_fh, 0, SEEK_SET);
+        buffer = (uint8_t *)av_malloc(buffer_size * sizeof(uint8_t));
+//        self.ioCtx = avio_alloc_context(_buffer, _bufferSize, 0, (__bridge void*)self, IOReadFunc, 0, IOSeekFunc);
+
+//        AVFormatContext *fmt_ctx = NULL;
+//        AVIOContext *avio_ctx = NULL;
         
-        // allocate the AVIOContext
-        self.ioCtx = avio_alloc_context(
-                                   _buffer, _bufferSize, // internal buffer and its size
-                                   0,            // write flag (1=true,0=false)
-                                   (__bridge void*)self,  // user data, will be passed to our callback functions
-                                   IOReadFunc, 
-                                   0,            // no writing
-                                   IOSeekFunc
-                                   );
+        
+//        char *input_filename = path.UTF8String;
+        
+        int ret = 0;
+        struct buffer_data bd = { 0 };
+        
+        
+          /* register codecs and formats and other lavf/lavc components*/
+          av_register_all();
+        
+          /* slurp file content into buffer */
+          ret = av_file_map(path.UTF8String, &buffer, &buffer_size, 0, NULL);
+//          if (ret < 0)
+//              goto end;
+        
+          /* fill opaque structure used by the AVIOContext read callback */
+          bd.ptr = buffer;
+          bd.size = buffer_size;
+        
+//          if (!(fmt_ctx = avformat_alloc_context())) {
+//              ret = AVERROR(ENOMEM);
+//              goto end;
+//          }
+        
+        
+          avio_ctx_buffer = av_malloc(avio_ctx_buffer_size);
+          if (!avio_ctx_buffer) {
+              ret = AVERROR(ENOMEM);
+//              goto end;
+          }
+        
+          self.ioCtx = avio_alloc_context(avio_ctx_buffer, avio_ctx_buffer_size, 0, &bd, &read_packet, NULL, NULL);
+          if (!self.ioCtx) {
+              ret = AVERROR(ENOMEM);
+//              goto end;
+          }
+        
+//        fmt_ctx->pb = avio_ctx;
+//        
+//        
+//        ret = avformat_open_input(&fmt_ctx, NULL, NULL, NULL);
+//        
+//        if (ret < 0) {
+//              fprintf(stderr, "Could not open input\n");
+//              goto end;
+//              }
+//        
+//          ret = avformat_find_stream_info(fmt_ctx, NULL);
+//          if (ret < 0) {
+//              fprintf(stderr, "Could not find stream information\n");
+//              goto end;
+//              }
+//        
+//          av_dump_format(fmt_ctx, 0, input_filename, 0);
+//        
+//         end:
+//          avformat_close_input(&fmt_ctx);
+//          /* note: the internal buffer could have changed, and be != avio_ctx_buffer */
+//          if (avio_ctx) {
+//              av_freep(&avio_ctx->buffer);
+//              av_freep(&avio_ctx);
+//              }
+//          av_file_unmap(buffer, buffer_size);
     }
     
     
     return self;
 }
 
+static int read_packet(void *opaque, uint8_t *buf, int buf_size)
+{
+    struct buffer_data *bd = (struct buffer_data *)opaque;
+    buf_size = FFMIN(buf_size, bd->size);
+    
+    
+    printf("ptr:%p size:%zu\n", bd->ptr, bd->size);
+ 
+    /* copy internal buffer data to buf */
+    memcpy(buf, bd->ptr, buf_size);
+    bd->ptr += buf_size;
+    bd->size -= buf_size;
+    
+    return buf_size;
+}
+
 - (void)initAVFormatContext:(AVFormatContext *)pCtx
 {
     pCtx->pb = self.ioCtx;
     pCtx->flags |= AVFMT_FLAG_CUSTOM_IO;
-    
-    // or read some of the file and let ffmpeg do the guessing
-    size_t len = fread(_buffer, 1, _bufferSize, _fh);
-    if (len == 0)
-        return;
-    fseek(_fh, 0, SEEK_SET); // reset to beginning of file
-    
-    AVProbeData probeData;
-    probeData.buf = _buffer;
-    probeData.buf_size = _bufferSize - 1;
-//    probeData.filename = "";
-    pCtx->iformat = av_find_input_format("h264");// av_probe_input_format(&probeData, 1);
+    pCtx->fps_probe_size = 25;
 }
 
 
+/*
+ * Methods for reading data
+ */
+/*
 static int IOReadFunc(void *data, uint8_t *buf, int buf_size)
 {
     FDContextWrapper *hctx = (__bridge FDContextWrapper*)data;
@@ -109,6 +188,7 @@ static int64_t IOSeekFunc(void *data, int64_t pos, int whence)
     long fpos = ftell(hctx->_fh); // int64_t is usually long long
     return (int64_t)fpos;
 }
+*/
 
 - (void)dealloc
 {

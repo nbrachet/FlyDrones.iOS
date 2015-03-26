@@ -24,7 +24,6 @@
 - (instancetype)init;
 - (int)openURLPath:(NSString *)urlPath;
 - (int)startDecodingWithCallbackBlock:(void(^)(FDFFmpegFrameEntity *frameEntity))frameCallbackBlock
-                      waitForConsumer:(BOOL)wait
                    completionCallback:(void(^)())completion;
 - (void)stopDecoding;
 

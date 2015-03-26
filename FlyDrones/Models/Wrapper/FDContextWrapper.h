@@ -12,6 +12,5 @@
 @interface FDContextWrapper : NSObject
 
 - (instancetype)initWithSourcePath:(NSString *)path;
-
 - (void)initAVFormatContext:(AVFormatContext *)pCtx;
 @end

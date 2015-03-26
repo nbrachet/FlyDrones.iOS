@@ -117,7 +117,7 @@ static NSString * const kFDNetworkPort = @"5555";
         
         [self.h264Wrapper startDecodingWithCallbackBlock:^(FDFFmpegFrameEntity *frameEntity) {
             [self.videoStreamingController loadVideoEntity:frameEntity];
-        } waitForConsumer:NO completionCallback:^{
+        } completionCallback:^{
             [self hideDisplayInfo];
         }];
     }

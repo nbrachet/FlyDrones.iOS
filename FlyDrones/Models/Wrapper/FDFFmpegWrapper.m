@@ -17,6 +17,10 @@
 #import "avcodec.h"
 #import <libkern/OSAtomic.h>
 
+#include "avcodec.h"
+#include "avformat.h"
+#include "avio.h"
+#include "file.h"
 
 #pragma mark - Private interface methods
 
@@ -40,6 +44,10 @@
 
 @end
 
+struct buffer_data {
+    uint8_t *ptr;
+    size_t size; ///< size left in the buffer
+};
 
 #pragma mark - Public interface methods
 
@@ -95,41 +103,64 @@
     if (self.formatCtx != NULL || self.codec != NULL)
         return -1;
     
+    AVIOContext *avio_ctx = NULL;
+    uint8_t *buffer = NULL,
+    *avio_ctx_buffer = NULL;
+    size_t buffer_size,
+    avio_ctx_buffer_size = 0;
+    FILE *fh = fopen(urlPath.UTF8String, "rb");
     
-//    unsigned char *buffer;
-//    AVIOContext *context = avio_alloc_context(buffer, 2048, AVIO_FLAG_READ, NULL, NULL, NULL, NULL);
-//    
-//    int status_code = avio_open(&context, urlPath.UTF8String, AVIO_FLAG_READ);
-//    NSLog(@"Status code: %d", status_code);
-//    
-//    self.formatCtx = avformat_alloc_context();
-//    self.formatCtx->pb = context;
-//    self.formatCtx->video_codec = avcodec_find_decoder(AV_CODEC_ID_H264);
-//    self.formatCtx->fps_probe_size = 25;
+    if (!fh) {
+        NSLog(@"Failed to open file %@\n", urlPath);
+    }
+
+    fseek (fh, 0, SEEK_END);
+    avio_ctx_buffer_size = ftell(fh);
+    fseek(fh, 0, SEEK_SET);
     
-    self->_formatCtx = avformat_alloc_context();
-    FDContextWrapper *context = [[FDContextWrapper alloc] initWithSourcePath:urlPath];
-    [context initAVFormatContext:self->_formatCtx];
+    int ret = 0;
+    struct buffer_data bd = { 0 };
     
-//    int open_status = avformat_open_input(&self->_formatCtx, urlPath.UTF8String, NULL, NULL); //from file
-    int open_status = avformat_open_input(&self->_formatCtx, "", NULL, NULL); // from buffer
-    if (open_status != 0)
-    {
-        NSLog(@"error opening stream");
-        [self dealloc_helper];
+    ret = av_file_map(urlPath.UTF8String, &buffer, &buffer_size, 0, NULL);
+    if(ret < 0 ) {
         return -1;
     }
     
-    self.formatCtx->fps_probe_size = 25;
+    bd.ptr = buffer;
+    bd.size = buffer_size;
     
-    int stream_info_status = avformat_find_stream_info(self.formatCtx, NULL);
-    if(stream_info_status < 0)
-    {
-        [self dealloc_helper];
+    if (!(_formatCtx = avformat_alloc_context())) {
+        return -1;
+    }
+    
+    
+    avio_ctx_buffer = av_malloc(avio_ctx_buffer_size*sizeof(uint8_t));
+    if (!avio_ctx_buffer) {
+        return -1;
+    }
+    
+    avio_ctx = avio_alloc_context(avio_ctx_buffer, avio_ctx_buffer_size, 0, &bd, &read_packet, NULL, NULL);
+    if (!avio_ctx) {
+        return -1;
+    }
+    
+    _formatCtx->pb = avio_ctx;
+    
+    ret = avformat_open_input(&_formatCtx, NULL, NULL, NULL);
+    if (ret < 0) {
+        NSLog(@"Could not open input\n");
+        return -1;
+    }
+    
+    ret = avformat_find_stream_info(_formatCtx, NULL);
+    if (ret < 0) {
+        NSLog(@"Could not find stream information\n");
         return -1;
     }
     
     self.videoStream = -1;
+    self.formatCtx->video_codec_id = AV_CODEC_ID_H264;
+    self.formatCtx->video_codec = avcodec_find_decoder(AV_CODEC_ID_H264);
     
     for(int i = 0; i < self.formatCtx->nb_streams; i++)
     {
@@ -175,11 +206,26 @@
     return 0;
 }
 
+static int read_packet(void *opaque, uint8_t *buf, int buf_size)
+{
+    struct buffer_data *bd = (struct buffer_data *)opaque;
+    buf_size = FFMIN(buf_size, bd->size);
+    
+    
+    printf("ptr:%p size:%zu\n", bd->ptr, bd->size);
+    
+    /* copy internal buffer data to buf */
+    memcpy(buf, bd->ptr, buf_size);
+    bd->ptr += buf_size;
+    bd->size -= buf_size;
+    
+    return buf_size;
+}
+
 
 #pragma mark - Start/Stop stream/file
 
 - (int)startDecodingWithCallbackBlock:(void(^)(FDFFmpegFrameEntity *frameEntity))frameCallbackBlock
-                      waitForConsumer:(BOOL)wait
                    completionCallback:(void(^)())completion
 {
     OSMemoryBarrier();
@@ -195,11 +241,20 @@
         {
             @autoreleasepool
             {
-                if (av_read_frame(self.formatCtx, &self->_packet) >= 0)
+                int status = -1;
+                @try
+                {
+                    status = av_read_frame(self.formatCtx, &self->_packet);
+                }
+                @catch(NSException *ex)
+                {
+                    NSLog(@"%@", ex);
+                }
+                
+                if (status >= 0)
                 {
                     if(self.packet.stream_index == self.videoStream)
                     {
-                        self.frame->coded_picture_number++;
                         avcodec_decode_video2(self.codecCtx, self.frame, &frameFinished, &self->_packet);
                         
                         // Setup picture width and height
