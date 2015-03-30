@@ -98,69 +98,76 @@ struct buffer_data {
     return self;
 }
 
-- (int)openURLPath:(NSString *)urlPath
+- (int)openURLPath:(NSString *)urlPath useBuffer:(BOOL)isBuffer
 {
     if (self.formatCtx != NULL || self.codec != NULL)
         return -1;
     
-    AVIOContext *avio_ctx = NULL;
-    uint8_t *buffer = NULL,
-    *avio_ctx_buffer = NULL;
-    size_t buffer_size,
-    avio_ctx_buffer_size = 0;
-    FILE *fh = fopen(urlPath.UTF8String, "rb");
-    
-    if (!fh) {
-        NSLog(@"Failed to open file %@\n", urlPath);
-    }
-
-    fseek (fh, 0, SEEK_END);
-    avio_ctx_buffer_size = ftell(fh);
-    fseek(fh, 0, SEEK_SET);
-    
     int ret = 0;
-    struct buffer_data bd = { 0 };
+  
     
-    ret = av_file_map(urlPath.UTF8String, &buffer, &buffer_size, 0, NULL);
-    if(ret < 0 ) {
+    // Handling data from buffer
+    if(isBuffer)
+    {
+        AVIOContext *avio_ctx = NULL;
+        uint8_t *buffer = NULL,
+        *avio_ctx_buffer = NULL;
+        size_t buffer_size, avio_ctx_buffer_size = 0;
+        FILE *fh = fopen(urlPath.UTF8String, "rb");
+        
+        if (!fh)
+        {
+            NSLog(@"Failed to open file %@\n", urlPath);
+        }
+
+        fseek (fh, 0, SEEK_END);
+        avio_ctx_buffer_size = ftell(fh);
+        fseek(fh, 0, SEEK_SET);
+        
+        struct buffer_data bd = { 0 };
+        
+        ret = av_file_map(urlPath.UTF8String, &buffer, &buffer_size, 0, NULL);
+        if(ret < 0 )
+        {
+            return -1;
+        }
+        
+        bd.ptr = buffer;
+        bd.size = buffer_size;
+        
+        if (!(_formatCtx = avformat_alloc_context()))
+        {
+            return -1;
+        }
+        
+        avio_ctx_buffer = av_malloc(avio_ctx_buffer_size*sizeof(uint8_t));
+        if (!avio_ctx_buffer)
+        {
+            return -1;
+        }
+        
+        avio_ctx = avio_alloc_context(avio_ctx_buffer, (int)avio_ctx_buffer_size, 0, &bd, &read_packet, NULL, NULL);
+        if (!avio_ctx)
+        {
+            return -1;
+        }
+        
+        _formatCtx->pb = avio_ctx;
+    }
+    
+    if (avformat_open_input(&_formatCtx, (isBuffer ? NULL : urlPath.UTF8String), NULL, NULL) < 0)
+    {
+        NSLog(@"Error on reading data \n");
         return -1;
     }
     
-    bd.ptr = buffer;
-    bd.size = buffer_size;
-    
-    if (!(_formatCtx = avformat_alloc_context())) {
-        return -1;
-    }
-    
-    
-    avio_ctx_buffer = av_malloc(avio_ctx_buffer_size*sizeof(uint8_t));
-    if (!avio_ctx_buffer) {
-        return -1;
-    }
-    
-    avio_ctx = avio_alloc_context(avio_ctx_buffer, avio_ctx_buffer_size, 0, &bd, &read_packet, NULL, NULL);
-    if (!avio_ctx) {
-        return -1;
-    }
-    
-    _formatCtx->pb = avio_ctx;
-    
-    ret = avformat_open_input(&_formatCtx, NULL, NULL, NULL);
-    if (ret < 0) {
-        NSLog(@"Could not open input\n");
-        return -1;
-    }
-    
-    ret = avformat_find_stream_info(_formatCtx, NULL);
-    if (ret < 0) {
+    if (avformat_find_stream_info(_formatCtx, NULL) < 0)
+    {
         NSLog(@"Could not find stream information\n");
         return -1;
     }
     
     self.videoStream = -1;
-    self.formatCtx->video_codec_id = AV_CODEC_ID_H264;
-    self.formatCtx->video_codec = avcodec_find_decoder(AV_CODEC_ID_H264);
     
     for(int i = 0; i < self.formatCtx->nb_streams; i++)
     {
@@ -241,31 +248,18 @@ static int read_packet(void *opaque, uint8_t *buf, int buf_size)
         {
             @autoreleasepool
             {
-                int status = -1;
-                @try
+                if (av_read_frame(self.formatCtx, &self->_packet) >= 0 && self.packet.stream_index == self.videoStream)
                 {
-                    status = av_read_frame(self.formatCtx, &self->_packet);
-                }
-                @catch(NSException *ex)
-                {
-                    NSLog(@"%@", ex);
-                }
-                
-                if (status >= 0)
-                {
-                    if(self.packet.stream_index == self.videoStream)
+                    avcodec_decode_video2(self.codecCtx, self.frame, &frameFinished, &self->_packet);
+                        
+                    // Setup picture width and height
+                    self.frame->width = self.codecCtx->coded_width;
+                    self.frame->height = self.codecCtx->coded_height;
+                    
+                    if(frameFinished)
                     {
-                        avcodec_decode_video2(self.codecCtx, self.frame, &frameFinished, &self->_packet);
-                        
-                        // Setup picture width and height
-                        self.frame->width = self.codecCtx->coded_width;
-                        self.frame->height = self.codecCtx->coded_height;
-                        
-                        if(frameFinished)
-                        {
-                            FDFFmpegFrameEntity *entity = [[FDFFmpegFrameEntity alloc] initEntityFrame:self.frame];
-                            frameCallbackBlock(entity);
-                        }
+                        FDFFmpegFrameEntity *entity = [[FDFFmpegFrameEntity alloc] initEntityFrame:self.frame];
+                        frameCallbackBlock(entity);
                     }
                     
                     av_free_packet(&_packet);

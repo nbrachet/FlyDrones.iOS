@@ -106,19 +106,16 @@ static NSString * const kFDNetworkPort = @"5555";
 - (void)startDecoding
 {
     self.h264Wrapper = nil;
-    NSString *path = [[NSBundle mainBundle] pathToFile:@"2014-12-19.h264"];
-//    NSString *path = [NSString stringWithFormat:@"udp://%@:%@", [NSString getIPAddress], kFDNetworkPort];
-    
-    int status = [self.h264Wrapper openURLPath:path];
+    NSString *path = [self isLocalURLPath:YES];
+    int status = [self.h264Wrapper openURLPath:path useBuffer:YES];
     
     if (status == 0)
     {
         [self showDisplayInfo];
-        
         [self.h264Wrapper startDecodingWithCallbackBlock:^(FDFFmpegFrameEntity *frameEntity) {
             [self.videoStreamingController loadVideoEntity:frameEntity];
         } completionCallback:^{
-            [self hideDisplayInfo];
+            [self stopDecoding];
         }];
     }
     else
@@ -132,6 +129,14 @@ static NSString * const kFDNetworkPort = @"5555";
     [self hideDisplayInfo];
     [self.h264Wrapper stopDecoding];
     self.h264Wrapper = nil;
+}
+
+- (NSString *)isLocalURLPath:(BOOL)state
+{
+    if(state)
+        return [[NSBundle mainBundle] pathToFile:@"2014-12-19.h264"];
+    else
+        return [NSString stringWithFormat:@"udp://%@:%@", [NSString getIPAddress], kFDNetworkPort];
 }
 
 

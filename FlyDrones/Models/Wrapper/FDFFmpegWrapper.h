@@ -22,7 +22,7 @@
 #pragma mark - Instance methods
 
 - (instancetype)init;
-- (int)openURLPath:(NSString *)urlPath;
+- (int)openURLPath:(NSString *)urlPath useBuffer:(BOOL)isBuffer;
 - (int)startDecodingWithCallbackBlock:(void(^)(FDFFmpegFrameEntity *frameEntity))frameCallbackBlock
                    completionCallback:(void(^)())completion;
 - (void)stopDecoding;
