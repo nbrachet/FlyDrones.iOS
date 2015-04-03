@@ -7,13 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E321ACEB55500B33BDD /* FDMovieDecoder.m */; };
+		1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E351ACEBBFE00B33BDD /* FDDashboardViewController.m */; };
+		1B955E391ACEBCED00B33BDD /* FDMovieGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E381ACEBCED00B33BDD /* FDMovieGLView.m */; };
+		1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E3B1ACEC0F900B33BDD /* FDLoginViewController.m */; };
+		1B955E3F1ACEE39B00B33BDD /* FDMovieFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E3E1ACEE39B00B33BDD /* FDMovieFrame.m */; };
+		1B955E411ACEE81B00B33BDD /* Images-2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B955E401ACEE81B00B33BDD /* Images-2.xcassets */; };
 		371525F11A77B28A00F885B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 371525F01A77B28A00F885B8 /* main.m */; };
 		371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 371525FB1A77B28A00F885B8 /* Images.xcassets */; };
 		371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3715261D1A77B59E00F885B8 /* LaunchScreen.xib */; };
 		371526251A77B59E00F885B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3715261F1A77B59E00F885B8 /* Main.storyboard */; };
 		371598EC1A837E0E000DB8EA /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 371598EB1A837E0E000DB8EA /* UIView+Utils.m */; };
 		37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431EDD1A7A57C0007CDD6F /* AppDelegate.m */; };
-		37431F561A7A57C0007CDD6F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431EDF1A7A57C0007CDD6F /* MainViewController.m */; };
 		37431F571A7A57C0007CDD6F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F471A7A57C0007CDD6F /* libavcodec.a */; };
 		37431F581A7A57C0007CDD6F /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F481A7A57C0007CDD6F /* libavdevice.a */; };
 		37431F591A7A57C0007CDD6F /* libavfilter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F491A7A57C0007CDD6F /* libavfilter.a */; };
@@ -29,10 +34,7 @@
 		37431F9C1A7A71C6007CDD6F /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F9A1A7A71C6007CDD6F /* GLKit.framework */; };
 		37431F9D1A7A71C6007CDD6F /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */; };
 		379A98211AA0828C00B4A5D1 /* 2014-12-19.h264 in Resources */ = {isa = PBXBuildFile; fileRef = 379A98201AA0828C00B4A5D1 /* 2014-12-19.h264 */; };
-		37AAB9751A7BAB66000544CE /* FDFFmpegWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */; };
-		37AAB9781A7BADFA000544CE /* FDFFmpegFrameEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB9771A7BADFA000544CE /* FDFFmpegFrameEntity.m */; };
 		37B0AF531A80CA6B005B2D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */; };
-		37B0AF561A80CAA3005B2D8D /* FDVideoStreamingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B0AF551A80CAA3005B2D8D /* FDVideoStreamingController.m */; };
 		37B0AF5B1A8106B5005B2D8D /* NSBundle+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */; };
 		37ED58361AB0787500C10DFD /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ED58351AB0787500C10DFD /* NSString+Datetime.m */; };
 		37ED583A1AB0A07F00C10DFD /* FDDisplayInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ED58391AB0A07F00C10DFD /* FDDisplayInfoView.m */; };
@@ -40,6 +42,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B955E311ACEB55500B33BDD /* FDMovieDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMovieDecoder.h; sourceTree = "<group>"; };
+		1B955E321ACEB55500B33BDD /* FDMovieDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieDecoder.m; sourceTree = "<group>"; };
+		1B955E341ACEBBFE00B33BDD /* FDDashboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDashboardViewController.h; sourceTree = "<group>"; };
+		1B955E351ACEBBFE00B33BDD /* FDDashboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDashboardViewController.m; sourceTree = "<group>"; };
+		1B955E371ACEBCED00B33BDD /* FDMovieGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMovieGLView.h; sourceTree = "<group>"; };
+		1B955E381ACEBCED00B33BDD /* FDMovieGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieGLView.m; sourceTree = "<group>"; };
+		1B955E3A1ACEC0F900B33BDD /* FDLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDLoginViewController.h; sourceTree = "<group>"; };
+		1B955E3B1ACEC0F900B33BDD /* FDLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDLoginViewController.m; sourceTree = "<group>"; };
+		1B955E3D1ACEE39B00B33BDD /* FDMovieFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMovieFrame.h; sourceTree = "<group>"; };
+		1B955E3E1ACEE39B00B33BDD /* FDMovieFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieFrame.m; sourceTree = "<group>"; };
+		1B955E401ACEE81B00B33BDD /* Images-2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Images-2.xcassets"; sourceTree = "<group>"; };
 		371525EB1A77B28A00F885B8 /* FlyDrones.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlyDrones.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		371525F01A77B28A00F885B8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		371525FB1A77B28A00F885B8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../Images.xcassets; sourceTree = "<group>"; };
@@ -48,11 +61,8 @@
 		371526201A77B59E00F885B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		371598EA1A837E0E000DB8EA /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
 		371598EB1A837E0E000DB8EA /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
-		371598ED1A838B11000DB8EA /* FDMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDMacro.h; sourceTree = "<group>"; };
 		37431EDC1A7A57C0007CDD6F /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		37431EDD1A7A57C0007CDD6F /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		37431EDE1A7A57C0007CDD6F /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
-		37431EDF1A7A57C0007CDD6F /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		37431EE41A7A57C0007CDD6F /* avcodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avcodec.h; sourceTree = "<group>"; };
 		37431EE51A7A57C0007CDD6F /* avfft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avfft.h; sourceTree = "<group>"; };
 		37431EE61A7A57C0007CDD6F /* dv_profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dv_profile.h; sourceTree = "<group>"; };
@@ -161,16 +171,8 @@
 		37431F991A7A65F5007CDD6F /* FlyDrones-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FlyDrones-Prefix.pch"; sourceTree = "<group>"; };
 		37431F9A1A7A71C6007CDD6F /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		37727A311A7F8CE100F4403E /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		379A98201AA0828C00B4A5D1 /* 2014-12-19.h264 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "2014-12-19.h264"; sourceTree = "<group>"; };
-		37AAB9731A7BAB66000544CE /* FDFFmpegWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFFmpegWrapper.h; sourceTree = "<group>"; };
-		37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFFmpegWrapper.m; sourceTree = "<group>"; };
-		37AAB9761A7BADFA000544CE /* FDFFmpegFrameEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFFmpegFrameEntity.h; sourceTree = "<group>"; };
-		37AAB9771A7BADFA000544CE /* FDFFmpegFrameEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFFmpegFrameEntity.m; sourceTree = "<group>"; };
 		37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		37B0AF541A80CAA3005B2D8D /* FDVideoStreamingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDVideoStreamingController.h; sourceTree = "<group>"; };
-		37B0AF551A80CAA3005B2D8D /* FDVideoStreamingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDVideoStreamingController.m; sourceTree = "<group>"; };
-		37B0AF571A80E279005B2D8D /* FDTypesAndStructures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDTypesAndStructures.h; sourceTree = "<group>"; };
 		37B0AF591A8106B5005B2D8D /* NSBundle+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+Utils.h"; sourceTree = "<group>"; };
 		37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+Utils.m"; sourceTree = "<group>"; };
 		37ED58341AB0787500C10DFD /* NSString+Datetime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Datetime.h"; sourceTree = "<group>"; };
@@ -207,6 +209,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B955E301ACEB52D00B33BDD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1B955E311ACEB55500B33BDD /* FDMovieDecoder.h */,
+				1B955E321ACEB55500B33BDD /* FDMovieDecoder.m */,
+				1B955E3D1ACEE39B00B33BDD /* FDMovieFrame.h */,
+				1B955E3E1ACEE39B00B33BDD /* FDMovieFrame.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		371525E21A77B28A00F885B8 = {
 			isa = PBXGroup;
 			children = (
@@ -230,6 +243,7 @@
 				371526191A77B59E00F885B8 /* Resources */,
 				371525EE1A77B28A00F885B8 /* Supporting Files */,
 				37431F621A7A59D7007CDD6F /* Frameworks */,
+				1B955E401ACEE81B00B33BDD /* Images-2.xcassets */,
 			);
 			path = FlyDrones;
 			sourceTree = "<group>";
@@ -274,10 +288,10 @@
 		37431EDA1A7A57C0007CDD6F /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1B955E301ACEB52D00B33BDD /* Model */,
 				37431EDB1A7A57C0007CDD6F /* Controller */,
 				37AAB96F1A7B9FF0000544CE /* Misc */,
 				37ED58371AB0A04800C10DFD /* View */,
-				37AAB9701A7B9FF0000544CE /* Models */,
 				37431EE01A7A57C0007CDD6F /* Libs */,
 			);
 			path = Classes;
@@ -286,11 +300,12 @@
 		37431EDB1A7A57C0007CDD6F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				37B0AF511A80CA16005B2D8D /* Video Streaming */,
 				37431EDC1A7A57C0007CDD6F /* AppDelegate.h */,
 				37431EDD1A7A57C0007CDD6F /* AppDelegate.m */,
-				37431EDE1A7A57C0007CDD6F /* MainViewController.h */,
-				37431EDF1A7A57C0007CDD6F /* MainViewController.m */,
+				1B955E341ACEBBFE00B33BDD /* FDDashboardViewController.h */,
+				1B955E351ACEBBFE00B33BDD /* FDDashboardViewController.m */,
+				1B955E3A1ACEC0F900B33BDD /* FDLoginViewController.h */,
+				1B955E3B1ACEC0F900B33BDD /* FDLoginViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -534,50 +549,10 @@
 			isa = PBXGroup;
 			children = (
 				37B0AF581A810682005B2D8D /* Categories */,
-				37727A311A7F8CE100F4403E /* Constants.h */,
-				37B0AF571A80E279005B2D8D /* FDTypesAndStructures.h */,
-				371598ED1A838B11000DB8EA /* FDMacro.h */,
 			);
 			name = Misc;
 			path = FlyDrones/Misc;
 			sourceTree = SOURCE_ROOT;
-		};
-		37AAB9701A7B9FF0000544CE /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				37AAB9711A7B9FF0000544CE /* Data models */,
-				37AAB9721A7B9FF0000544CE /* Wrapper */,
-			);
-			name = Models;
-			path = FlyDrones/Models;
-			sourceTree = SOURCE_ROOT;
-		};
-		37AAB9711A7B9FF0000544CE /* Data models */ = {
-			isa = PBXGroup;
-			children = (
-				37AAB9761A7BADFA000544CE /* FDFFmpegFrameEntity.h */,
-				37AAB9771A7BADFA000544CE /* FDFFmpegFrameEntity.m */,
-			);
-			path = "Data models";
-			sourceTree = "<group>";
-		};
-		37AAB9721A7B9FF0000544CE /* Wrapper */ = {
-			isa = PBXGroup;
-			children = (
-				37AAB9731A7BAB66000544CE /* FDFFmpegWrapper.h */,
-				37AAB9741A7BAB66000544CE /* FDFFmpegWrapper.m */,
-			);
-			path = Wrapper;
-			sourceTree = "<group>";
-		};
-		37B0AF511A80CA16005B2D8D /* Video Streaming */ = {
-			isa = PBXGroup;
-			children = (
-				37B0AF541A80CAA3005B2D8D /* FDVideoStreamingController.h */,
-				37B0AF551A80CAA3005B2D8D /* FDVideoStreamingController.m */,
-			);
-			path = "Video Streaming";
-			sourceTree = "<group>";
 		};
 		37B0AF581A810682005B2D8D /* Categories */ = {
 			isa = PBXGroup;
@@ -607,6 +582,8 @@
 			children = (
 				37ED58381AB0A07F00C10DFD /* FDDisplayInfoView.h */,
 				37ED58391AB0A07F00C10DFD /* FDDisplayInfoView.m */,
+				1B955E371ACEBCED00B33BDD /* FDMovieGLView.h */,
+				1B955E381ACEBCED00B33BDD /* FDMovieGLView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -642,6 +619,7 @@
 				TargetAttributes = {
 					371525EA1A77B28A00F885B8 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = PVDZWY67J6;
 					};
 				};
 			};
@@ -671,6 +649,7 @@
 				371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */,
 				371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */,
 				371526251A77B59E00F885B8 /* Main.storyboard in Resources */,
+				1B955E411ACEE81B00B33BDD /* Images-2.xcassets in Resources */,
 				379A98211AA0828C00B4A5D1 /* 2014-12-19.h264 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -682,15 +661,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */,
 				37B0AF5B1A8106B5005B2D8D /* NSBundle+Utils.m in Sources */,
-				37B0AF561A80CAA3005B2D8D /* FDVideoStreamingController.m in Sources */,
+				1B955E391ACEBCED00B33BDD /* FDMovieGLView.m in Sources */,
 				A59E43F21A8E549C0089E339 /* NSString+Network.m in Sources */,
-				37AAB9751A7BAB66000544CE /* FDFFmpegWrapper.m in Sources */,
-				37AAB9781A7BADFA000544CE /* FDFFmpegFrameEntity.m in Sources */,
 				37ED583A1AB0A07F00C10DFD /* FDDisplayInfoView.m in Sources */,
-				37431F561A7A57C0007CDD6F /* MainViewController.m in Sources */,
+				1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */,
+				1B955E3F1ACEE39B00B33BDD /* FDMovieFrame.m in Sources */,
 				37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */,
 				371598EC1A837E0E000DB8EA /* UIView+Utils.m in Sources */,
+				1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */,
 				371525F11A77B28A00F885B8 /* main.m in Sources */,
 				37ED58361AB0787500C10DFD /* NSString+Datetime.m in Sources */,
 			);
@@ -802,12 +782,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "FlyDrones/FlyDrones-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/FlyDrones/Classes/Libs/Ffmpeg\"",
-					"\"$(SRCROOT)/FlyDrones/Classes/Libs/x264\"",
+					"\"$(SRCROOT)/FlyDrones/Classes/Libs/\"/**",
 				);
 				INFOPLIST_FILE = "$(PROJECT_DIR)/FlyDrones/Resources/General/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -817,6 +799,7 @@
 					"$(PROJECT_DIR)/FlyDrones/Classes/Libs/x264/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "0cbbc996-15d8-493c-a2ec-bc9e7a88b048";
 			};
 			name = Debug;
 		};
@@ -824,12 +807,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "FlyDrones/FlyDrones-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/FlyDrones/Classes/Libs/Ffmpeg\"",
-					"\"$(SRCROOT)/FlyDrones/Classes/Libs/x264\"",
+					"\"$(SRCROOT)/FlyDrones/Classes/Libs/\"/**",
 				);
 				INFOPLIST_FILE = "$(PROJECT_DIR)/FlyDrones/Resources/General/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -839,6 +824,7 @@
 					"$(PROJECT_DIR)/FlyDrones/Classes/Libs/x264/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "0cbbc996-15d8-493c-a2ec-bc9e7a88b048";
 			};
 			name = Release;
 		};

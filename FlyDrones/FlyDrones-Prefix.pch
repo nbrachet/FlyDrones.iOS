@@ -17,7 +17,10 @@
     #import <Foundation/Foundation.h>
 #endif
 
-
 #pragma GCC diagnostic ignored "-Wwarning-flag"
 
-#define NSLog(__FORMAT__, ...) NSLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#ifdef DEBUG
+    #define NSLog(__FORMAT__, ...) NSLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+    #define NSLog(...)
+#endif

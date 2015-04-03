@@ -9,11 +9,7 @@
 
 @interface FDDisplayInfoView : UIView
 
-#pragma mark - Instance methods
-
 - (void)showDisplayInfo;
 - (void)hideDisplayInfo;
-
-#pragma mark -
 
 @end

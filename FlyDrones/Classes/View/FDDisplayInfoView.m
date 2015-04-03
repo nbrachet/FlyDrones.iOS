@@ -7,37 +7,27 @@
 //
 
 #import "FDDisplayInfoView.h"
-
 #import "NSString+Datetime.h"
-
 
 #pragma mark - Private interface methods
 
 @interface FDDisplayInfoView ()
 
-#pragma mark - Properties
-
 @property (nonatomic, weak) IBOutlet UILabel *dateLabel;
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
-
 @property (nonatomic, strong) NSTimer *timer;
 
 @end
 
-
-#pragma mark - Public interface methods
-
 @implementation FDDisplayInfoView
 
-#pragma mark - Instance methods
+#pragma mark - Public
 
-- (void)showDisplayInfo
-{    
+- (void)showDisplayInfo {
     [self runTimer];
 }
 
-- (void)hideDisplayInfo
-{
+- (void)hideDisplayInfo {
     self.dateLabel.text = @"";
     self.timeLabel.text = @"";
     
@@ -45,10 +35,14 @@
     self.timer = nil;
 }
 
-- (void)runTimer
-{
+#pragma mark - Private
+
+- (void)runTimer {
+    if (self.timer != nil) {
+        [self.timer invalidate];
+    }
     self.timer = [[NSTimer alloc] initWithFireDate:[NSDate date]
-                                          interval:1
+                                          interval:1.0f
                                             target:self
                                           selector:@selector(updateDateTime)
                                           userInfo:nil
@@ -57,12 +51,9 @@
     [runner addTimer:self.timer forMode:NSDefaultRunLoopMode];
 }
 
-- (void)updateDateTime
-{
+- (void)updateDateTime {
     self.dateLabel.text = [NSString currentDate];
     self.timeLabel.text = [NSString currentTime];
 }
-
-#pragma mark -
 
 @end
