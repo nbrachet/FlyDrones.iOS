@@ -14,40 +14,10 @@
 #import "libswresample/swresample.h"
 #import "libavutil/pixdesc.h"
 
-static NSString * errorMessage (FDMovieDecoderError errorCode) {
-    switch (errorCode) {
-        case FDMovieDecoderErrorNone:
-            return @"";
-            
-        case FDMovieDecoderErrorOpenFile:
-            return NSLocalizedString(@"Unable to open file", nil);
-            
-        case FDMovieDecoderErrorStreamInfoNotFound:
-            return NSLocalizedString(@"Unable to find stream information", nil);
-            
-        case FDMovieDecoderErrorStreamNotFound:
-            return NSLocalizedString(@"Unable to find stream", nil);
-            
-        case FDMovieDecoderErrorCodecNotFound:
-            return NSLocalizedString(@"Unable to find codec", nil);
-            
-        case FDMovieDecoderErrorOpenCodec:
-            return NSLocalizedString(@"Unable to open codec", nil);
-            
-        case FDMovieDecoderErrorAllocateFrame:
-            return NSLocalizedString(@"Unable to allocate frame", nil);
-            
-        case FDMovieErroSetupScaler:
-            return NSLocalizedString(@"Unable to setup scaler", nil);
-            
-        case FDMovieDecoderErroreSampler:
-            return NSLocalizedString(@"Unable to setup resampler", nil);
-            
-        case FDMovieErroUnsupported:
-            return NSLocalizedString(@"The ability is not supported", nil);
-    }
-}
-
+struct BufferData {
+    uint8_t *ptr;
+    size_t size; ///< size left in the buffer
+};
 
 static void avStreamFPSTimeBase(AVStream *st, CGFloat defaultTimeBase, CGFloat *pFPS, CGFloat *pTimeBase) {
     CGFloat fps, timebase;
@@ -102,43 +72,24 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
     return md;
 }
 
-static BOOL isNetworkPath (NSString *path) {
-    NSRange range = [path rangeOfString:@":"];
-    if (range.location == NSNotFound) {
-        return NO;
-    }
-    NSString *scheme = [path substringToIndex:range.length];
-    if ([scheme isEqualToString:@"file"]) {
-        return NO;
-    }
-    return YES;
-}
-
-static int interrupt_callback(void *ctx);
-
 @interface FDMovieDecoder () {
-    
-    AVFormatContext     *_formatCtx;
+    AVFormatContext     *formatContext;
     AVCodecContext      *_videoCodecCtx;
-    AVCodecContext      *_subtitleCodecCtx;
     AVFrame             *_videoFrame;
     NSInteger           _videoStream;
-    NSInteger           _subtitleStream;
     AVPicture           _picture;
     BOOL                _pictureValid;
     struct SwsContext   *_swsContext;
     CGFloat             _videoTimeBase;
     CGFloat             _position;
     NSArray             *_videoStreams;
-    NSArray             *_subtitleStreams;
     SwrContext          *_swrContext;
     void                *_swrBuffer;
     NSUInteger          _swrBufferSize;
     NSDictionary        *_info;
     FDVideoFrameFormat  _videoFrameFormat;
-    NSUInteger          _artworkStream;
-    NSInteger           _subtitleASSEvents;
 }
+
 @end
 
 @implementation FDMovieDecoder
@@ -148,24 +99,20 @@ static int interrupt_callback(void *ctx);
 @dynamic frameWidth;
 @dynamic frameHeight;
 @dynamic sampleRate;
-@dynamic subtitleStreamsCount;
-@dynamic selectedSubtitleStream;
 @dynamic validVideo;
-@dynamic validSubtitles;
 @dynamic info;
-@dynamic videoStreamFormatName;
 @dynamic startTime;
 
 #pragma mark - Custom Accessors
 
 - (CGFloat)duration {
-    if (!_formatCtx) {
+    if (!formatContext) {
         return 0;
     }
-    if (_formatCtx->duration == AV_NOPTS_VALUE) {
+    if (formatContext->duration == AV_NOPTS_VALUE) {
         return MAXFLOAT;
     }
-    return (CGFloat)_formatCtx->duration / AV_TIME_BASE;
+    return (CGFloat)formatContext->duration / AV_TIME_BASE;
 }
 
 - (CGFloat)position {
@@ -178,7 +125,7 @@ static int interrupt_callback(void *ctx);
 	   
     if (_videoStream != -1) {
         int64_t ts = (int64_t)(seconds / _videoTimeBase);
-        avformat_seek_file(_formatCtx, _videoStream, ts, ts, ts, AVSEEK_FLAG_FRAME);
+        avformat_seek_file(formatContext, _videoStream, ts, ts, ts, AVSEEK_FLAG_FRAME);
         avcodec_flush_buffers(_videoCodecCtx);
     }
 }
@@ -191,57 +138,28 @@ static int interrupt_callback(void *ctx);
     return _videoCodecCtx ? _videoCodecCtx->height : 0;
 }
 
-- (NSUInteger)subtitleStreamsCount {
-    return [_subtitleStreams count];
-}
-
-- (NSInteger)selectedSubtitleStream {
-    if (_subtitleStream == -1) {
-        return -1;
-    }
-    return [_subtitleStreams indexOfObject:@(_subtitleStream)];
-}
-
-- (void)setSelectedSubtitleStream:(NSInteger)selected {
-    [self closeSubtitleStream];
-    
-    if (selected == -1) {
-        _subtitleStream = -1;
-    } else {
-        NSInteger subtitleStream = [_subtitleStreams[selected] integerValue];
-        FDMovieDecoderError errCode = [self openSubtitleStream:subtitleStream];
-        if (FDMovieDecoderErrorNone != errCode) {
-            NSLog(@"%@", errorMessage(errCode));
-        }
-    }
-}
-
 - (BOOL)validVideo {
     return _videoStream != -1;
-}
-
-- (BOOL)validSubtitles {
-    return _subtitleStream != -1;
 }
 
 - (NSDictionary *)info {
     if (!_info) {
         NSMutableDictionary *md = [NSMutableDictionary dictionary];
         
-        if (_formatCtx) {
-            const char *formatName = _formatCtx->iformat->name;
+        if (formatContext) {
+            const char *formatName = formatContext->iformat->name;
             [md setValue:[NSString stringWithCString:formatName encoding:NSUTF8StringEncoding] forKey:@"format"];
             
-            if (_formatCtx->bit_rate) {
-                [md setValue: [NSNumber numberWithInt:_formatCtx->bit_rate] forKey: @"bitrate"];
+            if (formatContext->bit_rate) {
+                [md setValue: [NSNumber numberWithInt:formatContext->bit_rate] forKey: @"bitrate"];
             }
             
-            if (_formatCtx->metadata) {
+            if (formatContext->metadata) {
                 
                 NSMutableDictionary *md1 = [NSMutableDictionary dictionary];
                 
                 AVDictionaryEntry *tag = NULL;
-                while((tag = av_dict_get(_formatCtx->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
+                while((tag = av_dict_get(formatContext->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
                     
                     [md1 setValue:[NSString stringWithCString:tag->value encoding:NSUTF8StringEncoding]
                            forKey:[NSString stringWithCString:tag->key encoding:NSUTF8StringEncoding]];
@@ -255,7 +173,7 @@ static int interrupt_callback(void *ctx);
             if (_videoStreams.count) {
                 NSMutableArray *ma = [NSMutableArray array];
                 for (NSNumber *n in _videoStreams) {
-                    AVStream *st = _formatCtx->streams[n.integerValue];
+                    AVStream *st = formatContext->streams[n.integerValue];
                     avcodec_string(buf, sizeof(buf), st->codec, 1);
                     NSString *s = [NSString stringWithCString:buf encoding:NSUTF8StringEncoding];
                     if ([s hasPrefix:@"Video: "])
@@ -264,29 +182,6 @@ static int interrupt_callback(void *ctx);
                 }
                 md[@"video"] = ma.copy;
             }
-            
-            if (_subtitleStreams.count) {
-                NSMutableArray *ma = [NSMutableArray array];
-                for (NSNumber *n in _subtitleStreams) {
-                    AVStream *st = _formatCtx->streams[n.integerValue];
-                    
-                    NSMutableString *ms = [NSMutableString string];
-                    AVDictionaryEntry *lang = av_dict_get(st->metadata, "language", NULL, 0);
-                    if (lang && lang->value) {
-                        [ms appendFormat:@"%s ", lang->value];
-                    }
-                    
-                    avcodec_string(buf, sizeof(buf), st->codec, 1);
-                    NSString *s = [NSString stringWithCString:buf encoding:NSUTF8StringEncoding];
-                    if ([s hasPrefix:@"Subtitle: "])
-                        s = [s substringFromIndex:@"Subtitle: ".length];
-                    [ms appendString:s];
-                    
-                    [ma addObject:ms.copy];
-                }
-                md[@"subtitles"] = ma.copy;
-            }
-            
         }
         
         _info = [md copy];
@@ -295,36 +190,16 @@ static int interrupt_callback(void *ctx);
     return _info;
 }
 
-- (NSString *)videoStreamFormatName {
-    if (!_videoCodecCtx) {
-        return nil;
-    }
-    
-    if (_videoCodecCtx->pix_fmt == AV_PIX_FMT_NONE) {
-        return @"";
-    }
-    
-    const char *name = av_get_pix_fmt_name(_videoCodecCtx->pix_fmt);
-    return name ? [NSString stringWithCString:name encoding:NSUTF8StringEncoding] : @"?";
-}
-
-- (CGFloat) startTime {
+- (CGFloat)startTime {
     if (_videoStream != -1) {
         
-        AVStream *st = _formatCtx->streams[_videoStream];
+        AVStream *st = formatContext->streams[_videoStream];
         if (AV_NOPTS_VALUE != st->start_time)
             return st->start_time * _videoTimeBase;
         return 0;
     }
     
     return 0;
-}
-
-- (BOOL)interruptDecoder {
-    if (_interruptCallback) {
-        return _interruptCallback();
-    }
-    return NO;
 }
 
 #pragma mark - Lifecycle
@@ -340,6 +215,96 @@ static int interrupt_callback(void *ctx);
 }
 
 #pragma mark - Public
+
+
+- (BOOL)openFile:(NSString *)urlPath buffered:(BOOL)isBuffered {
+    if (urlPath.length == 0 || formatContext) {
+        return NO;
+    }
+    
+//    int ret;
+//    if (isBuffered) {
+//        AVIOContext *avio_ctx = NULL;
+//        uint8_t *buffer = NULL,
+//        *avio_ctx_buffer = NULL;
+//        size_t buffer_size, avio_ctx_buffer_size = 0;
+//        FILE *file = fopen(urlPath.UTF8String, "rb");
+//        
+//        if (!file) {
+//            NSLog(@"Failed to open file %@\n", urlPath);
+//            return NO;
+//        }
+//        
+//        fseek (file, 0, SEEK_END);
+//        avio_ctx_buffer_size = ftell(file);
+//        fseek(file, 0, SEEK_SET);
+//        
+//        struct BufferData bufferData = { 0 };
+//        
+//        ret = av_file_map(urlPath.UTF8String, &buffer, &buffer_size, 0, NULL);
+//        if (ret < 0 ) {
+//            return NO;
+//        }
+//        
+//        bufferData.ptr = buffer;
+//        bufferData.size = buffer_size;
+//        
+//        if (!(formatContext = avformat_alloc_context())) {
+//            return NO;
+//        }
+//        
+//        avio_ctx_buffer = av_malloc(avio_ctx_buffer_size * sizeof(uint8_t));
+//        if (!avio_ctx_buffer) {
+//            return NO;
+//        }
+//        
+//        avio_ctx = avio_alloc_context(avio_ctx_buffer, (int)avio_ctx_buffer_size, 0, &bufferData, &readPacket, NULL, NULL);
+//        if (!avio_ctx) {
+//            return NO;
+//        }
+//        
+//        formatContext->pb = avio_ctx;
+//    }
+        
+    //Open input
+    if (avformat_open_input(&formatContext, [urlPath cStringUsingEncoding:NSUTF8StringEncoding], NULL, NULL) < 0) {
+        if (formatContext) {
+            avformat_free_context(formatContext);
+        }
+        return NO;
+    }
+    
+    
+    //Find stream info
+    if (avformat_find_stream_info(formatContext, NULL) < 0) {
+        avformat_close_input(&formatContext);
+        return NO;
+    }
+    
+    av_dump_format(formatContext, 0, [urlPath cStringUsingEncoding: NSUTF8StringEncoding], false);
+    
+    //Open video stream
+    _videoStream = -1;
+    _videoStreams = collectStreams(formatContext, AVMEDIA_TYPE_VIDEO);
+    BOOL isVideoStreamOpened = NO;
+    for (NSNumber *n in _videoStreams) {
+        const NSUInteger iStream = n.integerValue;
+        if ((formatContext->streams[iStream]->disposition & AV_DISPOSITION_ATTACHED_PIC) == 0) {
+            isVideoStreamOpened = [self openVideoStream:iStream];
+            if (isVideoStreamOpened) {
+                break;
+            }
+        }
+    }
+    
+    if (!isVideoStreamOpened) {
+        [self closeFile];
+        NSLog(@"Failed opened , %@", urlPath.lastPathComponent);
+        return NO;
+    }
+    
+    return YES;
+}
 
 - (BOOL)setupVideoFrameFormat:(FDVideoFrameFormat)format {
     if (format == FDVideoFrameFormatYUV &&
@@ -366,7 +331,7 @@ static int interrupt_callback(void *ctx);
     
     while (!finished) {
         
-        if (av_read_frame(_formatCtx, &packet) < 0) {
+        if (av_read_frame(formatContext, &packet) < 0) {
             _isEOF = YES;
             break;
         }
@@ -398,48 +363,10 @@ static int interrupt_callback(void *ctx);
                         
                         _position = frame.position;
                         decodedDuration += frame.duration;
-                        if (decodedDuration > minDuration)
+                        if (decodedDuration > minDuration) {
                             finished = YES;
+                        }
                     }
-                }
-                
-                if (0 == len) {
-                    break;
-                }
-                
-                pktSize -= len;
-            }
-        } else if (packet.stream_index == _artworkStream) {
-            
-            if (packet.size) {
-                
-                FDArtworkFrame *frame = [[FDArtworkFrame alloc] init];
-                frame.picture = [NSData dataWithBytes:packet.data length:packet.size];
-                [result addObject:frame];
-            }
-            
-        } else if (packet.stream_index == _subtitleStream) {
-            
-            int pktSize = packet.size;
-            
-            while (pktSize > 0) {
-                
-                AVSubtitle subtitle;
-                int gotsubtitle = 0;
-                int len = avcodec_decode_subtitle2(_subtitleCodecCtx, &subtitle, &gotsubtitle, &packet);
-                
-                if (len < 0) {
-                    NSLog(@"decode subtitle error, skip packet");
-                    break;
-                }
-                
-                if (gotsubtitle) {
-                    
-                    FDSubtitleFrame *frame = [self handleSubtitle: &subtitle];
-                    if (frame) {
-                        [result addObject:frame];
-                    }
-                    avsubtitle_free(&subtitle);
                 }
                 
                 if (0 == len) {
@@ -455,103 +382,72 @@ static int interrupt_callback(void *ctx);
     return result;
 }
 
-- (BOOL)openFile:(NSString *)path {
-    NSAssert(path, @"nil path");
-    NSAssert(!_formatCtx, @"already open");
+static int readPacket(void *opaque, uint8_t *buffer, int bufferSize) {
+    struct BufferData *bufferData = (struct BufferData *)opaque;
+    bufferSize = FFMIN(bufferSize, bufferData->size);
     
-    _isNetwork = isNetworkPath(path);
     
-    static BOOL needNetworkInit = YES;
-    if (needNetworkInit && _isNetwork) {
-        needNetworkInit = NO;
-        avformat_network_init();
-    }
+    printf("ptr:%p size:%zu\n", bufferData->ptr, bufferData->size);
     
-    _path = path;
+    /* copy internal buffer data to buf */
+    memcpy(buffer, bufferData->ptr, bufferSize);
+    bufferData->ptr += bufferSize;
+    bufferData->size -= bufferSize;
     
-    FDMovieDecoderError errCode = [self openInput: path];
-    if (errCode == FDMovieDecoderErrorNone) {
-        FDMovieDecoderError videoErr = [self openVideoStream];
-        _subtitleStream = -1;
-        if (videoErr != FDMovieDecoderErrorNone) {
-            errCode = videoErr; // both fails
-        } else {
-            _subtitleStreams = collectStreams(_formatCtx, AVMEDIA_TYPE_SUBTITLE);
-        }
-    }
-    
-    if (errCode != FDMovieDecoderErrorNone) {
-        [self closeFile];
-        NSString *errMsg = errorMessage(errCode);
-        NSLog(@"%@, %@", errMsg, path.lastPathComponent);
-        return NO;
-    }
-    
-    return YES;
+    return bufferSize;
 }
 
 #pragma mark - Private
 
-- (FDMovieDecoderError)openInput:(NSString *)path {
-    AVFormatContext *formatCtx = NULL;
-    
-    if (_interruptCallback) {
-        
-        formatCtx = avformat_alloc_context();
-        if (!formatCtx) {
-            return FDMovieDecoderErrorOpenFile;
-        }
-        
-        AVIOInterruptCB cb = {interrupt_callback, (__bridge void *)(self)};
-        formatCtx->interrupt_callback = cb;
-    }
-    
-    if (avformat_open_input(&formatCtx, [path cStringUsingEncoding: NSUTF8StringEncoding], NULL, NULL) < 0) {
-        if (formatCtx) {
-            avformat_free_context(formatCtx);
-        }
-        return FDMovieDecoderErrorOpenFile;
-    }
-    
-    if (avformat_find_stream_info(formatCtx, NULL) < 0) {
-        avformat_close_input(&formatCtx);
-        return FDMovieDecoderErrorStreamInfoNotFound;
-    }
-    
-    av_dump_format(formatCtx, 0, [path.lastPathComponent cStringUsingEncoding: NSUTF8StringEncoding], false);
-    
-    _formatCtx = formatCtx;
-    return FDMovieDecoderErrorNone;
-}
+//- (FDMovieDecoderError)openInput:(NSString *)path {
+//    AVFormatContext *formatCtx = NULL;
+//    
+//    if (avformat_open_input(&formatCtx, [path cStringUsingEncoding: NSUTF8StringEncoding], NULL, NULL) < 0) {
+//        if (formatCtx) {
+//            avformat_free_context(formatCtx);
+//        }
+//        return FDMovieDecoderErrorOpenFile;
+//    }
+//    
+//    if (avformat_find_stream_info(formatCtx, NULL) < 0) {
+//        avformat_close_input(&formatCtx);
+//        return FDMovieDecoderErrorStreamInfoNotFound;
+//    }
+//    
+//    av_dump_format(formatCtx, 0, [path cStringUsingEncoding: NSUTF8StringEncoding], false);
+//    
+//    formatContext = formatCtx;
+//    return FDMovieDecoderErrorNone;
+//}
+//
+//- (FDMovieDecoderError)openVideoStream {
+//    FDMovieDecoderError errCode = FDMovieDecoderErrorStreamNotFound;
+//    _videoStream = -1;
+//    _artworkStream = -1;
+//    _videoStreams = collectStreams(formatContext, AVMEDIA_TYPE_VIDEO);
+//    for (NSNumber *n in _videoStreams) {
+//        const NSUInteger iStream = n.integerValue;
+//        if (0 == (formatContext->streams[iStream]->disposition & AV_DISPOSITION_ATTACHED_PIC)) {
+//            errCode = [self openVideoStream:iStream];
+//            if (errCode == FDMovieDecoderErrorNone) {
+//                break;
+//            }
+//        } else {
+//            _artworkStream = iStream;
+//        }
+//    }
+//    
+//    return errCode;
+//}
 
-- (FDMovieDecoderError) openVideoStream {
-    FDMovieDecoderError errCode = FDMovieDecoderErrorStreamNotFound;
-    _videoStream = -1;
-    _artworkStream = -1;
-    _videoStreams = collectStreams(_formatCtx, AVMEDIA_TYPE_VIDEO);
-    for (NSNumber *n in _videoStreams) {
-        const NSUInteger iStream = n.integerValue;
-        if (0 == (_formatCtx->streams[iStream]->disposition & AV_DISPOSITION_ATTACHED_PIC)) {
-            errCode = [self openVideoStream:iStream];
-            if (errCode == FDMovieDecoderErrorNone) {
-                break;
-            }
-        } else {
-            _artworkStream = iStream;
-        }
-    }
-    
-    return errCode;
-}
-
-- (FDMovieDecoderError)openVideoStream:(NSInteger)videoStream {
+- (BOOL)openVideoStream:(NSInteger)videoStream {
     // get a pointer to the codec context for the video stream
-    AVCodecContext *codecCtx = _formatCtx->streams[videoStream]->codec;
+    AVCodecContext *codecCtx = formatContext->streams[videoStream]->codec;
     
     // find the decoder for the video stream
     AVCodec *codec = avcodec_find_decoder(codecCtx->codec_id);
     if (!codec) {
-        return FDMovieDecoderErrorCodecNotFound;
+        return NO;
     }
     
     // inform the codec that we can handle truncated bitstreams -- i.e.,
@@ -561,14 +457,14 @@ static int interrupt_callback(void *ctx);
     
     // open codec
     if (avcodec_open2(codecCtx, codec, NULL) < 0) {
-        return FDMovieDecoderErrorOpenCodec;
+        return NO;
     }
     
     _videoFrame = av_frame_alloc();
     
     if (!_videoFrame) {
         avcodec_close(codecCtx);
-        return FDMovieDecoderErrorAllocateFrame;
+        return NO;
     }
     
     _videoStream = videoStream;
@@ -576,7 +472,7 @@ static int interrupt_callback(void *ctx);
     
     // determine fps
     
-    AVStream *st = _formatCtx->streams[_videoStream];
+    AVStream *st = formatContext->streams[_videoStream];
     avStreamFPSTimeBase(st, 0.04, &_fps, &_videoTimeBase);
     
     NSLog(@"video codec size: %d:%d fps: %.3f tb: %f",
@@ -588,64 +484,20 @@ static int interrupt_callback(void *ctx);
     NSLog(@"video start time %f", st->start_time * _videoTimeBase);
     NSLog(@"video disposition %d", st->disposition);
     
-    return FDMovieDecoderErrorNone;
-}
-
-- (FDMovieDecoderError)openSubtitleStream:(NSInteger)subtitleStream {
-    AVCodecContext *codecCtx = _formatCtx->streams[subtitleStream]->codec;
-    
-    AVCodec *codec = avcodec_find_decoder(codecCtx->codec_id);
-    if(!codec) {
-        return FDMovieDecoderErrorCodecNotFound;
-    }
-    
-    const AVCodecDescriptor *codecDesc = avcodec_descriptor_get(codecCtx->codec_id);
-    if (codecDesc && (codecDesc->props & AV_CODEC_PROP_BITMAP_SUB)) {
-        // Only text based subtitles supported
-        return FDMovieErroUnsupported;
-    }
-    
-    if (avcodec_open2(codecCtx, codec, NULL) < 0) {
-        return FDMovieDecoderErrorOpenCodec;
-    }
-    
-    _subtitleStream = subtitleStream;
-    _subtitleCodecCtx = codecCtx;
-    
-    NSLog(@"subtitle codec: '%s' mode: %d enc: %s", codecDesc->name, codecCtx->sub_charenc_mode, codecCtx->sub_charenc);
-    
-    _subtitleASSEvents = -1;
-    
-    if (codecCtx->subtitle_header_size) {
-        NSString *s = [[NSString alloc] initWithBytes:codecCtx->subtitle_header
-                                               length:codecCtx->subtitle_header_size
-                                             encoding:NSASCIIStringEncoding];
-        
-        if (s.length) {
-            NSArray *fields = [FDMovieSubtitleASSParser parseEvents:s];
-            if (fields.count && [fields.lastObject isEqualToString:@"Text"]) {
-                _subtitleASSEvents = fields.count;
-                NSLog(@"subtitle ass events: %@", [fields componentsJoinedByString:@","]);
-            }
-        }
-    }
-    
-    return FDMovieDecoderErrorNone;
+    return YES;
 }
 
 - (void)closeFile {
     [self closeVideoStream];
-    [self closeSubtitleStream];
     
     _videoStreams = nil;
-    _subtitleStreams = nil;
     
-    if (_formatCtx) {
-        _formatCtx->interrupt_callback.opaque = NULL;
-        _formatCtx->interrupt_callback.callback = NULL;
+    if (formatContext) {
+//        formatContext->interrupt_callback.opaque = NULL;
+//        formatContext->interrupt_callback.callback = NULL;
         
-        avformat_close_input(&_formatCtx);
-        _formatCtx = NULL;
+        avformat_close_input(&formatContext);
+        formatContext = NULL;
     }
 }
 
@@ -663,15 +515,6 @@ static int interrupt_callback(void *ctx);
         
         avcodec_close(_videoCodecCtx);
         _videoCodecCtx = NULL;
-    }
-}
-
-- (void) closeSubtitleStream {
-    _subtitleStream = -1;
-    
-    if (_subtitleCodecCtx) {
-        avcodec_close(_subtitleCodecCtx);
-        _subtitleCodecCtx = NULL;
     }
 }
 
@@ -777,143 +620,9 @@ static int interrupt_callback(void *ctx);
         // as example yuvj420p stream from web camera
         frame.duration = 1.0 / _fps;
     }
-    NSLog(@"Frame: position %.4f duration %.4f | pkt_pos %lld ", frame.position, frame.duration, av_frame_get_pkt_pos(_videoFrame));
+//    NSLog(@"Frame: position %.4f duration %.4f | pkt_pos %lld ", frame.position, frame.duration, av_frame_get_pkt_pos(_videoFrame));
     
     return frame;
-}
-
-- (FDSubtitleFrame *)handleSubtitle: (AVSubtitle *)pSubtitle {
-    NSMutableString *ms = [NSMutableString string];
-    for (NSUInteger i = 0; i < pSubtitle->num_rects; ++i) {
-        AVSubtitleRect *rect = pSubtitle->rects[i];
-        if (rect) {
-            if (rect->text) { // rect->type == SUBTITLE_TEXT
-                NSString *s = [NSString stringWithUTF8String:rect->text];
-                if (s.length) [ms appendString:s];
-            } else if (rect->ass && _subtitleASSEvents != -1) {
-                NSString *s = [NSString stringWithUTF8String:rect->ass];
-                if (s.length) {
-                    NSArray *fields = [FDMovieSubtitleASSParser parseDialogue:s numFields:_subtitleASSEvents];
-                    if (fields.count && [fields.lastObject length]) {
-                        s = [FDMovieSubtitleASSParser removeCommandsFromEventText: fields.lastObject];
-                        if (s.length) [ms appendString:s];
-                    }
-                }
-            }
-        }
-    }
-    
-    if (!ms.length) {
-        return nil;
-    }
-    
-    FDSubtitleFrame *frame = [[FDSubtitleFrame alloc] init];
-    frame.text = [ms copy];
-    frame.position = pSubtitle->pts / AV_TIME_BASE + pSubtitle->start_display_time;
-    frame.duration = (CGFloat)(pSubtitle->end_display_time - pSubtitle->start_display_time) / 1000.f;
-    
-    return frame;
-}
-
-@end
-
-
-static int interrupt_callback(void *ctx) {
-    if (!ctx) {
-        return 0;
-    }
-    __unsafe_unretained FDMovieDecoder *p = (__bridge FDMovieDecoder *)ctx;
-    const BOOL r = [p interruptDecoder];
-    if (r) {
-        NSLog(@"DEBUG: INTERRUPT_CALLBACK!");
-    }
-    return r;
-}
-
-
-@implementation FDMovieSubtitleASSParser
-
-+ (NSArray *)parseEvents:(NSString *)events {
-    NSRange r = [events rangeOfString:@"[Events]"];
-    if (r.location != NSNotFound) {
-        
-        NSUInteger pos = r.location + r.length;
-        
-        r = [events rangeOfString:@"Format:"
-                          options:0
-                            range:NSMakeRange(pos, events.length - pos)];
-        
-        if (r.location != NSNotFound) {
-            
-            pos = r.location + r.length;
-            r = [events rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]
-                                        options:0
-                                          range:NSMakeRange(pos, events.length - pos)];
-            
-            if (r.location != NSNotFound) {
-                
-                NSString *format = [events substringWithRange:NSMakeRange(pos, r.location - pos)];
-                NSArray *fields = [format componentsSeparatedByString:@","];
-                if (fields.count > 0) {
-                    
-                    NSCharacterSet *ws = [NSCharacterSet whitespaceCharacterSet];
-                    NSMutableArray *ma = [NSMutableArray array];
-                    for (NSString *s in fields) {
-                        [ma addObject:[s stringByTrimmingCharactersInSet:ws]];
-                    }
-                    return ma;
-                }
-            }
-        }
-    }
-    
-    return nil;
-}
-
-+ (NSArray *)parseDialogue:(NSString *)dialogue numFields:(NSUInteger)numFields {
-    if ([dialogue hasPrefix:@"Dialogue:"]) {
-        NSMutableArray *ma = [NSMutableArray array];
-        
-        NSRange r = {@"Dialogue:".length, 0};
-        NSUInteger n = 0;
-        
-        while (r.location != NSNotFound && n++ < numFields) {
-            const NSUInteger pos = r.location + r.length;
-            
-            r = [dialogue rangeOfString:@","
-                                options:0
-                                  range:NSMakeRange(pos, dialogue.length - pos)];
-            
-            const NSUInteger len = r.location == NSNotFound ? dialogue.length - pos : r.location - pos;
-            NSString *p = [dialogue substringWithRange:NSMakeRange(pos, len)];
-            p = [p stringByReplacingOccurrencesOfString:@"\\N" withString:@"\n"];
-            [ma addObject: p];
-        }
-        
-        return ma;
-    }
-    
-    return nil;
-}
-
-+ (NSString *)removeCommandsFromEventText:(NSString *)text {
-    NSMutableString *ms = [NSMutableString string];
-    
-    NSScanner *scanner = [NSScanner scannerWithString:text];
-    while (!scanner.isAtEnd) {
-        NSString *s;
-        if ([scanner scanUpToString:@"{\\" intoString:&s]) {
-            [ms appendString:s];
-        }
-        
-        if (!([scanner scanString:@"{\\" intoString:nil] &&
-              [scanner scanUpToString:@"}" intoString:nil] &&
-              [scanner scanString:@"}" intoString:nil])) {
-            break;
-        }
-    }
-    
-    return ms;
 }
 
 @end

@@ -19,8 +19,7 @@ extern CFAbsoluteTime StartTime;
 
 #pragma mark - UIApplication delegate methods
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     #if MEASURE_LAUNCH_TIME
         dispatch_async(dispatch_get_main_queue(), ^{

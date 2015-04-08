@@ -17,8 +17,6 @@ NSString * const FDMovieParameterMinBufferedDuration = @"FDMovieParameterMinBuff
 NSString * const FDMovieParameterMaxBufferedDuration = @"FDMovieParameterMaxBufferedDuration";
 NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisableDeinterlacing";
 
-#define LOCAL_MIN_BUFFERED_DURATION   0.2
-#define LOCAL_MAX_BUFFERED_DURATION   0.4
 #define NETWORK_MIN_BUFFERED_DURATION 2.0
 #define NETWORK_MAX_BUFFERED_DURATION 4.0
 
@@ -27,22 +25,22 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     FDMovieDecoder      *_decoder;
     dispatch_queue_t    _dispatchQueue;
     NSMutableArray      *_videoFrames;
-    NSMutableArray      *_subtitles;
+//    NSMutableArray      *_subtitles;
     CGFloat             _moviePosition;
-    BOOL                _disableUpdateHUD;
+//    BOOL                _disableUpdateHUD;
     NSTimeInterval      _tickCorrectionTime;
     NSTimeInterval      _tickCorrectionPosition;
     NSUInteger          _tickCounter;
     BOOL                _restoreIdleTimer;
-    BOOL                _interrupted;
+//    BOOL                _interrupted;
     
     FDMovieGLView       *_glView;
     UIImageView         *_imageView;
 
-    UIToolbar           *_bottomBar;
-    
-    UIBarButtonItem     *_playBtn;
-    UIBarButtonItem     *_pauseBtn;
+//    UIToolbar           *_bottomBar;
+//    
+//    UIBarButtonItem     *_playBtn;
+//    UIBarButtonItem     *_pauseBtn;
     
 
     
@@ -60,7 +58,6 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
 
 @property (nonatomic, readwrite, getter=isPlaying) BOOL playing;
 @property (readwrite) BOOL decoding;
-@property (readwrite, strong) FDArtworkFrame *artworkFrame;
 
 @end
 
@@ -80,13 +77,13 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     __weak __typeof(self) weakSelf = self;
     FDMovieDecoder *decoder = [[FDMovieDecoder alloc] init];
     
-    decoder.interruptCallback = ^BOOL(){
-        __strong  __typeof(weakSelf) strongSelf = weakSelf;
-        return strongSelf ? [strongSelf interruptDecoder] : YES;
-    };
+//    decoder.interruptCallback = ^BOOL(){
+//        __strong  __typeof(weakSelf) strongSelf = weakSelf;
+//        return strongSelf ? [strongSelf interruptDecoder] : YES;
+//    };
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [decoder openFile:self.path];
+        [decoder openFile:self.path buffered:NO];
         __strong __typeof(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
             dispatch_sync(dispatch_get_main_queue(), ^{
@@ -131,7 +128,7 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     [[UIApplication sharedApplication] setIdleTimerDisabled:_savedIdleTimer];
     
     _buffered = NO;
-    _interrupted = YES;
+//    _interrupted = YES;
     
     NSLog(@"viewWillDisappear %@", self);
 }
@@ -165,7 +162,7 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
         } else {
             // force ffmpeg to free allocated memory
             [_decoder closeFile];
-            [_decoder openFile:nil];
+            [_decoder openFile:nil buffered:NO];
             
             [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
                                         message:NSLocalizedString(@"Out of memory", nil)
@@ -176,7 +173,7 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     } else {
         [self freeBufferedFrames];
         [_decoder closeFile];
-        [_decoder openFile:nil];
+        [_decoder openFile:nil buffered:NO];
     }
 }
 
@@ -196,14 +193,8 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     if (!_decoder.validVideo) {
         return;
     }
-    
-    if (_interrupted) {
-        return;
-    }
-    
+
     self.playing = YES;
-    _interrupted = NO;
-    _disableUpdateHUD = NO;
     _tickCorrectionTime = 0;
     _tickCounter = 0;
     
@@ -223,7 +214,6 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     }
     
     self.playing = NO;
-    //_interrupted = YES;
     NSLog(@"Pause movie");
 }
 
@@ -250,18 +240,9 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
         _decoder = decoder;
         _dispatchQueue = dispatch_queue_create("FDMovie", DISPATCH_QUEUE_SERIAL);
         _videoFrames = [NSMutableArray array];
-        
-        if (_decoder.subtitleStreamsCount) {
-            _subtitles = [NSMutableArray array];
-        }
-        
-        if (_decoder.isNetwork) {
+    
             _minBufferedDuration = NETWORK_MIN_BUFFERED_DURATION;
             _maxBufferedDuration = NETWORK_MAX_BUFFERED_DURATION;
-        } else {
-            _minBufferedDuration = LOCAL_MIN_BUFFERED_DURATION;
-            _maxBufferedDuration = LOCAL_MAX_BUFFERED_DURATION;
-        }
         
         if (!_decoder.validVideo) {
             _minBufferedDuration *= 10.0; // increase for audio
@@ -339,16 +320,6 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
         }
     }
     
-    if (_decoder.validSubtitles) {
-        @synchronized(_subtitles) {
-            for (FDMovieFrame *frame in frames) {
-                if ([frame isKindOfClass:[FDSubtitleFrame class]]) {
-                    [_subtitles addObject:frame];
-                }
-            }
-        }
-    }
-    
     return self.playing && _bufferedDuration < _maxBufferedDuration;
 }
 
@@ -373,7 +344,8 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     __weak __typeof(self) weakSelf = self;
     __weak FDMovieDecoder *weakDecoder = _decoder;
     
-    const CGFloat duration = _decoder.isNetwork ? .0f : 0.1f;
+//    const CGFloat duration = _decoder.isNetwork ? .0f : 0.1f;
+    CGFloat duration = 0;
     
     self.decoding = YES;
     dispatch_async(_dispatchQueue, ^{
@@ -446,7 +418,8 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
         }
         
         const NSTimeInterval correction = [self tickCorrection];
-        const NSTimeInterval time = MAX(interval + correction, 1/25.0f);
+        const CGFloat fps = (_decoder.fps > 0) ? _decoder.fps : 25.0f;
+        const NSTimeInterval time = MAX(interval + correction, 1.0f/fps);
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, time * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self tick];
@@ -535,19 +508,13 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     @synchronized(_videoFrames) {
         [_videoFrames removeAllObjects];
     }
-    
-    if (_subtitles) {
-        @synchronized(_subtitles) {
-            [_subtitles removeAllObjects];
-        }
-    }
-    
+
     _bufferedDuration = 0;
 }
 
-- (BOOL) interruptDecoder {
-    return _interrupted;
-}
+//- (BOOL) interruptDecoder {
+//    return _interrupted;
+//}
 
 #pragma mark - UIGestureRecognizerDelegate
 

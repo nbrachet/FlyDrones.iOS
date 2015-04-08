@@ -13,11 +13,16 @@
 		1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E3B1ACEC0F900B33BDD /* FDLoginViewController.m */; };
 		1B955E3F1ACEE39B00B33BDD /* FDMovieFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E3E1ACEE39B00B33BDD /* FDMovieFrame.m */; };
 		1B955E411ACEE81B00B33BDD /* Images-2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B955E401ACEE81B00B33BDD /* Images-2.xcassets */; };
+		1B97E9EB1AD5519300051601 /* NSBundle+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E21AD5519300051601 /* NSBundle+Utils.m */; };
+		1B97E9EC1AD5519300051601 /* NSFileManager+ANUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E41AD5519300051601 /* NSFileManager+ANUtils.m */; };
+		1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E61AD5519300051601 /* NSString+Datetime.m */; };
+		1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E81AD5519300051601 /* NSString+Network.m */; };
+		1B97E9EF1AD5519300051601 /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9EA1AD5519300051601 /* UIView+Utils.m */; };
+		1BC1CCF91AD2E1D100498E27 /* template.sdp in Resources */ = {isa = PBXBuildFile; fileRef = 1BC1CCF81AD2E1D100498E27 /* template.sdp */; };
 		371525F11A77B28A00F885B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 371525F01A77B28A00F885B8 /* main.m */; };
 		371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 371525FB1A77B28A00F885B8 /* Images.xcassets */; };
 		371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3715261D1A77B59E00F885B8 /* LaunchScreen.xib */; };
 		371526251A77B59E00F885B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3715261F1A77B59E00F885B8 /* Main.storyboard */; };
-		371598EC1A837E0E000DB8EA /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 371598EB1A837E0E000DB8EA /* UIView+Utils.m */; };
 		37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431EDD1A7A57C0007CDD6F /* AppDelegate.m */; };
 		37431F571A7A57C0007CDD6F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F471A7A57C0007CDD6F /* libavcodec.a */; };
 		37431F581A7A57C0007CDD6F /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F481A7A57C0007CDD6F /* libavdevice.a */; };
@@ -35,10 +40,7 @@
 		37431F9D1A7A71C6007CDD6F /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */; };
 		379A98211AA0828C00B4A5D1 /* 2014-12-19.h264 in Resources */ = {isa = PBXBuildFile; fileRef = 379A98201AA0828C00B4A5D1 /* 2014-12-19.h264 */; };
 		37B0AF531A80CA6B005B2D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */; };
-		37B0AF5B1A8106B5005B2D8D /* NSBundle+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */; };
-		37ED58361AB0787500C10DFD /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ED58351AB0787500C10DFD /* NSString+Datetime.m */; };
 		37ED583A1AB0A07F00C10DFD /* FDDisplayInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ED58391AB0A07F00C10DFD /* FDDisplayInfoView.m */; };
-		A59E43F21A8E549C0089E339 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A59E43F11A8E549C0089E339 /* NSString+Network.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,14 +55,23 @@
 		1B955E3D1ACEE39B00B33BDD /* FDMovieFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMovieFrame.h; sourceTree = "<group>"; };
 		1B955E3E1ACEE39B00B33BDD /* FDMovieFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieFrame.m; sourceTree = "<group>"; };
 		1B955E401ACEE81B00B33BDD /* Images-2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Images-2.xcassets"; sourceTree = "<group>"; };
+		1B97E9E11AD5519300051601 /* NSBundle+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+Utils.h"; sourceTree = "<group>"; };
+		1B97E9E21AD5519300051601 /* NSBundle+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+Utils.m"; sourceTree = "<group>"; };
+		1B97E9E31AD5519300051601 /* NSFileManager+ANUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+ANUtils.h"; sourceTree = "<group>"; };
+		1B97E9E41AD5519300051601 /* NSFileManager+ANUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+ANUtils.m"; sourceTree = "<group>"; };
+		1B97E9E51AD5519300051601 /* NSString+Datetime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Datetime.h"; sourceTree = "<group>"; };
+		1B97E9E61AD5519300051601 /* NSString+Datetime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Datetime.m"; sourceTree = "<group>"; };
+		1B97E9E71AD5519300051601 /* NSString+Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Network.h"; sourceTree = "<group>"; };
+		1B97E9E81AD5519300051601 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
+		1B97E9E91AD5519300051601 /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
+		1B97E9EA1AD5519300051601 /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
+		1BC1CCF81AD2E1D100498E27 /* template.sdp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = template.sdp; sourceTree = "<group>"; };
 		371525EB1A77B28A00F885B8 /* FlyDrones.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlyDrones.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		371525F01A77B28A00F885B8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		371525FB1A77B28A00F885B8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../Images.xcassets; sourceTree = "<group>"; };
 		3715261B1A77B59E00F885B8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3715261E1A77B59E00F885B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		371526201A77B59E00F885B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		371598EA1A837E0E000DB8EA /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
-		371598EB1A837E0E000DB8EA /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
 		37431EDC1A7A57C0007CDD6F /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		37431EDD1A7A57C0007CDD6F /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		37431EE41A7A57C0007CDD6F /* avcodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avcodec.h; sourceTree = "<group>"; };
@@ -173,14 +184,8 @@
 		37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		379A98201AA0828C00B4A5D1 /* 2014-12-19.h264 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "2014-12-19.h264"; sourceTree = "<group>"; };
 		37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		37B0AF591A8106B5005B2D8D /* NSBundle+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+Utils.h"; sourceTree = "<group>"; };
-		37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+Utils.m"; sourceTree = "<group>"; };
-		37ED58341AB0787500C10DFD /* NSString+Datetime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Datetime.h"; sourceTree = "<group>"; };
-		37ED58351AB0787500C10DFD /* NSString+Datetime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Datetime.m"; sourceTree = "<group>"; };
 		37ED58381AB0A07F00C10DFD /* FDDisplayInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDisplayInfoView.h; sourceTree = "<group>"; };
 		37ED58391AB0A07F00C10DFD /* FDDisplayInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDisplayInfoView.m; sourceTree = "<group>"; };
-		A59E43F01A8E549C0089E339 /* NSString+Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Network.h"; sourceTree = "<group>"; };
-		A59E43F11A8E549C0089E339 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,6 +225,23 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		1B97E9E01AD5519300051601 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				1B97E9E11AD5519300051601 /* NSBundle+Utils.h */,
+				1B97E9E21AD5519300051601 /* NSBundle+Utils.m */,
+				1B97E9E31AD5519300051601 /* NSFileManager+ANUtils.h */,
+				1B97E9E41AD5519300051601 /* NSFileManager+ANUtils.m */,
+				1B97E9E51AD5519300051601 /* NSString+Datetime.h */,
+				1B97E9E61AD5519300051601 /* NSString+Datetime.m */,
+				1B97E9E71AD5519300051601 /* NSString+Network.h */,
+				1B97E9E81AD5519300051601 /* NSString+Network.m */,
+				1B97E9E91AD5519300051601 /* UIView+Utils.h */,
+				1B97E9EA1AD5519300051601 /* UIView+Utils.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
 		371525E21A77B28A00F885B8 = {
 			isa = PBXGroup;
 			children = (
@@ -239,6 +261,7 @@
 		371525ED1A77B28A00F885B8 /* FlyDrones */ = {
 			isa = PBXGroup;
 			children = (
+				1B97E9E01AD5519300051601 /* Categories */,
 				37431EDA1A7A57C0007CDD6F /* Classes */,
 				371526191A77B59E00F885B8 /* Resources */,
 				371525EE1A77B28A00F885B8 /* Supporting Files */,
@@ -264,6 +287,7 @@
 				37B0AF5C1A8108BC005B2D8D /* Video */,
 				3715261A1A77B59E00F885B8 /* General */,
 				3715261C1A77B59E00F885B8 /* Storyboard */,
+				1BC1CCF81AD2E1D100498E27 /* template.sdp */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -290,7 +314,6 @@
 			children = (
 				1B955E301ACEB52D00B33BDD /* Model */,
 				37431EDB1A7A57C0007CDD6F /* Controller */,
-				37AAB96F1A7B9FF0000544CE /* Misc */,
 				37ED58371AB0A04800C10DFD /* View */,
 				37431EE01A7A57C0007CDD6F /* Libs */,
 			);
@@ -545,30 +568,6 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
-		37AAB96F1A7B9FF0000544CE /* Misc */ = {
-			isa = PBXGroup;
-			children = (
-				37B0AF581A810682005B2D8D /* Categories */,
-			);
-			name = Misc;
-			path = FlyDrones/Misc;
-			sourceTree = SOURCE_ROOT;
-		};
-		37B0AF581A810682005B2D8D /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				37ED58341AB0787500C10DFD /* NSString+Datetime.h */,
-				37ED58351AB0787500C10DFD /* NSString+Datetime.m */,
-				A59E43F01A8E549C0089E339 /* NSString+Network.h */,
-				A59E43F11A8E549C0089E339 /* NSString+Network.m */,
-				37B0AF591A8106B5005B2D8D /* NSBundle+Utils.h */,
-				37B0AF5A1A8106B5005B2D8D /* NSBundle+Utils.m */,
-				371598EA1A837E0E000DB8EA /* UIView+Utils.h */,
-				371598EB1A837E0E000DB8EA /* UIView+Utils.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
 		37B0AF5C1A8108BC005B2D8D /* Video */ = {
 			isa = PBXGroup;
 			children = (
@@ -647,6 +646,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */,
+				1BC1CCF91AD2E1D100498E27 /* template.sdp in Resources */,
 				371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */,
 				371526251A77B59E00F885B8 /* Main.storyboard in Resources */,
 				1B955E411ACEE81B00B33BDD /* Images-2.xcassets in Resources */,
@@ -661,18 +661,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B97E9EF1AD5519300051601 /* UIView+Utils.m in Sources */,
 				1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */,
-				37B0AF5B1A8106B5005B2D8D /* NSBundle+Utils.m in Sources */,
 				1B955E391ACEBCED00B33BDD /* FDMovieGLView.m in Sources */,
-				A59E43F21A8E549C0089E339 /* NSString+Network.m in Sources */,
+				1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */,
 				37ED583A1AB0A07F00C10DFD /* FDDisplayInfoView.m in Sources */,
+				1B97E9EC1AD5519300051601 /* NSFileManager+ANUtils.m in Sources */,
 				1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */,
 				1B955E3F1ACEE39B00B33BDD /* FDMovieFrame.m in Sources */,
 				37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */,
-				371598EC1A837E0E000DB8EA /* UIView+Utils.m in Sources */,
 				1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */,
+				1B97E9EB1AD5519300051601 /* NSBundle+Utils.m in Sources */,
 				371525F11A77B28A00F885B8 /* main.m in Sources */,
-				37ED58361AB0787500C10DFD /* NSString+Datetime.m in Sources */,
+				1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -783,8 +784,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PREFIX_HEADER = "FlyDrones/FlyDrones-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -808,8 +809,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PREFIX_HEADER = "FlyDrones/FlyDrones-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
