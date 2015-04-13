@@ -11,7 +11,8 @@
 #import "NSString+Network.h"
 #import "NSFileManager+ANUtils.h"
 
-//ffmpeg -re -i /Users/nab0y4enko/Library/Mobile\ Documents/com\~apple\~CloudDocs/2014-12-19.h264 -vcodec copy -acodec copy -f h264  -f rtp rtp://192.168.1.219:5555 > config.sdp
+//ffmpeg -re -i /Users/nab0y4enko/Library/Mobile\ Documents/com\~apple\~CloudDocs/2014-12-19.h264 -vcodec copy -f h264 -f rtp rtp://192.168.1.219:5555
+//ffmpeg -re -i /Users/nab0y4enko/Library/Mobile\ Documents/com\~apple\~CloudDocs/2014-12-19.h264 -vcodec copy -f h264 -f h264 udp://192.168.0.100:5555
 
 static NSString * const FDLoginViewControllerCustomNetworkPort = @"5555";
 
@@ -92,7 +93,7 @@ static NSString * const FDLoginViewControllerCustomNetworkPort = @"5555";
 
 - (NSString *)createSDPFile {
     NSError *error;
-    NSString *sdpTemplatePath = [[NSBundle mainBundle] pathForResource:@"template" ofType:@"sdp"];
+    NSString *sdpTemplatePath = [[NSBundle mainBundle] pathForResource:@"sdp_template" ofType:nil];
     NSString *sdpTemplate = [[NSString alloc] initWithContentsOfFile:sdpTemplatePath encoding:NSUTF8StringEncoding error:&error];
     if (error) {
         return nil;

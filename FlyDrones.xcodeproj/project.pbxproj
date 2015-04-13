@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B15E4C31AD6767B00305E86 /* sdp_template in Resources */ = {isa = PBXBuildFile; fileRef = 1B15E4C21AD6767B00305E86 /* sdp_template */; };
 		1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E321ACEB55500B33BDD /* FDMovieDecoder.m */; };
 		1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E351ACEBBFE00B33BDD /* FDDashboardViewController.m */; };
 		1B955E391ACEBCED00B33BDD /* FDMovieGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E381ACEBCED00B33BDD /* FDMovieGLView.m */; };
@@ -18,7 +19,6 @@
 		1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E61AD5519300051601 /* NSString+Datetime.m */; };
 		1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E81AD5519300051601 /* NSString+Network.m */; };
 		1B97E9EF1AD5519300051601 /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9EA1AD5519300051601 /* UIView+Utils.m */; };
-		1BC1CCF91AD2E1D100498E27 /* template.sdp in Resources */ = {isa = PBXBuildFile; fileRef = 1BC1CCF81AD2E1D100498E27 /* template.sdp */; };
 		371525F11A77B28A00F885B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 371525F01A77B28A00F885B8 /* main.m */; };
 		371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 371525FB1A77B28A00F885B8 /* Images.xcassets */; };
 		371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3715261D1A77B59E00F885B8 /* LaunchScreen.xib */; };
@@ -44,6 +44,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B15E4C21AD6767B00305E86 /* sdp_template */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sdp_template; sourceTree = "<group>"; };
 		1B955E311ACEB55500B33BDD /* FDMovieDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMovieDecoder.h; sourceTree = "<group>"; };
 		1B955E321ACEB55500B33BDD /* FDMovieDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieDecoder.m; sourceTree = "<group>"; };
 		1B955E341ACEBBFE00B33BDD /* FDDashboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDashboardViewController.h; sourceTree = "<group>"; };
@@ -65,7 +66,6 @@
 		1B97E9E81AD5519300051601 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
 		1B97E9E91AD5519300051601 /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
 		1B97E9EA1AD5519300051601 /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
-		1BC1CCF81AD2E1D100498E27 /* template.sdp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = template.sdp; sourceTree = "<group>"; };
 		371525EB1A77B28A00F885B8 /* FlyDrones.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlyDrones.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		371525F01A77B28A00F885B8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		371525FB1A77B28A00F885B8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../Images.xcassets; sourceTree = "<group>"; };
@@ -283,11 +283,11 @@
 		371526191A77B59E00F885B8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1B15E4C21AD6767B00305E86 /* sdp_template */,
 				371525FB1A77B28A00F885B8 /* Images.xcassets */,
 				37B0AF5C1A8108BC005B2D8D /* Video */,
 				3715261A1A77B59E00F885B8 /* General */,
 				3715261C1A77B59E00F885B8 /* Storyboard */,
-				1BC1CCF81AD2E1D100498E27 /* template.sdp */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -646,9 +646,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */,
-				1BC1CCF91AD2E1D100498E27 /* template.sdp in Resources */,
 				371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */,
 				371526251A77B59E00F885B8 /* Main.storyboard in Resources */,
+				1B15E4C31AD6767B00305E86 /* sdp_template in Resources */,
 				1B955E411ACEE81B00B33BDD /* Images-2.xcassets in Resources */,
 				379A98211AA0828C00B4A5D1 /* 2014-12-19.h264 in Resources */,
 			);

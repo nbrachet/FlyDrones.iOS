@@ -76,12 +76,6 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
 
     __weak __typeof(self) weakSelf = self;
     FDMovieDecoder *decoder = [[FDMovieDecoder alloc] init];
-    
-//    decoder.interruptCallback = ^BOOL(){
-//        __strong  __typeof(weakSelf) strongSelf = weakSelf;
-//        return strongSelf ? [strongSelf interruptDecoder] : YES;
-//    };
-    
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [decoder openFile:self.path buffered:NO];
         __strong __typeof(weakSelf) strongSelf = weakSelf;
@@ -128,7 +122,6 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     [[UIApplication sharedApplication] setIdleTimerDisabled:_savedIdleTimer];
     
     _buffered = NO;
-//    _interrupted = YES;
     
     NSLog(@"viewWillDisappear %@", self);
 }
@@ -177,7 +170,7 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     }
 }
 
-- (void) applicationWillResignActive: (NSNotification *)notification {
+- (void)applicationWillResignActive: (NSNotification *)notification {
     [self pause];
     
     NSLog(@"applicationWillResignActive");

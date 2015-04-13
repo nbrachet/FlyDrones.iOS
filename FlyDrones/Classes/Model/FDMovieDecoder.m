@@ -119,7 +119,7 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
     return _position;
 }
 
-- (void)setPosition: (CGFloat)seconds {
+- (void)setPosition:(CGFloat)seconds {
     _position = seconds;
     _isEOF = NO;
 	   
@@ -222,55 +222,56 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
         return NO;
     }
     
-//    int ret;
-//    if (isBuffered) {
-//        AVIOContext *avio_ctx = NULL;
-//        uint8_t *buffer = NULL,
-//        *avio_ctx_buffer = NULL;
-//        size_t buffer_size, avio_ctx_buffer_size = 0;
-//        FILE *file = fopen(urlPath.UTF8String, "rb");
-//        
-//        if (!file) {
-//            NSLog(@"Failed to open file %@\n", urlPath);
-//            return NO;
-//        }
-//        
-//        fseek (file, 0, SEEK_END);
-//        avio_ctx_buffer_size = ftell(file);
-//        fseek(file, 0, SEEK_SET);
-//        
-//        struct BufferData bufferData = { 0 };
-//        
-//        ret = av_file_map(urlPath.UTF8String, &buffer, &buffer_size, 0, NULL);
-//        if (ret < 0 ) {
-//            return NO;
-//        }
-//        
-//        bufferData.ptr = buffer;
-//        bufferData.size = buffer_size;
-//        
-//        if (!(formatContext = avformat_alloc_context())) {
-//            return NO;
-//        }
-//        
-//        avio_ctx_buffer = av_malloc(avio_ctx_buffer_size * sizeof(uint8_t));
-//        if (!avio_ctx_buffer) {
-//            return NO;
-//        }
-//        
-//        avio_ctx = avio_alloc_context(avio_ctx_buffer, (int)avio_ctx_buffer_size, 0, &bufferData, &readPacket, NULL, NULL);
-//        if (!avio_ctx) {
-//            return NO;
-//        }
-//        
-//        formatContext->pb = avio_ctx;
-//    }
+    int ret;
+    if (isBuffered) {
+        AVIOContext *avio_ctx = NULL;
+        uint8_t *buffer = NULL,
+        *avio_ctx_buffer = NULL;
+        size_t buffer_size, avio_ctx_buffer_size = 0;
+        FILE *file = fopen(urlPath.UTF8String, "rb");
         
+        if (!file) {
+            NSLog(@"Failed to open file %@\n", urlPath);
+            return NO;
+        }
+        
+        fseek (file, 0, SEEK_END);
+        avio_ctx_buffer_size = ftell(file);
+        fseek(file, 0, SEEK_SET);
+        
+        struct BufferData bufferData = { 0 };
+        
+        ret = av_file_map(urlPath.UTF8String, &buffer, &buffer_size, 0, NULL);
+        if (ret < 0 ) {
+            return NO;
+        }
+        
+        bufferData.ptr = buffer;
+        bufferData.size = buffer_size;
+        
+        if (!(formatContext = avformat_alloc_context())) {
+            return NO;
+        }
+        
+        avio_ctx_buffer = av_malloc(avio_ctx_buffer_size * sizeof(uint8_t));
+        if (!avio_ctx_buffer) {
+            return NO;
+        }
+        
+        avio_ctx = avio_alloc_context(avio_ctx_buffer, (int)avio_ctx_buffer_size, 0, &bufferData, &readPacket, NULL, NULL);
+        if (!avio_ctx) {
+            return NO;
+        }
+        
+        formatContext->pb = avio_ctx;
+    }
+    
     //Open input
     if (avformat_open_input(&formatContext, [urlPath cStringUsingEncoding:NSUTF8StringEncoding], NULL, NULL) < 0) {
         if (formatContext) {
             avformat_free_context(formatContext);
         }
+        NSLog(@"Failed create format context");
         return NO;
     }
     
@@ -278,6 +279,7 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
     //Find stream info
     if (avformat_find_stream_info(formatContext, NULL) < 0) {
         avformat_close_input(&formatContext);
+        NSLog(@"Failed find stream info");
         return NO;
     }
     
