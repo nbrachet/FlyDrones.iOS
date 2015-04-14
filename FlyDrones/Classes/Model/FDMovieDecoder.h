@@ -6,27 +6,21 @@
 //  Copyright (c) 2015 Sergey Galagan. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <CoreGraphics/CoreGraphics.h>
-#import "FDMovieFrame.h"
+@class FDVideoFrame;
+@class FDMovieDecoder;
+
+@protocol FDMovieDecoderDelegate <NSObject>
+
+- (void)movieDecoder:(FDMovieDecoder *)movieDecoder decodedVideoFrame:(FDVideoFrame *)videoFrame;
+
+@end
 
 @interface FDMovieDecoder : NSObject
 
-@property (nonatomic, readonly) BOOL isEOF;
-@property (readwrite, nonatomic) CGFloat position;
-@property (nonatomic, readonly) CGFloat duration;
-@property (nonatomic, readonly) CGFloat fps;
-@property (nonatomic, readonly) CGFloat sampleRate;
-@property (nonatomic, readonly) NSUInteger frameWidth;
-@property (nonatomic, readonly) NSUInteger frameHeight;
-@property (nonatomic, readonly) BOOL validVideo;
-@property (nonatomic, readonly, strong) NSDictionary *info;
-@property (nonatomic, readonly) CGFloat startTime;
-@property (nonatomic) BOOL disableDeinterlacing;
+@property(nonatomic, weak) id<FDMovieDecoderDelegate> delegate;
 
-- (BOOL)openFile:(NSString *)urlPath buffered:(BOOL)isBuffered;
-- (void)closeFile;
-- (BOOL)setupVideoFrameFormat:(FDVideoFrameFormat)format;
-- (NSArray *)decodeFrames:(CGFloat) minDuration;
+- (instancetype)init __attribute__((unavailable("init not available")));
+- (instancetype)initFromReceivedData:(NSData *)data delegate:(id<FDMovieDecoderDelegate>)delegate;
+- (void)decodeFrame:(NSData *)frameData;
 
 @end

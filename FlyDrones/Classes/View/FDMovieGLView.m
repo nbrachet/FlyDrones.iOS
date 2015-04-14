@@ -12,7 +12,7 @@
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
-#import "FDMovieDecoder.h"
+#import "FDMovieFrame.h"
 
 #pragma mark - Shaders
 
@@ -168,78 +168,6 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
 
 @end
 
-@interface FDMovieGLRenderer_RGB : NSObject<FDMovieGLRenderer> {
-    GLint _uniformSampler;
-    GLuint _texture;
-}
-
-@end
-
-@implementation FDMovieGLRenderer_RGB
-
-- (BOOL)isValid {
-    return (_texture != 0);
-}
-
-- (NSString *)fragmentShader {
-    return rgbFragmentShaderString;
-}
-
-- (void)resolveUniforms: (GLuint) program {
-    _uniformSampler = glGetUniformLocation(program, "s_texture");
-}
-
-- (void)setFrame:(FDVideoFrame *)frame {
-    FDVideoFrameRGB *rgbFrame = (FDVideoFrameRGB *)frame;
-    
-    assert(rgbFrame.rgb.length == rgbFrame.width * rgbFrame.height * 3);
-    
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    
-    if (0 == _texture) {
-        glGenTextures(1, &_texture);
-    }
-    
-    glBindTexture(GL_TEXTURE_2D, _texture);
-    
-    glTexImage2D(GL_TEXTURE_2D,
-                 0,
-                 GL_RGB,
-                 frame.width,
-                 frame.height,
-                 0,
-                 GL_RGB,
-                 GL_UNSIGNED_BYTE,
-                 rgbFrame.rgb.bytes);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-}
-
-- (BOOL) prepareRender {
-    if (_texture == 0) {
-        return NO;
-    }
-    
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, _texture);
-    glUniform1i(_uniformSampler, 0);
-    
-    return YES;
-}
-
-- (void)dealloc {
-    if (_texture) {
-        glDeleteTextures(1, &_texture);
-        _texture = 0;
-    }
-}
-
-@end
-
-
 @interface FDMovieGLRenderer_YUV : NSObject<FDMovieGLRenderer> {
     GLint _uniformSamplers[3];
     GLuint _textures[3];
@@ -336,7 +264,6 @@ enum {
 };
 
 @implementation FDMovieGLView {
-    
     FDMovieDecoder *_decoder;
     EAGLContext *_context;
     GLuint _framebuffer;
@@ -354,76 +281,75 @@ enum {
     return [CAEAGLLayer class];
 }
 
-- (id) initWithFrame:(CGRect)frame decoder: (FDMovieDecoder *) decoder {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _decoder = decoder;
-        
-        if ([decoder setupVideoFrameFormat:FDVideoFrameFormatYUV]) {
-            _renderer = [[FDMovieGLRenderer_YUV alloc] init];
-            NSLog(@"OK use YUV GL renderer");
-        } else {
-            _renderer = [[FDMovieGLRenderer_RGB alloc] init];
-            NSLog(@"OK use RGB GL renderer");
-        }
-        
-        CAEAGLLayer *eaglLayer = (CAEAGLLayer*) self.layer;
-        eaglLayer.opaque = YES;
-        eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        [NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking,
-                                        kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
-                                        nil];
-        
-        _context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-        
-        if (!_context || ![EAGLContext setCurrentContext:_context]) {
-            
-            NSLog(@"failed to setup EAGLContext");
-            self = nil;
-            return nil;
-        }
-        
-        glGenFramebuffers(1, &_framebuffer);
-        glGenRenderbuffers(1, &_renderbuffer);
-        glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer);
-        glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
-        [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)self.layer];
-        glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &_backingWidth);
-        glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &_backingHeight);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _renderbuffer);
-        
-        GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-        if (status != GL_FRAMEBUFFER_COMPLETE) {
-            NSLog(@"failed to make complete framebuffer object %x", status);
-            self = nil;
-            return nil;
-        }
-        
-        GLenum glError = glGetError();
-        if (GL_NO_ERROR != glError) {
-            NSLog(@"failed to setup GL %x", glError);
-            self = nil;
-            return nil;
-        }
-        
-        if (![self loadShaders]) {
-            self = nil;
-            return nil;
-        }
-        
-        _vertices[0] = -1.0f;  // x0
-        _vertices[1] = -1.0f;  // y0
-        _vertices[2] =  1.0f;  // ..
-        _vertices[3] = -1.0f;
-        _vertices[4] = -1.0f;
-        _vertices[5] =  1.0f;
-        _vertices[6] =  1.0f;  // x3
-        _vertices[7] =  1.0f;  // y3
-        
-        NSLog(@"OK setup GL");
+        [self initializeGL];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self initializeGL];
+
+    }
+    return self;
+}
+
+- (void)initializeGL {
+    _renderer = [[FDMovieGLRenderer_YUV alloc] init];
+    NSLog(@"OK use YUV GL renderer");
+    CAEAGLLayer *eaglLayer = (CAEAGLLayer*) self.layer;
+    eaglLayer.opaque = YES;
+    eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking,
+                                    kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
+                                    nil];
+    
+    _context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    
+    if (!_context || ![EAGLContext setCurrentContext:_context]) {
+        NSLog(@"failed to setup EAGLContext");
+        return;
     }
     
-    return self;
+    glGenFramebuffers(1, &_framebuffer);
+    glGenRenderbuffers(1, &_renderbuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
+    [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)self.layer];
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &_backingWidth);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &_backingHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _renderbuffer);
+    
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        NSLog(@"failed to make complete framebuffer object %x", status);
+        return;
+    }
+    
+    GLenum glError = glGetError();
+    if (GL_NO_ERROR != glError) {
+        NSLog(@"failed to setup GL %x", glError);
+        return;
+    }
+    
+    if (![self loadShaders]) {
+        return;
+    }
+    
+    _vertices[0] = -1.0f;  // x0
+    _vertices[1] = -1.0f;  // y0
+    _vertices[2] =  1.0f;  // ..
+    _vertices[3] = -1.0f;
+    _vertices[4] = -1.0f;
+    _vertices[5] =  1.0f;
+    _vertices[6] =  1.0f;  // x3
+    _vertices[7] =  1.0f;  // y3
+    
+    NSLog(@"OK setup GL");
 }
 
 - (void)dealloc {
@@ -532,8 +458,8 @@ exit:
 
 - (void)updateVertices {
     const BOOL fit = (self.contentMode == UIViewContentModeScaleAspectFit);
-    const float width = _decoder.frameWidth;
-    const float height = _decoder.frameHeight;
+    const float width = 854;
+    const float height = 480;
     const float dH = (float)_backingHeight / height;
     const float dW = (float)_backingWidth	  / width;
     const float dd = fit ? MIN(dH, dW) : MAX(dH, dW);

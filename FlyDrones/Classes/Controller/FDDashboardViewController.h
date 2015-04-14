@@ -8,15 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@class MovieDecoder;
-
-extern NSString * const FDMovieParameterMinBufferedDuration;    // Float
-extern NSString * const FDMovieParameterMaxBufferedDuration;    // Float
-extern NSString * const FDMovieParameterDisableDeinterlacing;   // BOOL
-
 @interface FDDashboardViewController : UIViewController
 
 @property (nonatomic, copy) NSString *path;
-@property (readonly, getter=isPlaying) BOOL playing;
 
 @end

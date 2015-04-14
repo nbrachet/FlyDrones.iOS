@@ -13,9 +13,6 @@
 
 @interface FDMovieGLView : UIView
 
-- (id) initWithFrame:(CGRect)frame
-             decoder: (FDMovieDecoder *) decoder;
-
-- (void) render: (FDVideoFrame *) frame;
+- (void)render:(FDVideoFrame *)frame;
 
 @end
