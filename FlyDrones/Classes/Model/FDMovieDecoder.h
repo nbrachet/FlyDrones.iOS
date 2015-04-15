@@ -24,7 +24,7 @@
 @property (nonatomic, readonly) CGFloat startTime;
 @property (nonatomic) BOOL disableDeinterlacing;
 
-- (BOOL)openFile:(NSString *)urlPath buffered:(BOOL)isBuffered;
+- (BOOL)openFile:(NSString *)urlPath;
 - (void)closeFile;
 - (BOOL)setupVideoFrameFormat:(FDVideoFrameFormat)format;
 - (NSArray *)decodeFrames:(CGFloat) minDuration;

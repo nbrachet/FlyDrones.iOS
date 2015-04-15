@@ -77,7 +77,7 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     __weak __typeof(self) weakSelf = self;
     FDMovieDecoder *decoder = [[FDMovieDecoder alloc] init];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [decoder openFile:self.path buffered:NO];
+        [decoder openFile:self.path];
         __strong __typeof(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
             dispatch_sync(dispatch_get_main_queue(), ^{
@@ -155,7 +155,7 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
         } else {
             // force ffmpeg to free allocated memory
             [_decoder closeFile];
-            [_decoder openFile:nil buffered:NO];
+            [_decoder openFile:nil];
             
             [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
                                         message:NSLocalizedString(@"Out of memory", nil)
@@ -166,7 +166,7 @@ NSString * const FDMovieParameterDisableDeinterlacing = @"FDMovieParameterDisabl
     } else {
         [self freeBufferedFrames];
         [_decoder closeFile];
-        [_decoder openFile:nil buffered:NO];
+        [_decoder openFile:nil];
     }
 }
 
