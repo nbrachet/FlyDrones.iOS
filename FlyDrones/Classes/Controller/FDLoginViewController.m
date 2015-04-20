@@ -14,7 +14,7 @@
 //ffmpeg -re -i /Users/nab0y4enko/Library/Mobile\ Documents/com\~apple\~CloudDocs/2014-12-19.h264 -vcodec copy -f h264 -f rtp rtp://192.168.1.219:5555
 //ffmpeg -re -i /Users/nab0y4enko/Library/Mobile\ Documents/com\~apple\~CloudDocs/2014-12-19.h264 -vcodec copy -f h264 -f h264 udp://192.168.0.100:5555
 
-static NSString * const FDLoginViewControllerCustomNetworkPort = @"1234";
+static NSString * const FDLoginViewControllerCustomNetworkPort = @"5555";
 
 @interface FDLoginViewController ()
 
@@ -31,7 +31,7 @@ static NSString * const FDLoginViewControllerCustomNetworkPort = @"1234";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.rtpStreamPath = [NSString stringWithFormat:@"rtp://%@:%@", [NSString getIPAddress], FDLoginViewControllerCustomNetworkPort];
+    self.rtpStreamPath = [NSString stringWithFormat:@"udp://%@:%@", [NSString getIPAddress], FDLoginViewControllerCustomNetworkPort];
     self.customPathTextField.text = self.rtpStreamPath;
 }
 

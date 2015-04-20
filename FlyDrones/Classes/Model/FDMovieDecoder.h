@@ -21,6 +21,7 @@
 
 - (instancetype)init __attribute__((unavailable("init not available")));
 - (instancetype)initFromReceivedData:(NSData *)data delegate:(id<FDMovieDecoderDelegate>)delegate;
-- (void)decodeFrame:(NSData *)frameData;
+
+- (void)parseAndDecodeInputData:(NSData *)data;
 
 @end

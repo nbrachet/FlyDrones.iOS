@@ -17,10 +17,10 @@
 		1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E61AD5519300051601 /* NSString+Datetime.m */; };
 		1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E81AD5519300051601 /* NSString+Network.m */; };
 		1B97E9EF1AD5519300051601 /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9EA1AD5519300051601 /* UIView+Utils.m */; };
+		1BED467B1AE56D79008EA8C8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BED467A1AE56D79008EA8C8 /* Images.xcassets */; };
+		1BED46891AE56DC2008EA8C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46851AE56DC2008EA8C8 /* Main.storyboard */; };
+		1BED468A1AE56DC2008EA8C8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46871AE56DC2008EA8C8 /* LaunchScreen.xib */; };
 		371525F11A77B28A00F885B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 371525F01A77B28A00F885B8 /* main.m */; };
-		371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 371525FB1A77B28A00F885B8 /* Images.xcassets */; };
-		371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3715261D1A77B59E00F885B8 /* LaunchScreen.xib */; };
-		371526251A77B59E00F885B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3715261F1A77B59E00F885B8 /* Main.storyboard */; };
 		37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431EDD1A7A57C0007CDD6F /* AppDelegate.m */; };
 		37431F571A7A57C0007CDD6F /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F471A7A57C0007CDD6F /* libavcodec.a */; };
 		37431F581A7A57C0007CDD6F /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431F481A7A57C0007CDD6F /* libavdevice.a */; };
@@ -63,12 +63,12 @@
 		1B97E9E81AD5519300051601 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
 		1B97E9E91AD5519300051601 /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
 		1B97E9EA1AD5519300051601 /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
+		1BED467A1AE56D79008EA8C8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		1BED467C1AE56D8E008EA8C8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1BED46861AE56DC2008EA8C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1BED46881AE56DC2008EA8C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		371525EB1A77B28A00F885B8 /* FlyDrones.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlyDrones.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		371525F01A77B28A00F885B8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		371525FB1A77B28A00F885B8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../Images.xcassets; sourceTree = "<group>"; };
-		3715261B1A77B59E00F885B8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3715261E1A77B59E00F885B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		371526201A77B59E00F885B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		37431EDC1A7A57C0007CDD6F /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		37431EDD1A7A57C0007CDD6F /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		37431EE41A7A57C0007CDD6F /* avcodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avcodec.h; sourceTree = "<group>"; };
@@ -266,7 +266,8 @@
 				37431EDA1A7A57C0007CDD6F /* Classes */,
 				371526191A77B59E00F885B8 /* Resources */,
 				371525EE1A77B28A00F885B8 /* Supporting Files */,
-				37431F621A7A59D7007CDD6F /* Frameworks */,
+				1BED46851AE56DC2008EA8C8 /* Main.storyboard */,
+				1BED46871AE56DC2008EA8C8 /* LaunchScreen.xib */,
 			);
 			path = FlyDrones;
 			sourceTree = "<group>";
@@ -274,6 +275,7 @@
 		371525EE1A77B28A00F885B8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1BED467C1AE56D8E008EA8C8 /* Info.plist */,
 				371525F01A77B28A00F885B8 /* main.m */,
 				37431F991A7A65F5007CDD6F /* FlyDrones-Prefix.pch */,
 			);
@@ -283,28 +285,9 @@
 		371526191A77B59E00F885B8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				371525FB1A77B28A00F885B8 /* Images.xcassets */,
-				3715261A1A77B59E00F885B8 /* General */,
-				3715261C1A77B59E00F885B8 /* Storyboard */,
+				1BED467A1AE56D79008EA8C8 /* Images.xcassets */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		3715261A1A77B59E00F885B8 /* General */ = {
-			isa = PBXGroup;
-			children = (
-				3715261B1A77B59E00F885B8 /* Info.plist */,
-			);
-			path = General;
-			sourceTree = "<group>";
-		};
-		3715261C1A77B59E00F885B8 /* Storyboard */ = {
-			isa = PBXGroup;
-			children = (
-				3715261D1A77B59E00F885B8 /* LaunchScreen.xib */,
-				3715261F1A77B59E00F885B8 /* Main.storyboard */,
-			);
-			path = Storyboard;
 			sourceTree = "<group>";
 		};
 		37431EDA1A7A57C0007CDD6F /* Classes */ = {
@@ -552,20 +535,6 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
-		37431F621A7A59D7007CDD6F /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */,
-				37431F9A1A7A71C6007CDD6F /* GLKit.framework */,
-				37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */,
-				37431F651A7A5A49007CDD6F /* libiconv.2.4.0.dylib */,
-				37431F631A7A59FE007CDD6F /* libz.dylib */,
-				37431F601A7A597A007CDD6F /* libbz2.dylib */,
-			);
-			name = Frameworks;
-			path = ..;
-			sourceTree = "<group>";
-		};
 		37ED58371AB0A04800C10DFD /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -589,6 +558,12 @@
 		956F2D260B6A2289A457E2B3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */,
+				37431F9A1A7A71C6007CDD6F /* GLKit.framework */,
+				37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */,
+				37431F651A7A5A49007CDD6F /* libiconv.2.4.0.dylib */,
+				37431F631A7A59FE007CDD6F /* libz.dylib */,
+				37431F601A7A597A007CDD6F /* libbz2.dylib */,
 				0F276A55EA306C80D69E7558 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -654,9 +629,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				371526241A77B59E00F885B8 /* LaunchScreen.xib in Resources */,
-				371525FC1A77B28A00F885B8 /* Images.xcassets in Resources */,
-				371526251A77B59E00F885B8 /* Main.storyboard in Resources */,
+				1BED468A1AE56DC2008EA8C8 /* LaunchScreen.xib in Resources */,
+				1BED46891AE56DC2008EA8C8 /* Main.storyboard in Resources */,
+				1BED467B1AE56D79008EA8C8 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -719,20 +694,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		3715261D1A77B59E00F885B8 /* LaunchScreen.xib */ = {
+		1BED46851AE56DC2008EA8C8 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3715261E1A77B59E00F885B8 /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-		3715261F1A77B59E00F885B8 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				371526201A77B59E00F885B8 /* Base */,
+				1BED46861AE56DC2008EA8C8 /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1BED46871AE56DC2008EA8C8 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1BED46881AE56DC2008EA8C8 /* Base */,
+			);
+			name = LaunchScreen.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -832,7 +807,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/FlyDrones/Classes/Libs/\"/**",
 				);
-				INFOPLIST_FILE = "$(PROJECT_DIR)/FlyDrones/Resources/General/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/FlyDrones/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -858,7 +833,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/FlyDrones/Classes/Libs/\"/**",
 				);
-				INFOPLIST_FILE = "$(PROJECT_DIR)/FlyDrones/Resources/General/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/FlyDrones/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

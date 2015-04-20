@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="aOP-K8-VNR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="aOP-K8-VNR">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
@@ -135,26 +135,25 @@
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cs6-h5-FNz" customClass="FDMovieGLView">
-                                <rect key="frame" x="0.0" y="60" width="1024" height="708"/>
+                                <rect key="frame" x="85" y="144" width="854" height="480"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="480" id="NaE-U0-94E"/>
+                                    <constraint firstAttribute="width" constant="854" id="Z1W-6O-VIm"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="LWK-ix-jAd" firstAttribute="leading" secondItem="6SL-qf-fRV" secondAttribute="trailing" constant="25" id="0Qa-2M-FKW"/>
-                            <constraint firstItem="Cs6-h5-FNz" firstAttribute="top" secondItem="LWK-ix-jAd" secondAttribute="bottom" id="4Tb-RQ-Ho7"/>
                             <constraint firstItem="LWK-ix-jAd" firstAttribute="top" secondItem="rf2-3D-sY9" secondAttribute="top" id="F5g-qq-U8M"/>
+                            <constraint firstAttribute="centerX" secondItem="Cs6-h5-FNz" secondAttribute="centerX" id="Fi5-L3-yds"/>
+                            <constraint firstAttribute="centerY" secondItem="Cs6-h5-FNz" secondAttribute="centerY" id="FkM-Qt-5u4"/>
                             <constraint firstAttribute="trailing" secondItem="LWK-ix-jAd" secondAttribute="trailing" id="LZP-6H-Eij"/>
-                            <constraint firstItem="Cs6-h5-FNz" firstAttribute="leading" secondItem="rf2-3D-sY9" secondAttribute="leading" id="Ss9-XD-lSi"/>
-                            <constraint firstAttribute="trailing" secondItem="Cs6-h5-FNz" secondAttribute="trailing" id="Uzn-jg-HB7"/>
                             <constraint firstItem="6SL-qf-fRV" firstAttribute="leading" secondItem="rf2-3D-sY9" secondAttribute="leading" constant="16" id="Vid-na-d8E"/>
-                            <constraint firstItem="bzP-nR-mER" firstAttribute="top" secondItem="Cs6-h5-FNz" secondAttribute="bottom" id="m6F-Qq-eiW"/>
                             <constraint firstItem="6SL-qf-fRV" firstAttribute="top" secondItem="rf2-3D-sY9" secondAttribute="top" constant="20" id="uDa-bI-8pr"/>
                         </constraints>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="Eiv-Pc-Tvp" appends="YES" id="ZLP-5F-4DW"/>
-                        </connections>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
@@ -163,12 +162,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nI3-Gy-L8n" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="Eiv-Pc-Tvp">
-                    <connections>
-                        <action selector="playDidTouch:" destination="pck-8Q-Mej" id="Bo5-jj-fnk"/>
-                        <outlet property="delegate" destination="pck-8Q-Mej" id="vWj-9m-VMr"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2460" y="370"/>
         </scene>

@@ -13,9 +13,11 @@
 #import "libavutil/pixdesc.h"
 #import "FDMovieFrame.h"
 
+//static int const FDMovieDecoderBufferSize = 48576;
+
 static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
     width = MIN(linesize, width);
-    NSMutableData *md = [NSMutableData dataWithLength: width * height];
+    NSMutableData *md = [NSMutableData dataWithLength:width * height];
     Byte *dst = md.mutableBytes;
     for (NSUInteger i = 0; i < height; ++i) {
         memcpy(dst, src, width);
@@ -28,12 +30,16 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
 @interface FDMovieDecoder () {
     struct AVCodec *videoCodec;
     struct AVCodecContext *videoCodecContext;
+    struct AVCodecParserContext *videoCodecParserContext;   //parser that is used to decode the h264 bitstream
+
     struct AVFrame *videoFrame;
     struct AVFrame *srcFrame;
     struct AVFrame *dstFrame;
     struct SwsContext *convertCtx;
     uint8_t *outputBuf;
 }
+
+@property (nonatomic, strong) dispatch_queue_t parsingQueue;
 
 @end
 
@@ -59,6 +65,7 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
         self.delegate = delegate;
         
         videoCodec = avcodec_find_decoder(CODEC_ID_H264);
+        
         videoCodecContext = avcodec_alloc_context3(videoCodec);
         
         // Note: for H.264 RTSP streams, the width and height are usually not specified (width and height are 0).
@@ -70,7 +77,14 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
         videoCodecContext->extradata_size = data.length;
         [data getBytes:videoCodecContext->extradata length:videoCodecContext->extradata_size];
         videoCodecContext->pix_fmt = PIX_FMT_YUV420P;
+  
+        //we can receive truncated frames
+        if(videoCodec->capabilities & CODEC_CAP_TRUNCATED) {
+            videoCodecContext->flags |= CODEC_FLAG_TRUNCATED;
+        }
         
+        videoCodecParserContext = av_parser_init(AV_CODEC_ID_H264);
+
         srcFrame = av_frame_alloc();
         dstFrame = av_frame_alloc();
         
@@ -80,6 +94,9 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
             self = nil;
             return nil;
         }
+        
+        self.parsingQueue = dispatch_queue_create("Parsing Queue", DISPATCH_QUEUE_SERIAL);
+        
     }
     return self;
 }
@@ -89,6 +106,9 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
         av_free(videoCodecContext->extradata);
         avcodec_close(videoCodecContext);
         av_free(videoCodecContext);
+    }
+    if (videoCodecParserContext) {
+        av_parser_close(videoCodecParserContext);
     }
     if (videoFrame) {
         av_free(videoFrame);
@@ -103,45 +123,82 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
 
 #pragma mark - Public
 
-- (void)decodeFrame:(NSData *)frameData {
-    AVPacket packet = {0};
+- (void)parseAndDecodeInputData:(NSData *)data {
+    __weak __typeof(self)weakSelf = self;
+    dispatch_async(self.parsingQueue, ^{
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+        
+        [strongSelf parseData:data];
+    });
+
+}
+
+#pragma mark - Private
+
+- (void)parseData:(NSData *)data {
+    NSLog(@"start parsing");
     
-    packet.data = (uint8_t *)frameData.bytes;
-    packet.size = frameData.length;
+    NSMutableData *parsingData = [NSMutableData dataWithData:data];
+    
+    while ([parsingData length] > 0) {
+        const uint8_t *parsingDataBytes = (const uint8_t*)[parsingData bytes];
+        uint8_t *parsedData = NULL;
+        int parsedDataSize = 0;
+        int length = av_parser_parse2(videoCodecParserContext,
+                                      videoCodecContext,
+                                      &parsedData,                 //output data
+                                      &parsedDataSize,             //output data size
+                                      &parsingDataBytes[0],        //input data
+                                      (int)[parsingData length],   //input data size
+                                      0,                           //PTS
+                                      0,                           //DTS
+                                      AV_NOPTS_VALUE);
+        
+        if (length > 0) {
+            [parsingData replaceBytesInRange:NSMakeRange(0, length) withBytes:NULL length:0];
+        }
+        if (parsedDataSize >= 0) {
+            NSLog(@"Detect frame");
+            [self decodeFrameData:parsedData size:parsedDataSize];
+        }
+    }
+    NSLog(@"Finish parsing");
+}
+
+- (void)decodeFrameData:(uint8_t *)data size:(int)size {
+    AVPacket packet;
+    av_init_packet(&packet);
+    
+    packet.data = data;
+    packet.size = size;
     packet.stream_index = 0;
-    //    packet.pts = 0x8000000000000000;
-    //    packet.dts = 0x8000000000000000;
+    packet.pts = 0x8000000000000000;
+    packet.dts = 0x8000000000000000;
     //packet.duration=
     
-    int packetSize = packet.size;
-    while (packetSize > 0) {
-        int frameFinished = 0;
-        
-        int length = avcodec_decode_video2(videoCodecContext, srcFrame, &frameFinished, &packet);
+    while(packet.size > 0) {
+        int got_picture;
+        int length = avcodec_decode_video2(videoCodecContext, srcFrame, &got_picture, &packet);
         if (length < 0) {
             NSLog(@"decode video error, skip packet");
             break;
         }
-        
-        if (frameFinished) {
-            if ([self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)]) {
+        if (got_picture) {
+            if (self.delegate != nil && [self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)]) {
                 FDVideoFrame *decodedVideoFrame = [self handleVideoFrame];
                 if (decodedVideoFrame != nil) {
                     [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
                 }
             }
         }
-        
-        if (length == 0) {
-            break;
-        }
-        
-        packetSize -= length;
+        packet.size -= length;
+        packet.data += length;
     }
     av_free_packet(&packet);
 }
-
-#pragma mark - Private
 
 - (FDVideoFrame *)handleVideoFrame {
     if (!srcFrame->data[0]) {

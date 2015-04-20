@@ -21,6 +21,8 @@
 @property (nonatomic, strong) AsyncUdpSocket *asyncUdpSocket;
 @property (nonatomic, strong) FDMovieDecoder *movieDecoder;
 
+@property (nonatomic, strong) NSMutableData *bigData;
+
 @end
 
 @implementation FDDashboardViewController
@@ -48,6 +50,7 @@
     [super viewWillDisappear:animated];
     
     [self stopDataReceiving];
+    
 }
 
 
@@ -86,7 +89,7 @@
         return NO;
     }
     
-    BOOL success = [self.asyncUdpSocket bindToAddress:url.host port:[url.port integerValue]  error:&error];
+    BOOL success = [self.asyncUdpSocket bindToAddress:url.host port:[url.port integerValue] error:&error];
     if (!success || error != nil) {
         NSLog(@"%@", error.localizedDescription);
         return NO;
@@ -101,6 +104,24 @@
     [self.asyncUdpSocket close];
     self.asyncUdpSocket.delegate = nil;
     self.asyncUdpSocket = nil;
+}
+
+- (int)isH264iFrame:(NSData *)data {
+    const char* bytes = (const char*)[data bytes];
+    char firstByte = bytes[0];
+    char secondByte = bytes[1];
+
+    int fragment_type = firstByte & 0x1F;
+    int nal_type = secondByte & 0x1F;
+    int start_bit = secondByte & 0x80;
+    int end_bit = secondByte & 0x40;
+    
+    NSLog(@"Fragment type:%d NAL type:%d Start bit:%d End bit:%d", fragment_type, nal_type, start_bit, end_bit);
+    
+    if (((fragment_type == 28 || fragment_type == 29) && nal_type == 5 && start_bit == 128) || fragment_type == 5) {
+        return YES;
+    }
+    return NO;
     
 }
 
@@ -111,12 +132,13 @@
     
     
     NSData *udpData = [data subdataWithRange:NSMakeRange(12, data.length-12)];  //remove first 12 bytes
+    
     if (self.movieDecoder == nil) {
         self.movieDecoder = [[FDMovieDecoder alloc] initFromReceivedData:udpData delegate:self];
     }
-
-    [self.movieDecoder decodeFrame:udpData];
-
+    
+    [self.movieDecoder parseAndDecodeInputData:udpData];
+    
     return YES;
 }
 
@@ -131,7 +153,15 @@
 #pragma mark - FDMovieDecoderDelegate
 
 - (void)movieDecoder:(FDMovieDecoder *)movieDecoder decodedVideoFrame:(FDVideoFrame *)videoFrame {
-    [self.movieGLView render:videoFrame];
+    __weak __typeof(self)weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+        
+        [strongSelf.movieGLView render:videoFrame];
+    });
 }
 
 @end
