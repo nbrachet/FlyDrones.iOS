@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -135,11 +136,10 @@
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cs6-h5-FNz" customClass="FDMovieGLView">
-                                <rect key="frame" x="85" y="144" width="854" height="480"/>
+                                <rect key="frame" x="0.0" y="96" width="1024" height="576"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="480" id="NaE-U0-94E"/>
-                                    <constraint firstAttribute="width" constant="854" id="Z1W-6O-VIm"/>
+                                    <constraint firstAttribute="width" secondItem="Cs6-h5-FNz" secondAttribute="height" multiplier="854:480" id="u3I-vl-S77"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -148,10 +148,11 @@
                         <constraints>
                             <constraint firstItem="LWK-ix-jAd" firstAttribute="leading" secondItem="6SL-qf-fRV" secondAttribute="trailing" constant="25" id="0Qa-2M-FKW"/>
                             <constraint firstItem="LWK-ix-jAd" firstAttribute="top" secondItem="rf2-3D-sY9" secondAttribute="top" id="F5g-qq-U8M"/>
-                            <constraint firstAttribute="centerX" secondItem="Cs6-h5-FNz" secondAttribute="centerX" id="Fi5-L3-yds"/>
-                            <constraint firstAttribute="centerY" secondItem="Cs6-h5-FNz" secondAttribute="centerY" id="FkM-Qt-5u4"/>
                             <constraint firstAttribute="trailing" secondItem="LWK-ix-jAd" secondAttribute="trailing" id="LZP-6H-Eij"/>
+                            <constraint firstItem="Cs6-h5-FNz" firstAttribute="leading" secondItem="rf2-3D-sY9" secondAttribute="leading" id="O7F-ZK-7nV"/>
                             <constraint firstItem="6SL-qf-fRV" firstAttribute="leading" secondItem="rf2-3D-sY9" secondAttribute="leading" constant="16" id="Vid-na-d8E"/>
+                            <constraint firstAttribute="centerY" secondItem="Cs6-h5-FNz" secondAttribute="centerY" id="bt2-jj-8sI"/>
+                            <constraint firstAttribute="trailing" secondItem="Cs6-h5-FNz" secondAttribute="trailing" id="f7t-UK-355"/>
                             <constraint firstItem="6SL-qf-fRV" firstAttribute="top" secondItem="rf2-3D-sY9" secondAttribute="top" constant="20" id="uDa-bI-8pr"/>
                         </constraints>
                     </view>

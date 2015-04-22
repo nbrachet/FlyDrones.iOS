@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B9552391AE7BBA30054BA0C /* FDVideoFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9552381AE7BBA30054BA0C /* FDVideoFrame.m */; };
 		1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E321ACEB55500B33BDD /* FDMovieDecoder.m */; };
 		1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E351ACEBBFE00B33BDD /* FDDashboardViewController.m */; };
 		1B955E391ACEBCED00B33BDD /* FDMovieGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E381ACEBCED00B33BDD /* FDMovieGLView.m */; };
 		1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E3B1ACEC0F900B33BDD /* FDLoginViewController.m */; };
-		1B955E3F1ACEE39B00B33BDD /* FDMovieFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E3E1ACEE39B00B33BDD /* FDMovieFrame.m */; };
 		1B97E9EB1AD5519300051601 /* NSBundle+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E21AD5519300051601 /* NSBundle+Utils.m */; };
 		1B97E9EC1AD5519300051601 /* NSFileManager+ANUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E41AD5519300051601 /* NSFileManager+ANUtils.m */; };
 		1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E61AD5519300051601 /* NSString+Datetime.m */; };
@@ -43,6 +43,8 @@
 
 /* Begin PBXFileReference section */
 		0F276A55EA306C80D69E7558 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B9552371AE7BBA30054BA0C /* FDVideoFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDVideoFrame.h; sourceTree = "<group>"; };
+		1B9552381AE7BBA30054BA0C /* FDVideoFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDVideoFrame.m; sourceTree = "<group>"; };
 		1B955E311ACEB55500B33BDD /* FDMovieDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMovieDecoder.h; sourceTree = "<group>"; };
 		1B955E321ACEB55500B33BDD /* FDMovieDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieDecoder.m; sourceTree = "<group>"; };
 		1B955E341ACEBBFE00B33BDD /* FDDashboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDashboardViewController.h; sourceTree = "<group>"; };
@@ -51,8 +53,6 @@
 		1B955E381ACEBCED00B33BDD /* FDMovieGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieGLView.m; sourceTree = "<group>"; };
 		1B955E3A1ACEC0F900B33BDD /* FDLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDLoginViewController.h; sourceTree = "<group>"; };
 		1B955E3B1ACEC0F900B33BDD /* FDLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDLoginViewController.m; sourceTree = "<group>"; };
-		1B955E3D1ACEE39B00B33BDD /* FDMovieFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMovieFrame.h; sourceTree = "<group>"; };
-		1B955E3E1ACEE39B00B33BDD /* FDMovieFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieFrame.m; sourceTree = "<group>"; };
 		1B97E9E11AD5519300051601 /* NSBundle+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+Utils.h"; sourceTree = "<group>"; };
 		1B97E9E21AD5519300051601 /* NSBundle+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+Utils.m"; sourceTree = "<group>"; };
 		1B97E9E31AD5519300051601 /* NSFileManager+ANUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+ANUtils.h"; sourceTree = "<group>"; };
@@ -218,8 +218,8 @@
 			children = (
 				1B955E311ACEB55500B33BDD /* FDMovieDecoder.h */,
 				1B955E321ACEB55500B33BDD /* FDMovieDecoder.m */,
-				1B955E3D1ACEE39B00B33BDD /* FDMovieFrame.h */,
-				1B955E3E1ACEE39B00B33BDD /* FDMovieFrame.m */,
+				1B9552371AE7BBA30054BA0C /* FDVideoFrame.h */,
+				1B9552381AE7BBA30054BA0C /* FDVideoFrame.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -581,6 +581,7 @@
 				371525E81A77B28A00F885B8 /* Frameworks */,
 				371525E91A77B28A00F885B8 /* Resources */,
 				3C61D5EAD438785A6C0BE916 /* Copy Pods Resources */,
+				1B9552361AE6DC3F0054BA0C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -638,6 +639,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1B9552361AE6DC3F0054BA0C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=/usr/local/bin:$PATH\ncd /Users/nab0y4enko/Projects/FlyDrones.iOS/parse\n\nparse symbols -p \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+		};
 		3C61D5EAD438785A6C0BE916 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -682,12 +696,12 @@
 				37ED583A1AB0A07F00C10DFD /* FDDisplayInfoView.m in Sources */,
 				1B97E9EC1AD5519300051601 /* NSFileManager+ANUtils.m in Sources */,
 				1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */,
-				1B955E3F1ACEE39B00B33BDD /* FDMovieFrame.m in Sources */,
 				37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */,
 				1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */,
 				1B97E9EB1AD5519300051601 /* NSBundle+Utils.m in Sources */,
 				371525F11A77B28A00F885B8 /* main.m in Sources */,
 				1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */,
+				1B9552391AE7BBA30054BA0C /* FDVideoFrame.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

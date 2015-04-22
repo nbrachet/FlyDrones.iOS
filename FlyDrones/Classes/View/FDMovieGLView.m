@@ -12,7 +12,7 @@
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
-#import "FDMovieFrame.h"
+#import "FDVideoFrame.h"
 
 #pragma mark - Shaders
 
@@ -155,16 +155,15 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
     mout[15] = 1.0f;
 }
 
-
 #pragma mark - Frame renderers
 
 @protocol FDMovieGLRenderer
 
-- (BOOL) isValid;
-- (NSString *) fragmentShader;
-- (void) resolveUniforms: (GLuint) program;
-- (void) setFrame: (FDVideoFrame *) frame;
-- (BOOL) prepareRender;
+- (BOOL)isValid;
+- (NSString *)fragmentShader;
+- (void)resolveUniforms:(GLuint)program;
+- (void)setVideoFrame:(FDVideoFrame *)videoFrame;
+- (BOOL)prepareRender;
 
 @end
 
@@ -192,15 +191,13 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
     _uniformSamplers[2] = glGetUniformLocation(program, "s_texture_v");
 }
 
-- (void)setFrame:(FDVideoFrame *)frame {
-    FDVideoFrameYUV *yuvFrame = (FDVideoFrameYUV *)frame;
+- (void)setVideoFrame:(FDVideoFrame *)videoFrame {
+    assert(videoFrame.luma.length == videoFrame.width * videoFrame.height);
+    assert(videoFrame.chromaB.length == (videoFrame.width * videoFrame.height) / 4);
+    assert(videoFrame.chromaR.length == (videoFrame.width * videoFrame.height) / 4);
     
-    assert(yuvFrame.luma.length == yuvFrame.width * yuvFrame.height);
-    assert(yuvFrame.chromaB.length == (yuvFrame.width * yuvFrame.height) / 4);
-    assert(yuvFrame.chromaR.length == (yuvFrame.width * yuvFrame.height) / 4);
-    
-    const NSUInteger frameWidth = frame.width;
-    const NSUInteger frameHeight = frame.height;
+    const NSUInteger frameWidth = videoFrame.width;
+    const NSUInteger frameHeight = videoFrame.height;
     
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     
@@ -208,7 +205,7 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
         glGenTextures(3, _textures);
     }
     
-    const UInt8 *pixels[3] = { yuvFrame.luma.bytes, yuvFrame.chromaB.bytes, yuvFrame.chromaR.bytes };
+    const UInt8 *pixels[3] = { videoFrame.luma.bytes, videoFrame.chromaB.bytes, videoFrame.chromaR.bytes };
     const NSUInteger widths[3]  = { frameWidth, frameWidth / 2, frameWidth / 2 };
     const NSUInteger heights[3] = { frameHeight, frameHeight / 2, frameHeight / 2 };
     
@@ -255,7 +252,6 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
 
 @end
 
-
 #pragma mark - FDMovieGLView
 
 enum {
@@ -264,7 +260,6 @@ enum {
 };
 
 @implementation FDMovieGLView {
-    FDMovieDecoder *_decoder;
     EAGLContext *_context;
     GLuint _framebuffer;
     GLuint _renderbuffer;
@@ -277,7 +272,7 @@ enum {
     id<FDMovieGLRenderer> _renderer;
 }
 
-+ (Class) layerClass {
++ (Class)layerClass {
     return [CAEAGLLayer class];
 }
 
@@ -391,14 +386,15 @@ enum {
     }
     
     [self updateVertices];
-    [self render: nil];
+    [self renderVideoFrame:nil];
 }
 
 - (void)setContentMode:(UIViewContentMode)contentMode {
     [super setContentMode:contentMode];
     [self updateVertices];
-    if (_renderer.isValid)
-        [self render:nil];
+    if (_renderer.isValid) {
+        [self renderVideoFrame:nil];
+    }
 }
 
 - (BOOL)loadShaders {
@@ -476,7 +472,7 @@ exit:
     _vertices[7] =   h;
 }
 
-- (void)render:(FDVideoFrame *)frame {
+- (void)renderVideoFrame:(FDVideoFrame *)videoFrame {
     static const GLfloat texCoords[] = {
         0.0f, 1.0f,
         1.0f, 1.0f,
@@ -492,8 +488,8 @@ exit:
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(_program);
     
-    if (frame) {
-        [_renderer setFrame:frame];
+    if (videoFrame) {
+        [_renderer setVideoFrame:videoFrame];
     }
     
     if ([_renderer prepareRender]) {

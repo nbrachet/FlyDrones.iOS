@@ -9,10 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @class FDVideoFrame;
-@class FDMovieDecoder;
 
 @interface FDMovieGLView : UIView
 
-- (void)render:(FDVideoFrame *)frame;
+- (void)renderVideoFrame:(FDVideoFrame *)videoFrame;
 
 @end

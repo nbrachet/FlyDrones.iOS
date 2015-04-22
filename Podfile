@@ -1,1 +1,2 @@
 pod 'CocoaAsyncSocket'
+pod 'ParseCrashReporting'

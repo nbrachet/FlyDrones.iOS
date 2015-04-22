@@ -13,6 +13,8 @@
 #import "FDMovieGLView.h"
 #import "FDDisplayInfoView.h"
 
+static NSUInteger const StandardRTPHheaderLength = 12;
+
 @interface FDDashboardViewController () <FDMovieDecoderDelegate>
 
 @property (nonatomic, weak) IBOutlet FDDisplayInfoView *displayInfoView;
@@ -20,8 +22,6 @@
 
 @property (nonatomic, strong) AsyncUdpSocket *asyncUdpSocket;
 @property (nonatomic, strong) FDMovieDecoder *movieDecoder;
-
-@property (nonatomic, strong) NSMutableData *bigData;
 
 @end
 
@@ -31,7 +31,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -50,17 +49,11 @@
     [super viewWillDisappear:animated];
     
     [self stopDataReceiving];
-    
-}
-
-
-- (void)dealloc {
-
+    self.movieDecoder = nil;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -106,23 +99,33 @@
     self.asyncUdpSocket = nil;
 }
 
-- (int)isH264iFrame:(NSData *)data {
-    const char* bytes = (const char*)[data bytes];
-    char firstByte = bytes[0];
-    char secondByte = bytes[1];
+//- (int)isH264iFrame:(NSData *)data {
+//    const char* bytes = (const char*)[data bytes];
+//    char firstByte = bytes[0];
+//    char secondByte = bytes[1];
+//
+//    int fragment_type = firstByte & 0x1F;
+//    int nal_type = secondByte & 0x1F;
+//    int start_bit = secondByte & 0x80;
+//    int end_bit = secondByte & 0x40;
+//    
+//    NSLog(@"Fragment type:%d NAL type:%d Start bit:%d End bit:%d", fragment_type, nal_type, start_bit, end_bit);
+//    
+//    if (((fragment_type == 28 || fragment_type == 29) && nal_type == 5 && start_bit == 128) || fragment_type == 5) {
+//        return YES;
+//    }
+//    return NO;
+//}
 
-    int fragment_type = firstByte & 0x1F;
-    int nal_type = secondByte & 0x1F;
-    int start_bit = secondByte & 0x80;
-    int end_bit = secondByte & 0x40;
-    
-    NSLog(@"Fragment type:%d NAL type:%d Start bit:%d End bit:%d", fragment_type, nal_type, start_bit, end_bit);
-    
-    if (((fragment_type == 28 || fragment_type == 29) && nal_type == 5 && start_bit == 128) || fragment_type == 5) {
-        return YES;
-    }
-    return NO;
-    
+- (NSInteger)rtpHeaderLength:(NSData *)data {
+    const char* bytes = (const char*)[data bytes];
+    int rtpHeaderLength = (bytes[0] & 0xF) * 4 + StandardRTPHheaderLength;    /*( <star>p & 0xF ) * 4 + 12 -- where p is a pointer to the RTP header*/
+    return rtpHeaderLength;
+}
+
+- (BOOL)isSRData:(NSData *)data {
+    const char* bytes = (const char*)[data bytes];
+    return (bytes[1] & 0xFF) == 200;                    /*that would ignore RTCP SR packets*/
 }
 
 #pragma mark - AsyncSocketDelegate
@@ -130,20 +133,37 @@
 - (BOOL)onUdpSocket:(AsyncUdpSocket *)sock didReceiveData:(NSData *)data withTag:(long)tag fromHost:(NSString *)host port:(UInt16)port {
     [self.asyncUdpSocket receiveWithTimeout:-1 tag:2];
     
-    
-    NSData *udpData = [data subdataWithRange:NSMakeRange(12, data.length-12)];  //remove first 12 bytes
-    
-    if (self.movieDecoder == nil) {
-        self.movieDecoder = [[FDMovieDecoder alloc] initFromReceivedData:udpData delegate:self];
+    if (data.length < StandardRTPHheaderLength) {
+        return YES;
     }
     
-    [self.movieDecoder parseAndDecodeInputData:udpData];
+    NSInteger rtpHeaderLength = [self rtpHeaderLength:data];
+    if (data.length <= rtpHeaderLength) {
+        return YES;
+    }
+    
+    BOOL isSRData = [self isSRData:data];
+    if (isSRData) {
+        return YES;
+    }
+    
+    NSData *frameData = [data subdataWithRange:NSMakeRange(rtpHeaderLength, data.length - rtpHeaderLength)];
+    
+    if (frameData.length == 0) {
+        return YES;
+    }
+    
+    if (self.movieDecoder == nil) {
+        self.movieDecoder = [[FDMovieDecoder alloc] initFromReceivedData:frameData delegate:self];
+    }
+    
+    [self.movieDecoder parseAndDecodeInputData:frameData];
     
     return YES;
 }
 
 - (void)onUdpSocket:(AsyncUdpSocket *)sock didNotReceiveDataWithTag:(long)tag dueToError:(NSError *)error {
-    NSLog(@"%s %@", __func__, error);
+    NSLog(@"%@", error);
 }
 
 - (void)onUdpSocketDidClose:(AsyncUdpSocket *)sock {
@@ -160,7 +180,7 @@
             return;
         }
         
-        [strongSelf.movieGLView render:videoFrame];
+        [strongSelf.movieGLView renderVideoFrame:videoFrame];
     });
 }
 

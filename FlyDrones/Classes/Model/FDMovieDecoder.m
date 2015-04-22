@@ -11,32 +11,14 @@
 #import "libswscale/swscale.h"
 #import "libswresample/swresample.h"
 #import "libavutil/pixdesc.h"
-#import "FDMovieFrame.h"
-
-//static int const FDMovieDecoderBufferSize = 48576;
-
-static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
-    width = MIN(linesize, width);
-    NSMutableData *md = [NSMutableData dataWithLength:width * height];
-    Byte *dst = md.mutableBytes;
-    for (NSUInteger i = 0; i < height; ++i) {
-        memcpy(dst, src, width);
-        dst += width;
-        src += linesize;
-    }
-    return md;
-}
+#import "FDVideoFrame.h"
 
 @interface FDMovieDecoder () {
     struct AVCodec *videoCodec;
     struct AVCodecContext *videoCodecContext;
     struct AVCodecParserContext *videoCodecParserContext;   //parser that is used to decode the h264 bitstream
 
-    struct AVFrame *videoFrame;
-    struct AVFrame *srcFrame;
-    struct AVFrame *dstFrame;
-    struct SwsContext *convertCtx;
-    uint8_t *outputBuf;
+    struct AVFrame *decodedFrame;
 }
 
 @property (nonatomic, strong) dispatch_queue_t parsingQueue;
@@ -74,7 +56,7 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
         videoCodecContext->height = 480;
         
         videoCodecContext->extradata = av_malloc(data.length);
-        videoCodecContext->extradata_size = data.length;
+        videoCodecContext->extradata_size = (int)data.length;
         [data getBytes:videoCodecContext->extradata length:videoCodecContext->extradata_size];
         videoCodecContext->pix_fmt = PIX_FMT_YUV420P;
   
@@ -85,8 +67,7 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
         
         videoCodecParserContext = av_parser_init(AV_CODEC_ID_H264);
 
-        srcFrame = av_frame_alloc();
-        dstFrame = av_frame_alloc();
+        decodedFrame = av_frame_alloc();
         
         BOOL isInitializedDecoder = (avcodec_open2(videoCodecContext, videoCodec, NULL) < 0) ? NO : YES;
         if (!isInitializedDecoder) {
@@ -110,20 +91,18 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
     if (videoCodecParserContext) {
         av_parser_close(videoCodecParserContext);
     }
-    if (videoFrame) {
-        av_free(videoFrame);
-    }
-    if (dstFrame) {
-        av_free(dstFrame);
-    }
-    if (outputBuf) {
-        av_free(outputBuf);
+    if (decodedFrame) {
+        av_free(decodedFrame);
     }
 }
 
 #pragma mark - Public
 
 - (void)parseAndDecodeInputData:(NSData *)data {
+    if (data.length == 0) {
+        return;
+    }
+    
     __weak __typeof(self)weakSelf = self;
     dispatch_async(self.parsingQueue, ^{
         __strong __typeof(weakSelf) strongSelf = weakSelf;
@@ -139,11 +118,13 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
 #pragma mark - Private
 
 - (void)parseData:(NSData *)data {
-    NSLog(@"start parsing");
+    if (data.length == 0) {
+        return;
+    }
     
     NSMutableData *parsingData = [NSMutableData dataWithData:data];
     
-    while ([parsingData length] > 0) {
+    while (parsingData.length > 0) {
         const uint8_t *parsingDataBytes = (const uint8_t*)[parsingData bytes];
         uint8_t *parsedData = NULL;
         int parsedDataSize = 0;
@@ -160,15 +141,17 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
         if (length > 0) {
             [parsingData replaceBytesInRange:NSMakeRange(0, length) withBytes:NULL length:0];
         }
-        if (parsedDataSize >= 0) {
-            NSLog(@"Detect frame");
+        if (parsedDataSize > 0) {
             [self decodeFrameData:parsedData size:parsedDataSize];
         }
     }
-    NSLog(@"Finish parsing");
 }
 
 - (void)decodeFrameData:(uint8_t *)data size:(int)size {
+    if (!data || size == 0) {
+        return;
+    }
+    
     AVPacket packet;
     av_init_packet(&packet);
     
@@ -181,14 +164,17 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
     
     while(packet.size > 0) {
         int got_picture;
-        int length = avcodec_decode_video2(videoCodecContext, srcFrame, &got_picture, &packet);
+        int length = avcodec_decode_video2(videoCodecContext, decodedFrame, &got_picture, &packet);
         if (length < 0) {
-            NSLog(@"decode video error, skip packet");
+            NSLog(@"Decode video error, skip packet");
             break;
         }
         if (got_picture) {
             if (self.delegate != nil && [self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)]) {
-                FDVideoFrame *decodedVideoFrame = [self handleVideoFrame];
+                FDVideoFrame *decodedVideoFrame = [[FDVideoFrame alloc] initWithFrame:decodedFrame
+                                                                                width:videoCodecContext->width
+                                                                               height:videoCodecContext->height];
+                
                 if (decodedVideoFrame != nil) {
                     [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
                 }
@@ -198,33 +184,6 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
         packet.data += length;
     }
     av_free_packet(&packet);
-}
-
-- (FDVideoFrame *)handleVideoFrame {
-    if (!srcFrame->data[0]) {
-        return nil;
-    }
-    
-    FDVideoFrameYUV *frame = [[FDVideoFrameYUV alloc] init];
-    
-    frame.luma = copyFrameData(srcFrame->data[0],
-                               srcFrame->linesize[0],
-                               videoCodecContext->width,
-                               videoCodecContext->height);
-    
-    frame.chromaB = copyFrameData(srcFrame->data[1],
-                                  srcFrame->linesize[1],
-                                  videoCodecContext->width / 2.0f,
-                                  videoCodecContext->height / 2.0f);
-    
-    frame.chromaR = copyFrameData(srcFrame->data[2],
-                                  srcFrame->linesize[2],
-                                  videoCodecContext->width / 2.0f,
-                                  videoCodecContext->height / 2.0f);
-    
-    frame.width = videoCodecContext->width;
-    frame.height = videoCodecContext->height;
-    return frame;
 }
 
 @end
