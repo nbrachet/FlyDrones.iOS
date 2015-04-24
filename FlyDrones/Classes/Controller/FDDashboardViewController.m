@@ -7,20 +7,17 @@
 //
 
 #import "FDDashboardViewController.h"
-#import <CocoaAsyncSocket/AsyncSocket.h>
-#import <CocoaAsyncSocket/AsyncUdpSocket.h>
 #import "FDMovieDecoder.h"
 #import "FDMovieGLView.h"
 #import "FDDisplayInfoView.h"
+#import "FDConnectionManager.h"
 
-static NSUInteger const StandardRTPHheaderLength = 12;
-
-@interface FDDashboardViewController () <FDMovieDecoderDelegate>
+@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate>
 
 @property (nonatomic, weak) IBOutlet FDDisplayInfoView *displayInfoView;
 @property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
 
-@property (nonatomic, strong) AsyncUdpSocket *asyncUdpSocket;
+@property (nonatomic, strong) FDConnectionManager *connectionManager;
 @property (nonatomic, strong) FDMovieDecoder *movieDecoder;
 
 @end
@@ -31,6 +28,9 @@ static NSUInteger const StandardRTPHheaderLength = 12;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.connectionManager = [[FDConnectionManager alloc] init];
+    self.connectionManager.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -42,13 +42,15 @@ static NSUInteger const StandardRTPHheaderLength = 12;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    [self startDataReceiving];
+//    [self.connectionManager connectToServer:self.path];
+    [self.connectionManager connectToServer:self.hostForConnection portForConnection:self.portForConnection portForReceived:self.portForReceived];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    [self stopDataReceiving];
+    [self.connectionManager closeConnection];
     self.movieDecoder = nil;
 }
 
@@ -71,33 +73,6 @@ static NSUInteger const StandardRTPHheaderLength = 12;
 
 #pragma mark - Private
 
-- (BOOL)startDataReceiving {
-    [self stopDataReceiving];
-    
-    self.asyncUdpSocket = [[AsyncUdpSocket alloc] initWithDelegate:self];
-    NSError *error = nil;
-    
-    NSURL *url = [NSURL URLWithString:self.path];
-    if (url == nil) {
-        return NO;
-    }
-    
-    BOOL success = [self.asyncUdpSocket bindToAddress:url.host port:[url.port integerValue] error:&error];
-    if (!success || error != nil) {
-        NSLog(@"%@", error.localizedDescription);
-        return NO;
-    }
-    
-    [self.asyncUdpSocket receiveWithTimeout:-1 tag:0];
-    
-    return YES;
-}
-
-- (void)stopDataReceiving {
-    [self.asyncUdpSocket close];
-    self.asyncUdpSocket.delegate = nil;
-    self.asyncUdpSocket = nil;
-}
 
 //- (int)isH264iFrame:(NSData *)data {
 //    const char* bytes = (const char*)[data bytes];
@@ -117,57 +92,18 @@ static NSUInteger const StandardRTPHheaderLength = 12;
 //    return NO;
 //}
 
-- (NSInteger)rtpHeaderLength:(NSData *)data {
-    const char* bytes = (const char*)[data bytes];
-    int rtpHeaderLength = (bytes[0] & 0xF) * 4 + StandardRTPHheaderLength;    /*( <star>p & 0xF ) * 4 + 12 -- where p is a pointer to the RTP header*/
-    return rtpHeaderLength;
-}
+#pragma mark - FDConnectionManagerDelegate
 
-- (BOOL)isSRData:(NSData *)data {
-    const char* bytes = (const char*)[data bytes];
-    return (bytes[1] & 0xFF) == 200;                    /*that would ignore RTCP SR packets*/
-}
-
-#pragma mark - AsyncSocketDelegate
-
-- (BOOL)onUdpSocket:(AsyncUdpSocket *)sock didReceiveData:(NSData *)data withTag:(long)tag fromHost:(NSString *)host port:(UInt16)port {
-    [self.asyncUdpSocket receiveWithTimeout:-1 tag:2];
-    
-    if (data.length < StandardRTPHheaderLength) {
-        return YES;
-    }
-    
-    NSInteger rtpHeaderLength = [self rtpHeaderLength:data];
-    if (data.length <= rtpHeaderLength) {
-        return YES;
-    }
-    
-    BOOL isSRData = [self isSRData:data];
-    if (isSRData) {
-        return YES;
-    }
-    
-    NSData *frameData = [data subdataWithRange:NSMakeRange(rtpHeaderLength, data.length - rtpHeaderLength)];
-    
-    if (frameData.length == 0) {
-        return YES;
+- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveData:(NSData *)data {
+    if (data.length == 0) {
+        return;
     }
     
     if (self.movieDecoder == nil) {
-        self.movieDecoder = [[FDMovieDecoder alloc] initFromReceivedData:frameData delegate:self];
+        self.movieDecoder = [[FDMovieDecoder alloc] initFromReceivedData:data delegate:self];
     }
     
-    [self.movieDecoder parseAndDecodeInputData:frameData];
-    
-    return YES;
-}
-
-- (void)onUdpSocket:(AsyncUdpSocket *)sock didNotReceiveDataWithTag:(long)tag dueToError:(NSError *)error {
-    NSLog(@"%@", error);
-}
-
-- (void)onUdpSocketDidClose:(AsyncUdpSocket *)sock {
-    NSLog(@"%s", __func__);
+    [self.movieDecoder parseAndDecodeInputData:data];
 }
 
 #pragma mark - FDMovieDecoderDelegate

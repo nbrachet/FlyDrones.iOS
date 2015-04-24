@@ -10,6 +10,8 @@
 
 @interface FDDashboardViewController : UIViewController
 
-@property (nonatomic, copy) NSString *path;
+@property (nonatomic, copy) NSString *hostForConnection;
+@property (nonatomic, assign) NSUInteger portForConnection;
+@property (nonatomic, assign) NSUInteger portForReceived;
 
 @end

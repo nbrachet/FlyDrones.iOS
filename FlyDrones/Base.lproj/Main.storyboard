@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="aOP-K8-VNR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="aOP-K8-VNR">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
@@ -37,7 +37,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qJT-Bv-RUe">
-                                <rect key="frame" x="16" y="49" width="992" height="30"/>
+                                <rect key="frame" x="16" y="49" width="153" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="qe2-si-flz"/>
                                 </constraints>
@@ -54,19 +54,79 @@
                                     <action selector="letsFly:" destination="VO8-QM-Xhe" eventType="touchUpInside" id="7BC-VC-GyJ"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Host for connection" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gwu-Md-IqN">
+                                <rect key="frame" x="16" y="20" width="153" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="Oko-uL-dxU"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Port for connection" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YWB-aB-g0k">
+                                <rect key="frame" x="16" y="87" width="153" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="AnP-f1-256"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="u64-R3-k5W">
+                                <rect key="frame" x="16" y="116" width="153" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="E75-pC-cHL"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Port for received" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M61-DH-gXr">
+                                <rect key="frame" x="16" y="176" width="153" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="VB4-t4-N4R"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="adz-ym-jz2">
+                                <rect key="frame" x="16" y="205" width="153" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="WCo-pE-kqI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="qJT-Bv-RUe" secondAttribute="trailing" constant="16" id="VzT-WY-dFG"/>
-                            <constraint firstItem="qJT-Bv-RUe" firstAttribute="top" secondItem="Ogj-VT-Q2t" secondAttribute="bottom" constant="49" id="kB4-uB-SDs"/>
+                            <constraint firstAttribute="trailing" secondItem="YWB-aB-g0k" secondAttribute="trailing" constant="855" id="4QO-2n-UYJ"/>
+                            <constraint firstItem="adz-ym-jz2" firstAttribute="top" secondItem="M61-DH-gXr" secondAttribute="bottom" constant="8" id="6fa-Xr-OLF"/>
+                            <constraint firstItem="YWB-aB-g0k" firstAttribute="top" secondItem="qJT-Bv-RUe" secondAttribute="bottom" constant="8" id="CKT-KW-NsN"/>
+                            <constraint firstItem="M61-DH-gXr" firstAttribute="top" secondItem="u64-R3-k5W" secondAttribute="bottom" constant="30" id="D0z-ev-1Vy"/>
+                            <constraint firstItem="adz-ym-jz2" firstAttribute="leading" secondItem="gUX-JV-DGM" secondAttribute="leading" constant="16" id="EQH-dM-z3G"/>
+                            <constraint firstItem="Gwu-Md-IqN" firstAttribute="top" secondItem="Ogj-VT-Q2t" secondAttribute="bottom" constant="20" id="Iwe-rF-qgo"/>
+                            <constraint firstItem="M61-DH-gXr" firstAttribute="leading" secondItem="gUX-JV-DGM" secondAttribute="leading" constant="16" id="OGv-gx-4nF"/>
+                            <constraint firstAttribute="trailing" secondItem="M61-DH-gXr" secondAttribute="trailing" constant="855" id="SRz-58-bIF"/>
+                            <constraint firstAttribute="trailing" secondItem="qJT-Bv-RUe" secondAttribute="trailing" constant="855" id="VzT-WY-dFG"/>
+                            <constraint firstItem="u64-R3-k5W" firstAttribute="top" secondItem="YWB-aB-g0k" secondAttribute="bottom" constant="8" id="WkJ-rK-73z"/>
+                            <constraint firstAttribute="trailing" secondItem="Gwu-Md-IqN" secondAttribute="trailing" constant="855" id="X4r-nd-qyV"/>
+                            <constraint firstItem="u64-R3-k5W" firstAttribute="leading" secondItem="gUX-JV-DGM" secondAttribute="leading" constant="16" id="dlw-uO-UWZ"/>
+                            <constraint firstAttribute="trailing" secondItem="adz-ym-jz2" secondAttribute="trailing" constant="855" id="jy2-Tv-zS8"/>
+                            <constraint firstItem="qJT-Bv-RUe" firstAttribute="top" secondItem="Gwu-Md-IqN" secondAttribute="bottom" constant="8" id="pcV-ME-pFb"/>
+                            <constraint firstAttribute="trailing" secondItem="u64-R3-k5W" secondAttribute="trailing" constant="855" id="qnh-Bo-TqK"/>
+                            <constraint firstItem="YWB-aB-g0k" firstAttribute="leading" secondItem="gUX-JV-DGM" secondAttribute="leading" constant="16" id="tKj-4r-JVv"/>
                             <constraint firstItem="qJT-Bv-RUe" firstAttribute="leading" secondItem="gUX-JV-DGM" secondAttribute="leading" constant="16" id="xPB-Uz-bW1"/>
+                            <constraint firstItem="Gwu-Md-IqN" firstAttribute="leading" secondItem="gUX-JV-DGM" secondAttribute="leading" constant="16" id="xdV-wj-2YA"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ml0-gp-fyR"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
-                        <outlet property="customPathTextField" destination="qJT-Bv-RUe" id="P0w-tj-dyp"/>
+                        <outlet property="hostForConnectionTextField" destination="qJT-Bv-RUe" id="nEH-h3-4nY"/>
+                        <outlet property="portForConnectionTextField" destination="u64-R3-k5W" id="jiX-UO-cJ3"/>
+                        <outlet property="portForReceivedTextField" destination="adz-ym-jz2" id="D0o-Rn-IO1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="psG-mU-OGz" userLabel="First Responder" sceneMemberID="firstResponder"/>
