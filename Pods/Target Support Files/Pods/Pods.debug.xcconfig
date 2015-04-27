@@ -1,7 +1,0 @@
-FRAMEWORK_SEARCH_PATHS = "$(PODS_ROOT)/Parse" "$(PODS_ROOT)/ParseCrashReporting" "$(PODS_ROOT)/SplunkMint-iOS/"
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Bolts" "${PODS_ROOT}/Headers/Public/CocoaAsyncSocket" "${PODS_ROOT}/Headers/Public/Parse" "${PODS_ROOT}/Headers/Public/ParseCrashReporting" "${PODS_ROOT}/Headers/Public/SplunkMint-iOS" $(SDKROOT)/usr/include/libz
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/Bolts" -isystem "${PODS_ROOT}/Headers/Public/CocoaAsyncSocket" -isystem "${PODS_ROOT}/Headers/Public/Parse" -isystem "${PODS_ROOT}/Headers/Public/ParseCrashReporting" -isystem "${PODS_ROOT}/Headers/Public/SplunkMint-iOS"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"Pods-Bolts" -l"Pods-CocoaAsyncSocket" -l"Pods-SplunkMint-iOS" -l"sqlite3" -l"stdc++.6" -l"z" -framework "AudioToolbox" -framework "CFNetwork" -framework "CoreGraphics" -framework "CoreLocation" -framework "CoreTelephony" -framework "Foundation" -framework "MobileCoreServices" -framework "Parse" -framework "ParseCrashReporting" -framework "QuartzCore" -framework "Security" -framework "SplunkMint-iOS" -framework "StoreKit" -framework "SystemConfiguration" -framework "WebKit" -weak_framework "Accounts" -weak_framework "Social"
-OTHER_LIBTOOLFLAGS = $(OTHER_LDFLAGS)
-PODS_ROOT = ${SRCROOT}/Pods
