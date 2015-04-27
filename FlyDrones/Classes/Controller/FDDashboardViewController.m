@@ -42,15 +42,14 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-//    [self.connectionManager connectToServer:self.path];
     [self.connectionManager connectToServer:self.hostForConnection portForConnection:self.portForConnection portForReceived:self.portForReceived];
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
     [self.connectionManager closeConnection];
+    self.connectionManager = nil;
     self.movieDecoder = nil;
 }
 
@@ -73,24 +72,6 @@
 
 #pragma mark - Private
 
-
-//- (int)isH264iFrame:(NSData *)data {
-//    const char* bytes = (const char*)[data bytes];
-//    char firstByte = bytes[0];
-//    char secondByte = bytes[1];
-//
-//    int fragment_type = firstByte & 0x1F;
-//    int nal_type = secondByte & 0x1F;
-//    int start_bit = secondByte & 0x80;
-//    int end_bit = secondByte & 0x40;
-//    
-//    NSLog(@"Fragment type:%d NAL type:%d Start bit:%d End bit:%d", fragment_type, nal_type, start_bit, end_bit);
-//    
-//    if (((fragment_type == 28 || fragment_type == 29) && nal_type == 5 && start_bit == 128) || fragment_type == 5) {
-//        return YES;
-//    }
-//    return NO;
-//}
 
 #pragma mark - FDConnectionManagerDelegate
 

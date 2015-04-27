@@ -28,7 +28,6 @@
     }
     freeifaddrs(interfaces);
 
-
     return address;
 }
 

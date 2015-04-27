@@ -32,7 +32,6 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (void)dealloc {
-    [self stopConnecting];
     [self closeConnection];
 }
 
@@ -67,17 +66,19 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     [self stopConnecting];
     NSLog(@"Start connecting");
 
-    NSDictionary *serverInfo = @{@"host" : host, @"port" : @(port)};
+    NSDictionary *serverInfo = @{@"host": host, @"port": @(port)};
 
     self.connectingTimer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(sendEmptyData:) userInfo:serverInfo repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.connectingTimer forMode:NSDefaultRunLoopMode];
 }
 
 - (void)stopConnecting {
-    NSLog(@"Cancel connecting");
+    NSLog(@"Stop connecting");
 
-    [self.connectingTimer invalidate];
-    self.connectingTimer = nil;
+    @synchronized(self) {
+        [self.connectingTimer invalidate];
+        self.connectingTimer = nil;
+    }
 }
 
 - (void)sendEmptyData:(NSTimer *)timer {
@@ -97,7 +98,9 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (void)closeConnection {
-    NSLog(@"Cancel connection");
+    [self stopConnecting];
+
+    NSLog(@"Close connection");
     [self.asyncUdpSocket close];
     self.asyncUdpSocket.delegate = nil;
     self.asyncUdpSocket = nil;
