@@ -11,8 +11,8 @@
 
 #pragma mark - Static
 
-static NSString * const kFDDateFormatString = @"MMMM dd, yyyy EEEE";
-static NSString * const kFDTimeFormatString = @"HH:mm:ss";
+static NSString *const kFDDateFormatString = @"MMMM dd, yyyy EEEE";
+static NSString *const kFDTimeFormatString = @"HH:mm:ss";
 
 
 #pragma mark - Public methods
@@ -21,8 +21,7 @@ static NSString * const kFDTimeFormatString = @"HH:mm:ss";
 
 #pragma mark - Date/time methods
 
-+ (NSString *)currentDate
-{
++ (NSString *)currentDate {
     NSDate *date = [NSDate date];
     NSDateFormatter *format = [[NSDateFormatter alloc] init];
     [format setLocale:[NSLocale currentLocale]];
@@ -30,8 +29,7 @@ static NSString * const kFDTimeFormatString = @"HH:mm:ss";
     return [format stringFromDate:date];
 }
 
-+ (NSString *)currentTime
-{
++ (NSString *)currentTime {
     NSDate *date = [NSDate date];
     NSDateFormatter *format = [[NSDateFormatter alloc] init];
     [format setDateFormat:kFDTimeFormatString];

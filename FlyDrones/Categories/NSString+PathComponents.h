@@ -11,6 +11,7 @@
 @interface NSString (PathComponents)
 
 - (NSUInteger)pathPort;
+
 - (NSString *)pathHost;
 
 @end

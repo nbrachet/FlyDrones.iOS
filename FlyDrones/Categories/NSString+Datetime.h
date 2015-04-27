@@ -12,6 +12,7 @@
 #pragma mark - Date/time methods
 
 + (NSString *)currentDate;
+
 + (NSString *)currentTime;
 
 #pragma mark -

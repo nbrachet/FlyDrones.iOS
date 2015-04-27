@@ -18,7 +18,7 @@
 #pragma mark - UIApplication delegate methods
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+
     [self enableMintAnalytics];
     [self enableParseCrashReporting];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];

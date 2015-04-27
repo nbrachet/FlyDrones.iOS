@@ -19,10 +19,12 @@
 
 @interface FDConnectionManager : NSObject
 
-@property (nonatomic, weak) id<FDConnectionManagerDelegate> delegate;
+@property(nonatomic, weak) id <FDConnectionManagerDelegate> delegate;
 
 - (BOOL)connectToServer:(NSString *)host portForConnection:(NSUInteger)portForConnection portForReceived:(NSUInteger)portForReceived;
+
 - (void)closeConnection;
+
 - (BOOL)isConnected;
 
 @end

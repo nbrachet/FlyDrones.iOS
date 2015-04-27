@@ -9,15 +9,19 @@
 @interface NSFileManager (ANUtils)
 
 + (NSString *)applicationDocumentsDirectoryPath;
+
 - (NSString *)applicationDocumentsDirectoryPath;
 
 + (NSString *)applicationCacheDirectoryPath;
+
 - (NSString *)applicationCacheDirectoryPath;
 
 + (NSString *)applicationTemporaryDirectoryPath;
+
 - (NSString *)applicationTemporaryDirectoryPath;
 
 + (NSURL *)searchFile:(NSString *)fileName inRootDirectoryPath:(NSString *)directoryPath;
+
 + (NSURL *)searchFile:(NSString *)fileName inRootDirectoryURL:(NSURL *)directoryURL;
 
 @end

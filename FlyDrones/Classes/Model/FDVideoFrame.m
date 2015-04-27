@@ -19,10 +19,10 @@
         }
         self.width = width;
         self.height = height;
-        self.luma = [self copyFrameData:frame->data[0] frameSize:(int)frame->linesize[0] width:(int)width height:(int)height];
-        self.chromaB = [self copyFrameData:frame->data[1] frameSize:(int)frame->linesize[1] width:(int)(width / 2) height:(int)(height / 2)];
-        self.chromaR = [self copyFrameData:frame->data[2] frameSize:(int)frame->linesize[2] width:(int)(width / 2) height:(int)(height  / 2)];
-        
+        self.luma = [self copyFrameData:frame->data[0] frameSize:(int) frame->linesize[0] width:(int) width height:(int) height];
+        self.chromaB = [self copyFrameData:frame->data[1] frameSize:(int) frame->linesize[1] width:(int) (width / 2) height:(int) (height / 2)];
+        self.chromaR = [self copyFrameData:frame->data[2] frameSize:(int) frame->linesize[2] width:(int) (width / 2) height:(int) (height / 2)];
+
         if (self.luma.length == 0 || self.chromaB.length == 0 || self.chromaR.length == 0) {
             self = nil;
             return nil;

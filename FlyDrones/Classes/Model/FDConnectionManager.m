@@ -7,17 +7,15 @@
 //
 
 #import "FDConnectionManager.h"
-#import <CocoaAsyncSocket/AsyncSocket.h>
 #import <CocoaAsyncSocket/AsyncUdpSocket.h>
-#import "NSString+PathComponents.h"
 #import "NSData+RTCP.h"
 
 static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 
 @interface FDConnectionManager () <AsyncUdpSocketDelegate>
 
-@property (nonatomic, strong) AsyncUdpSocket *asyncUdpSocket;
-@property (nonatomic, strong) NSTimer *connectingTimer;
+@property(nonatomic, strong) AsyncUdpSocket *asyncUdpSocket;
+@property(nonatomic, strong) NSTimer *connectingTimer;
 
 @end
 
@@ -28,7 +26,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 - (instancetype)init {
     self = [super init];
     if (self) {
-        
+
     }
     return self;
 }
@@ -42,20 +40,20 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 
 - (BOOL)connectToServer:(NSString *)hostForConnection portForConnection:(NSUInteger)portForConnection portForReceived:(NSUInteger)portForReceived {
     [self closeConnection];
-    
+
     self.asyncUdpSocket = [[AsyncUdpSocket alloc] initWithDelegate:self];
-    
+
     NSError *error = nil;
-    
+
     BOOL success = [self.asyncUdpSocket bindToPort:portForReceived error:&error];
     if (!success || error != nil) {
         NSLog(@"%@", error.localizedDescription);
         return NO;
     }
-    
+
     [self.asyncUdpSocket receiveWithTimeout:-1 tag:0];                      //start receiving
     [self startConnectingToHost:hostForConnection port:portForConnection];  //start connecting
-    
+
     return YES;
 }
 
@@ -69,8 +67,8 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     [self stopConnecting];
     NSLog(@"Start connecting");
 
-    NSDictionary *serverInfo = @{@"host": host, @"port": @(port)};
-    
+    NSDictionary *serverInfo = @{@"host" : host, @"port" : @(port)};
+
     self.connectingTimer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(sendEmptyData:) userInfo:serverInfo repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.connectingTimer forMode:NSDefaultRunLoopMode];
 }
@@ -84,15 +82,15 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 
 - (void)sendEmptyData:(NSTimer *)timer {
     NSDictionary *serverInfo = [timer userInfo];
-    
+
     NSData *packetData = [NSData RTCPDataWithVersion:2 packetType:RTCPPacketTypeRR];
-    
+
     BOOL success = [self.asyncUdpSocket sendData:packetData
                                           toHost:serverInfo[@"host"]
                                             port:[serverInfo[@"port"] intValue]
                                      withTimeout:-1
                                              tag:0];
-    
+
     if (!success) {
         NSLog(@"Error while sending data");
     }
@@ -106,13 +104,13 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (NSInteger)rtpHeaderLength:(NSData *)data {
-    const char* bytes = (const char*)[data bytes];
+    const char *bytes = (const char *) [data bytes];
     int rtpHeaderLength = (bytes[0] & 0xF) * 4 + FDConnectionManagerStandardRTPHeaderLength;    /*( <star>p & 0xF ) * 4 + 12 -- where p is a pointer to the RTP header*/
     return rtpHeaderLength;
 }
 
 - (BOOL)isSRData:(NSData *)data {
-    const char* bytes = (const char*)[data bytes];
+    const char *bytes = (const char *) [data bytes];
     return (bytes[1] & 0xFF) == 200;                    /*that would ignore RTCP SR packets*/
 }
 
@@ -123,40 +121,40 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (void)onUdpSocket:(AsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error {
-    
+
 }
 
 - (BOOL)onUdpSocket:(AsyncUdpSocket *)sock didReceiveData:(NSData *)data withTag:(long)tag fromHost:(NSString *)host port:(UInt16)port {
     [self.asyncUdpSocket receiveWithTimeout:-1 tag:2];
-    
+
     if ([self.connectingTimer isValid]) {
         [self stopConnecting];
     }
-    
+
     if (data.length < FDConnectionManagerStandardRTPHeaderLength) {
         return YES;
     }
-    
+
     NSInteger rtpHeaderLength = [self rtpHeaderLength:data];
     if (data.length <= rtpHeaderLength) {
         return YES;
     }
-    
+
     BOOL isSRData = [self isSRData:data];
     if (isSRData) {
         return YES;
     }
-    
+
     NSData *frameData = [data subdataWithRange:NSMakeRange(rtpHeaderLength, data.length - rtpHeaderLength)];
-    
+
     if (frameData.length == 0) {
         return YES;
     }
-    
+
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(connectionManager:didReceiveData:)]) {
         [self.delegate connectionManager:self didReceiveData:frameData];
     }
-    
+
     return YES;
 }
 

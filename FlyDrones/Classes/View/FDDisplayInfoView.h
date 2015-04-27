@@ -10,6 +10,7 @@
 @interface FDDisplayInfoView : UIView
 
 - (void)showDisplayInfo;
+
 - (void)hideDisplayInfo;
 
 @end

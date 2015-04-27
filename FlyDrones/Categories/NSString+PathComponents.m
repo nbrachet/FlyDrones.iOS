@@ -22,7 +22,7 @@
     } else {
         url = [NSURL URLWithString:self];
     }
-    
+
     NSNumber *portNumber = url.port;
     return [portNumber integerValue];
 }
@@ -39,7 +39,7 @@
     } else {
         url = [NSURL URLWithString:self];
     }
-    
+
     return url.host;
 }
 

@@ -12,11 +12,17 @@
 #pragma mark - Frames
 
 - (CGFloat)width;
+
 - (CGFloat)height;
-- (void)updateSize:(CGSize )size;
+
+- (void)updateSize:(CGSize)size;
+
 - (void)updateHeight:(CGFloat)height;
+
 - (void)updateWidth:(CGFloat)width;
+
 - (void)offsetByX:(CGFloat)offsetValue;
+
 - (void)offsetByY:(CGFloat)offsetValue;
 
 #pragma mark -
