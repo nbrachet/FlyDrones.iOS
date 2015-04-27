@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1B0042CA1AEA49C6007B1B35 /* FDConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0042C91AEA49C6007B1B35 /* FDConnectionManager.m */; };
 		1B0042CD1AEA5383007B1B35 /* NSString+PathComponents.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0042CC1AEA5383007B1B35 /* NSString+PathComponents.m */; };
-		1B58C5DB1AEAF40500DD7485 /* RTCPPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B58C5DA1AEAF40500DD7485 /* RTCPPacket.m */; };
 		1B9552391AE7BBA30054BA0C /* FDVideoFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9552381AE7BBA30054BA0C /* FDVideoFrame.m */; };
 		1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E321ACEB55500B33BDD /* FDMovieDecoder.m */; };
 		1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E351ACEBBFE00B33BDD /* FDDashboardViewController.m */; };
@@ -20,6 +19,7 @@
 		1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E61AD5519300051601 /* NSString+Datetime.m */; };
 		1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E81AD5519300051601 /* NSString+Network.m */; };
 		1B97E9EF1AD5519300051601 /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9EA1AD5519300051601 /* UIView+Utils.m */; };
+		1BB00CA21AEE6D9900FF787B /* NSData+RTCP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB00CA11AEE6D9900FF787B /* NSData+RTCP.m */; };
 		1BED467B1AE56D79008EA8C8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BED467A1AE56D79008EA8C8 /* Images.xcassets */; };
 		1BED46891AE56DC2008EA8C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46851AE56DC2008EA8C8 /* Main.storyboard */; };
 		1BED468A1AE56DC2008EA8C8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46871AE56DC2008EA8C8 /* LaunchScreen.xib */; };
@@ -51,7 +51,6 @@
 		1B0042CB1AEA5383007B1B35 /* NSString+PathComponents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PathComponents.h"; sourceTree = "<group>"; };
 		1B0042CC1AEA5383007B1B35 /* NSString+PathComponents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PathComponents.m"; sourceTree = "<group>"; };
 		1B58C5D91AEAF40500DD7485 /* RTCPPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPPacket.h; sourceTree = "<group>"; };
-		1B58C5DA1AEAF40500DD7485 /* RTCPPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTCPPacket.m; sourceTree = "<group>"; };
 		1B9552371AE7BBA30054BA0C /* FDVideoFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDVideoFrame.h; sourceTree = "<group>"; };
 		1B9552381AE7BBA30054BA0C /* FDVideoFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDVideoFrame.m; sourceTree = "<group>"; };
 		1B955E311ACEB55500B33BDD /* FDMovieDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMovieDecoder.h; sourceTree = "<group>"; };
@@ -72,6 +71,8 @@
 		1B97E9E81AD5519300051601 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
 		1B97E9E91AD5519300051601 /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
 		1B97E9EA1AD5519300051601 /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
+		1BB00CA01AEE6D9900FF787B /* NSData+RTCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+RTCP.h"; sourceTree = "<group>"; };
+		1BB00CA11AEE6D9900FF787B /* NSData+RTCP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+RTCP.m"; sourceTree = "<group>"; };
 		1BED467A1AE56D79008EA8C8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1BED467C1AE56D8E008EA8C8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BED46861AE56DC2008EA8C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -232,7 +233,6 @@
 				1B9552371AE7BBA30054BA0C /* FDVideoFrame.h */,
 				1B9552381AE7BBA30054BA0C /* FDVideoFrame.m */,
 				1B58C5D91AEAF40500DD7485 /* RTCPPacket.h */,
-				1B58C5DA1AEAF40500DD7485 /* RTCPPacket.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -252,6 +252,8 @@
 				1B97E9EA1AD5519300051601 /* UIView+Utils.m */,
 				1B0042CB1AEA5383007B1B35 /* NSString+PathComponents.h */,
 				1B0042CC1AEA5383007B1B35 /* NSString+PathComponents.m */,
+				1BB00CA01AEE6D9900FF787B /* NSData+RTCP.h */,
+				1BB00CA11AEE6D9900FF787B /* NSData+RTCP.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -613,8 +615,9 @@
 		371525E31A77B28A00F885B8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = FD;
 				LastUpgradeCheck = 0610;
-				ORGANIZATIONNAME = "Sergey Galagan";
+				ORGANIZATIONNAME = "Oleksii Naboichenko";
 				TargetAttributes = {
 					371525EA1A77B28A00F885B8 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -704,6 +707,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BB00CA21AEE6D9900FF787B /* NSData+RTCP.m in Sources */,
 				1B97E9EF1AD5519300051601 /* UIView+Utils.m in Sources */,
 				1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */,
 				1B955E391ACEBCED00B33BDD /* FDMovieGLView.m in Sources */,
@@ -712,7 +716,6 @@
 				1B0042CA1AEA49C6007B1B35 /* FDConnectionManager.m in Sources */,
 				1B97E9EC1AD5519300051601 /* NSFileManager+ANUtils.m in Sources */,
 				1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */,
-				1B58C5DB1AEAF40500DD7485 /* RTCPPacket.m in Sources */,
 				37431F551A7A57C0007CDD6F /* AppDelegate.m in Sources */,
 				1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */,
 				1B97E9EB1AD5519300051601 /* NSBundle+Utils.m in Sources */,
@@ -851,7 +854,7 @@
 					"$(PROJECT_DIR)/FlyDrones/Classes/Libs/x264/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0cbbc996-15d8-493c-a2ec-bc9e7a88b048";
+				PROVISIONING_PROFILE = "461dbd2b-d08f-48d7-9bfa-e83f83656eda";
 			};
 			name = Debug;
 		};
@@ -881,7 +884,7 @@
 					"$(PROJECT_DIR)/FlyDrones/Classes/Libs/x264/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0cbbc996-15d8-493c-a2ec-bc9e7a88b048";
+				PROVISIONING_PROFILE = "461dbd2b-d08f-48d7-9bfa-e83f83656eda";
 			};
 			name = Release;
 		};

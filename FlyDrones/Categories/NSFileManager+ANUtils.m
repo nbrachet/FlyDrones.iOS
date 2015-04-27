@@ -2,8 +2,8 @@
 //  NSFileManager+ANUtils.m
 //  ANUtils
 //
-//  Created by Alexey Naboychenko on 6/3/13.
-//  Copyright (c) 2013 Alexey Naboychenko. All rights reserved.
+//  Created by Oleksii Naboichenko on 6/3/13.
+//  Copyright (c) 2013 Oleksii Naboichenko. All rights reserved.
 //
 
 #import "NSFileManager+ANUtils.h"

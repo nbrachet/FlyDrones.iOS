@@ -3,13 +3,14 @@
 //  FlyDrones
 //
 //  Created by Oleksii Naboichenko on 4/24/15.
-//  Copyright (c) 2015 Sergey Galagan. All rights reserved.
+//  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
 
 #import "FDConnectionManager.h"
 #import <CocoaAsyncSocket/AsyncSocket.h>
 #import <CocoaAsyncSocket/AsyncUdpSocket.h>
 #import "NSString+PathComponents.h"
+#import "NSData+RTCP.h"
 
 static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 
@@ -27,6 +28,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 - (instancetype)init {
     self = [super init];
     if (self) {
+        
     }
     return self;
 }
@@ -82,8 +84,10 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 
 - (void)sendEmptyData:(NSTimer *)timer {
     NSDictionary *serverInfo = [timer userInfo];
-    const char bytes[] = "0xF";
-    BOOL success = [self.asyncUdpSocket sendData:[NSData dataWithBytes:bytes length:sizeof(bytes)]
+    
+    NSData *packetData = [NSData RTCPDataWithVersion:2 packetType:RTCPPacketTypeRR];
+    
+    BOOL success = [self.asyncUdpSocket sendData:packetData
                                           toHost:serverInfo[@"host"]
                                             port:[serverInfo[@"port"] intValue]
                                      withTimeout:-1
