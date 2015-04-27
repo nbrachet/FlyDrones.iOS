@@ -1,22 +1,22 @@
 PODS:
   - Bolts (1.1.4)
-  - BugSense (3.6)
   - CocoaAsyncSocket (7.4.1)
   - Parse (1.7.1):
     - Bolts (~> 1.1)
   - ParseCrashReporting (1.7.1):
     - Parse (~> 1.7.1)
+  - SplunkMint-iOS (4.2)
 
 DEPENDENCIES:
-  - BugSense
   - CocoaAsyncSocket
   - ParseCrashReporting
+  - SplunkMint-iOS
 
 SPEC CHECKSUMS:
   Bolts: f8e2f94edbf9fec7bb8de5ecaaa3aa6b7de6f64e
-  BugSense: 778c28028810e114f21faade24d074ede7f9b467
   CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
   Parse: fa8ec29de6d82035635986c11946299fb1b38316
   ParseCrashReporting: 9aeff8680d500e5e833564fca5b60333f7bb7403
+  SplunkMint-iOS: 058e5297f7cc8d335aea3dcaa8111eeb0f657371
 
 COCOAPODS: 0.36.4

@@ -1,3 +1,3 @@
 pod 'CocoaAsyncSocket'
 pod 'ParseCrashReporting'
-pod 'BugSense'
+pod 'SplunkMint-iOS'

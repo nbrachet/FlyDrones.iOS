@@ -7,8 +7,8 @@
 //
 
 #import "AppDelegate.h"
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
+#import <SplunkMint-iOS/SplunkMint-iOS.h>
+
 
 @import Parse;
 @import ParseCrashReporting;
@@ -19,10 +19,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    [self enableCrashlyticsWithWithLaunchOptions:launchOptions];
+    [self enableMintAnalytics];
     [self enableParseCrashReporting];
-    
-//    [self performSelector:@selector(crash) withObject:nil afterDelay:5];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+
+//    [self performSelector:@selector(crash) withObject:nil afterDelay:5.0f];
     return YES;
 }
 
@@ -54,9 +55,9 @@
 
 #pragma mark - Private
 
-- (void)enableCrashlyticsWithWithLaunchOptions:(NSDictionary *)launchOptions {
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-    [[Fabric with:@[CrashlyticsKit]] debug];
+- (void)enableMintAnalytics {
+    [[Mint sharedInstance] initAndStartSession:@"64cb899b"];
+    [[Mint sharedInstance] enableFlushOnlyOverWiFi:YES];
 }
 
 - (void)enableParseCrashReporting {
