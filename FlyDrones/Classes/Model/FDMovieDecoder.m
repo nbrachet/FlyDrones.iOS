@@ -125,24 +125,25 @@
     NSMutableData *parsingData = [NSMutableData dataWithData:data];
     
     while (parsingData.length > 0) {
-        const uint8_t *parsingDataBytes = (const uint8_t*)[parsingData bytes];
-        uint8_t *parsedData = NULL;
-        int parsedDataSize = 0;
-        int length = av_parser_parse2(videoCodecParserContext,
-                                      videoCodecContext,
-                                      &parsedData,                 //output data
-                                      &parsedDataSize,             //output data size
-                                      &parsingDataBytes[0],        //input data
-                                      (int)[parsingData length],   //input data size
-                                      0,                           //PTS
-                                      0,                           //DTS
-                                      AV_NOPTS_VALUE);
-        
-        if (length > 0) {
-            [parsingData replaceBytesInRange:NSMakeRange(0, length) withBytes:NULL length:0];
-        }
-        if (parsedDataSize > 0) {
-            [self decodeFrameData:parsedData size:parsedDataSize];
+        @autoreleasepool {
+            const uint8_t *parsingDataBytes = (const uint8_t*)[parsingData bytes];
+            uint8_t *parsedData = NULL;
+            int parsedDataSize = 0;
+            int length = av_parser_parse2(videoCodecParserContext,
+                                          videoCodecContext,
+                                          &parsedData,                 //output data
+                                          &parsedDataSize,             //output data size
+                                          &parsingDataBytes[0],        //input data
+                                          (int)[parsingData length],   //input data size
+                                          0,                           //PTS
+                                          0,                           //DTS
+                                          AV_NOPTS_VALUE);
+            if (length > 0) {
+                [parsingData replaceBytesInRange:NSMakeRange(0, length) withBytes:NULL length:0];
+            }
+            if (parsedDataSize > 0) {
+                [self decodeFrameData:parsedData size:parsedDataSize];
+            }
         }
     }
 }
@@ -174,7 +175,7 @@
                 FDVideoFrame *decodedVideoFrame = [[FDVideoFrame alloc] initWithFrame:decodedFrame
                                                                                 width:videoCodecContext->width
                                                                                height:videoCodecContext->height];
-                
+//
                 if (decodedVideoFrame != nil) {
                     [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
                 }

@@ -7,19 +7,14 @@
 //
 
 #import "AppDelegate.h"
-#import <SplunkMint-iOS/SplunkMint-iOS.h>
-
-
-@import Parse;
-@import ParseCrashReporting;
+#import <Parse/Parse.h>
+#import <ParseCrashReporting/ParseCrashReporting.h>
 
 @implementation AppDelegate
 
 #pragma mark - UIApplication delegate methods
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-    [self enableMintAnalytics];
     [self enableParseCrashReporting];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
 
@@ -54,11 +49,6 @@
 }
 
 #pragma mark - Private
-
-- (void)enableMintAnalytics {
-    [[Mint sharedInstance] initAndStartSession:@"64cb899b"];
-    [[Mint sharedInstance] enableFlushOnlyOverWiFi:YES];
-}
 
 - (void)enableParseCrashReporting {
     [ParseCrashReporting enable];
