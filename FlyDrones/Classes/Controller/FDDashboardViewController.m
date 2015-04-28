@@ -31,6 +31,19 @@
 
     self.connectionManager = [[FDConnectionManager alloc] init];
     self.connectionManager.delegate = self;
+    
+    if(CFByteOrderGetCurrent() == CFByteOrderLittleEndian) {
+        NSLog(@"BYTEORDER: Little Endian");
+    } else {
+        NSLog(@"BYTEORDER: Big Endian");
+    }
+    
+//#if __LITTLE_ENDIAN__
+//    return CFByteOrderLittleEndian;
+//#elif __BIG_ENDIAN__
+//    return CFByteOrderBigEndian;
+//#else
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {

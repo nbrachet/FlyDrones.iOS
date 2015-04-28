@@ -36,7 +36,6 @@ static NSString * const FDLoginViewControllerCustomNetworkPort = @"5555";
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
 }
 
 - (void)didReceiveMemoryWarning {

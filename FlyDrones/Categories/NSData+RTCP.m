@@ -15,8 +15,27 @@
     memset(&packet, 0, sizeof(packet));
     packet.version = version;
     packet.pt = packetType;
-    packet.length = sizeof(struct RTCPPacket);
-    return [NSData dataWithBytes:&packet length:sizeof(packet)];
+    packet.length = CFSwapInt16HostToBig(sizeof(struct RTCPPacket));
+    NSData *data = [NSData dataWithBytes:&packet length:sizeof(packet)];
+    NSLog(@"data bytes in hex: %@", [data hexadecimalString]);
+    return data;
 }
 
+- (NSString *)hexadecimalString {
+    const unsigned char *dataBuffer = (const unsigned char *)[self bytes];
+    
+    if (!dataBuffer) {
+        return [NSString string];
+    }
+    
+    NSUInteger dataLength  = [self length];
+    NSMutableString *hexString  = [NSMutableString stringWithCapacity:(dataLength * 2)];
+    
+    for (int i = 0; i < dataLength; ++i) {
+        [hexString appendFormat:@"%02x", (unsigned int)dataBuffer[i]];
+        [hexString appendString:@" "];
+    }
+    
+    return [NSString stringWithString:hexString];
+}
 @end

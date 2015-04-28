@@ -785,7 +785,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -821,7 +821,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -854,7 +854,7 @@
 					"$(PROJECT_DIR)/FlyDrones/Classes/Libs/x264/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "461dbd2b-d08f-48d7-9bfa-e83f83656eda";
+				PROVISIONING_PROFILE = "0cbbc996-15d8-493c-a2ec-bc9e7a88b048";
 			};
 			name = Debug;
 		};
@@ -884,7 +884,7 @@
 					"$(PROJECT_DIR)/FlyDrones/Classes/Libs/x264/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "461dbd2b-d08f-48d7-9bfa-e83f83656eda";
+				PROVISIONING_PROFILE = "0cbbc996-15d8-493c-a2ec-bc9e7a88b048";
 			};
 			name = Release;
 		};
