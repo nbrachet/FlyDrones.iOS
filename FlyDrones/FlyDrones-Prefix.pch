@@ -3,8 +3,13 @@
 //  FlyDrones
 //
 //  Created by Sergey Galagan on 1/29/15.
-//  Copyright (c) 2015 Sergey Galagan. All rights reserved.
+//  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
+
+#import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <Accelerate/Accelerate.h>
+#import <AVFoundation/AVFoundation.h>
 
 #import <Availability.h>
 
@@ -13,14 +18,16 @@
 #endif
 
 #ifdef __OBJC__
-    #import <UIKit/UIKit.h>
-    #import <Foundation/Foundation.h>
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
 #endif
 
 #pragma GCC diagnostic ignored "-Wwarning-flag"
 
 #ifdef DEBUG
-    #define NSLog(__FORMAT__, ...) NSLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define NSLog(__FORMAT__, ...) NSLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
     #define NSLog(...)
 #endif

@@ -1,0 +1,14 @@
+{
+  "global": {
+    "parseVersion": "1.4.2"
+  },
+  "applications": {
+    "FlyDrones": {
+      "applicationId": "ZynF8lZVcwF9hhJSMJ2uosi3gRIlzbayvsMcQBcS",
+      "masterKey": "B0Dyly8N1eDfqar3HEwolbQyFzJr6SYVaaJKMoZk"
+    },
+    "_default": {
+      "link": "FlyDrones"
+    }
+  }
+}

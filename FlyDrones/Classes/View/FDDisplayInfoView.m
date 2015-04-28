@@ -3,7 +3,7 @@
 //  FlyDrones
 //
 //  Created by Sergey Galagan on 3/11/15.
-//  Copyright (c) 2015 Sergey Galagan. All rights reserved.
+//  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
 
 #import "FDDisplayInfoView.h"
@@ -13,9 +13,9 @@
 
 @interface FDDisplayInfoView ()
 
-@property (nonatomic, weak) IBOutlet UILabel *dateLabel;
-@property (nonatomic, weak) IBOutlet UILabel *timeLabel;
-@property (nonatomic, strong) NSTimer *timer;
+@property(nonatomic, weak) IBOutlet UILabel *dateLabel;
+@property(nonatomic, weak) IBOutlet UILabel *timeLabel;
+@property(nonatomic, strong) NSTimer *timer;
 
 @end
 
@@ -30,7 +30,7 @@
 - (void)hideDisplayInfo {
     self.dateLabel.text = @"";
     self.timeLabel.text = @"";
-    
+
     [self.timer invalidate];
     self.timer = nil;
 }

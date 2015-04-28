@@ -2,8 +2,8 @@
 //  NSFileManager+ANUtils.m
 //  ANUtils
 //
-//  Created by Alexey Naboychenko on 6/3/13.
-//  Copyright (c) 2013 Alexey Naboychenko. All rights reserved.
+//  Created by Oleksii Naboichenko on 6/3/13.
+//  Copyright (c) 2013 Oleksii Naboichenko. All rights reserved.
 //
 
 #import "NSFileManager+ANUtils.h"
@@ -22,13 +22,13 @@
         dispatch_once(&onceToken, ^{
             //user documents folder
             path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-            
+
             //retain path
             if (path != nil) {
                 path = [NSString stringWithString:path];
             }
         });
-        
+
         return path;
     }
 }
@@ -40,29 +40,29 @@
 - (NSString *)applicationCacheDirectoryPath {
     @synchronized ([NSFileManager class]) {
         static NSString *path = nil;
-        
+
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             //cache folder
             path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
-            
+
 #ifndef __IPHONE_OS_VERSION_MAX_ALLOWED
             //append application bundle ID on Mac OS
             NSString *bundleIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleIdentifierKey];
             path = [path stringByAppendingPathComponent:bundleIdentifier];
 #endif
-            
+
             //create the folder if it doesn't exist
             if (![self fileExistsAtPath:path]) {
                 [self createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:NULL];
             }
-            
+
             //retain path
             if (path != nil) {
                 path = [NSString stringWithString:path];
             }
         });
-        
+
         return path;
     }
 }
@@ -73,7 +73,7 @@
 
 - (NSString *)applicationTemporaryDirectoryPath {
     static NSString *path = nil;
-    
+
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         //temporary directory (shouldn't change during app lifetime)
@@ -111,16 +111,16 @@
 }
 
 - (NSURL *)searchFile:(NSString *)fileName inRootDirectoryURL:(NSURL *)directoryURL {
-    if ([fileName length] == 0 || directoryURL == nil ) {
+    if ([fileName length] == 0 || directoryURL == nil) {
         return nil;
     }
-    
+
     NSArray *enumeratorPropertiesKeys = @[NSURLIsDirectoryKey];
     NSDirectoryEnumerator *enumerator = [self enumeratorAtURL:directoryURL
                                    includingPropertiesForKeys:enumeratorPropertiesKeys
                                                       options:0
                                                  errorHandler:^(NSURL *url, NSError *error) {
-                                                        return YES;
+                                                     return YES;
                                                  }];
     for (NSURL *metaDataURL in enumerator) {
         NSString *metaDataName = [[metaDataURL absoluteString] lastPathComponent];

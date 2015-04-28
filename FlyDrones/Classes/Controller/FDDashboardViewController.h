@@ -3,20 +3,15 @@
 //  FlyDrones
 //
 //  Created by Oleksii Naboichenko on 4/3/15.
-//  Copyright (c) 2015 Sergey Galagan. All rights reserved.
+//  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@class MovieDecoder;
-
-extern NSString * const FDMovieParameterMinBufferedDuration;    // Float
-extern NSString * const FDMovieParameterMaxBufferedDuration;    // Float
-extern NSString * const FDMovieParameterDisableDeinterlacing;   // BOOL
-
 @interface FDDashboardViewController : UIViewController
 
-@property (nonatomic, copy) NSString *path;
-@property (readonly, getter=isPlaying) BOOL playing;
+@property(nonatomic, copy) NSString *hostForConnection;
+@property(nonatomic, assign) NSUInteger portForConnection;
+@property(nonatomic, assign) NSUInteger portForReceived;
 
 @end

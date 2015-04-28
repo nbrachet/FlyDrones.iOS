@@ -3,7 +3,7 @@
 //  FlyDrones
 //
 //  Created by Sergey Galagan on 2/5/15.
-//  Copyright (c) 2015 Sergey Galagan. All rights reserved.
+//  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
 
 #import "UIView+Utils.h"
@@ -13,46 +13,39 @@
 
 #pragma mark - Frames
 
-- (CGFloat)height
-{
+- (CGFloat)height {
     return CGRectGetHeight(self.frame);
 }
 
-- (CGFloat)width
-{
+- (CGFloat)width {
     return CGRectGetWidth(self.frame);
 }
 
-- (void)updateHeight:(CGFloat)height
-{
+- (void)updateHeight:(CGFloat)height {
     CGRect frame = self.frame;
     frame.size.height = height;
     self.frame = frame;
 }
 
-- (void)updateWidth:(CGFloat)width
-{
+- (void)updateWidth:(CGFloat)width {
     CGRect frame = self.frame;
     frame.size.width = width;
     self.frame = frame;
 }
 
-- (void)updateSize:(CGSize )size
-{
+- (void)updateSize:(CGSize)size {
     CGRect frame = self.frame;
     frame.size = size;
     self.frame = frame;
 }
 
-- (void)offsetByX:(CGFloat)offsetValue
-{
+- (void)offsetByX:(CGFloat)offsetValue {
     CGRect frame = self.frame;
     frame.origin.x = offsetValue;
     self.frame = frame;
 }
 
-- (void)offsetByY:(CGFloat)offsetValue
-{
+- (void)offsetByY:(CGFloat)offsetValue {
     CGRect frame = self.frame;
     frame.origin.y = offsetValue;
     self.frame = frame;
