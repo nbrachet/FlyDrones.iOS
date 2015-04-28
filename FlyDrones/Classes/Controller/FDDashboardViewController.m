@@ -12,7 +12,7 @@
 #import "FDDisplayInfoView.h"
 #import "FDConnectionManager.h"
 
-@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate>
+@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, UIAlertViewDelegate>
 
 @property(nonatomic, weak) IBOutlet FDDisplayInfoView *displayInfoView;
 @property(nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
@@ -31,19 +31,6 @@
 
     self.connectionManager = [[FDConnectionManager alloc] init];
     self.connectionManager.delegate = self;
-    
-    if(CFByteOrderGetCurrent() == CFByteOrderLittleEndian) {
-        NSLog(@"BYTEORDER: Little Endian");
-    } else {
-        NSLog(@"BYTEORDER: Big Endian");
-    }
-    
-//#if __LITTLE_ENDIAN__
-//    return CFByteOrderLittleEndian;
-//#elif __BIG_ENDIAN__
-//    return CFByteOrderBigEndian;
-//#else
-
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -55,7 +42,15 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    [self.connectionManager connectToServer:self.hostForConnection portForConnection:self.portForConnection portForReceived:self.portForReceived];
+    BOOL isConnected = [self.connectionManager connectToServer:self.hostForConnection portForConnection:self.portForConnection portForReceived:self.portForReceived];
+    if (!isConnected) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:@"Used port is blocked. Please shut all of the applications that use data streaming"
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -112,6 +107,12 @@
 
         [strongSelf.movieGLView renderVideoFrame:videoFrame];
     });
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    [self back:nil];
 }
 
 @end

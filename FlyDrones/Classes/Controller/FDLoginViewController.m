@@ -18,7 +18,6 @@ static NSString * const FDLoginViewControllerCustomNetworkPort = @"5555";
 
 @property (nonatomic, weak) IBOutlet UITextField *hostForConnectionTextField;
 @property (nonatomic, weak) IBOutlet UITextField *portForConnectionTextField;
-@property (nonatomic, weak) IBOutlet UITextField *portForReceivedTextField;
 
 @end
 
@@ -31,7 +30,6 @@ static NSString * const FDLoginViewControllerCustomNetworkPort = @"5555";
     
     self.hostForConnectionTextField.text = FDLoginViewControllerCustomNetworkHost;
     self.portForConnectionTextField.text = FDLoginViewControllerCustomNetworkPort;
-    self.portForReceivedTextField.text = FDLoginViewControllerCustomNetworkPort;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -48,9 +46,8 @@ static NSString * const FDLoginViewControllerCustomNetworkPort = @"5555";
 - (IBAction)letsFly:(id)sender {
     NSString *hostForConnection = self.hostForConnectionTextField.text;
     NSUInteger portForConnection = [self.portForConnectionTextField.text integerValue];
-    NSUInteger portForReceived = [self.portForReceivedTextField.text integerValue];
     
-    if (hostForConnection.length == 0 || portForConnection <= 0 || portForReceived <= 0) {
+    if (hostForConnection.length == 0 || portForConnection <= 0) {
         [[[UIAlertView alloc] initWithTitle:@"Warning" message:@"Please fill all fields correctly" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
         return;
     }
@@ -58,7 +55,7 @@ static NSString * const FDLoginViewControllerCustomNetworkPort = @"5555";
     FDDashboardViewController *dashboardViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"FDDashboardViewController"];
     dashboardViewController.hostForConnection = hostForConnection;
     dashboardViewController.portForConnection = portForConnection;
-    dashboardViewController.portForReceived = portForReceived;
+    dashboardViewController.portForReceived = portForConnection;
     [self.navigationController pushViewController:dashboardViewController animated:YES];
 }
 

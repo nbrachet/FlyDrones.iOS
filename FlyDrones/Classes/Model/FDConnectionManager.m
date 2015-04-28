@@ -43,7 +43,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     self.asyncUdpSocket = [[AsyncUdpSocket alloc] initWithDelegate:self];
 
     NSError *error = nil;
-
+    
     BOOL success = [self.asyncUdpSocket bindToPort:portForReceived error:&error];
     if (!success || error != nil) {
         NSLog(@"%@", error.localizedDescription);
@@ -85,6 +85,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     NSDictionary *serverInfo = [timer userInfo];
 
     NSData *packetData = [NSData RTCPDataWithVersion:2 packetType:RTCPPacketTypeRR];
+    NSLog(@"Send data: %@", [packetData hexadecimalString]);
 
     BOOL success = [self.asyncUdpSocket sendData:packetData
                                           toHost:serverInfo[@"host"]

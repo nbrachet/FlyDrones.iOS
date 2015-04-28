@@ -11,6 +11,8 @@
 
 @interface NSData (RTCP)
 
-+ (NSData *)RTCPDataWithVersion:(NSUInteger)version packetType:(RTCPPacketType)packetType;
++ (NSData *)RTCPDataWithVersion:(uint32_t)version packetType:(RTCPPacketType)packetType;
+
+- (NSString *)hexadecimalString;
 
 @end

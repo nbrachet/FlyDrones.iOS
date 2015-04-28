@@ -10,14 +10,13 @@
 
 @implementation NSData (RTCP)
 
-+ (NSData *)RTCPDataWithVersion:(NSUInteger)version packetType:(RTCPPacketType)packetType {
++ (NSData *)RTCPDataWithVersion:(uint32_t)version packetType:(RTCPPacketType)packetType {
     struct RTCPPacket packet;
     memset(&packet, 0, sizeof(packet));
     packet.version = version;
     packet.pt = packetType;
     packet.length = CFSwapInt16HostToBig(sizeof(struct RTCPPacket));
     NSData *data = [NSData dataWithBytes:&packet length:sizeof(packet)];
-    NSLog(@"data bytes in hex: %@", [data hexadecimalString]);
     return data;
 }
 
