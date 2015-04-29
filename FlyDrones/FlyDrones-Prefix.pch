@@ -6,23 +6,18 @@
 //  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <CoreGraphics/CoreGraphics.h>
-#import <Accelerate/Accelerate.h>
-#import <AVFoundation/AVFoundation.h>
-
-#import <Availability.h>
-
-#ifndef __IPHONE_7_0
-    #warning "This project uses features only available in iOS SDK 7.0 and later."
-#endif
-
 #ifdef __OBJC__
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <Accelerate/Accelerate.h>
+#import <AVFoundation/AVFoundation.h>
+#import <Availability.h>
 
 #endif
+
+#import "mavlink.h"
 
 #pragma GCC diagnostic ignored "-Wwarning-flag"
 
