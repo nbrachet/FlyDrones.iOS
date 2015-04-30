@@ -8,17 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		1B0042CA1AEA49C6007B1B35 /* FDConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0042C91AEA49C6007B1B35 /* FDConnectionManager.m */; };
-		1B0042CD1AEA5383007B1B35 /* NSString+PathComponents.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0042CC1AEA5383007B1B35 /* NSString+PathComponents.m */; };
 		1B9552391AE7BBA30054BA0C /* FDVideoFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9552381AE7BBA30054BA0C /* FDVideoFrame.m */; };
 		1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E321ACEB55500B33BDD /* FDMovieDecoder.m */; };
 		1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E351ACEBBFE00B33BDD /* FDDashboardViewController.m */; };
 		1B955E391ACEBCED00B33BDD /* FDMovieGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E381ACEBCED00B33BDD /* FDMovieGLView.m */; };
 		1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B955E3B1ACEC0F900B33BDD /* FDLoginViewController.m */; };
-		1B97E9EB1AD5519300051601 /* NSBundle+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E21AD5519300051601 /* NSBundle+Utils.m */; };
 		1B97E9EC1AD5519300051601 /* NSFileManager+ANUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E41AD5519300051601 /* NSFileManager+ANUtils.m */; };
 		1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E61AD5519300051601 /* NSString+Datetime.m */; };
 		1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E81AD5519300051601 /* NSString+Network.m */; };
-		1B97E9EF1AD5519300051601 /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9EA1AD5519300051601 /* UIView+Utils.m */; };
 		1BAC812F1AF101FE00D77B65 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAC812E1AF101FE00D77B65 /* AppDelegate.m */; };
 		1BAC82811AF102E600D77B65 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAC81971AF102E600D77B65 /* libavcodec.a */; };
 		1BAC82821AF102E600D77B65 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAC81981AF102E600D77B65 /* libavdevice.a */; };
@@ -30,6 +27,10 @@
 		1BAC82881AF102E600D77B65 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAC819E1AF102E600D77B65 /* libswscale.a */; };
 		1BAC82891AF102E600D77B65 /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAC82801AF102E600D77B65 /* libx264.a */; };
 		1BB00CA21AEE6D9900FF787B /* NSData+RTCP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB00CA11AEE6D9900FF787B /* NSData+RTCP.m */; };
+		1BDB2A011AF170F800B2A465 /* FDDroneControlManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A001AF170F800B2A465 /* FDDroneControlManager.m */; };
+		1BDB2A041AF291B000B2A465 /* FDFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A031AF291B000B2A465 /* FDFileReader.m */; };
+		1BDB2A061AF295B000B2A465 /* 2015-04-15 10-57-47.tlog in Resources */ = {isa = PBXBuildFile; fileRef = 1BDB2A051AF295B000B2A465 /* 2015-04-15 10-57-47.tlog */; };
+		1BDB2A0A1AF2C68000B2A465 /* NSString+MAVLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A091AF2C68000B2A465 /* NSString+MAVLink.m */; };
 		1BED467B1AE56D79008EA8C8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BED467A1AE56D79008EA8C8 /* Images.xcassets */; };
 		1BED46891AE56DC2008EA8C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46851AE56DC2008EA8C8 /* Main.storyboard */; };
 		1BED468A1AE56DC2008EA8C8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46871AE56DC2008EA8C8 /* LaunchScreen.xib */; };
@@ -48,8 +49,6 @@
 		0F276A55EA306C80D69E7558 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B0042C81AEA49C6007B1B35 /* FDConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDConnectionManager.h; sourceTree = "<group>"; };
 		1B0042C91AEA49C6007B1B35 /* FDConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConnectionManager.m; sourceTree = "<group>"; };
-		1B0042CB1AEA5383007B1B35 /* NSString+PathComponents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PathComponents.h"; sourceTree = "<group>"; };
-		1B0042CC1AEA5383007B1B35 /* NSString+PathComponents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PathComponents.m"; sourceTree = "<group>"; };
 		1B58C5D91AEAF40500DD7485 /* RTCPPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPPacket.h; sourceTree = "<group>"; };
 		1B648D471AF1181E007FB8EA /* ardupilotmega.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ardupilotmega.h; sourceTree = "<group>"; };
 		1B648D481AF1181E007FB8EA /* mavlink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mavlink.h; sourceTree = "<group>"; };
@@ -274,16 +273,12 @@
 		1B955E381ACEBCED00B33BDD /* FDMovieGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieGLView.m; sourceTree = "<group>"; };
 		1B955E3A1ACEC0F900B33BDD /* FDLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDLoginViewController.h; sourceTree = "<group>"; };
 		1B955E3B1ACEC0F900B33BDD /* FDLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDLoginViewController.m; sourceTree = "<group>"; };
-		1B97E9E11AD5519300051601 /* NSBundle+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+Utils.h"; sourceTree = "<group>"; };
-		1B97E9E21AD5519300051601 /* NSBundle+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+Utils.m"; sourceTree = "<group>"; };
 		1B97E9E31AD5519300051601 /* NSFileManager+ANUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+ANUtils.h"; sourceTree = "<group>"; };
 		1B97E9E41AD5519300051601 /* NSFileManager+ANUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+ANUtils.m"; sourceTree = "<group>"; };
 		1B97E9E51AD5519300051601 /* NSString+Datetime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Datetime.h"; sourceTree = "<group>"; };
 		1B97E9E61AD5519300051601 /* NSString+Datetime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Datetime.m"; sourceTree = "<group>"; };
 		1B97E9E71AD5519300051601 /* NSString+Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Network.h"; sourceTree = "<group>"; };
 		1B97E9E81AD5519300051601 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
-		1B97E9E91AD5519300051601 /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
-		1B97E9EA1AD5519300051601 /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
 		1BAC812D1AF101FE00D77B65 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1BAC812E1AF101FE00D77B65 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1BAC81341AF102E600D77B65 /* avcodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avcodec.h; sourceTree = "<group>"; };
@@ -390,6 +385,13 @@
 		1BAC82801AF102E600D77B65 /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libx264.a; sourceTree = "<group>"; };
 		1BB00CA01AEE6D9900FF787B /* NSData+RTCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+RTCP.h"; sourceTree = "<group>"; };
 		1BB00CA11AEE6D9900FF787B /* NSData+RTCP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+RTCP.m"; sourceTree = "<group>"; };
+		1BDB29FF1AF170F800B2A465 /* FDDroneControlManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDroneControlManager.h; sourceTree = "<group>"; };
+		1BDB2A001AF170F800B2A465 /* FDDroneControlManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDroneControlManager.m; sourceTree = "<group>"; };
+		1BDB2A021AF291B000B2A465 /* FDFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFileReader.h; sourceTree = "<group>"; };
+		1BDB2A031AF291B000B2A465 /* FDFileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFileReader.m; sourceTree = "<group>"; };
+		1BDB2A051AF295B000B2A465 /* 2015-04-15 10-57-47.tlog */ = {isa = PBXFileReference; lastKnownFileType = file; path = "2015-04-15 10-57-47.tlog"; sourceTree = "<group>"; };
+		1BDB2A081AF2C68000B2A465 /* NSString+MAVLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MAVLink.h"; sourceTree = "<group>"; };
+		1BDB2A091AF2C68000B2A465 /* NSString+MAVLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MAVLink.m"; sourceTree = "<group>"; };
 		1BED467A1AE56D79008EA8C8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1BED467C1AE56D8E008EA8C8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BED46861AE56DC2008EA8C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -716,6 +718,10 @@
 				1B9552371AE7BBA30054BA0C /* FDVideoFrame.h */,
 				1B9552381AE7BBA30054BA0C /* FDVideoFrame.m */,
 				1B58C5D91AEAF40500DD7485 /* RTCPPacket.h */,
+				1BDB29FF1AF170F800B2A465 /* FDDroneControlManager.h */,
+				1BDB2A001AF170F800B2A465 /* FDDroneControlManager.m */,
+				1BDB2A021AF291B000B2A465 /* FDFileReader.h */,
+				1BDB2A031AF291B000B2A465 /* FDFileReader.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -723,20 +729,16 @@
 		1B97E9E01AD5519300051601 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				1B97E9E11AD5519300051601 /* NSBundle+Utils.h */,
-				1B97E9E21AD5519300051601 /* NSBundle+Utils.m */,
 				1B97E9E31AD5519300051601 /* NSFileManager+ANUtils.h */,
 				1B97E9E41AD5519300051601 /* NSFileManager+ANUtils.m */,
 				1B97E9E51AD5519300051601 /* NSString+Datetime.h */,
 				1B97E9E61AD5519300051601 /* NSString+Datetime.m */,
 				1B97E9E71AD5519300051601 /* NSString+Network.h */,
 				1B97E9E81AD5519300051601 /* NSString+Network.m */,
-				1B97E9E91AD5519300051601 /* UIView+Utils.h */,
-				1B97E9EA1AD5519300051601 /* UIView+Utils.m */,
-				1B0042CB1AEA5383007B1B35 /* NSString+PathComponents.h */,
-				1B0042CC1AEA5383007B1B35 /* NSString+PathComponents.m */,
 				1BB00CA01AEE6D9900FF787B /* NSData+RTCP.h */,
 				1BB00CA11AEE6D9900FF787B /* NSData+RTCP.m */,
+				1BDB2A081AF2C68000B2A465 /* NSString+MAVLink.h */,
+				1BDB2A091AF2C68000B2A465 /* NSString+MAVLink.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1008,6 +1010,7 @@
 		371526191A77B59E00F885B8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1BDB2A051AF295B000B2A465 /* 2015-04-15 10-57-47.tlog */,
 				1BED467A1AE56D79008EA8C8 /* Images.xcassets */,
 			);
 			path = Resources;
@@ -1132,6 +1135,7 @@
 			files = (
 				1BED468A1AE56DC2008EA8C8 /* LaunchScreen.xib in Resources */,
 				1BED46891AE56DC2008EA8C8 /* Main.storyboard in Resources */,
+				1BDB2A061AF295B000B2A465 /* 2015-04-15 10-57-47.tlog in Resources */,
 				1BED467B1AE56D79008EA8C8 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1190,9 +1194,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BB00CA21AEE6D9900FF787B /* NSData+RTCP.m in Sources */,
-				1B97E9EF1AD5519300051601 /* UIView+Utils.m in Sources */,
 				1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */,
+				1BDB2A0A1AF2C68000B2A465 /* NSString+MAVLink.m in Sources */,
 				1B955E391ACEBCED00B33BDD /* FDMovieGLView.m in Sources */,
+				1BDB2A041AF291B000B2A465 /* FDFileReader.m in Sources */,
 				1BAC812F1AF101FE00D77B65 /* AppDelegate.m in Sources */,
 				1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */,
 				37ED583A1AB0A07F00C10DFD /* FDDisplayInfoView.m in Sources */,
@@ -1200,10 +1205,9 @@
 				1B97E9EC1AD5519300051601 /* NSFileManager+ANUtils.m in Sources */,
 				1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */,
 				1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */,
-				1B97E9EB1AD5519300051601 /* NSBundle+Utils.m in Sources */,
 				371525F11A77B28A00F885B8 /* main.m in Sources */,
 				1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */,
-				1B0042CD1AEA5383007B1B35 /* NSString+PathComponents.m in Sources */,
+				1BDB2A011AF170F800B2A465 /* FDDroneControlManager.m in Sources */,
 				1B9552391AE7BBA30054BA0C /* FDVideoFrame.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

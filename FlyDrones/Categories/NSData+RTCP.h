@@ -15,4 +15,6 @@
 
 - (NSString *)hexadecimalString;
 
+- (NSArray *)componentsSeparatedByByte:(Byte)byte;
+
 @end
