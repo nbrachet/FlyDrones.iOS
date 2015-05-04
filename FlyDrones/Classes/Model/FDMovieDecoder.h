@@ -17,7 +17,7 @@
 
 @interface FDMovieDecoder : NSObject
 
-@property(nonatomic, weak) id <FDMovieDecoderDelegate> delegate;
+@property (nonatomic, weak) id <FDMovieDecoderDelegate> delegate;
 
 - (instancetype)init __attribute__((unavailable("init not available")));
 

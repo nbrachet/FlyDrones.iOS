@@ -11,11 +11,11 @@
 
 @interface FDVideoFrame : NSObject
 
-@property(nonatomic, copy) NSData *luma;
-@property(nonatomic, copy) NSData *chromaB;
-@property(nonatomic, copy) NSData *chromaR;
-@property(nonatomic) NSUInteger width;
-@property(nonatomic) NSUInteger height;
+@property (nonatomic, copy) NSData *luma;
+@property (nonatomic, copy) NSData *chromaB;
+@property (nonatomic, copy) NSData *chromaR;
+@property (nonatomic) NSUInteger width;
+@property (nonatomic) NSUInteger height;
 
 - (instancetype)initWithFrame:(AVFrame *)frame width:(NSUInteger)width height:(NSUInteger)height;
 

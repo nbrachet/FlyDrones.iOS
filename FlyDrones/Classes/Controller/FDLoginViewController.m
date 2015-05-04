@@ -9,7 +9,6 @@
 #import "FDLoginViewController.h"
 #import "FDDashboardViewController.h"
 #import "NSString+Network.h"
-#import "FDDroneControlManager.h"
 
 static NSString * const FDLoginViewControllerCustomNetworkHost = @"192.168.1.80";
 //static NSString * const FDLoginViewControllerCustomNetworkHost = @"108.26.177.27";
@@ -37,8 +36,6 @@ static NSString * const FDLoginViewControllerCustomNetworkPort = @"5556";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    /*Test parseing tlog*/
-//    [[[FDDroneControlManager alloc] init] parseFile:@"2015-04-15 10-57-47" ofType:@"tlog"];
 }
 
 - (void)didReceiveMemoryWarning {

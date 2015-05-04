@@ -27,6 +27,7 @@
 		1BAC82881AF102E600D77B65 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAC819E1AF102E600D77B65 /* libswscale.a */; };
 		1BAC82891AF102E600D77B65 /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAC82801AF102E600D77B65 /* libx264.a */; };
 		1BB00CA21AEE6D9900FF787B /* NSData+RTCP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB00CA11AEE6D9900FF787B /* NSData+RTCP.m */; };
+		1BB1AD3C1AF42C2D004A5EA8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BB1AD3B1AF42C2D004A5EA8 /* CoreLocation.framework */; };
 		1BDB2A011AF170F800B2A465 /* FDDroneControlManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A001AF170F800B2A465 /* FDDroneControlManager.m */; };
 		1BDB2A041AF291B000B2A465 /* FDFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A031AF291B000B2A465 /* FDFileReader.m */; };
 		1BDB2A061AF295B000B2A465 /* 2015-04-15 10-57-47.tlog in Resources */ = {isa = PBXBuildFile; fileRef = 1BDB2A051AF295B000B2A465 /* 2015-04-15 10-57-47.tlog */; };
@@ -385,6 +386,7 @@
 		1BAC82801AF102E600D77B65 /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libx264.a; sourceTree = "<group>"; };
 		1BB00CA01AEE6D9900FF787B /* NSData+RTCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+RTCP.h"; sourceTree = "<group>"; };
 		1BB00CA11AEE6D9900FF787B /* NSData+RTCP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+RTCP.m"; sourceTree = "<group>"; };
+		1BB1AD3B1AF42C2D004A5EA8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		1BDB29FF1AF170F800B2A465 /* FDDroneControlManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDroneControlManager.h; sourceTree = "<group>"; };
 		1BDB2A001AF170F800B2A465 /* FDDroneControlManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDroneControlManager.m; sourceTree = "<group>"; };
 		1BDB2A021AF291B000B2A465 /* FDFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFileReader.h; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BB1AD3C1AF42C2D004A5EA8 /* CoreLocation.framework in Frameworks */,
 				37B0AF531A80CA6B005B2D8D /* QuartzCore.framework in Frameworks */,
 				37431F9C1A7A71C6007CDD6F /* GLKit.framework in Frameworks */,
 				1BAC82841AF102E600D77B65 /* libavformat.a in Frameworks */,
@@ -1060,6 +1063,7 @@
 		956F2D260B6A2289A457E2B3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1BB1AD3B1AF42C2D004A5EA8 /* CoreLocation.framework */,
 				37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */,
 				37431F9A1A7A71C6007CDD6F /* GLKit.framework */,
 				37431F9B1A7A71C6007CDD6F /* OpenGLES.framework */,

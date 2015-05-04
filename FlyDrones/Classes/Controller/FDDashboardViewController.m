@@ -11,15 +11,19 @@
 #import "FDMovieGLView.h"
 #import "FDDisplayInfoView.h"
 #import "FDConnectionManager.h"
+#import "FDDroneControlManager.h"
 
-@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, UIAlertViewDelegate>
+@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate>
 
-@property(nonatomic, weak) IBOutlet FDDisplayInfoView *displayInfoView;
-@property(nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
+@property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
+@property (nonatomic, weak) IBOutlet UILabel *locationLabel;
+@property (nonatomic, weak) IBOutlet UILabel *batteryStatusLabel;
+@property (nonatomic, weak) IBOutlet UITextView *outputTextView;
 
-@property(nonatomic, strong) FDConnectionManager *connectionManager;
-@property(nonatomic, strong) FDMovieDecoder *movieDecoder;
+@property (nonatomic, strong) FDConnectionManager *connectionManager;
+@property (nonatomic, strong) FDMovieDecoder *movieDecoder;
 
+@property (nonatomic, strong) FDDroneControlManager *droneControlManager;
 @end
 
 @implementation FDDashboardViewController
@@ -31,12 +35,14 @@
 
     self.connectionManager = [[FDConnectionManager alloc] init];
     self.connectionManager.delegate = self;
+    
+    self.droneControlManager = [[FDDroneControlManager alloc] init];
+    self.droneControlManager.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
-    [self.displayInfoView showDisplayInfo];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -51,6 +57,8 @@
                                               otherButtonTitles:nil];
         [alert show];
     }
+    
+    [self.droneControlManager parseLogFile:@"2015-04-15 10-57-47" ofType:@"tlog"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -113,6 +121,39 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     [self back:nil];
+}
+
+#pragma mark - FDDroneControlManagerDelegate
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didParseMessage:(NSString *)messageDescription {
+    if (self.outputTextView.text.length == 0) {
+        self.outputTextView.text = messageDescription;
+    } else {
+        self.outputTextView.text = [self.outputTextView.text stringByAppendingFormat:@"\n%@", messageDescription];
+    }
+    self.outputTextView.textColor = [UIColor whiteColor];
+    
+    [self.outputTextView scrollRangeToVisible:NSMakeRange(self.outputTextView.text.length, 0)];
+}
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryStatus:(NSInteger)batteryRemaining {
+    NSMutableString *batteryStatus = [NSMutableString stringWithString:@"Battery Remaining: "];
+    if (batteryRemaining == -1) {
+        [batteryStatus appendString:@"unknown"];
+    } else {
+        [batteryStatus appendFormat:@"%d%%", batteryRemaining];
+    }
+    self.batteryStatusLabel.text = batteryStatus;
+}
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
+    NSMutableString *location = [NSMutableString stringWithString:@"Location Coordinate: "];
+    if (locationCoordinate.latitude == 0.0f || locationCoordinate.longitude == 0.0f) {
+        [location appendString:@"unknown"];
+    } else {
+        [location appendFormat:@"%f %f", locationCoordinate.latitude, locationCoordinate.longitude];
+    }
+    self.locationLabel.text = location;
 }
 
 @end

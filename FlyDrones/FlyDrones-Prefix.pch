@@ -14,6 +14,7 @@
 #import <Accelerate/Accelerate.h>
 #import <AVFoundation/AVFoundation.h>
 #import <Availability.h>
+#import <CoreLocation/CoreLocation.h>
 
 #endif
 

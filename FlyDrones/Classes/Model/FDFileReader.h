@@ -18,7 +18,7 @@
 //- (NSString *)readTrimmedLine;
 //
 #if NS_BLOCKS_AVAILABLE
-- (void)enumerateBytesUsingBlock:(void(^)(NSData *data, BOOL *stop))block;
+- (void)asyncEnumerateBytesUsingBlock:(void(^)(NSData *data, BOOL *stop))block;
 #endif
 
 @end

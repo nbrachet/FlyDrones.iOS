@@ -56,18 +56,25 @@
 
 #if NS_BLOCKS_AVAILABLE
 
-- (void)enumerateBytesUsingBlock:(void(^)(NSData *, BOOL *))block {
-    NSData *data = nil;
-    BOOL stop = NO;
-    while (stop == NO /* && (data = [self readBytes:1])*/) {
-        @autoreleasepool {
-            data = [self readBytes:1];
-            if (data.length == 0) {
-                break;
+- (void)asyncEnumerateBytesUsingBlock:(void(^)(NSData *, BOOL *))block {
+    __weak __typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
+        NSData *data = nil;
+        BOOL stop = NO;
+        while (stop == NO /* && (data = [self readBytes:1])*/) {
+            if (strongSelf == nil) {
+                return;
             }
-            block(data, &stop);
+            @autoreleasepool {
+                data = [self readBytes:1];
+                if (data.length == 0) {
+                    break;
+                }
+                block(data, &stop);
+            }
         }
-    }
+    });
 }
 
 #endif

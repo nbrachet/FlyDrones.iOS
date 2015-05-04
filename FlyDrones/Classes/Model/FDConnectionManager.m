@@ -14,8 +14,8 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 
 @interface FDConnectionManager () <AsyncUdpSocketDelegate>
 
-@property(nonatomic, strong) AsyncUdpSocket *asyncUdpSocket;
-@property(nonatomic, strong) NSTimer *connectingTimer;
+@property (nonatomic, strong) AsyncUdpSocket *asyncUdpSocket;
+@property (nonatomic, strong) NSTimer *connectingTimer;
 
 @end
 
