@@ -14,6 +14,7 @@
 
 @optional
 - (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveData:(NSData *)data;
+- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveTCPData:(NSData *)data;
 
 @end
 
@@ -26,5 +27,7 @@
 - (void)closeConnection;
 
 - (BOOL)isConnected;
+
+- (void)receiveTCPServer:(NSString *)host port:(NSUInteger)port;
 
 @end

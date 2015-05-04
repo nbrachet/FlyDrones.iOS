@@ -24,6 +24,7 @@
 @property (nonatomic, strong) FDMovieDecoder *movieDecoder;
 
 @property (nonatomic, strong) FDDroneControlManager *droneControlManager;
+
 @end
 
 @implementation FDDashboardViewController
@@ -35,9 +36,6 @@
 
     self.connectionManager = [[FDConnectionManager alloc] init];
     self.connectionManager.delegate = self;
-    
-    self.droneControlManager = [[FDDroneControlManager alloc] init];
-    self.droneControlManager.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -57,8 +55,9 @@
                                               otherButtonTitles:nil];
         [alert show];
     }
+    [self.connectionManager receiveTCPServer:self.hostForTCPConnection port:self.portForTCPConnection];
     
-    [self.droneControlManager parseLogFile:@"2015-04-15 10-57-47" ofType:@"tlog"];
+//    [self.droneControlManager parseLogFile:@"2015-04-15 10-57-47" ofType:@"tlog"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -66,7 +65,9 @@
 
     [self.connectionManager closeConnection];
     self.connectionManager = nil;
+    
     self.movieDecoder = nil;
+    self.droneControlManager = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -101,6 +102,19 @@
     }
 
     [self.movieDecoder parseAndDecodeInputData:data];
+}
+
+- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveTCPData:(NSData *)data {
+    if (data.length == 0) {
+        return;
+    }
+    
+    if (self.droneControlManager == nil) {
+        self.droneControlManager = [[FDDroneControlManager alloc] init];
+        self.droneControlManager.delegate = self;
+    }
+    
+    [self.droneControlManager parseInputData:data];
 }
 
 #pragma mark - FDMovieDecoderDelegate
@@ -154,6 +168,10 @@
         [location appendFormat:@"%f %f", locationCoordinate.latitude, locationCoordinate.longitude];
     }
     self.locationLabel.text = location;
+}
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading airspeed:(CGFloat)airspeed altitude:(CGFloat)altitude {
+
 }
 
 @end

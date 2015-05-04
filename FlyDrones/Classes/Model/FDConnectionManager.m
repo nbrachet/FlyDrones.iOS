@@ -7,6 +7,7 @@
 //
 
 #import "FDConnectionManager.h"
+#import <CocoaAsyncSocket/AsyncSocket.h>
 #import <CocoaAsyncSocket/AsyncUdpSocket.h>
 #import "NSData+RTCP.h"
 
@@ -14,6 +15,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 
 @interface FDConnectionManager () <AsyncUdpSocketDelegate>
 
+@property (nonatomic, strong) AsyncSocket *asyncSocket;
 @property (nonatomic, strong) AsyncUdpSocket *asyncUdpSocket;
 @property (nonatomic, strong) NSTimer *connectingTimer;
 
@@ -58,6 +60,11 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 
 - (BOOL)isConnected {
     return self.asyncUdpSocket.isConnected;
+}
+
+- (void)receiveTCPServer:(NSString *)host port:(NSUInteger)port {
+    self.asyncSocket = [[AsyncSocket alloc] initWithDelegate:self];
+    [self.asyncSocket readDataWithTimeout:-1 tag:10];
 }
 
 #pragma mark - Private
@@ -118,7 +125,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     return (bytes[1] & 0xFF) == 200;                    /*that would ignore RTCP SR packets*/
 }
 
-#pragma mark - AsyncSocketDelegate
+#pragma mark - AsyncUdpSocketDelegate
 
 - (void)onUdpSocket:(AsyncUdpSocket *)sock didSendDataWithTag:(long)tag {
     NSLog(@"Data sending");
@@ -168,6 +175,34 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 
 - (void)onUdpSocketDidClose:(AsyncUdpSocket *)sock {
 
+}
+
+#pragma mark - AsyncSocketDelegate
+
+- (void)onSocket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port {
+    
+}
+
+- (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
+    NSInteger rtpHeaderLength = [self rtpHeaderLength:data];
+    if (data.length <= rtpHeaderLength) {
+        return;
+    }
+    
+    BOOL isSRData = [self isSRData:data];
+    if (isSRData) {
+        return;
+    }
+    
+    NSData *frameData = [data subdataWithRange:NSMakeRange(rtpHeaderLength, data.length - rtpHeaderLength)];
+    
+    if (frameData.length == 0) {
+        return;
+    }
+    
+    if (self.delegate != nil && [self.delegate respondsToSelector:@selector(connectionManager:didReceiveTCPData:)]) {
+        [self.delegate connectionManager:self didReceiveTCPData:frameData];
+    }
 }
 
 @end
