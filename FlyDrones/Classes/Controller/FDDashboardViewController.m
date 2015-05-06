@@ -17,7 +17,12 @@
 
 @property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
-@property (nonatomic, weak) IBOutlet UILabel *batteryStatusLabel;
+@property (nonatomic, weak) IBOutlet UILabel *batteryRemainingLabel;
+@property (nonatomic, weak) IBOutlet UILabel *batteryCurrentLabel;
+@property (nonatomic, weak) IBOutlet UILabel *batteryVoltageLabel;
+@property (nonatomic, weak) IBOutlet UILabel *attitudeStatusLabel;
+@property (nonatomic, weak) IBOutlet UILabel *altitudeLabel;
+
 @property (nonatomic, weak) IBOutlet UITextView *outputTextView;
 
 @property (nonatomic, strong) FDConnectionManager *connectionManager;
@@ -140,6 +145,8 @@
 #pragma mark - FDDroneControlManagerDelegate
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didParseMessage:(NSString *)messageDescription {
+    NSLog(@"%@", messageDescription);
+
     if (self.outputTextView.text.length == 0) {
         self.outputTextView.text = messageDescription;
     } else {
@@ -150,14 +157,30 @@
     [self.outputTextView scrollRangeToVisible:NSMakeRange(self.outputTextView.text.length, 0)];
 }
 
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryStatus:(NSInteger)batteryRemaining {
-    NSMutableString *batteryStatus = [NSMutableString stringWithString:@"Battery Remaining: "];
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryRemaining:(NSInteger)batteryRemaining current:(CGFloat)current voltage:(CGFloat)voltage {
+    NSMutableString *batteryRemainingString = [NSMutableString stringWithString:@"Battery Remaining: "];
     if (batteryRemaining == -1) {
-        [batteryStatus appendString:@"unknown"];
+        [batteryRemainingString appendString:@"unknown"];
     } else {
-        [batteryStatus appendFormat:@"%d%%", batteryRemaining];
+        [batteryRemainingString appendFormat:@"%ld%%", (long)batteryRemaining];
     }
-    self.batteryStatusLabel.text = batteryStatus;
+    self.batteryRemainingLabel.text = batteryRemainingString;
+    
+    NSMutableString *batteryCurrentString = [NSMutableString stringWithString:@"Battery Current: "];
+    if (current == -1) {
+        [batteryCurrentString appendString:@"unknown"];
+    } else {
+        [batteryCurrentString appendFormat:@"%0.3fA", current];
+    }
+    self.batteryCurrentLabel.text = batteryCurrentString;
+    
+    NSMutableString *batteryVoltageString = [NSMutableString stringWithString:@"Battery Voltage: "];
+    if (voltage == -1) {
+        [batteryVoltageString appendString:@"unknown"];
+    } else {
+        [batteryVoltageString appendFormat:@"%0.3fV", voltage];
+    }
+    self.batteryVoltageLabel.text = batteryVoltageString;
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
@@ -171,7 +194,19 @@
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading airspeed:(CGFloat)airspeed altitude:(CGFloat)altitude {
+    
+    
+    self.altitudeLabel.text = [NSString stringWithFormat:@"Altitude: %0.2f", altitude];
+}
 
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleAttitudeRoll:(CGFloat)roll pitch:(CGFloat)pitch yaw:(CGFloat)yaw rollspeed:(CGFloat)rollspeed pitchspeed:(CGFloat)pitchspeed yawspeed:(CGFloat)yawspeed {
+    
+    NSMutableString *attitudeStatusString = [NSMutableString string];
+    [attitudeStatusString appendFormat:@"Roll:  %f\n", roll];
+    [attitudeStatusString appendFormat:@"Pitch: %f\n", pitch];
+    [attitudeStatusString appendFormat:@"Yaw:   %f", yaw];
+    
+    self.attitudeStatusLabel.text = attitudeStatusString;
 }
 
 @end

@@ -28,6 +28,6 @@
 
 - (BOOL)isConnected;
 
-- (void)receiveTCPServer:(NSString *)host port:(NSUInteger)port;
+- (BOOL)receiveTCPServer:(NSString *)host port:(NSUInteger)port;
 
 @end

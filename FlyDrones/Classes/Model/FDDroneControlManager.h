@@ -14,16 +14,14 @@
 
 @optional
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didParseMessage:(NSString *)messageDescription;
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryStatus:(NSInteger)batteryRemaining;
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryRemaining:(NSInteger)batteryRemaining current:(CGFloat)current voltage:(CGFloat)voltage;
+
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate;
 
-/**
- * @brief Visual Flight Rules
- * @param heading in degrees, in compass units (0..360, 0=north)
- * @param airspeed in m/s
- * @param altitude (MSL), in meters
- */
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading airspeed:(CGFloat)airspeed altitude:(CGFloat)altitude;
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleAttitudeRoll:(CGFloat)roll pitch:(CGFloat)pitch yaw:(CGFloat)yaw rollspeed:(CGFloat)rollspeed pitchspeed:(CGFloat)pitchspeed yawspeed:(CGFloat)yawspeed;
 
 @end
 

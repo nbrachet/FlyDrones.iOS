@@ -192,52 +192,110 @@
                             </textView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cs6-h5-FNz" customClass="FDMovieGLView">
                                 <rect key="frame" x="0.0" y="96" width="1024" height="576"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Cs6-h5-FNz" secondAttribute="height" multiplier="854:480" id="u3I-vl-S77"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2IX-tV-0Y7">
-                                <rect key="frame" x="604" y="10" width="410" height="40"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MXE-AL-yjr" userLabel="Altitude Label">
+                                <rect key="frame" x="0.0" y="580" width="240" height="28"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="410" id="WcR-q8-olP"/>
-                                    <constraint firstAttribute="height" constant="40" id="quK-Tj-CZW"/>
+                                    <constraint firstAttribute="width" constant="240" id="Fnf-ac-ru3"/>
+                                    <constraint firstAttribute="height" constant="28" id="OSU-2e-n8N"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z1Z-n8-DCa">
-                                <rect key="frame" x="604" y="50" width="410" height="40"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="510-7M-deL" userLabel="Attitude Label">
+                                <rect key="frame" x="0.0" y="96" width="240" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="UKz-IH-u4w"/>
+                                    <constraint firstAttribute="height" constant="100" id="pV0-hK-t6V"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2IX-tV-0Y7" userLabel="Battary Remaining Label">
+                                <rect key="frame" x="814" y="10" width="200" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="WcR-q8-olP"/>
+                                    <constraint firstAttribute="height" constant="21" id="quK-Tj-CZW"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z1Z-n8-DCa" userLabel="GPS Status Label">
+                                <rect key="frame" x="136" y="10" width="410" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="410" id="b8X-Ef-ykc"/>
-                                    <constraint firstAttribute="height" constant="40" id="etb-PD-Znp"/>
+                                    <constraint firstAttribute="height" constant="21" id="etb-PD-Znp"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U5c-8F-Cat" userLabel="Battary Current Label">
+                                <rect key="frame" x="814" y="31" width="200" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="WtC-dR-OVu"/>
+                                    <constraint firstAttribute="height" constant="21" id="ukJ-uM-0Eg"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="agb-nc-REF" userLabel="Battary Voltage Label">
+                                <rect key="frame" x="814" y="52" width="200" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="Vzr-Zm-UcF"/>
+                                    <constraint firstAttribute="width" constant="200" id="ckK-2W-8CH"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="z1Z-n8-DCa" secondAttribute="trailing" constant="10" id="IFr-R9-zTf"/>
+                            <constraint firstItem="510-7M-deL" firstAttribute="top" secondItem="6SL-qf-fRV" secondAttribute="bottom" constant="46" id="0C4-wK-XVU"/>
+                            <constraint firstItem="MXE-AL-yjr" firstAttribute="top" secondItem="6SL-qf-fRV" secondAttribute="bottom" constant="530" id="4Un-Ec-E1T"/>
+                            <constraint firstItem="510-7M-deL" firstAttribute="leading" secondItem="rf2-3D-sY9" secondAttribute="leading" id="Abb-X1-Ua5"/>
+                            <constraint firstAttribute="trailing" secondItem="U5c-8F-Cat" secondAttribute="trailing" constant="10" id="C3f-e9-lWU"/>
+                            <constraint firstItem="MXE-AL-yjr" firstAttribute="leading" secondItem="rf2-3D-sY9" secondAttribute="leading" id="GH7-Jv-3yR"/>
+                            <constraint firstAttribute="trailing" secondItem="z1Z-n8-DCa" secondAttribute="trailing" constant="478" id="IFr-R9-zTf"/>
                             <constraint firstAttribute="trailing" secondItem="KPH-aN-ohH" secondAttribute="trailing" id="IGv-gI-pLL"/>
-                            <constraint firstItem="z1Z-n8-DCa" firstAttribute="top" secondItem="2IX-tV-0Y7" secondAttribute="bottom" id="MT6-QE-UXD"/>
+                            <constraint firstItem="z1Z-n8-DCa" firstAttribute="top" secondItem="2IX-tV-0Y7" secondAttribute="bottom" constant="-21" id="MT6-QE-UXD"/>
                             <constraint firstAttribute="trailing" secondItem="2IX-tV-0Y7" secondAttribute="trailing" constant="10" id="NMh-NU-FcT"/>
                             <constraint firstItem="Cs6-h5-FNz" firstAttribute="leading" secondItem="rf2-3D-sY9" secondAttribute="leading" id="O7F-ZK-7nV"/>
+                            <constraint firstItem="U5c-8F-Cat" firstAttribute="top" secondItem="2IX-tV-0Y7" secondAttribute="bottom" id="UjN-Hy-qqV"/>
                             <constraint firstItem="6SL-qf-fRV" firstAttribute="leading" secondItem="rf2-3D-sY9" secondAttribute="leading" constant="16" id="Vid-na-d8E"/>
                             <constraint firstItem="2IX-tV-0Y7" firstAttribute="top" secondItem="rf2-3D-sY9" secondAttribute="top" constant="10" id="Zij-cL-Nng"/>
                             <constraint firstAttribute="centerY" secondItem="Cs6-h5-FNz" secondAttribute="centerY" id="bt2-jj-8sI"/>
                             <constraint firstAttribute="trailing" secondItem="Cs6-h5-FNz" secondAttribute="trailing" id="f7t-UK-355"/>
                             <constraint firstItem="bzP-nR-mER" firstAttribute="top" secondItem="KPH-aN-ohH" secondAttribute="bottom" constant="1" id="gyR-nU-Oja"/>
                             <constraint firstItem="KPH-aN-ohH" firstAttribute="leading" secondItem="rf2-3D-sY9" secondAttribute="leading" id="kDt-0i-K1d"/>
+                            <constraint firstItem="agb-nc-REF" firstAttribute="top" secondItem="U5c-8F-Cat" secondAttribute="bottom" id="u3G-3i-i9E"/>
                             <constraint firstItem="6SL-qf-fRV" firstAttribute="top" secondItem="rf2-3D-sY9" secondAttribute="top" constant="20" id="uDa-bI-8pr"/>
+                            <constraint firstAttribute="trailing" secondItem="agb-nc-REF" secondAttribute="trailing" constant="10" id="vaf-5N-66c"/>
                         </constraints>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
-                        <outlet property="batteryStatusLabel" destination="2IX-tV-0Y7" id="mpZ-kz-1wV"/>
+                        <outlet property="altitudeLabel" destination="MXE-AL-yjr" id="M0B-PC-Spa"/>
+                        <outlet property="attitudeStatusLabel" destination="510-7M-deL" id="fV6-0f-gmB"/>
+                        <outlet property="batteryCurrentLabel" destination="U5c-8F-Cat" id="fzs-J1-t07"/>
+                        <outlet property="batteryRemainingLabel" destination="2IX-tV-0Y7" id="zDX-Nz-z6y"/>
+                        <outlet property="batteryVoltageLabel" destination="agb-nc-REF" id="yCD-7m-BGf"/>
                         <outlet property="locationLabel" destination="z1Z-n8-DCa" id="fnA-cy-6Pr"/>
                         <outlet property="movieGLView" destination="Cs6-h5-FNz" id="qhE-kN-1RP"/>
                         <outlet property="outputTextView" destination="KPH-aN-ohH" id="nRM-yp-bmM"/>

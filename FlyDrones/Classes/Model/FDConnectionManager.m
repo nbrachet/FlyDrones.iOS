@@ -7,16 +7,22 @@
 //
 
 #import "FDConnectionManager.h"
-#import <CocoaAsyncSocket/AsyncSocket.h>
-#import <CocoaAsyncSocket/AsyncUdpSocket.h>
+#import <CocoaAsyncSocket/GCDAsyncSocket.h>
+#import <CocoaAsyncSocket/GCDAsyncUdpSocket.h>
 #import "NSData+RTCP.h"
 
 static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 
-@interface FDConnectionManager () <AsyncUdpSocketDelegate>
+@interface FDConnectionManager () <GCDAsyncUdpSocketDelegate, GCDAsyncSocketDelegate>
 
-@property (nonatomic, strong) AsyncSocket *asyncSocket;
-@property (nonatomic, strong) AsyncUdpSocket *asyncUdpSocket;
+@property (nonatomic, strong) GCDAsyncUdpSocket *videoAsyncUdpSocket;
+@property (nonatomic, strong) dispatch_queue_t videoSocketQueue;
+@property (nonatomic, strong) dispatch_queue_t videoSocketDelegateQueue;
+
+@property (nonatomic, strong) GCDAsyncSocket *controlAsyncSocket;
+@property (nonatomic, strong) dispatch_queue_t controlSocketQueue;
+@property (nonatomic, strong) dispatch_queue_t controlSocketDelegateQueue;
+
 @property (nonatomic, strong) NSTimer *connectingTimer;
 
 @end
@@ -28,7 +34,10 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 - (instancetype)init {
     self = [super init];
     if (self) {
-
+        self.videoSocketQueue = dispatch_queue_create("videoSocketQueue", DISPATCH_QUEUE_SERIAL);
+        self.videoSocketDelegateQueue = dispatch_queue_create("videoSocketDelegateQueue", DISPATCH_QUEUE_SERIAL);
+        self.controlSocketQueue = dispatch_queue_create("controlSocketQueue", DISPATCH_QUEUE_SERIAL);
+        self.controlSocketDelegateQueue = dispatch_queue_create("controlSocketDelegateQueue", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
@@ -40,31 +49,47 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 #pragma mark - Public
 
 - (BOOL)connectToServer:(NSString *)hostForConnection portForConnection:(NSUInteger)portForConnection portForReceived:(NSUInteger)portForReceived {
+
     [self closeConnection];
 
-    self.asyncUdpSocket = [[AsyncUdpSocket alloc] initWithDelegate:self];
+    self.videoAsyncUdpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:self.videoSocketDelegateQueue socketQueue:self.videoSocketQueue];
 
     NSError *error = nil;
     
-    BOOL success = [self.asyncUdpSocket bindToPort:portForReceived error:&error];
-    if (!success || error != nil) {
+    BOOL isBinded = [self.videoAsyncUdpSocket bindToPort:portForReceived error:&error];
+    if (!isBinded || error != nil) {
         NSLog(@"%@", error.localizedDescription);
         return NO;
     }
 
-    [self.asyncUdpSocket receiveWithTimeout:-1 tag:0];                      //start receiving
+    BOOL isReceiving = [self.videoAsyncUdpSocket beginReceiving:&error];
+    if (!isReceiving || error != nil) {
+        NSLog(@"%@", error.localizedDescription);
+        return NO;
+    }
+    
+    //start receiving
     [self startConnectingToHost:hostForConnection port:portForConnection];  //start connecting
 
     return YES;
 }
 
 - (BOOL)isConnected {
-    return self.asyncUdpSocket.isConnected;
+    return self.videoAsyncUdpSocket.isConnected;
 }
 
-- (void)receiveTCPServer:(NSString *)host port:(NSUInteger)port {
-    self.asyncSocket = [[AsyncSocket alloc] initWithDelegate:self];
-    [self.asyncSocket readDataWithTimeout:-1 tag:10];
+- (BOOL)receiveTCPServer:(NSString *)host port:(NSUInteger)port {
+    self.controlAsyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:self.controlSocketQueue socketQueue:self.controlSocketDelegateQueue];
+    NSError *error = nil;
+    BOOL success = [self.controlAsyncSocket connectToHost:host onPort:port error:&error];
+    
+    if (!success || error != nil) {
+        NSLog(@"%@", error.localizedDescription);
+        return NO;
+    }
+    [self.controlAsyncSocket readDataWithTimeout:-1 tag:10];
+
+    return YES;
 }
 
 #pragma mark - Private
@@ -94,24 +119,20 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     NSData *packetData = [NSData RTCPDataWithVersion:2 packetType:RTCPPacketTypeRR];
     NSLog(@"Send data: %@", [packetData hexadecimalString]);
 
-    BOOL success = [self.asyncUdpSocket sendData:packetData
-                                          toHost:serverInfo[@"host"]
-                                            port:[serverInfo[@"port"] intValue]
+    [self.videoAsyncUdpSocket sendData:packetData
+                                toHost:serverInfo[@"host"]
+                                  port:[serverInfo[@"port"] intValue]
                                      withTimeout:-1
                                              tag:0];
-
-    if (!success) {
-        NSLog(@"Error while sending data");
-    }
 }
 
 - (void)closeConnection {
     [self stopConnecting];
 
     NSLog(@"Close connection");
-    [self.asyncUdpSocket close];
-    self.asyncUdpSocket.delegate = nil;
-    self.asyncUdpSocket = nil;
+    [self.videoAsyncUdpSocket close];
+    self.videoAsyncUdpSocket.delegate = nil;
+    self.videoAsyncUdpSocket = nil;
 }
 
 - (NSInteger)rtpHeaderLength:(NSData *)data {
@@ -125,83 +146,57 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     return (bytes[1] & 0xFF) == 200;                    /*that would ignore RTCP SR packets*/
 }
 
-#pragma mark - AsyncUdpSocketDelegate
+#pragma mark - GCDAsyncUdpSocketDelegate
 
-- (void)onUdpSocket:(AsyncUdpSocket *)sock didSendDataWithTag:(long)tag {
-    NSLog(@"Data sending");
-}
-
-- (void)onUdpSocket:(AsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error {
-
-}
-
-- (BOOL)onUdpSocket:(AsyncUdpSocket *)sock didReceiveData:(NSData *)data withTag:(long)tag fromHost:(NSString *)host port:(UInt16)port {
-    [self.asyncUdpSocket receiveWithTimeout:-1 tag:2];
+- (void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address withFilterContext:(id)filterContext {
 
     if ([self.connectingTimer isValid]) {
         [self stopConnecting];
     }
 
     if (data.length < FDConnectionManagerStandardRTPHeaderLength) {
-        return YES;
+        return;
     }
 
     NSInteger rtpHeaderLength = [self rtpHeaderLength:data];
     if (data.length <= rtpHeaderLength) {
-        return YES;
+        return;
     }
 
     BOOL isSRData = [self isSRData:data];
     if (isSRData) {
-        return YES;
+        return;
     }
 
     NSData *frameData = [data subdataWithRange:NSMakeRange(rtpHeaderLength, data.length - rtpHeaderLength)];
 
     if (frameData.length == 0) {
-        return YES;
+        return;
     }
 
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(connectionManager:didReceiveData:)]) {
         [self.delegate connectionManager:self didReceiveData:frameData];
     }
 
-    return YES;
+    return;
 }
 
-- (void)onUdpSocket:(AsyncUdpSocket *)sock didNotReceiveDataWithTag:(long)tag dueToError:(NSError *)error {
-    NSLog(@"%@", error);
-}
-
-- (void)onUdpSocketDidClose:(AsyncUdpSocket *)sock {
-
-}
-
-#pragma mark - AsyncSocketDelegate
-
-- (void)onSocket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port {
+- (void)udpSocketDidClose:(GCDAsyncUdpSocket *)sock withError:(NSError *)error {
     
 }
 
-- (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
-    NSInteger rtpHeaderLength = [self rtpHeaderLength:data];
-    if (data.length <= rtpHeaderLength) {
-        return;
-    }
+#pragma mark - GCDAsyncSocketDelegate
+
+- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     
-    BOOL isSRData = [self isSRData:data];
-    if (isSRData) {
-        return;
-    }
-    
-    NSData *frameData = [data subdataWithRange:NSMakeRange(rtpHeaderLength, data.length - rtpHeaderLength)];
-    
-    if (frameData.length == 0) {
-        return;
-    }
-    
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
+    [self.controlAsyncSocket readDataWithTimeout:-1 tag:10];
+
+
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(connectionManager:didReceiveTCPData:)]) {
-        [self.delegate connectionManager:self didReceiveTCPData:frameData];
+        [self.delegate connectionManager:self didReceiveTCPData:data];
     }
 }
 

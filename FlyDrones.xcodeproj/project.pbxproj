@@ -1110,7 +1110,6 @@
 				TargetAttributes = {
 					371525EA1A77B28A00F885B8 = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = PVDZWY67J6;
 					};
 				};
 			};
@@ -1324,7 +1323,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1343,7 +1342,7 @@
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "891fa8f0-988c-42af-ab3d-7690adfc256e";
+				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
 			};
 			name = Debug;
 		};
@@ -1353,7 +1352,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1372,7 +1371,7 @@
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "891fa8f0-988c-42af-ab3d-7690adfc256e";
+				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
 			};
 			name = Release;
 		};
