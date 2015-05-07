@@ -13,9 +13,9 @@
 
 @interface FDDisplayInfoView ()
 
-@property(nonatomic, weak) IBOutlet UILabel *dateLabel;
-@property(nonatomic, weak) IBOutlet UILabel *timeLabel;
-@property(nonatomic, strong) NSTimer *timer;
+@property (nonatomic, weak) IBOutlet UILabel *dateLabel;
+@property (nonatomic, weak) IBOutlet UILabel *timeLabel;
+@property (nonatomic, strong) NSTimer *timer;
 
 @end
 

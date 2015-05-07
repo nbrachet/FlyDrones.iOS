@@ -15,6 +15,4 @@
 
 + (NSString *)currentTime;
 
-#pragma mark -
-
 @end

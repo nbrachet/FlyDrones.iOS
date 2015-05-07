@@ -6,28 +6,24 @@
 //  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <CoreGraphics/CoreGraphics.h>
-#import <Accelerate/Accelerate.h>
-#import <AVFoundation/AVFoundation.h>
-
-#import <Availability.h>
-
-#ifndef __IPHONE_7_0
-    #warning "This project uses features only available in iOS SDK 7.0 and later."
-#endif
-
 #ifdef __OBJC__
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <Accelerate/Accelerate.h>
+#import <AVFoundation/AVFoundation.h>
+#import <Availability.h>
+#import <CoreLocation/CoreLocation.h>
 
 #endif
+
+#import "mavlink.h"
 
 #pragma GCC diagnostic ignored "-Wwarning-flag"
 
-#ifdef DEBUG
-#define NSLog(__FORMAT__, ...) NSLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
-#else
-    #define NSLog(...)
-#endif
+//#ifdef DEBUG
+//#define NSLog(__FORMAT__, ...) NSLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+//#else
+//    #define NSLog(...)
+//#endif

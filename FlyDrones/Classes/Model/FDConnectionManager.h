@@ -14,17 +14,20 @@
 
 @optional
 - (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveData:(NSData *)data;
+- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveTCPData:(NSData *)data;
 
 @end
 
 @interface FDConnectionManager : NSObject
 
-@property(nonatomic, weak) id <FDConnectionManagerDelegate> delegate;
+@property (nonatomic, weak) id <FDConnectionManagerDelegate> delegate;
 
 - (BOOL)connectToServer:(NSString *)host portForConnection:(NSUInteger)portForConnection portForReceived:(NSUInteger)portForReceived;
 
 - (void)closeConnection;
 
 - (BOOL)isConnected;
+
+- (BOOL)receiveTCPServer:(NSString *)host port:(NSUInteger)port;
 
 @end

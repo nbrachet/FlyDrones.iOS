@@ -37,4 +37,34 @@
     
     return [NSString stringWithString:hexString];
 }
+
+- (NSArray *)componentsSeparatedByByte:(Byte)byte {
+    unsigned long len, index, last_sep_index;
+    NSData *line;
+    NSMutableArray *lines = nil;
+    
+    len = [self length];
+    Byte buffer[len];
+    
+    [self getBytes:buffer length:len];
+    
+    index = last_sep_index = 0;
+    
+    lines = [[NSMutableArray alloc] init];
+    
+    do {
+        if (buffer[index] == byte) {
+            NSRange startEndRange = NSMakeRange(last_sep_index, index - last_sep_index);
+            line = [self subdataWithRange:startEndRange];
+            
+            [lines addObject:line];
+            
+            last_sep_index = index + 1;
+            
+            continue;
+        }
+    } while (index++ < len);
+    return lines;
+}
+
 @end
