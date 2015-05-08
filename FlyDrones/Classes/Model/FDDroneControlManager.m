@@ -10,6 +10,8 @@
 #import "FDFileReader.h"
 #import "NSString+MAVLink.h"
 
+NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"didHandleBatteryStatus";
+
 @interface FDDroneControlManager () {
     mavlink_message_t msg;
     mavlink_status_t status;
@@ -95,35 +97,46 @@
 }
 
 - (void)handleMessage:(mavlink_message_t *)message {
-    if (self.delegate == nil) {
-        return;
-    }
+    FDDroneStatus *droneStatus = [FDDroneStatus currentStatus];
     switch (message->msgid) {
         case MAVLINK_MSG_ID_BATTERY_STATUS: {
-            if (![self.delegate respondsToSelector:@selector(droneControlManager:didHandleBatteryRemaining:current:voltage:)]) {
-                break;
-            }
-            
             mavlink_battery_status_t batteryStatus;
             mavlink_msg_battery_status_decode(message, &batteryStatus);
 
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.delegate droneControlManager:self didHandleBatteryRemaining:batteryStatus.battery_remaining current:batteryStatus.current_battery voltage:-1];
+                droneStatus.batteryRemaining = batteryStatus.battery_remaining / 100.0f;
+                droneStatus.batteryAmperage = batteryStatus.current_battery / 100.0f;
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleBatteryStatusNotification object:self];
+                
+                if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleBatteryRemaining:current:voltage:)]) {
+                    [self.delegate droneControlManager:self
+                             didHandleBatteryRemaining:droneStatus.batteryRemaining
+                                               current:droneStatus.batteryAmperage
+                                               voltage:-1];
+                }
             });
             
             break;
         }
             
         case MAVLINK_MSG_ID_SYS_STATUS: {
-            if (![self.delegate respondsToSelector:@selector(droneControlManager:didHandleBatteryRemaining:current:voltage:)]) {
-                break;
-            }
-
             mavlink_sys_status_t sysStatus;
             mavlink_msg_sys_status_decode(message, &sysStatus);
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.delegate droneControlManager:self didHandleBatteryRemaining:sysStatus.battery_remaining current:sysStatus.current_battery/100.0f voltage:sysStatus.voltage_battery/1000.0f];
+                droneStatus.batteryRemaining = sysStatus.battery_remaining / 100.0f;
+                droneStatus.batteryAmperage = sysStatus.current_battery / 100.0f;
+                droneStatus.batteryVoltage = sysStatus.voltage_battery/1000.0f;
+            
+                [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleBatteryStatusNotification object:self];
+                
+                if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleBatteryRemaining:current:voltage:)]) {
+                    [self.delegate droneControlManager:self
+                             didHandleBatteryRemaining:droneStatus.batteryRemaining
+                                               current:droneStatus.batteryAmperage
+                                               voltage:droneStatus.batteryVoltage];
+                }
             });
         }
 

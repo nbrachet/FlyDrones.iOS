@@ -174,8 +174,8 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
         return;
     }
 
-    if (self.delegate != nil && [self.delegate respondsToSelector:@selector(connectionManager:didReceiveData:)]) {
-        [self.delegate connectionManager:self didReceiveData:frameData];
+    if (self.delegate != nil && [self.delegate respondsToSelector:@selector(connectionManager:didReceiveUDPData:)]) {
+        [self.delegate connectionManager:self didReceiveUDPData:frameData];
     }
 
     return;

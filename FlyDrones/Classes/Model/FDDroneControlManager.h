@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FDDroneStatus.h"
+
+extern NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification;
 
 @class FDDroneControlManager;
 
@@ -15,7 +18,7 @@
 @optional
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didParseMessage:(NSString *)messageDescription;
 
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryRemaining:(NSInteger)batteryRemaining current:(CGFloat)current voltage:(CGFloat)voltage;
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryRemaining:(CGFloat)batteryRemaining current:(CGFloat)current voltage:(CGFloat)voltage;
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate;
 
