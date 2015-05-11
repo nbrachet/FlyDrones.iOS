@@ -10,6 +10,9 @@
 #import "FDDroneStatus.h"
 
 extern NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification;
+extern NSString * const FDDroneControlManagerDidHandleScaledPressureInfoNotification;
+extern NSString * const FDDroneControlManagerDidHandleVFRInfoNotification;
+extern NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotification;
 
 @class FDDroneControlManager;
 
@@ -22,9 +25,13 @@ extern NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification;
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate;
 
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading airspeed:(CGFloat)airspeed altitude:(CGFloat)altitude;
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading altitude:(CGFloat)altitude airspeed:(CGFloat)airspeed groundspeed:(CGFloat)groundspeed climbRate:(CGFloat)climbRate throttleSetting:(CGFloat)throttleSetting;
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleAttitudeRoll:(CGFloat)roll pitch:(CGFloat)pitch yaw:(CGFloat)yaw rollspeed:(CGFloat)rollspeed pitchspeed:(CGFloat)pitchspeed yawspeed:(CGFloat)yawspeed;
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleNavigationInfo:(CGFloat)navigationBearing;
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleScaledPressureInfo:(CGFloat)temperature absolutePressure:(CGFloat)absolutePressure differentialPressure:(CGFloat)differentialPressure;
 
 @end
 

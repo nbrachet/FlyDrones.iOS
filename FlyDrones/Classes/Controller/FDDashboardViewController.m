@@ -24,7 +24,9 @@
 @property (nonatomic, weak) IBOutlet FDCompassView *compassView;
 
 @property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
-@property (nonatomic, weak) IBOutlet UILabel *altitudeLabel;
+@property (nonatomic, weak) IBOutlet UIButton *altitudeButton;
+@property (nonatomic, weak) IBOutlet UIButton *temperatureButton;
+@property (nonatomic, weak) IBOutlet UIButton *worldwideLocationButton;
 
 @property (nonatomic, strong) FDConnectionManager *connectionManager;
 @property (nonatomic, strong) FDMovieDecoder *movieDecoder;
@@ -87,6 +89,17 @@
 
 - (BOOL)prefersStatusBarHidden {
     return YES;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"ShowBatteryStatus"] ||
+        [segue.identifier isEqualToString:@"ShowScaledPressure"] ||
+        [segue.identifier isEqualToString:@"ShowVFRInfo"] ||
+        [segue.identifier isEqualToString:@"ShowLocationInfo"]) {
+        UIViewController *destinationViewController = segue.destinationViewController;
+        UIPopoverPresentationController *popoverPresentationController = destinationViewController.popoverPresentationController;
+        popoverPresentationController.backgroundColor = destinationViewController.view.backgroundColor;
+    }
 }
 
 #pragma mark - UIStateRestoration
@@ -169,20 +182,33 @@
     NSLog(@"%@", messageDescription);
 }
 
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
+    self.worldwideLocationButton.enabled = CLLocationCoordinate2DIsValid(locationCoordinate);
+}
+
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryRemaining:(CGFloat)batteryRemaining current:(CGFloat)current voltage:(CGFloat)voltage {
     
     self.batteryButton.batteryRemainingPercent = batteryRemaining;
 }
 
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
-}
-
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading airspeed:(CGFloat)airspeed altitude:(CGFloat)altitude {
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading altitude:(CGFloat)altitude airspeed:(CGFloat)airspeed groundspeed:(CGFloat)groundspeed climbRate:(CGFloat)climbRate throttleSetting:(CGFloat)throttleSetting {
     self.compassView.heading = heading;
-    self.altitudeLabel.text = (altitude > 0) ? [NSString stringWithFormat:@"%0.2f m", altitude] : @"N/A";
+
+    NSString *altitudeString = (altitude != FDNotAvailable) ? [NSString stringWithFormat:@"%0.2f m", altitude] : @"N/A";
+    [UIView performWithoutAnimation:^{
+        self.altitudeButton.titleLabel.text = altitudeString;
+        [self.altitudeButton setTitle:altitudeString forState:UIControlStateNormal];
+    }];
 }
 
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleAttitudeRoll:(CGFloat)roll pitch:(CGFloat)pitch yaw:(CGFloat)yaw rollspeed:(CGFloat)rollspeed pitchspeed:(CGFloat)pitchspeed yawspeed:(CGFloat)yawspeed {
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleNavigationInfo:(CGFloat)navigationBearing {
+    self.compassView.navigationBearing = navigationBearing;
+}
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleScaledPressureInfo:(CGFloat)temperature absolutePressure:(CGFloat)absolutePressure differentialPressure:(CGFloat)differentialPressure {
+    
+    NSString *temperatureString = (temperature != FDNotAvailable) ? [NSString stringWithFormat:@"%0.1f°C", temperature] : @"N/A";
+    [self.temperatureButton setTitle:temperatureString forState:UIControlStateNormal];
 }
 
 @end

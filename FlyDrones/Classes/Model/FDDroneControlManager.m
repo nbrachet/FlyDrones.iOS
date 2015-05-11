@@ -10,7 +10,10 @@
 #import "FDFileReader.h"
 #import "NSString+MAVLink.h"
 
-NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"didHandleBatteryStatus";
+NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"didHandleBatteryStatusNotification";
+NSString * const FDDroneControlManagerDidHandleScaledPressureInfoNotification = @"didHandleScaledPressureInfoNotification";
+NSString * const FDDroneControlManagerDidHandleVFRInfoNotification = @"didHandleVFRInfoNotification";
+NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotification = @"didHandleLocationCoordinate";
 
 @interface FDDroneControlManager () {
     mavlink_message_t msg;
@@ -99,14 +102,44 @@ NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"did
 - (void)handleMessage:(mavlink_message_t *)message {
     FDDroneStatus *droneStatus = [FDDroneStatus currentStatus];
     switch (message->msgid) {
+        case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT: {
+            mavlink_nav_controller_output_t navControllerOutput;
+            mavlink_msg_nav_controller_output_decode(message, &navControllerOutput);
+            droneStatus.navigationBearing = navControllerOutput.nav_bearing;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleNavigationInfo:)]) {
+                    [self.delegate droneControlManager:self didHandleNavigationInfo:droneStatus.navigationBearing];
+                }
+            });
+            break;
+        }
+            
+        case MAVLINK_MSG_ID_SCALED_PRESSURE: {
+            mavlink_scaled_pressure_t scaledPressure;
+            mavlink_msg_scaled_pressure_decode(message, &scaledPressure);
+            droneStatus.temperature = scaledPressure.temperature / 100.0f;
+            droneStatus.absolutePressure = scaledPressure.press_abs;
+            droneStatus.differentialPressure = scaledPressure.press_diff;
+            
+            
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleScaledPressureInfoNotification object:self];
+                
+                if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleScaledPressureInfo:absolutePressure:differentialPressure:)]) {
+                    [self.delegate droneControlManager:self didHandleScaledPressureInfo:droneStatus.temperature absolutePressure:droneStatus.absolutePressure differentialPressure:droneStatus.differentialPressure];
+                }
+            });
+        }
+            
         case MAVLINK_MSG_ID_BATTERY_STATUS: {
             mavlink_battery_status_t batteryStatus;
             mavlink_msg_battery_status_decode(message, &batteryStatus);
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                droneStatus.batteryRemaining = batteryStatus.battery_remaining / 100.0f;
-                droneStatus.batteryAmperage = batteryStatus.current_battery / 100.0f;
+            droneStatus.batteryRemaining = batteryStatus.battery_remaining / 100.0f;
+            droneStatus.batteryAmperage = batteryStatus.current_battery / 100.0f;
                 
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleBatteryStatusNotification object:self];
                 
                 if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleBatteryRemaining:current:voltage:)]) {
@@ -123,12 +156,11 @@ NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"did
         case MAVLINK_MSG_ID_SYS_STATUS: {
             mavlink_sys_status_t sysStatus;
             mavlink_msg_sys_status_decode(message, &sysStatus);
+            droneStatus.batteryRemaining = sysStatus.battery_remaining / 100.0f;
+            droneStatus.batteryAmperage = sysStatus.current_battery / 100.0f;
+            droneStatus.batteryVoltage = sysStatus.voltage_battery / 1000.0f;
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                droneStatus.batteryRemaining = sysStatus.battery_remaining / 100.0f;
-                droneStatus.batteryAmperage = sysStatus.current_battery / 100.0f;
-                droneStatus.batteryVoltage = sysStatus.voltage_battery/1000.0f;
-            
                 [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleBatteryStatusNotification object:self];
                 
                 if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleBatteryRemaining:current:voltage:)]) {
@@ -149,7 +181,10 @@ NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"did
             mavlink_msg_gps_raw_int_decode(message, &gpsRawIntPkt);
             CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(gpsRawIntPkt.lat/10000000.0f,
                                                                                    gpsRawIntPkt.lon/10000000.0f);
+            droneStatus.locationCoordinate = locationCoordinate;
             dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleLocationCoordinateNotification object:self];
+                
                 [self.delegate droneControlManager:self didHandleLocationCoordinate:locationCoordinate];
             });
             
@@ -157,18 +192,33 @@ NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"did
         }
             
         case MAVLINK_MSG_ID_VFR_HUD: {
-            if (![self.delegate respondsToSelector:@selector(droneControlManager:didHandleVFRInfoForHeading:airspeed:altitude:)]) {
-                break;
-            }
-            
             mavlink_vfr_hud_t  vfrHudPkt;
             mavlink_msg_vfr_hud_decode(message, &vfrHudPkt);
+            
+            droneStatus.altitude = vfrHudPkt.alt;
+            droneStatus.airspeed = vfrHudPkt.airspeed;
+            droneStatus.groundspeed = vfrHudPkt.groundspeed;
+            droneStatus.climbRate = vfrHudPkt.climb;
+            droneStatus.heading = vfrHudPkt.heading;
+            droneStatus.throttleSetting = vfrHudPkt.throttle;
+            
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.delegate droneControlManager:self didHandleVFRInfoForHeading:vfrHudPkt.heading airspeed:vfrHudPkt.airspeed altitude:vfrHudPkt.alt];
+                [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleVFRInfoNotification object:self];
+                
+                if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleVFRInfoForHeading:altitude:airspeed:groundspeed:climbRate:throttleSetting:)]) {
+                    [self.delegate droneControlManager:self
+                            didHandleVFRInfoForHeading:droneStatus.heading
+                                              altitude:droneStatus.altitude
+                                              airspeed:droneStatus.airspeed
+                                           groundspeed:droneStatus.groundspeed
+                                             climbRate:droneStatus.climbRate
+                                       throttleSetting:droneStatus.throttleSetting];
+                }
             });
             
             break;
         }
+            
         case MAVLINK_MSG_ID_ATTITUDE: {
             if (![self.delegate respondsToSelector:@selector(droneControlManager:didHandleAttitudeRoll:pitch:yaw:rollspeed:pitchspeed:yawspeed:)]) {
                 break;
@@ -177,36 +227,13 @@ NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"did
             mavlink_attitude_t attitude;
             mavlink_msg_attitude_decode(message, &attitude);
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.delegate droneControlManager:self didHandleAttitudeRoll:attitude.roll pitch:attitude.pitch yaw:attitude.yaw rollspeed:attitude.rollspeed pitchspeed:attitude.pitchspeed yawspeed:attitude.yawspeed];
+                if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleAttitudeRoll:pitch:yaw:rollspeed:pitchspeed:yawspeed:)]) {
+                    [self.delegate droneControlManager:self didHandleAttitudeRoll:attitude.roll pitch:attitude.pitch yaw:attitude.yaw rollspeed:attitude.rollspeed pitchspeed:attitude.pitchspeed yawspeed:attitude.yawspeed];
+                }
             });
             
             break;
         }
-            
-        
-//        case MAVLINK_MSG_ID_PARAM_VALUE:
-//            NSLog(@"MAVLINK_MSG_ID_PARAM_VALUE");
-// 
-//            break;
-//        case MAVLINK_MSG_ID_HEARTBEAT:
-//            NSLog(@"MAVLINK_MSG_ID_HEARTBEAT");
-//            break;
-//        case MAVLINK_MSG_ID_RADIO_STATUS:
-//            NSLog(@"MAVLINK_MSG_ID_RADIO_STATUS");
-//            break;
-//        case MAVLINK_MSG_ID_RADIO:
-//            NSLog(@"MAVLINK_MSG_ID_RADIO");
-//            break;
-//        case MAVLINK_MSG_ID_STATUSTEXT:
-//            NSLog(@"MAVLINK_MSG_ID_STATUSTEXT");
-//            break;
-//        case MAVLINK_MSG_ID_SYS_STATUS:
-//            NSLog(@"MAVLINK_MSG_ID_SYS_STATUS");
-//            break;
-//
-//        default:
-//            NSLog(@"The msg id is %d (0x%x)", msg.msgid, msg.msgid);
-//        break;
     }
 }
 

@@ -35,9 +35,24 @@
 }
 
 - (void)clearStatus {
-    self.batteryRemaining = 0;
-    self.batteryVoltage = 0;
-    self.batteryAmperage = 0;
+    self.batteryRemaining = FDNotAvailable;
+    self.batteryVoltage = FDNotAvailable;
+    self.batteryAmperage = FDNotAvailable;
+    
+    self.altitude = FDNotAvailable;
+    self.airspeed = FDNotAvailable;
+    self.groundspeed = FDNotAvailable;
+    self.climbRate = FDNotAvailable;
+    self.heading = FDNotAvailable;
+    self.throttleSetting = FDNotAvailable;
+    
+    self.navigationBearing = FDNotAvailable;
+    
+    self.temperature = FDNotAvailable;
+    self.absolutePressure = FDNotAvailable;
+    self.differentialPressure = FDNotAvailable;
+    
+    self.locationCoordinate = kCLLocationCoordinate2DInvalid;
 }
 
 @end

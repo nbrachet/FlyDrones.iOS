@@ -39,6 +39,10 @@
 		1BDB2A041AF291B000B2A465 /* FDFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A031AF291B000B2A465 /* FDFileReader.m */; };
 		1BDB2A061AF295B000B2A465 /* 2015-04-15 10-57-47.tlog in Resources */ = {isa = PBXBuildFile; fileRef = 1BDB2A051AF295B000B2A465 /* 2015-04-15 10-57-47.tlog */; };
 		1BDB2A0A1AF2C68000B2A465 /* NSString+MAVLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A091AF2C68000B2A465 /* NSString+MAVLink.m */; };
+		1BE363D51B00EB8200F880F3 /* FDScaledPressureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE363D41B00EB8200F880F3 /* FDScaledPressureViewController.m */; };
+		1BE363D81B0124C800F880F3 /* FDVFRInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE363D71B0124C800F880F3 /* FDVFRInfoViewController.m */; };
+		1BE363DB1B0124E400F880F3 /* FDLocationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE363DA1B0124E400F880F3 /* FDLocationInfoViewController.m */; };
+		1BE363DD1B0134E300F880F3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BE363DC1B0134E300F880F3 /* MapKit.framework */; };
 		1BED467B1AE56D79008EA8C8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BED467A1AE56D79008EA8C8 /* Images.xcassets */; };
 		1BED46891AE56DC2008EA8C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46851AE56DC2008EA8C8 /* Main.storyboard */; };
 		1BED468A1AE56DC2008EA8C8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46871AE56DC2008EA8C8 /* LaunchScreen.xib */; };
@@ -415,6 +419,13 @@
 		1BDB2A051AF295B000B2A465 /* 2015-04-15 10-57-47.tlog */ = {isa = PBXFileReference; lastKnownFileType = file; path = "2015-04-15 10-57-47.tlog"; sourceTree = "<group>"; };
 		1BDB2A081AF2C68000B2A465 /* NSString+MAVLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MAVLink.h"; sourceTree = "<group>"; };
 		1BDB2A091AF2C68000B2A465 /* NSString+MAVLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MAVLink.m"; sourceTree = "<group>"; };
+		1BE363D31B00EB8200F880F3 /* FDScaledPressureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDScaledPressureViewController.h; sourceTree = "<group>"; };
+		1BE363D41B00EB8200F880F3 /* FDScaledPressureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDScaledPressureViewController.m; sourceTree = "<group>"; };
+		1BE363D61B0124C800F880F3 /* FDVFRInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDVFRInfoViewController.h; sourceTree = "<group>"; };
+		1BE363D71B0124C800F880F3 /* FDVFRInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDVFRInfoViewController.m; sourceTree = "<group>"; };
+		1BE363D91B0124E400F880F3 /* FDLocationInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDLocationInfoViewController.h; sourceTree = "<group>"; };
+		1BE363DA1B0124E400F880F3 /* FDLocationInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDLocationInfoViewController.m; sourceTree = "<group>"; };
+		1BE363DC1B0134E300F880F3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		1BED467A1AE56D79008EA8C8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1BED467C1AE56D8E008EA8C8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BED46861AE56DC2008EA8C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -439,6 +450,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BE363DD1B0134E300F880F3 /* MapKit.framework in Frameworks */,
 				1BB1AD3C1AF42C2D004A5EA8 /* CoreLocation.framework in Frameworks */,
 				37B0AF531A80CA6B005B2D8D /* QuartzCore.framework in Frameworks */,
 				37431F9C1A7A71C6007CDD6F /* GLKit.framework in Frameworks */,
@@ -1067,6 +1079,12 @@
 				1B955E351ACEBBFE00B33BDD /* FDDashboardViewController.m */,
 				1BC5E8F61AFCE3EC006C5AD1 /* FDBatteryStatusViewController.h */,
 				1BC5E8F71AFCE3EC006C5AD1 /* FDBatteryStatusViewController.m */,
+				1BE363D31B00EB8200F880F3 /* FDScaledPressureViewController.h */,
+				1BE363D41B00EB8200F880F3 /* FDScaledPressureViewController.m */,
+				1BE363D61B0124C800F880F3 /* FDVFRInfoViewController.h */,
+				1BE363D71B0124C800F880F3 /* FDVFRInfoViewController.m */,
+				1BE363D91B0124E400F880F3 /* FDLocationInfoViewController.h */,
+				1BE363DA1B0124E400F880F3 /* FDLocationInfoViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1098,6 +1116,7 @@
 		956F2D260B6A2289A457E2B3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1BE363DC1B0134E300F880F3 /* MapKit.framework */,
 				1BB1AD3B1AF42C2D004A5EA8 /* CoreLocation.framework */,
 				37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */,
 				37431F9A1A7A71C6007CDD6F /* GLKit.framework */,
@@ -1232,8 +1251,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BE363D81B0124C800F880F3 /* FDVFRInfoViewController.m in Sources */,
 				1BC5E8FB1AFCEAAA006C5AD1 /* FDDroneStatus.m in Sources */,
 				1BB00CA21AEE6D9900FF787B /* NSData+RTCP.m in Sources */,
+				1BE363D51B00EB8200F880F3 /* FDScaledPressureViewController.m in Sources */,
 				1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */,
 				1BDB2A0A1AF2C68000B2A465 /* NSString+MAVLink.m in Sources */,
 				1BC5E9021AFD02DC006C5AD1 /* FDCompassView.m in Sources */,
@@ -1253,6 +1274,7 @@
 				1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */,
 				371525F11A77B28A00F885B8 /* main.m in Sources */,
 				1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */,
+				1BE363DB1B0124E400F880F3 /* FDLocationInfoViewController.m in Sources */,
 				1BDB2A011AF170F800B2A465 /* FDDroneControlManager.m in Sources */,
 				1B9552391AE7BBA30054BA0C /* FDVideoFrame.m in Sources */,
 			);

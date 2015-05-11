@@ -20,12 +20,12 @@
     [self redraw];
 }
 
-- (void)setNavBearing:(CGFloat)navBearing {
-    if (_navBearing == navBearing  || navBearing < 0 || navBearing > 360) {
+- (void)setNavigationBearing:(CGFloat)navigationBearing {
+    if (_navigationBearing == navigationBearing  || navigationBearing < 0 || navigationBearing > 360) {
         return;
     }
     
-    _navBearing = navBearing;
+    _navigationBearing = navigationBearing;
     [self redraw];
 }
 
@@ -40,7 +40,7 @@
     const float tickBase = centerPoint.y + CGRectGetHeight(rect) / 2.0f - CGRectGetHeight(rect) / 20.0f;
     const float tickMajorHeight = CGRectGetHeight(rect) / 3.0f;
     const float tickMinorHeight = CGRectGetHeight(rect) / 6.0f;
-    const float tickWidth = CGRectGetWidth(rect) * 0.015f;
+    const float tickWidth = CGRectGetWidth(rect) * 0.01f;
     const float chevronSide = CGRectGetWidth(rect) * 0.018f;
     const float fontSize = CGRectGetHeight(rect) * 0.6f;
     
@@ -51,26 +51,34 @@
     CGContextSetFillColorWithColor(context, [self.backgroundColor CGColor]);
     CGContextFillRect(context, rect);
     
-    //Draw text
-    CGContextSetStrokeColorWithColor(context, [self.textColor CGColor]);
-    CGContextSetFillColorWithColor(context, [self.textColor CGColor]);
-    CGContextSetLineWidth(context, tickWidth);
-    CGContextSetTextMatrix(context, CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
-    CGContextSelectFont(context, "Arial Rounded MT Bold", fontSize, kCGEncodingMacRoman);
-    CGContextSetTextDrawingMode(context, kCGTextFill);
-    
+    // Draw text and tick lines
     // Draw 360 degrees, centered on current position.
     // An aircraft compass has:
     //   * small tick every 5 deg
     //   * large tick every 10 deg
     //   * number every 30 deg, with N/S/W/E replacing their respective numbers
-    //
-    // They also run in an "anticlockwise" direction; that is, [NE --- N --- NW],
-    // but have deliberately chosen a more intuitive display here
-    CGFloat startAngle = ((NSInteger)self.heading - 180)/5 * 5;
+    
+    if (self.numbersColor == nil) {
+        self.numbersColor = [UIColor blackColor];
+    }
+    
+    if (self.lettersColor == nil) {
+        self.lettersColor = [UIColor blackColor];
+    }
+    
+    NSDictionary *numbersTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSize - 3],
+                                            NSForegroundColorAttributeName: self.numbersColor};
+    NSDictionary *lettersTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSize],
+                                            NSForegroundColorAttributeName: self.lettersColor};
+    CGContextSetLineWidth(context, tickWidth);
+
+    CGFloat startAngle = ((NSInteger)self.heading - 180) /5 * 5;
     const float startX = centerPoint.x + (startAngle - self.heading) * oneDegX;
     NSInteger angle = (startAngle < 0) ? startAngle += 360 : startAngle;
+    
     for (int i = 0; i < 360; i += 5, angle = (angle + 5) % 360) {
+        CGContextSetStrokeColorWithColor(context, [self.numbersColor CGColor]);
+        CGContextSetFillColorWithColor(context, [self.numbersColor CGColor]);
         // Find the x position of this tick
         const float x = startX + i * oneDegX;
         if (x < -20 || x > CGRectGetWidth(rect) + 20) {
@@ -89,20 +97,22 @@
         
         // Draw the "numbers"
         if (angle % 30 == 0) {
-            NSString *text;
+            NSMutableAttributedString *attributedText;
+            CGSize textSize;
             if (angle % 90 == 0) {
                 // Compass points
                 NSArray *array = @[@"N", @"E", @"S", @"W"];
-                text = array[angle / 90];
+                attributedText = [[NSMutableAttributedString alloc] initWithString:array[angle / 90] attributes:lettersTextAttributes];
+                textSize = [attributedText size];
             } else {
                 // Plain old number
-                text = [NSString stringWithFormat:@"%03ld", (long)angle];
+                NSString *numberString = [NSString stringWithFormat:@"%ld", (long)angle];
+                attributedText = [[NSMutableAttributedString alloc] initWithString:numberString attributes:numbersTextAttributes];
+                textSize = [attributedText size];
+                [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:@"°" attributes:numbersTextAttributes]];
             }
             
-            float textWidth = [self getTextWidth:text withContext:context];
-            CGContextSetTextDrawingMode(context, kCGTextFill);
-            CGContextSetTextPosition(context, x - textWidth/2, centerPoint.y);
-            CGContextShowText(context, [text cStringUsingEncoding:NSASCIIStringEncoding], text.length);
+            [attributedText drawAtPoint:CGPointMake(x - textSize.width / 2.0f, 0)];
         }
     }
     
@@ -129,13 +139,13 @@
     if (self.firstGradientColor != nil || self.secondGradientColor != nil) {
         NSArray *colors;
         if (self.firstGradientColor != nil && self.secondGradientColor != nil) {
-            colors =@[(__bridge id)self.firstGradientColor.CGColor,
+            colors = @[(__bridge id)self.firstGradientColor.CGColor,
                       (__bridge id)self.secondGradientColor.CGColor];
         } else if (self.firstGradientColor != nil) {
-            colors =@[(__bridge id)self.firstGradientColor.CGColor,
+            colors = @[(__bridge id)self.firstGradientColor.CGColor,
                       (__bridge id)[UIColor clearColor].CGColor];
         } else {
-            colors =@[(__bridge id)[UIColor clearColor].CGColor,
+            colors = @[(__bridge id)[UIColor clearColor].CGColor,
                       (__bridge id)self.secondGradientColor.CGColor];
         }
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -170,7 +180,7 @@
     
     // Draw bearing chevron
     if (self.bearingChevronColor != nil) {
-        float bearingError = (self.navBearing - self.heading);
+        float bearingError = (self.navigationBearing - self.heading);
         if (bearingError > 180) {
             bearingError -= 360;
         }
@@ -214,7 +224,7 @@
         CGContextBeginPath(context);
         CGContextAddRect(context, gaugeBoundary);
         CGContextSetStrokeColorWithColor(context, [[UIColor grayColor] CGColor]);
-        CGContextSetLineWidth(context, tickWidth / 3.0f);
+        CGContextSetLineWidth(context, self.borderWidth);
         CGContextStrokePath(context);
     }
 }
@@ -224,12 +234,12 @@
 - (void)redraw {
     [self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
 }
-
-- (float)getTextWidth:(NSString *)text withContext:(CGContextRef)ctx {
-    CGContextSetTextDrawingMode(ctx, kCGTextInvisible);
-    CGContextSetTextPosition(ctx, 0, 0);
-    CGContextShowText(ctx, [text cStringUsingEncoding:NSASCIIStringEncoding], text.length);
-    CGPoint newPos = CGContextGetTextPosition(ctx);
-    return newPos.x;
-}
+//
+//- (float)getTextWidth:(NSString *)text withContext:(CGContextRef)ctx {
+//    CGContextSetTextDrawingMode(ctx, kCGTextInvisible);
+//    CGContextSetTextPosition(ctx, 0, 0);
+//    CGContextShowText(ctx, [text cStringUsingEncoding:NSASCIIStringEncoding], text.length);
+//    CGPoint newPos = CGContextGetTextPosition(ctx);
+//    return newPos.x;
+//}
 @end

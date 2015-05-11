@@ -33,9 +33,9 @@
 
 - (void)refreshInfo:(NSNotification *)notification {
     FDDroneStatus *currentDroneStatus = [FDDroneStatus currentStatus];
-    self.batteryRemainingLabel.text = (currentDroneStatus.batteryRemaining > 0) ? [NSString stringWithFormat:@"%d%%", (int)(currentDroneStatus.batteryRemaining * 100.0f)] : @"n/a";
-    self.batteryVoltageLabel.text = (currentDroneStatus.batteryVoltage > 0) ? [NSString stringWithFormat:@"%0.3fV", currentDroneStatus.batteryVoltage] : @"n/a";
-    self.batteryAmperageLabel.text = (currentDroneStatus.batteryAmperage > 0) ? [NSString stringWithFormat:@"%0.3fA", currentDroneStatus.batteryAmperage] : @"n/a";
+    self.batteryRemainingLabel.text = (currentDroneStatus.batteryRemaining != FDNotAvailable) ? [NSString stringWithFormat:@"%d%%", (int)(currentDroneStatus.batteryRemaining * 100.0f)] : @"N/A";
+    self.batteryVoltageLabel.text = (currentDroneStatus.batteryVoltage != FDNotAvailable) ? [NSString stringWithFormat:@"%0.3fV", currentDroneStatus.batteryVoltage] : @"N/A";
+    self.batteryAmperageLabel.text = (currentDroneStatus.batteryAmperage != FDNotAvailable) ? [NSString stringWithFormat:@"%0.3fA", currentDroneStatus.batteryAmperage] : @"N/A";
 }
 
 @end
