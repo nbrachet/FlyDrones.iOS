@@ -16,6 +16,9 @@
     [super viewDidLoad];
     
     self.toggleAnimationType = SWRevealToggleAnimationTypeEaseOut;
+    self.rearViewRevealWidth = 132.0f;
+    self.rearViewRevealDisplacement = 0.0f;
+    self.rearViewRevealOverdraw = 0.0f;
 }
 
 @end

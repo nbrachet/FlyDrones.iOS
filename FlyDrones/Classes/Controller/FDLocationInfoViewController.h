@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
-@interface FDLocationInfoViewController : UIViewController
+@interface FDLocationInfoViewController : UIViewController <MKMapViewDelegate>
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
+@property (nonatomic, weak) IBOutlet UILabel *locationLabel;
+@property (nonatomic, weak) IBOutlet UISwitch *mapTypeSwitch;
 
 @end

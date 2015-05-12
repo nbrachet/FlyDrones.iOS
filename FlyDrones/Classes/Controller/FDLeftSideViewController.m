@@ -7,11 +7,26 @@
 //
 
 #import "FDLeftSideViewController.h"
+#import "FDConnectionSettingsViewController.h"
 
 @implementation FDLeftSideViewController
 
+#pragma mark - Lifecycle
+
 - (BOOL)prefersStatusBarHidden {
     return YES;
+}
+
+#pragma mark - IBActions
+
+- (IBAction)settings:(id)sender {
+    for (UIViewController *viewController in self.navigationController.viewControllers) {
+        if ([viewController isKindOfClass:FDConnectionSettingsViewController.class]) {
+            [self.navigationController popToViewController:viewController animated:YES];
+            return;
+        }
+    }
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 @end

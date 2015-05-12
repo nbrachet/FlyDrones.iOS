@@ -81,6 +81,8 @@
     self.connectionManager = nil;
     self.movieDecoder = nil;
     self.droneControlManager = nil;
+    
+    [[FDDroneStatus currentStatus] clearStatus];
 }
 
 - (void)didReceiveMemoryWarning {

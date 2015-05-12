@@ -9,8 +9,10 @@
 #import "FDConnectionSettingsViewController.h"
 #import "FDDroneStatus.h"
 
-static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"192.168.0.103";
-static NSString * const FDConnectionSettingsViewControllerCustomTCPHost = @"192.168.0.103";
+static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"192.168.1.58";
+static NSString * const FDConnectionSettingsViewControllerCustomTCPHost = @"192.168.1.58";
+//static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"192.168.0.103";
+//static NSString * const FDConnectionSettingsViewControllerCustomTCPHost = @"192.168.0.103";
 //static NSString * const FDLoginViewControllerCustomNetworkHost = @"108.26.177.27";
 
 static NSString * const FDConnectionSettingsViewControllerCustomUDPPort = @"5556";
