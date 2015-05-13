@@ -68,12 +68,46 @@
                                     <segue destination="hc7-fe-hUM" kind="show" id="whI-lq-Z5M"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n7Y-ox-VCe" customClass="FDJoystickView">
+                                <rect key="frame" x="106" y="305" width="225" height="225"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="JoystickBase" translatesAutoresizingMaskIntoConstraints="NO" id="tmm-3k-Eae">
+                                        <rect key="frame" x="0.0" y="0.0" width="225" height="225"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="JoystickControl" translatesAutoresizingMaskIntoConstraints="NO" id="bE3-If-sOv">
+                                        <rect key="frame" x="71" y="71" width="84" height="84"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="84" id="f8P-GM-i2m"/>
+                                            <constraint firstAttribute="width" constant="84" id="fKQ-2U-Sdx"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="tmm-3k-Eae" firstAttribute="leading" secondItem="n7Y-ox-VCe" secondAttribute="leading" id="3Us-Fr-XTH"/>
+                                    <constraint firstAttribute="bottom" secondItem="tmm-3k-Eae" secondAttribute="bottom" id="8yJ-s0-htX"/>
+                                    <constraint firstAttribute="trailing" secondItem="tmm-3k-Eae" secondAttribute="trailing" id="FCR-mP-gX7"/>
+                                    <constraint firstAttribute="height" constant="225" id="SfW-fs-4zi"/>
+                                    <constraint firstAttribute="centerX" secondItem="bE3-If-sOv" secondAttribute="centerX" id="U3w-GE-ayf"/>
+                                    <constraint firstItem="tmm-3k-Eae" firstAttribute="top" secondItem="n7Y-ox-VCe" secondAttribute="top" id="ZMd-d4-SRF"/>
+                                    <constraint firstAttribute="centerY" secondItem="bE3-If-sOv" secondAttribute="centerY" id="yik-5J-HaD"/>
+                                    <constraint firstAttribute="width" constant="225" id="zuV-x0-fAB"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="backgroundImageView" destination="tmm-3k-Eae" id="Mjs-OT-oEa"/>
+                                    <outlet property="touchImageView" destination="bE3-If-sOv" id="Og5-NA-wyr"/>
+                                    <outlet property="touchImageViewCenterXLayoutConstraint" destination="U3w-GE-ayf" id="yzP-IL-XDS"/>
+                                    <outlet property="touchImageViewCenterYLayoutConstraint" destination="yik-5J-HaD" id="thy-Mv-Zz0"/>
+                                </connections>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="JuL-Uz-lUO" secondAttribute="centerX" id="1pJ-Y3-G76"/>
                             <constraint firstAttribute="centerX" secondItem="01f-4w-Glh" secondAttribute="centerX" id="NaK-25-fPk"/>
                             <constraint firstAttribute="centerY" secondItem="01f-4w-Glh" secondAttribute="centerY" id="PXl-A9-Rwr"/>
+                            <constraint firstItem="n7Y-ox-VCe" firstAttribute="leading" secondItem="1Rp-oX-ddD" secondAttribute="leadingMargin" constant="90" id="VPX-ZD-yDE"/>
+                            <constraint firstItem="Kxk-pv-7iA" firstAttribute="top" secondItem="n7Y-ox-VCe" secondAttribute="bottom" constant="70" id="VsK-Fi-uy4"/>
                             <constraint firstAttribute="centerX" secondItem="1XX-yF-c3m" secondAttribute="centerX" id="b5p-Ut-ith"/>
                             <constraint firstAttribute="centerY" secondItem="JuL-Uz-lUO" secondAttribute="centerY" constant="101" id="dJy-XO-znL"/>
                             <constraint firstAttribute="centerY" secondItem="1XX-yF-c3m" secondAttribute="centerY" constant="63" id="mql-OX-rnw"/>
@@ -1002,6 +1036,8 @@
         <image name="BatteryLow" width="32" height="32"/>
         <image name="BatteryMedium" width="32" height="32"/>
         <image name="BatteryNA" width="32" height="32"/>
+        <image name="JoystickBase" width="225" height="225"/>
+        <image name="JoystickControl" width="84" height="84"/>
         <image name="MunuIcon" width="32" height="32"/>
         <image name="Settings" width="50" height="50"/>
         <image name="Temperature" width="25" height="25"/>

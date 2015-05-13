@@ -19,6 +19,8 @@
 		1B97E9EC1AD5519300051601 /* NSFileManager+ANUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E41AD5519300051601 /* NSFileManager+ANUtils.m */; };
 		1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E61AD5519300051601 /* NSString+Datetime.m */; };
 		1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E81AD5519300051601 /* NSString+Network.m */; };
+		1B9C88C11B0372BC00270E08 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B9C88C01B0372BC00270E08 /* SpriteKit.framework */; };
+		1B9C88C41B0377DB00270E08 /* FDJoystickView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9C88C31B0377DB00270E08 /* FDJoystickView.m */; };
 		1BAC812F1AF101FE00D77B65 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAC812E1AF101FE00D77B65 /* AppDelegate.m */; };
 		1BAC82811AF102E600D77B65 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAC81971AF102E600D77B65 /* libavcodec.a */; };
 		1BAC82821AF102E600D77B65 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAC81981AF102E600D77B65 /* libavdevice.a */; };
@@ -297,6 +299,9 @@
 		1B97E9E61AD5519300051601 /* NSString+Datetime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Datetime.m"; sourceTree = "<group>"; };
 		1B97E9E71AD5519300051601 /* NSString+Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Network.h"; sourceTree = "<group>"; };
 		1B97E9E81AD5519300051601 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
+		1B9C88C01B0372BC00270E08 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
+		1B9C88C21B0377DB00270E08 /* FDJoystickView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDJoystickView.h; sourceTree = "<group>"; };
+		1B9C88C31B0377DB00270E08 /* FDJoystickView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDJoystickView.m; sourceTree = "<group>"; };
 		1BAC812D1AF101FE00D77B65 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1BAC812E1AF101FE00D77B65 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1BAC81341AF102E600D77B65 /* avcodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avcodec.h; sourceTree = "<group>"; };
@@ -450,6 +455,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B9C88C11B0372BC00270E08 /* SpriteKit.framework in Frameworks */,
 				1BE363DD1B0134E300F880F3 /* MapKit.framework in Frameworks */,
 				1BB1AD3C1AF42C2D004A5EA8 /* CoreLocation.framework in Frameworks */,
 				37B0AF531A80CA6B005B2D8D /* QuartzCore.framework in Frameworks */,
@@ -1100,6 +1106,8 @@
 				1BC5E8F41AFCCBC5006C5AD1 /* FDBatteryButton.m */,
 				1BC5E9001AFD02DC006C5AD1 /* FDCompassView.h */,
 				1BC5E9011AFD02DC006C5AD1 /* FDCompassView.m */,
+				1B9C88C21B0377DB00270E08 /* FDJoystickView.h */,
+				1B9C88C31B0377DB00270E08 /* FDJoystickView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1116,6 +1124,7 @@
 		956F2D260B6A2289A457E2B3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1B9C88C01B0372BC00270E08 /* SpriteKit.framework */,
 				1BE363DC1B0134E300F880F3 /* MapKit.framework */,
 				1BB1AD3B1AF42C2D004A5EA8 /* CoreLocation.framework */,
 				37B0AF521A80CA6B005B2D8D /* QuartzCore.framework */,
@@ -1269,6 +1278,7 @@
 				37ED583A1AB0A07F00C10DFD /* FDDisplayInfoView.m in Sources */,
 				1B0042CA1AEA49C6007B1B35 /* FDConnectionManager.m in Sources */,
 				1B97E9EC1AD5519300051601 /* NSFileManager+ANUtils.m in Sources */,
+				1B9C88C41B0377DB00270E08 /* FDJoystickView.m in Sources */,
 				1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */,
 				1B43711F1AFBAABD00004CCD /* FDLeftSideViewController.m in Sources */,
 				1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */,
