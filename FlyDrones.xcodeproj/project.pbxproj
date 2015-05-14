@@ -37,6 +37,7 @@
 		1BC5E8F81AFCE3EC006C5AD1 /* FDBatteryStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BC5E8F71AFCE3EC006C5AD1 /* FDBatteryStatusViewController.m */; };
 		1BC5E8FB1AFCEAAA006C5AD1 /* FDDroneStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BC5E8FA1AFCEAAA006C5AD1 /* FDDroneStatus.m */; };
 		1BC5E9021AFD02DC006C5AD1 /* FDCompassView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BC5E9011AFD02DC006C5AD1 /* FDCompassView.m */; };
+		1BC8F9C11B04E4D9003D5EAC /* NSData+MAVLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BC8F9C01B04E4D9003D5EAC /* NSData+MAVLink.m */; };
 		1BDB2A011AF170F800B2A465 /* FDDroneControlManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A001AF170F800B2A465 /* FDDroneControlManager.m */; };
 		1BDB2A041AF291B000B2A465 /* FDFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A031AF291B000B2A465 /* FDFileReader.m */; };
 		1BDB2A061AF295B000B2A465 /* 2015-04-15 10-57-47.tlog in Resources */ = {isa = PBXBuildFile; fileRef = 1BDB2A051AF295B000B2A465 /* 2015-04-15 10-57-47.tlog */; };
@@ -417,6 +418,8 @@
 		1BC5E8FA1AFCEAAA006C5AD1 /* FDDroneStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDroneStatus.m; sourceTree = "<group>"; };
 		1BC5E9001AFD02DC006C5AD1 /* FDCompassView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCompassView.h; sourceTree = "<group>"; };
 		1BC5E9011AFD02DC006C5AD1 /* FDCompassView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDCompassView.m; sourceTree = "<group>"; };
+		1BC8F9BF1B04E4D9003D5EAC /* NSData+MAVLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+MAVLink.h"; sourceTree = "<group>"; };
+		1BC8F9C01B04E4D9003D5EAC /* NSData+MAVLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+MAVLink.m"; sourceTree = "<group>"; };
 		1BDB29FF1AF170F800B2A465 /* FDDroneControlManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDroneControlManager.h; sourceTree = "<group>"; };
 		1BDB2A001AF170F800B2A465 /* FDDroneControlManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDroneControlManager.m; sourceTree = "<group>"; };
 		1BDB2A021AF291B000B2A465 /* FDFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFileReader.h; sourceTree = "<group>"; };
@@ -783,6 +786,8 @@
 				1BB00CA11AEE6D9900FF787B /* NSData+RTCP.m */,
 				1BDB2A081AF2C68000B2A465 /* NSString+MAVLink.h */,
 				1BDB2A091AF2C68000B2A465 /* NSString+MAVLink.m */,
+				1BC8F9BF1B04E4D9003D5EAC /* NSData+MAVLink.h */,
+				1BC8F9C01B04E4D9003D5EAC /* NSData+MAVLink.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1267,6 +1272,7 @@
 				1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */,
 				1BDB2A0A1AF2C68000B2A465 /* NSString+MAVLink.m in Sources */,
 				1BC5E9021AFD02DC006C5AD1 /* FDCompassView.m in Sources */,
+				1BC8F9C11B04E4D9003D5EAC /* NSData+MAVLink.m in Sources */,
 				1B955E391ACEBCED00B33BDD /* FDMovieGLView.m in Sources */,
 				1BDB2A041AF291B000B2A465 /* FDFileReader.m in Sources */,
 				1BAC812F1AF101FE00D77B65 /* AppDelegate.m in Sources */,

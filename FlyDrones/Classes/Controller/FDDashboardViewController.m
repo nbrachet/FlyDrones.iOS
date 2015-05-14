@@ -16,17 +16,19 @@
 #import "FDBatteryButton.h"
 #import "FDDroneStatus.h"
 #import "FDCompassView.h"
+#import "FDJoystickView.h"
 
 @interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIButton *menuButton;
 @property (nonatomic, weak) IBOutlet FDBatteryButton *batteryButton;
 @property (nonatomic, weak) IBOutlet FDCompassView *compassView;
-
 @property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
 @property (nonatomic, weak) IBOutlet UIButton *altitudeButton;
 @property (nonatomic, weak) IBOutlet UIButton *temperatureButton;
 @property (nonatomic, weak) IBOutlet UIButton *worldwideLocationButton;
+@property (nonatomic, weak) IBOutlet FDJoystickView *leftJoystickView;
+@property (nonatomic, weak) IBOutlet FDJoystickView *rightJoystickView;
 
 @property (nonatomic, strong) FDConnectionManager *connectionManager;
 @property (nonatomic, strong) FDMovieDecoder *movieDecoder;
@@ -211,6 +213,11 @@
     
     NSString *temperatureString = (temperature != FDNotAvailable) ? [NSString stringWithFormat:@"%0.1f°C", temperature] : @"N/A";
     [self.temperatureButton setTitle:temperatureString forState:UIControlStateNormal];
+}
+
+
+- (void)timerTick:(NSTimer *)timer {
+    
 }
 
 @end

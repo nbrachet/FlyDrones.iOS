@@ -234,6 +234,10 @@ NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotification = 
             
             break;
         }
+//        case MAVLINK_MSG_ID_HEARTBEAT:
+//            NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
+//
+//        break;
     }
 }
 

@@ -30,4 +30,6 @@
 
 - (BOOL)receiveTCPServer:(NSString *)host port:(NSUInteger)port;
 
+- (BOOL)sendDataFromTCPConnection:(NSData *)data;
+
 @end

@@ -92,6 +92,14 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     return YES;
 }
 
+- (BOOL)sendDataFromTCPConnection:(NSData *)data {
+    if (data.length == 0 || !self.controlAsyncSocket.isConnected) {
+        return NO;
+    }
+    [self.controlAsyncSocket writeData:data withTimeout:-1 tag:11];
+    return YES;
+}
+
 #pragma mark - Private
 
 - (void)startConnectingToHost:(NSString *)host port:(NSUInteger)port {
@@ -198,6 +206,10 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(connectionManager:didReceiveTCPData:)]) {
         [self.delegate connectionManager:self didReceiveTCPData:data];
     }
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
+    NSLog(@"Did send control data");
 }
 
 @end
