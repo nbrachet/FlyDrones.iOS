@@ -10,10 +10,6 @@
 
 @interface NSData (MAVLink)
 
-+ (NSData *)dataWithManualControlsPitch:(int16_t)pitch
-                                   roll:(int16_t)roll
-                                 thrust:(int16_t)thrust
-                                    yaw:(int16_t)yaw
-                         sequenceNumber:(uint16_t)sequenceNumber;
++ (NSData *)dataWithMAVLinkMessage:(mavlink_message_t *)message;
 
 @end

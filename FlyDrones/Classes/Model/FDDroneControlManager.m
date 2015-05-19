@@ -15,6 +15,9 @@ NSString * const FDDroneControlManagerDidHandleScaledPressureInfoNotification = 
 NSString * const FDDroneControlManagerDidHandleVFRInfoNotification = @"didHandleVFRInfoNotification";
 NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotification = @"didHandleLocationCoordinate";
 
+CGFloat static const FDDroneControlManagerMavLinkDefaultSystemId = 255;
+CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
+
 @interface FDDroneControlManager () {
     mavlink_message_t msg;
     mavlink_status_t status;
@@ -234,11 +237,190 @@ NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotification = 
             
             break;
         }
-//        case MAVLINK_MSG_ID_HEARTBEAT:
-//            NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
-//
-//        break;
+            
+        case MAVLINK_MSG_ID_HEARTBEAT: {
+            NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
+            mavlink_heartbeat_t heartbeat;
+            mavlink_msg_heartbeat_decode(message, &heartbeat);
+            
+            droneStatus.mavCustomMode = heartbeat.custom_mode;
+            droneStatus.mavType = heartbeat.type;
+            droneStatus.mavAutopilotType = heartbeat.autopilot;
+            droneStatus.mavBaseMode = heartbeat.base_mode;
+            droneStatus.mavSystemStatus = heartbeat.system_status;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleHeartbeatInfo:mavType:mavAutopilotType:mavBaseMode:mavSystemStatus:)]) {
+                    [self.delegate droneControlManager:self
+                                didHandleHeartbeatInfo:droneStatus.mavCustomMode
+                                               mavType:droneStatus.mavType
+                                      mavAutopilotType:droneStatus.mavAutopilotType
+                                           mavBaseMode:droneStatus.mavBaseMode
+                                       mavSystemStatus:droneStatus.mavSystemStatus];
+                }
+            });
+            break;
+        }
+        case MAVLINK_MSG_ID_PARAM_VALUE: {
+            mavlink_param_value_t paramValue;
+            mavlink_msg_param_value_decode(message, &paramValue);
+            if (!paramValue.param_id) {
+                break;
+            }
+            NSString *paramIdString = [NSString stringWithCString:paramValue.param_id encoding:NSASCIIStringEncoding];
+            if (paramIdString.length == 0) {
+                break;
+            }
+            CGFloat param_value = paramValue.param_value;
+            
+            [droneStatus.paramValues setObject:[NSNumber numberWithFloat:param_value] forKey:paramIdString];
+            NSLog(@"%@: %f", paramIdString, param_value);
+            break;
+        }
+            
+        case MAVLINK_MSG_ID_RC_CHANNELS_RAW: {
+            mavlink_rc_channels_raw_t rcChannelsRaw;
+            mavlink_msg_rc_channels_raw_decode(message, &rcChannelsRaw);
+            [droneStatus.rcChannelsRaw replaceObjectAtIndex:0 withObject:@(rcChannelsRaw.chan1_raw)];
+            [droneStatus.rcChannelsRaw replaceObjectAtIndex:1 withObject:@(rcChannelsRaw.chan2_raw)];
+            [droneStatus.rcChannelsRaw replaceObjectAtIndex:2 withObject:@(rcChannelsRaw.chan3_raw)];
+            [droneStatus.rcChannelsRaw replaceObjectAtIndex:3 withObject:@(rcChannelsRaw.chan4_raw)];
+            [droneStatus.rcChannelsRaw replaceObjectAtIndex:4 withObject:@(rcChannelsRaw.chan5_raw)];
+            [droneStatus.rcChannelsRaw replaceObjectAtIndex:5 withObject:@(rcChannelsRaw.chan6_raw)];
+            [droneStatus.rcChannelsRaw replaceObjectAtIndex:6 withObject:@(rcChannelsRaw.chan7_raw)];
+            [droneStatus.rcChannelsRaw replaceObjectAtIndex:7 withObject:@(rcChannelsRaw.chan8_raw)];
+            break;
+        }
     }
+}
+
+- (NSData *)messageDataWithPitch:(CGFloat)pitch roll:(CGFloat)roll thrust:(CGFloat)thrust yaw:(CGFloat)yaw sequenceNumber:(uint16_t)sequenceNumber {
+    FDDroneStatus *currentStatus = [FDDroneStatus currentStatus];
+    if ((currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_DECODE_POSITION_MANUAL) ||
+        (currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_HIL_ENABLED)) {
+        mavlink_message_t message;
+        mavlink_msg_manual_control_pack(FDDroneControlManagerMavLinkDefaultSystemId,
+                                        FDDroneControlManagerMavLinkDefaultComponentId,
+                                        &message,
+                                        currentStatus.mavType,
+                                        pitch * 1000.0f,
+                                        roll * 1000.0f,
+                                        thrust * 1000.0f,
+                                        yaw * 1000.0f,
+                                        sequenceNumber);
+    
+        return [NSData dataWithMAVLinkMessage:&message];
+    } else if (currentStatus.mavBaseMode & (uint8_t)(MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)) {
+        @synchronized(currentStatus) {
+            if (![currentStatus.paramValues objectForKey:@"RCMAP_PITCH"] ||
+                ![currentStatus.paramValues objectForKey:@"RCMAP_ROLL"] ||
+                ![currentStatus.paramValues objectForKey:@"RCMAP_THROTTLE"] ||
+                ![currentStatus.paramValues objectForKey:@"RCMAP_YAW"]) {
+                return nil;
+            }
+            
+            //pitch
+            NSInteger pitchRCValueIndex = [[currentStatus.paramValues objectForKey:@"RCMAP_PITCH"] integerValue];
+            NSInteger pitchRCValue = [self rcValueFromManualControlValue:pitch rcChannelIndex:pitchRCValueIndex];
+            [currentStatus.rcChannelsRaw replaceObjectAtIndex:(pitchRCValueIndex - 1) withObject:@(pitchRCValue)];
+            
+            //roll
+            NSInteger rollRCValueIndex = [[currentStatus.paramValues objectForKey:@"RCMAP_ROLL"] integerValue];
+            NSInteger rollRCValue = [self rcValueFromManualControlValue:roll rcChannelIndex:rollRCValueIndex];
+            [currentStatus.rcChannelsRaw replaceObjectAtIndex:(rollRCValueIndex - 1) withObject:@(rollRCValue)];
+            
+            //throttle
+            NSInteger throttleRCValueIndex = [[currentStatus.paramValues objectForKey:@"RCMAP_THROTTLE"] integerValue];
+            NSInteger throttleRCValue = [self rcValueFromManualControlValue:thrust rcChannelIndex:throttleRCValueIndex];
+            [currentStatus.rcChannelsRaw replaceObjectAtIndex:(throttleRCValueIndex - 1) withObject:@(throttleRCValue)];
+            
+            //yaw
+            NSInteger yawRCValueIndex = [[currentStatus.paramValues objectForKey:@"RCMAP_YAW"] integerValue];
+            NSInteger yawRCValue = [self rcValueFromManualControlValue:yaw rcChannelIndex:yawRCValueIndex];
+            [currentStatus.rcChannelsRaw replaceObjectAtIndex:(yawRCValueIndex - 1) withObject:@(yawRCValue)];
+            
+            mavlink_message_t message;
+            mavlink_msg_rc_channels_override_pack(FDDroneControlManagerMavLinkDefaultSystemId,
+                                                  FDDroneControlManagerMavLinkDefaultComponentId,
+                                                  &message,
+                                                  msg.sysid,
+                                                  MAV_COMP_ID_ALL,
+                                                  [currentStatus.rcChannelsRaw[0] integerValue],
+                                                  [currentStatus.rcChannelsRaw[1] integerValue],
+                                                  [currentStatus.rcChannelsRaw[2] integerValue],
+                                                  [currentStatus.rcChannelsRaw[3] integerValue],
+                                                  [currentStatus.rcChannelsRaw[4] integerValue],
+                                                  [currentStatus.rcChannelsRaw[5] integerValue],
+                                                  [currentStatus.rcChannelsRaw[6] integerValue],
+                                                  [currentStatus.rcChannelsRaw[7] integerValue]);
+            return [NSData dataWithMAVLinkMessage:&message];
+        }
+    }
+    return nil;
+}
+
+- (NSData *)heartbeatData {
+    mavlink_message_t message;
+    mavlink_msg_heartbeat_pack(FDDroneControlManagerMavLinkDefaultSystemId,
+                               FDDroneControlManagerMavLinkDefaultComponentId,
+                               &message,
+                               MAV_TYPE_GCS,
+                               MAV_AUTOPILOT_INVALID,
+                               MAV_MODE_FLAG_MANUAL_INPUT_ENABLED|MAV_MODE_FLAG_SAFETY_ARMED,
+                               0,
+                               MAV_STATE_ACTIVE);
+    
+    return [NSData dataWithMAVLinkMessage:&message];
+}
+
+#pragma mark - Private
+
+- (NSInteger)rcValueFromManualControlValue:(CGFloat)value rcChannelIndex:(NSInteger)rcChannelIndex {
+    FDDroneStatus *currentStatus = [FDDroneStatus currentStatus];
+    
+    CGFloat minRCValue = 1000.0f;
+    NSString *minValueKey = [NSString stringWithFormat:@"RC%ld_MIN", (long)rcChannelIndex];
+    if ([currentStatus.paramValues objectForKey:minValueKey] != nil) {
+        minRCValue = [[currentStatus.paramValues objectForKey:minValueKey] floatValue];
+    }
+    
+    CGFloat trimRCValue = 1500.0f;
+    NSString *trimValueKey = [NSString stringWithFormat:@"RC%ld_TRIM", (long)rcChannelIndex];
+    if ([currentStatus.paramValues objectForKey:trimValueKey] != nil) {
+        trimRCValue = [[currentStatus.paramValues objectForKey:trimValueKey] floatValue];
+    }
+    
+    CGFloat maxRCValue = 2000.0f;
+    NSString *maxValueKey = [NSString stringWithFormat:@"RC%ld_MAX", (long)rcChannelIndex];
+    if ([currentStatus.paramValues objectForKey:maxValueKey] != nil) {
+        maxRCValue = [[currentStatus.paramValues objectForKey:maxValueKey] floatValue];
+    }
+    
+    NSInteger reverse = 1;
+    NSString *reverseValueKey = [NSString stringWithFormat:@"RC%ld_REV", (long)rcChannelIndex];
+    if ([currentStatus.paramValues objectForKey:reverseValueKey] != nil) {
+        reverse = [[currentStatus.paramValues objectForKey:reverseValueKey] integerValue];
+    }
+    
+    if (reverse == -1) {
+        value = -value;
+    }
+    
+    NSInteger rcValue = trimRCValue;
+    
+    if (value > 0) {
+        rcValue += (maxRCValue - trimRCValue) * value;
+    } else if (value < 0) {
+        rcValue -= (minRCValue - trimRCValue) * value;
+    }
+    
+    if (rcValue < minRCValue) {
+        rcValue = minRCValue;
+    }
+    if (rcValue > maxRCValue) {
+        rcValue = maxRCValue;
+    }
+    return rcValue;
 }
 
 @end

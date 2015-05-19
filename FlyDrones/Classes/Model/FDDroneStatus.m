@@ -39,6 +39,12 @@
     self.batteryVoltage = FDNotAvailable;
     self.batteryAmperage = FDNotAvailable;
     
+    [self.paramValues removeAllObjects];
+    self.paramValues = [NSMutableDictionary dictionary];
+    
+    [self.rcChannelsRaw removeAllObjects];
+    self.rcChannelsRaw = [NSMutableArray arrayWithArray:@[@(0),@(0),@(0),@(0),@(0),@(0),@(0),@(0)]];
+    
     self.altitude = FDNotAvailable;
     self.airspeed = FDNotAvailable;
     self.groundspeed = FDNotAvailable;

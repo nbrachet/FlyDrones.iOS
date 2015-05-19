@@ -12,6 +12,15 @@
 
 @interface FDDroneStatus : NSObject
 
+@property (nonatomic, assign) uint32_t mavCustomMode;       //< A bitfield for use for autopilot-specific flags.
+@property (nonatomic, assign) uint8_t mavType;              // MAV_TYPE ENUM
+@property (nonatomic, assign) uint8_t mavAutopilotType;     // MAV_AUTOPILOT ENUM
+@property (nonatomic, assign) uint8_t mavBaseMode;          // MAV_MODE_FLAGS ENUM
+@property (nonatomic, assign) uint8_t mavSystemStatus;      // MAV_STATE ENUM
+
+@property (nonatomic, strong) NSMutableDictionary *paramValues;
+@property (nonatomic, strong) NSMutableArray *rcChannelsRaw;
+
 @property (nonatomic, assign) CGFloat batteryRemaining;
 @property (nonatomic, assign) CGFloat batteryVoltage;
 @property (nonatomic, assign) CGFloat batteryAmperage;

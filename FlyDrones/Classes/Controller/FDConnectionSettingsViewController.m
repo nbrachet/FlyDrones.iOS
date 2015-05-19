@@ -9,14 +9,20 @@
 #import "FDConnectionSettingsViewController.h"
 #import "FDDroneStatus.h"
 
-//static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"192.168.1.58";
-//static NSString * const FDConnectionSettingsViewControllerCustomTCPHost = @"192.168.1.58";
-static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"192.168.0.102";
-static NSString * const FDConnectionSettingsViewControllerCustomTCPHost = @"192.168.0.102";
-//static NSString * const FDLoginViewControllerCustomNetworkHost = @"108.26.177.27";
+static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"192.168.1.58";
+//static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"192.168.0.102";
+//static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"108.26.177.27";
+static NSString * const UDPHostKey = @"UDPHostKey";
 
 static NSString * const FDConnectionSettingsViewControllerCustomUDPPort = @"5556";
+static NSString * const UDPPortKey = @"UDPPortKey";
+
+static NSString * const FDConnectionSettingsViewControllerCustomTCPHost = @"192.168.1.58";
+//static NSString * const FDConnectionSettingsViewControllerCustomTCPHost = @"192.168.0.102";
+static NSString * const TCPHostKey = @"TCPHostKey";
+
 static NSString * const FDConnectionSettingsViewControllerCustomTCPPort = @"5555";
+static NSString * const TCPPortKey = @"TCPPortKey";
 
 @interface FDConnectionSettingsViewController ()
 
@@ -35,31 +41,56 @@ static NSString * const FDConnectionSettingsViewControllerCustomTCPPort = @"5555
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.hostForConnectionTextField.text = FDConnectionSettingsViewControllerCustomUDPHost;
-    self.portForConnectionTextField.text = FDConnectionSettingsViewControllerCustomUDPPort;
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if ([userDefaults objectForKey:UDPHostKey]) {
+        self.hostForConnectionTextField.text = [userDefaults objectForKey:UDPHostKey];
+    } else {
+        self.hostForConnectionTextField.text = FDConnectionSettingsViewControllerCustomUDPHost;
+    }
     
-    self.hostForTCPConnectionTextField.text = FDConnectionSettingsViewControllerCustomTCPHost;
-    self.portForTCPConnectionTextField.text = FDConnectionSettingsViewControllerCustomTCPPort;
+    if ([userDefaults objectForKey:UDPPortKey]) {
+        self.portForConnectionTextField.text = [userDefaults objectForKey:UDPPortKey];
+    } else {
+        self.portForConnectionTextField.text = FDConnectionSettingsViewControllerCustomUDPPort;
+    }
+    
+    if ([userDefaults objectForKey:TCPHostKey]) {
+        self.hostForTCPConnectionTextField.text = [userDefaults objectForKey:TCPHostKey];
+    } else {
+        self.hostForTCPConnectionTextField.text = FDConnectionSettingsViewControllerCustomTCPHost;
+    }
+    
+    if ([userDefaults objectForKey:TCPPortKey]) {
+        self.portForTCPConnectionTextField.text = [userDefaults objectForKey:TCPPortKey];
+    } else {
+        self.portForTCPConnectionTextField.text = FDConnectionSettingsViewControllerCustomTCPPort;
+    }
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
     if ([identifier isEqualToString:@"ShowDashboard"]) {
 
         NSString *hostForUDPConnection = self.hostForConnectionTextField.text;
-        NSUInteger portForUDPConnection = [self.portForConnectionTextField.text integerValue];
+        NSString *portForUDPConnection = self.portForConnectionTextField.text;
         NSString *hostForTCPConnection = self.hostForTCPConnectionTextField.text;
-        NSUInteger portForTCPConnection = [self.portForTCPConnectionTextField.text integerValue];
+        NSString *portForTCPConnection = self.portForTCPConnectionTextField.text;
         
         if (hostForUDPConnection.length == 0 || portForUDPConnection <= 0 || hostForTCPConnection.length == 0 || portForTCPConnection <= 0) {
             [[[UIAlertView alloc] initWithTitle:@"Warning" message:@"Please fill all fields correctly" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
             return NO;
         }
         
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        [userDefaults setObject:hostForUDPConnection forKey:UDPHostKey];
+        [userDefaults setObject:portForUDPConnection forKey:UDPPortKey];
+        [userDefaults setObject:hostForTCPConnection forKey:TCPHostKey];
+        [userDefaults setObject:portForTCPConnection forKey:TCPPortKey];
+
         FDDroneStatus *currentDroneStatus = [FDDroneStatus currentStatus];
         currentDroneStatus.pathForUDPConnection = hostForUDPConnection;
-        currentDroneStatus.portForUDPConnection = portForUDPConnection;
+        currentDroneStatus.portForUDPConnection = [portForUDPConnection integerValue];
         currentDroneStatus.pathForTCPConnection = hostForTCPConnection;
-        currentDroneStatus.portForTCPConnection = portForTCPConnection;
+        currentDroneStatus.portForTCPConnection = [portForTCPConnection integerValue];
     }
     return YES;
 }

@@ -29,11 +29,12 @@
 @property (nonatomic, weak) IBOutlet UIButton *worldwideLocationButton;
 @property (nonatomic, weak) IBOutlet FDJoystickView *leftJoystickView;
 @property (nonatomic, weak) IBOutlet FDJoystickView *rightJoystickView;
+@property (nonatomic, weak) IBOutlet UILabel *modeLabel;
 
 @property (nonatomic, strong) FDConnectionManager *connectionManager;
 @property (nonatomic, strong) FDMovieDecoder *movieDecoder;
 @property (nonatomic, strong) FDDroneControlManager *droneControlManager;
-
+@property (nonatomic, strong) NSTimer *timer;
 @end
 
 @implementation FDDashboardViewController
@@ -48,6 +49,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    
+    self.droneControlManager = [[FDDroneControlManager alloc] init];
+    self.droneControlManager.delegate = self;
     
     self.connectionManager = [[FDConnectionManager alloc] init];
     self.connectionManager.delegate = self;
@@ -76,8 +81,18 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (![self.timer isValid]) {
+        [self startTimer];
+    }
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+
+    [self stopTimer];
     
     [self.connectionManager closeConnection];
     self.connectionManager = nil;
@@ -133,6 +148,38 @@
     }
 }
 
+- (void)startTimer {
+    [self stopTimer];
+    
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1f
+                                                  target:self
+                                                selector:@selector(timerTick:)
+                                                userInfo:nil
+                                                 repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
+}
+
+- (void)stopTimer {
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+- (void)timerTick:(NSTimer *)timer {
+    static NSUInteger tickCounter = 0;
+    tickCounter++;
+    if (tickCounter % 10 == 0) {
+        [self.connectionManager sendDataFromTCPConnection:[self.droneControlManager heartbeatData]];
+    }
+
+    NSData *controlData = [self.droneControlManager messageDataWithPitch:self.leftJoystickView.stickVerticalValue
+                                                                    roll:self.leftJoystickView.stickHorisontalValue
+                                                                  thrust:self.rightJoystickView.stickVerticalValue
+                                                                     yaw:self.rightJoystickView.stickHorisontalValue
+                                                          sequenceNumber:1];
+    [self.connectionManager sendDataFromTCPConnection:controlData];
+}
+
+
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -158,11 +205,6 @@
         return;
     }
     
-    if (self.droneControlManager == nil) {
-        self.droneControlManager = [[FDDroneControlManager alloc] init];
-        self.droneControlManager.delegate = self;
-    }
-    
     [self.droneControlManager parseInputData:data];
 }
 
@@ -183,7 +225,7 @@
 #pragma mark - FDDroneControlManagerDelegate
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didParseMessage:(NSString *)messageDescription {
-    NSLog(@"%@", messageDescription);
+//    NSLog(@"%@", messageDescription);
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
@@ -215,9 +257,29 @@
     [self.temperatureButton setTitle:temperatureString forState:UIControlStateNormal];
 }
 
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleHeartbeatInfo:(uint32_t)mavCustomMode mavType:(uint8_t)mavType mavAutopilotType:(uint8_t)mavAutopilotType mavBaseMode:(uint8_t)mavBaseMode mavSystemStatus:(uint8_t)mavSystemStatus {
+    NSMutableString *modeString = [NSMutableString string];
+    [modeString appendString:@"Mode:\n"];
+    if (mavBaseMode & MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) {
+        [modeString appendString:@"MAV_MODE_FLAG_CUSTOM_MODE_ENABLED"];
+    } else if (mavBaseMode & MAV_MODE_FLAG_TEST_ENABLED) {
+        [modeString appendString:@"MAV_MODE_FLAG_TEST_ENABLED"];
+    } else if (mavBaseMode & MAV_MODE_FLAG_AUTO_ENABLED) {
+        [modeString appendString:@"MAV_MODE_FLAG_AUTO_ENABLED"];
+    } else if (mavBaseMode & MAV_MODE_FLAG_STABILIZE_ENABLED) {
+        [modeString appendString:@"MAV_MODE_FLAG_STABILIZE_ENABLED"];
+    } else if (mavBaseMode & MAV_MODE_FLAG_HIL_ENABLED) {
+        [modeString appendString:@"MAV_MODE_FLAG_HIL_ENABLED"];
+    } else if (mavBaseMode & MAV_MODE_FLAG_MANUAL_INPUT_ENABLED) {
+        [modeString appendString:@"MAV_MODE_FLAG_MANUAL_INPUT_ENABLED"];
+    } else if (mavBaseMode & MAV_MODE_FLAG_SAFETY_ARMED) {
+        [modeString appendString:@"MAV_MODE_FLAG_SAFETY_ARMED"];
+    } else if (mavBaseMode & MAV_MODE_FLAG_ENUM_END) {
+        [modeString appendString:@"MAV_MODE_FLAG_ENUM_END"];
+    }
+    [modeString appendFormat:@"\nCustom Mode:\n%d", mavCustomMode];
 
-- (void)timerTick:(NSTimer *)timer {
-    
+    self.modeLabel.text = modeString;
 }
 
 @end

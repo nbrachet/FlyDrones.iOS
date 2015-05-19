@@ -462,6 +462,16 @@
                                             </segue>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yyj-0O-PBH">
+                                        <rect key="frame" x="662" y="0.0" width="300" height="60"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="300" id="pQo-hE-6Ro"/>
+                                            <constraint firstAttribute="height" constant="60" id="zOa-7a-qJ5"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -473,11 +483,13 @@
                                     <constraint firstItem="3fa-i6-kmk" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" constant="12" id="AVZ-8f-9Gj"/>
                                     <constraint firstItem="i1i-UJ-dEo" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="CeO-Lo-7NT"/>
                                     <constraint firstAttribute="centerY" secondItem="3fa-i6-kmk" secondAttribute="centerY" id="KW3-rS-MV3"/>
+                                    <constraint firstItem="Yyj-0O-PBH" firstAttribute="leading" secondItem="3fa-i6-kmk" secondAttribute="trailing" constant="10" id="Ppo-4I-VSX"/>
                                     <constraint firstItem="CK1-fU-SXs" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="PvP-bH-U9n"/>
                                     <constraint firstAttribute="trailing" secondItem="CK1-fU-SXs" secondAttribute="trailing" constant="8" id="Vtr-gL-ii3"/>
                                     <constraint firstAttribute="bottom" secondItem="n4B-o3-BAE" secondAttribute="bottom" id="aT1-ax-090"/>
                                     <constraint firstItem="n4B-o3-BAE" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="dhx-aE-3mC"/>
                                     <constraint firstItem="i1i-UJ-dEo" firstAttribute="leading" secondItem="c8e-mR-B3k" secondAttribute="leading" id="gtH-1x-BpP"/>
+                                    <constraint firstItem="Yyj-0O-PBH" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="im2-3d-0xp"/>
                                     <constraint firstAttribute="height" constant="64" id="nDL-SD-TaS"/>
                                     <constraint firstAttribute="bottom" secondItem="CK1-fU-SXs" secondAttribute="bottom" id="rXN-sh-2CZ"/>
                                     <constraint firstItem="gKc-cj-1q2" firstAttribute="leading" secondItem="n4B-o3-BAE" secondAttribute="trailing" constant="8" id="y2X-jd-50c"/>
@@ -545,7 +557,6 @@
                                 </constraints>
                                 <connections>
                                     <outlet property="backgroundImageView" destination="uvQ-D8-tic" id="azy-Bj-sNW"/>
-                                    <outlet property="delegate" destination="oOi-SA-tRy" id="V72-vk-0iO"/>
                                     <outlet property="touchImageView" destination="9Fd-s8-e0j" id="jhh-hX-dD8"/>
                                     <outlet property="touchImageViewCenterXLayoutConstraint" destination="k2H-ST-MRb" id="7Da-hg-gRp"/>
                                     <outlet property="touchImageViewCenterYLayoutConstraint" destination="EoF-4g-nqL" id="YT7-Ed-mPy"/>
@@ -577,7 +588,6 @@
                                 </constraints>
                                 <connections>
                                     <outlet property="backgroundImageView" destination="XYb-cJ-5uk" id="3Pc-GI-UJ9"/>
-                                    <outlet property="delegate" destination="oOi-SA-tRy" id="grb-1D-IyX"/>
                                     <outlet property="touchImageView" destination="tMb-fb-gbz" id="Lhb-nv-jDi"/>
                                     <outlet property="touchImageViewCenterXLayoutConstraint" destination="ydJ-GL-oTm" id="41D-1K-8Lt"/>
                                     <outlet property="touchImageViewCenterYLayoutConstraint" destination="BE5-XO-wz9" id="FuI-Nb-0qG"/>
@@ -626,6 +636,7 @@
                         <outlet property="compassView" destination="3fa-i6-kmk" id="kve-xH-TAC"/>
                         <outlet property="leftJoystickView" destination="Zom-z6-iIl" id="gEH-Hr-LYA"/>
                         <outlet property="menuButton" destination="i1i-UJ-dEo" id="Fn0-wu-jvB"/>
+                        <outlet property="modeLabel" destination="Yyj-0O-PBH" id="UTo-j9-BOf"/>
                         <outlet property="movieGLView" destination="eOu-L3-XOm" id="ZMm-nr-8uN"/>
                         <outlet property="rightJoystickView" destination="N6l-Yh-Btc" id="AKS-PB-7dw"/>
                         <outlet property="temperatureButton" destination="gKc-cj-1q2" id="3jc-0C-CmH"/>

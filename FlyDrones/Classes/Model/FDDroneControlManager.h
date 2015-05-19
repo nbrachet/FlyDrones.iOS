@@ -33,6 +33,8 @@ extern NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotifica
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleScaledPressureInfo:(CGFloat)temperature absolutePressure:(CGFloat)absolutePressure differentialPressure:(CGFloat)differentialPressure;
 
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleHeartbeatInfo:(uint32_t)mavCustomMode mavType:(uint8_t)mavType mavAutopilotType:(uint8_t) mavAutopilotType mavBaseMode:(uint8_t)mavBaseMode mavSystemStatus:(uint8_t)mavSystemStatus;
+
 @end
 
 @interface FDDroneControlManager : NSObject
@@ -41,5 +43,8 @@ extern NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotifica
 
 - (void)parseLogFile:(NSString *)name ofType:(NSString *)type;
 - (void)parseInputData:(NSData *)data;
+
+- (NSData *)messageDataWithPitch:(CGFloat)pitch roll:(CGFloat)roll thrust:(CGFloat)thrust yaw:(CGFloat)yaw sequenceNumber:(uint16_t)sequenceNumber;
+- (NSData *)heartbeatData;
 
 @end

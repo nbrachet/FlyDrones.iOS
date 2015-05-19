@@ -93,7 +93,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (BOOL)sendDataFromTCPConnection:(NSData *)data {
-    if (data.length == 0 || !self.controlAsyncSocket.isConnected) {
+    if (data.length == 0) {
         return NO;
     }
     [self.controlAsyncSocket writeData:data withTimeout:-1 tag:11];
