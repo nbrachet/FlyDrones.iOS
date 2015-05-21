@@ -21,6 +21,7 @@ typedef NS_ENUM(NSUInteger, FDJoystickViewMode) {
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *touchImageViewCenterXLayoutConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *touchImageViewCenterYLayoutConstraint;
 @property (nonatomic, assign) FDJoystickViewMode mode;
+@property (nonatomic, assign) BOOL isSingleActiveAxis;
 
 - (CGFloat)stickHorisontalValue;
 - (CGFloat)stickVerticalValue;

@@ -46,6 +46,7 @@
     
     [self customSetup];
     self.leftJoystickView.mode = FDJoystickViewModeSavedVerticalPosition;
+    self.leftJoystickView.isSingleActiveAxis = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
