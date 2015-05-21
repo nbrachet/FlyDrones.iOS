@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Dsn-5U-Zsb">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Dsn-5U-Zsb">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -532,13 +532,17 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zom-z6-iIl" userLabel="Left Joystick View" customClass="FDJoystickView">
-                                <rect key="frame" x="66" y="439" width="225" height="225"/>
+                                <rect key="frame" x="24" y="395" width="309" height="309"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="JoystickBase" translatesAutoresizingMaskIntoConstraints="NO" id="uvQ-D8-tic">
-                                        <rect key="frame" x="0.0" y="0.0" width="225" height="225"/>
+                                        <rect key="frame" x="42" y="42" width="225" height="225"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="225" id="4ki-Fy-b2k"/>
+                                            <constraint firstAttribute="height" constant="225" id="dHW-7K-eHE"/>
+                                        </constraints>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="JoystickControl" translatesAutoresizingMaskIntoConstraints="NO" id="9Fd-s8-e0j">
-                                        <rect key="frame" x="71" y="71" width="84" height="84"/>
+                                        <rect key="frame" x="113" y="113" width="84" height="84"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="84" id="c3D-Jh-YEj"/>
                                             <constraint firstAttribute="height" constant="84" id="d2s-uo-5m2"/>
@@ -546,15 +550,25 @@
                                     </imageView>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="uvQ-D8-tic" secondAttribute="centerX" id="DYD-6u-Fwk"/>
                                     <constraint firstAttribute="centerY" secondItem="9Fd-s8-e0j" secondAttribute="centerY" id="EoF-4g-nqL"/>
                                     <constraint firstItem="uvQ-D8-tic" firstAttribute="top" secondItem="Zom-z6-iIl" secondAttribute="top" id="P8t-5t-Dwq"/>
                                     <constraint firstAttribute="bottom" secondItem="uvQ-D8-tic" secondAttribute="bottom" id="V24-0s-nlH"/>
-                                    <constraint firstAttribute="width" constant="225" id="VZV-gI-Wbj"/>
+                                    <constraint firstAttribute="width" constant="309" id="VZV-gI-Wbj"/>
+                                    <constraint firstAttribute="centerY" secondItem="uvQ-D8-tic" secondAttribute="centerY" id="XFC-3i-r8C"/>
                                     <constraint firstAttribute="centerX" secondItem="9Fd-s8-e0j" secondAttribute="centerX" id="k2H-ST-MRb"/>
-                                    <constraint firstAttribute="height" constant="225" id="miL-uR-gVf"/>
+                                    <constraint firstAttribute="height" constant="309" id="miL-uR-gVf"/>
                                     <constraint firstItem="uvQ-D8-tic" firstAttribute="leading" secondItem="Zom-z6-iIl" secondAttribute="leading" id="pfm-bn-9ar"/>
                                     <constraint firstAttribute="trailing" secondItem="uvQ-D8-tic" secondAttribute="trailing" id="zlA-aP-spv"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="P8t-5t-Dwq"/>
+                                        <exclude reference="V24-0s-nlH"/>
+                                        <exclude reference="pfm-bn-9ar"/>
+                                        <exclude reference="zlA-aP-spv"/>
+                                    </mask>
+                                </variation>
                                 <connections>
                                     <outlet property="backgroundImageView" destination="uvQ-D8-tic" id="azy-Bj-sNW"/>
                                     <outlet property="touchImageView" destination="9Fd-s8-e0j" id="jhh-hX-dD8"/>
@@ -563,13 +577,17 @@
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N6l-Yh-Btc" userLabel="Right Joystick View" customClass="FDJoystickView">
-                                <rect key="frame" x="733" y="439" width="225" height="225"/>
+                                <rect key="frame" x="691" y="395" width="309" height="309"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="JoystickBase" translatesAutoresizingMaskIntoConstraints="NO" id="XYb-cJ-5uk">
-                                        <rect key="frame" x="0.0" y="0.0" width="225" height="225"/>
+                                        <rect key="frame" x="42" y="42" width="225" height="225"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="225" id="DwJ-89-kVK"/>
+                                            <constraint firstAttribute="width" constant="225" id="Xt8-cK-wos"/>
+                                        </constraints>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="JoystickControl" translatesAutoresizingMaskIntoConstraints="NO" id="tMb-fb-gbz">
-                                        <rect key="frame" x="71" y="71" width="84" height="84"/>
+                                        <rect key="frame" x="113" y="113" width="84" height="84"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="84" id="o95-hO-xmP"/>
                                             <constraint firstAttribute="width" constant="84" id="rxY-eR-XKN"/>
@@ -578,14 +596,24 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="centerY" secondItem="tMb-fb-gbz" secondAttribute="centerY" id="BE5-XO-wz9"/>
+                                    <constraint firstAttribute="centerX" secondItem="XYb-cJ-5uk" secondAttribute="centerX" id="BuN-DY-Cg3"/>
                                     <constraint firstItem="XYb-cJ-5uk" firstAttribute="leading" secondItem="N6l-Yh-Btc" secondAttribute="leading" id="IFv-7x-jaf"/>
-                                    <constraint firstAttribute="width" constant="225" id="VFh-4Q-RYg"/>
+                                    <constraint firstAttribute="width" constant="309" id="VFh-4Q-RYg"/>
                                     <constraint firstAttribute="trailing" secondItem="XYb-cJ-5uk" secondAttribute="trailing" id="Vm5-gO-rUW"/>
                                     <constraint firstAttribute="bottom" secondItem="XYb-cJ-5uk" secondAttribute="bottom" id="ZSj-SA-pn1"/>
-                                    <constraint firstAttribute="height" constant="225" id="kA6-9e-ZGj"/>
+                                    <constraint firstAttribute="centerY" secondItem="XYb-cJ-5uk" secondAttribute="centerY" id="hQh-lU-cdv"/>
+                                    <constraint firstAttribute="height" constant="309" id="kA6-9e-ZGj"/>
                                     <constraint firstItem="XYb-cJ-5uk" firstAttribute="top" secondItem="N6l-Yh-Btc" secondAttribute="top" id="uca-SX-1eF"/>
                                     <constraint firstAttribute="centerX" secondItem="tMb-fb-gbz" secondAttribute="centerX" id="ydJ-GL-oTm"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="IFv-7x-jaf"/>
+                                        <exclude reference="Vm5-gO-rUW"/>
+                                        <exclude reference="ZSj-SA-pn1"/>
+                                        <exclude reference="uca-SX-1eF"/>
+                                    </mask>
+                                </variation>
                                 <connections>
                                     <outlet property="backgroundImageView" destination="XYb-cJ-5uk" id="3Pc-GI-UJ9"/>
                                     <outlet property="touchImageView" destination="tMb-fb-gbz" id="Lhb-nv-jDi"/>
@@ -600,16 +628,16 @@
                             <constraint firstItem="eOu-L3-XOm" firstAttribute="top" secondItem="VWN-Yu-ZJD" secondAttribute="bottom" id="8Se-KS-Fyj"/>
                             <constraint firstAttribute="centerX" secondItem="eOu-L3-XOm" secondAttribute="centerX" id="Efe-6j-W7Z"/>
                             <constraint firstItem="c8e-mR-B3k" firstAttribute="top" secondItem="VWN-Yu-ZJD" secondAttribute="bottom" id="Ony-p9-7SK"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="N6l-Yh-Btc" secondAttribute="trailing" constant="50" id="PuC-UF-GZD"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="N6l-Yh-Btc" secondAttribute="trailing" constant="8" id="PuC-UF-GZD"/>
                             <constraint firstItem="qDH-KT-wm8" firstAttribute="top" secondItem="eOu-L3-XOm" secondAttribute="bottom" id="Tc6-PX-LUm"/>
-                            <constraint firstItem="Zom-z6-iIl" firstAttribute="leading" secondItem="uB9-Yc-A79" secondAttribute="leadingMargin" constant="50" id="V3D-At-TxO"/>
+                            <constraint firstItem="Zom-z6-iIl" firstAttribute="leading" secondItem="uB9-Yc-A79" secondAttribute="leadingMargin" constant="8" id="V3D-At-TxO"/>
                             <constraint firstAttribute="trailing" secondItem="c8e-mR-B3k" secondAttribute="trailing" id="XBY-xX-APU"/>
                             <constraint firstItem="c8e-mR-B3k" firstAttribute="leading" secondItem="uB9-Yc-A79" secondAttribute="leading" id="arp-3d-xmM"/>
-                            <constraint firstItem="gc9-C9-b7H" firstAttribute="top" secondItem="N6l-Yh-Btc" secondAttribute="bottom" constant="40" id="b3I-Fi-dp0"/>
+                            <constraint firstItem="gc9-C9-b7H" firstAttribute="top" secondItem="N6l-Yh-Btc" secondAttribute="bottom" id="b3I-Fi-dp0"/>
                             <constraint firstItem="qDH-KT-wm8" firstAttribute="top" secondItem="gc9-C9-b7H" secondAttribute="bottom" id="iHe-3j-9Su"/>
                             <constraint firstItem="eOu-L3-XOm" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="bottom" id="n5j-W8-SZF"/>
                             <constraint firstItem="gc9-C9-b7H" firstAttribute="top" secondItem="eOu-L3-XOm" secondAttribute="bottom" id="q82-b5-0zZ"/>
-                            <constraint firstItem="gc9-C9-b7H" firstAttribute="top" secondItem="Zom-z6-iIl" secondAttribute="bottom" constant="40" id="sna-KK-Xfn"/>
+                            <constraint firstItem="gc9-C9-b7H" firstAttribute="top" secondItem="Zom-z6-iIl" secondAttribute="bottom" id="sna-KK-Xfn"/>
                             <constraint firstItem="gc9-C9-b7H" firstAttribute="leading" secondItem="uB9-Yc-A79" secondAttribute="leading" id="vcE-Uj-evq"/>
                             <constraint firstAttribute="trailing" secondItem="gc9-C9-b7H" secondAttribute="trailing" id="xvw-q4-FwQ"/>
                         </constraints>

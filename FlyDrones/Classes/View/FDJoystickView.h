@@ -8,12 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, FDJoystickViewMode) {
+    FDJoystickViewModeAuto,
+    FDJoystickViewModeSavedHorizontalPosition,
+    FDJoystickViewModeSavedVerticalPosition,
+};
+
 @interface FDJoystickView : UIView
 
 @property (nonatomic, weak) IBOutlet UIImageView *backgroundImageView;
 @property (nonatomic, weak) IBOutlet UIImageView *touchImageView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *touchImageViewCenterXLayoutConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *touchImageViewCenterYLayoutConstraint;
+@property (nonatomic, assign) FDJoystickViewMode mode;
 
 - (CGFloat)stickHorisontalValue;
 - (CGFloat)stickVerticalValue;

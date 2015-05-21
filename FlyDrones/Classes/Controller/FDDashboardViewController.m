@@ -45,11 +45,11 @@
     [super viewDidLoad];
     
     [self customSetup];
+    self.leftJoystickView.mode = FDJoystickViewModeSavedVerticalPosition;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     
     self.droneControlManager = [[FDDroneControlManager alloc] init];
     self.droneControlManager.delegate = self;
@@ -172,9 +172,9 @@
     }
 
     NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
-                                                                    roll:self.leftJoystickView.stickHorisontalValue
+                                                                    roll:self.rightJoystickView.stickHorisontalValue
                                                                   thrust:self.leftJoystickView.stickVerticalValue
-                                                                     yaw:self.rightJoystickView.stickHorisontalValue
+                                                                     yaw:self.leftJoystickView.stickHorisontalValue
                                                           sequenceNumber:1];
     [self.connectionManager sendDataFromTCPConnection:controlData];
 }

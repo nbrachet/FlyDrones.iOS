@@ -22,11 +22,11 @@
 #pragma mark - Custom Accessors
 
 - (CGFloat)stickHorisontalValue {
-    return -self.prevTouchViewPosition.x / CGRectGetMidX(self.bounds);
+    return -self.prevTouchViewPosition.x / CGRectGetMidX(self.backgroundImageView.bounds);
 }
 
 - (CGFloat)stickVerticalValue {
-    return self.prevTouchViewPosition.y / CGRectGetMidY(self.bounds);
+    return self.prevTouchViewPosition.y / CGRectGetMidY(self.backgroundImageView.bounds);
 }
 
 #pragma mark - Lifecycle
@@ -55,8 +55,8 @@
             return;
         }
         
-        CGPoint touchPoint = [touch locationInView:self];
-        CGPoint viewMidlePoint = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+        CGPoint touchPoint = [touch locationInView:self.backgroundImageView];
+        CGPoint viewMidlePoint = CGPointMake(CGRectGetMidX(self.backgroundImageView.bounds), CGRectGetMidY(self.backgroundImageView.bounds));
         
         CGPoint touchViewMidlePoint = CGPointMake(CGRectGetMidX(self.touchImageView.bounds), CGRectGetMidY(self.touchImageView.bounds));
         CGSize firstTouchDelta = CGSizeMake(self.firstTouchPoint.x - touchViewMidlePoint.x,
@@ -88,7 +88,15 @@
 
 - (void)resetTouchViewPosition {
     self.isTracking = NO;
-    [self updateTouchViewPosition:CGPointZero animated:YES];
+    
+    CGPoint originPoint = CGPointZero;
+    if (self.mode == FDJoystickViewModeSavedHorizontalPosition) {
+        originPoint.x = self.prevTouchViewPosition.x;
+    }
+    if (self.mode == FDJoystickViewModeSavedVerticalPosition) {
+        originPoint.y = self.prevTouchViewPosition.y;
+    }
+    [self updateTouchViewPosition:originPoint animated:YES];
 }
 
 - (void)updateTouchViewPosition:(CGPoint)center animated:(BOOL)animated {
