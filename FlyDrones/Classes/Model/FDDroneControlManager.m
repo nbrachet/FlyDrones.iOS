@@ -277,20 +277,6 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
             NSLog(@"%@: %f", paramIdString, param_value);
             break;
         }
-            
-        case MAVLINK_MSG_ID_RC_CHANNELS_RAW: {
-            mavlink_rc_channels_raw_t rcChannelsRaw;
-            mavlink_msg_rc_channels_raw_decode(message, &rcChannelsRaw);
-            [droneStatus.rcChannelsRaw replaceObjectAtIndex:0 withObject:@(rcChannelsRaw.chan1_raw)];
-            [droneStatus.rcChannelsRaw replaceObjectAtIndex:1 withObject:@(rcChannelsRaw.chan2_raw)];
-            [droneStatus.rcChannelsRaw replaceObjectAtIndex:2 withObject:@(rcChannelsRaw.chan3_raw)];
-            [droneStatus.rcChannelsRaw replaceObjectAtIndex:3 withObject:@(rcChannelsRaw.chan4_raw)];
-            [droneStatus.rcChannelsRaw replaceObjectAtIndex:4 withObject:@(rcChannelsRaw.chan5_raw)];
-            [droneStatus.rcChannelsRaw replaceObjectAtIndex:5 withObject:@(rcChannelsRaw.chan6_raw)];
-            [droneStatus.rcChannelsRaw replaceObjectAtIndex:6 withObject:@(rcChannelsRaw.chan7_raw)];
-            [droneStatus.rcChannelsRaw replaceObjectAtIndex:7 withObject:@(rcChannelsRaw.chan8_raw)];
-            break;
-        }
     }
 }
 
@@ -319,25 +305,30 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
                 return nil;
             }
             
+            NSMutableArray *rcChannelsRaw = [NSMutableArray array];
+            for (int i = 0; i < 8; i++) {
+                [rcChannelsRaw addObject:@(0)];
+            }
+                
             //pitch
             NSInteger pitchRCValueIndex = [[currentStatus.paramValues objectForKey:@"RCMAP_PITCH"] integerValue];
             NSInteger pitchRCValue = [self rcValueFromManualControlValue:pitch rcChannelIndex:pitchRCValueIndex];
-            [currentStatus.rcChannelsRaw replaceObjectAtIndex:(pitchRCValueIndex - 1) withObject:@(pitchRCValue)];
+            [rcChannelsRaw replaceObjectAtIndex:(pitchRCValueIndex - 1) withObject:@(pitchRCValue)];
             
             //roll
             NSInteger rollRCValueIndex = [[currentStatus.paramValues objectForKey:@"RCMAP_ROLL"] integerValue];
             NSInteger rollRCValue = [self rcValueFromManualControlValue:roll rcChannelIndex:rollRCValueIndex];
-            [currentStatus.rcChannelsRaw replaceObjectAtIndex:(rollRCValueIndex - 1) withObject:@(rollRCValue)];
+            [rcChannelsRaw replaceObjectAtIndex:(rollRCValueIndex - 1) withObject:@(rollRCValue)];
             
             //throttle
             NSInteger throttleRCValueIndex = [[currentStatus.paramValues objectForKey:@"RCMAP_THROTTLE"] integerValue];
             NSInteger throttleRCValue = [self rcValueFromManualControlValue:thrust rcChannelIndex:throttleRCValueIndex];
-            [currentStatus.rcChannelsRaw replaceObjectAtIndex:(throttleRCValueIndex - 1) withObject:@(throttleRCValue)];
+            [rcChannelsRaw replaceObjectAtIndex:(throttleRCValueIndex - 1) withObject:@(throttleRCValue)];
             
             //yaw
             NSInteger yawRCValueIndex = [[currentStatus.paramValues objectForKey:@"RCMAP_YAW"] integerValue];
             NSInteger yawRCValue = [self rcValueFromManualControlValue:yaw rcChannelIndex:yawRCValueIndex];
-            [currentStatus.rcChannelsRaw replaceObjectAtIndex:(yawRCValueIndex - 1) withObject:@(yawRCValue)];
+            [rcChannelsRaw replaceObjectAtIndex:(yawRCValueIndex - 1) withObject:@(yawRCValue)];
             
             mavlink_message_t message;
             mavlink_msg_rc_channels_override_pack(FDDroneControlManagerMavLinkDefaultSystemId,
@@ -345,14 +336,14 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
                                                   &message,
                                                   msg.sysid,
                                                   MAV_COMP_ID_ALL,
-                                                  [currentStatus.rcChannelsRaw[0] integerValue],
-                                                  [currentStatus.rcChannelsRaw[1] integerValue],
-                                                  [currentStatus.rcChannelsRaw[2] integerValue],
-                                                  [currentStatus.rcChannelsRaw[3] integerValue],
-                                                  [currentStatus.rcChannelsRaw[4] integerValue],
-                                                  [currentStatus.rcChannelsRaw[5] integerValue],
-                                                  [currentStatus.rcChannelsRaw[6] integerValue],
-                                                  [currentStatus.rcChannelsRaw[7] integerValue]);
+                                                  [rcChannelsRaw[0] integerValue],
+                                                  [rcChannelsRaw[1] integerValue],
+                                                  [rcChannelsRaw[2] integerValue],
+                                                  [rcChannelsRaw[3] integerValue],
+                                                  [rcChannelsRaw[4] integerValue],
+                                                  [rcChannelsRaw[5] integerValue],
+                                                  [rcChannelsRaw[6] integerValue],
+                                                  [rcChannelsRaw[7] integerValue]);
             return [NSData dataWithMAVLinkMessage:&message];
         }
     }

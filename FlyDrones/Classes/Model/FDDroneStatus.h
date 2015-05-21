@@ -10,16 +10,33 @@
 
 #define FDNotAvailable NSIntegerMin
 
+typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
+    FDAutoPilotModeStabilize = 0,
+    FDAutoPilotModeAcro = 1,
+    FDAutoPilotModeAltHold = 2,
+    FDAutoPilotModeAuto = 3,
+    FDAutoPilotModeGuided = 4,
+    FDAutoPilotModeLoiter = 5,
+    FDAutoPilotModeRTL = 6,
+    FDAutoPilotModeCircle = 7,
+    FDAutoPilotModeLand = 9,
+    FDAutoPilotModeOfLoiter = 10,
+    FDAutoPilotModeDrift = 11,
+    FDAutoPilotModeSport = 13,
+    FDAutoPilotModeFlip = 14,
+    FDAutoPilotModeAutotune = 15,
+    FDAutoPilotModePoshold = 16
+};
+
 @interface FDDroneStatus : NSObject
 
-@property (nonatomic, assign) uint32_t mavCustomMode;       //< A bitfield for use for autopilot-specific flags.
+@property (nonatomic, assign) FDAutoPilotMode mavCustomMode;       //< A bitfield for use for autopilot-specific flags.
 @property (nonatomic, assign) uint8_t mavType;              // MAV_TYPE ENUM
 @property (nonatomic, assign) uint8_t mavAutopilotType;     // MAV_AUTOPILOT ENUM
 @property (nonatomic, assign) uint8_t mavBaseMode;          // MAV_MODE_FLAGS ENUM
 @property (nonatomic, assign) uint8_t mavSystemStatus;      // MAV_STATE ENUM
 
 @property (nonatomic, strong) NSMutableDictionary *paramValues;
-@property (nonatomic, strong) NSMutableArray *rcChannelsRaw;
 
 @property (nonatomic, assign) CGFloat batteryRemaining;
 @property (nonatomic, assign) CGFloat batteryVoltage;

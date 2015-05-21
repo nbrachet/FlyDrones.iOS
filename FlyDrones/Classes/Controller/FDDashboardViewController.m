@@ -171,9 +171,9 @@
         [self.connectionManager sendDataFromTCPConnection:[self.droneControlManager heartbeatData]];
     }
 
-    NSData *controlData = [self.droneControlManager messageDataWithPitch:self.leftJoystickView.stickVerticalValue
+    NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
                                                                     roll:self.leftJoystickView.stickHorisontalValue
-                                                                  thrust:self.rightJoystickView.stickVerticalValue
+                                                                  thrust:self.leftJoystickView.stickVerticalValue
                                                                      yaw:self.rightJoystickView.stickHorisontalValue
                                                           sequenceNumber:1];
     [self.connectionManager sendDataFromTCPConnection:controlData];
@@ -276,9 +276,62 @@
         [modeString appendString:@"MAV_MODE_FLAG_SAFETY_ARMED"];
     } else if (mavBaseMode & MAV_MODE_FLAG_ENUM_END) {
         [modeString appendString:@"MAV_MODE_FLAG_ENUM_END"];
+    } else {
+        [modeString appendFormat:@"%d", mavBaseMode];
     }
-    [modeString appendFormat:@"\nCustom Mode:\n%d", mavCustomMode];
-
+    
+    [modeString appendFormat:@"\nCustom Mode:\n"];
+    switch (mavCustomMode) {
+        case FDAutoPilotModeAcro:
+            [modeString appendString:@"ACRO"];
+            break;
+        case FDAutoPilotModeAltHold:
+            [modeString appendString:@"ALT_HOLD"];
+            break;
+        case FDAutoPilotModeAuto:
+            [modeString appendString:@"AUTO"];
+            break;
+        case FDAutoPilotModeAutotune:
+            [modeString appendString:@"AUTOTUNE"];
+            break;
+        case FDAutoPilotModeCircle:
+            [modeString appendString:@"CIRCLE"];
+            break;
+        case FDAutoPilotModeDrift:
+            [modeString appendString:@"DRIFT"];
+            break;
+        case FDAutoPilotModeFlip:
+            [modeString appendString:@"FLIP"];
+            break;
+        case FDAutoPilotModeGuided:
+            [modeString appendString:@"GUIDED"];
+            break;
+        case FDAutoPilotModeLand:
+            [modeString appendString:@"LAND"];
+            break;
+        case FDAutoPilotModeLoiter:
+            [modeString appendString:@"LOITER"];
+            break;
+        case FDAutoPilotModeOfLoiter:
+            [modeString appendString:@"OF_LOITER"];
+            break;
+        case FDAutoPilotModePoshold:
+            [modeString appendString:@"POSHOLD"];
+            break;
+        case FDAutoPilotModeRTL:
+            [modeString appendString:@"RTL"];
+            break;
+        case FDAutoPilotModeSport:
+            [modeString appendString:@"SPORT"];
+            break;
+        case FDAutoPilotModeStabilize:
+            [modeString appendString:@"STABILIZE"];
+            break;
+        default:
+            [modeString appendFormat:@"%d", mavCustomMode];
+            break;
+    }
+    
     self.modeLabel.text = modeString;
 }
 
