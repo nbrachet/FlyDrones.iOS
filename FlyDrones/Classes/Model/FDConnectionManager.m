@@ -74,9 +74,14 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     return YES;
 }
 
-- (BOOL)isConnected {
-    return self.videoAsyncUdpSocket.isConnected;
+- (BOOL)isTCPConnected {
+    return !self.controlAsyncSocket.isDisconnected;
 }
+
+- (BOOL)isUDPConnected {
+    return !self.videoAsyncUdpSocket.isClosed;
+}
+
 
 - (BOOL)receiveTCPServer:(NSString *)host port:(NSUInteger)port {
     self.controlAsyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:self.controlSocketQueue socketQueue:self.controlSocketDelegateQueue];
@@ -141,6 +146,10 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     [self.videoAsyncUdpSocket close];
     self.videoAsyncUdpSocket.delegate = nil;
     self.videoAsyncUdpSocket = nil;
+    
+    [self.controlAsyncSocket disconnect];
+    self.controlAsyncSocket.delegate = nil;
+    self.controlAsyncSocket = nil;
 }
 
 - (NSInteger)rtpHeaderLength:(NSData *)data {
@@ -155,6 +164,10 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 #pragma mark - GCDAsyncUdpSocketDelegate
+
+- (void)udpSocket:(GCDAsyncUdpSocket *)sock didConnectToAddress:(NSData *)address {
+    NSLog(@"%s", __FUNCTION__);
+}
 
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address withFilterContext:(id)filterContext {
 
@@ -190,16 +203,18 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (void)udpSocketDidClose:(GCDAsyncUdpSocket *)sock withError:(NSError *)error {
-    
+    NSLog(@"%s", __FUNCTION__);
 }
 
 #pragma mark - GCDAsyncSocketDelegate
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
-    
+    NSLog(@"%s", __FUNCTION__);
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
+    NSLog(@"%s", __FUNCTION__);
+
     [self.controlAsyncSocket readDataWithTimeout:-1 tag:10];
 
 

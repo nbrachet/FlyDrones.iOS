@@ -26,7 +26,8 @@
 
 - (void)closeConnection;
 
-- (BOOL)isConnected;
+- (BOOL)isTCPConnected;
+- (BOOL)isUDPConnected;
 
 - (BOOL)receiveTCPServer:(NSString *)host port:(NSUInteger)port;
 

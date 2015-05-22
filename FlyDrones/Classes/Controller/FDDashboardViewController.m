@@ -61,6 +61,19 @@ static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
     
     self.droneControlManager = [[FDDroneControlManager alloc] init];
     self.droneControlManager.delegate = self;
+
+    [self connectToServers];
+    
+    if (![self.timer isValid]) {
+        [self startTimer];
+    }
+    [self registerForNotifications];
+}
+
+- (void)connectToServers {
+    if (self.connectionManager != nil) {
+        return;
+    }
     
     self.connectionManager = [[FDConnectionManager alloc] init];
     self.connectionManager.delegate = self;
@@ -76,7 +89,7 @@ static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
                                               otherButtonTitles:nil];
         [alert show];
     }
-    
+
     BOOL isConnectedToTCPServer = [self.connectionManager receiveTCPServer:[FDDroneStatus currentStatus].pathForTCPConnection
                                                                       port:[FDDroneStatus currentStatus].portForTCPConnection];
     if (!isConnectedToTCPServer) {
@@ -89,18 +102,11 @@ static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    if (![self.timer isValid]) {
-        [self startTimer];
-    }
-}
-
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
     [self stopTimer];
+    [self unregisterFromNotifications];
     
     [self.connectionManager closeConnection];
     self.connectionManager = nil;
@@ -172,6 +178,35 @@ static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
     if (self.revealViewController != nil) {
         [self.navigationController.navigationBar addGestureRecognizer:self.revealViewController.panGestureRecognizer];
     }
+}
+
+- (void)registerForNotifications {
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(applicationDidEnterBackground)
+                                                name:UIApplicationDidEnterBackgroundNotification
+                                              object:nil];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(applicationDidBecomeActive)
+                                                name:UIApplicationDidBecomeActiveNotification
+                                              object:nil];
+}
+
+- (void)unregisterFromNotifications {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)applicationDidEnterBackground {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self stopTimer];
+    [self.connectionManager closeConnection];
+    self.connectionManager = nil;
+}
+
+- (void)applicationDidBecomeActive {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self connectToServers];
+    [self startTimer];
 }
 
 - (void)startTimer {
@@ -306,7 +341,8 @@ static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
     [self dissmissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
     
     self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
-    
+    self.enabledControls = YES;
+
     NSMutableString *modeString = [NSMutableString string];
     [modeString appendString:@"Mode:\n"];
     if (mavBaseMode & MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) {
