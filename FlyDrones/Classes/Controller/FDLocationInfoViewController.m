@@ -57,9 +57,6 @@
     if (!CLLocationCoordinate2DIsValid(locationCoordinate)) {
         return;
     }
-    
-    self.locationLabel.text = [NSString stringWithFormat:@"%f %f", locationCoordinate.latitude, locationCoordinate.longitude];
-    
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(locationCoordinate, 160, 160);
     [self.mapView setRegion:region animated:NO];
     

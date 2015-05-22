@@ -1051,7 +1051,7 @@
                                     <action selector="choseMapType:" destination="4vn-Kq-gAb" eventType="valueChanged" id="De6-MP-uRK"/>
                                 </connections>
                             </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T1q-M9-wjJ">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show legend" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T1q-M9-wjJ">
                                 <rect key="frame" x="8" y="333" width="247" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="Z00-dq-WDy"/>
@@ -1093,7 +1093,6 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="367"/>
                     <connections>
-                        <outlet property="locationLabel" destination="T1q-M9-wjJ" id="OBn-xq-wvk"/>
                         <outlet property="mapTypeSwitch" destination="nNl-xp-Zlg" id="3dt-07-rDA"/>
                         <outlet property="mapView" destination="0AA-4N-toX" id="W25-2T-1fT"/>
                     </connections>
