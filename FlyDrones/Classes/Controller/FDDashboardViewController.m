@@ -301,12 +301,6 @@ static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
     self.compassView.navigationBearing = navigationBearing;
 }
 
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleScaledPressureInfo:(CGFloat)temperature absolutePressure:(CGFloat)absolutePressure differentialPressure:(CGFloat)differentialPressure {
-    
-    NSString *temperatureString = (temperature != FDNotAvailable) ? [NSString stringWithFormat:@"%0.1f°C", temperature] : @"N/A";
-    [self.temperatureButton setTitle:temperatureString forState:UIControlStateNormal];
-}
-
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleHeartbeatInfo:(uint32_t)mavCustomMode mavType:(uint8_t)mavType mavAutopilotType:(uint8_t)mavAutopilotType mavBaseMode:(uint8_t)mavBaseMode mavSystemStatus:(uint8_t)mavSystemStatus {
     
     [self dissmissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];

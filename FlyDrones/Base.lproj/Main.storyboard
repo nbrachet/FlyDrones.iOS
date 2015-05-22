@@ -436,19 +436,6 @@
                                             </mask>
                                         </variation>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gKc-cj-1q2">
-                                        <rect key="frame" x="148" y="0.0" width="72" height="64"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="gKc-cj-1q2" secondAttribute="height" multiplier="1:1" constant="8" id="YD4-Ui-0LN"/>
-                                        </constraints>
-                                        <color key="tintColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" title="N/A" image="Temperature"/>
-                                        <connections>
-                                            <segue destination="S0V-7H-MAf" kind="popoverPresentation" identifier="ShowScaledPressure" popoverAnchorView="gKc-cj-1q2" id="tq4-ib-Pa7">
-                                                <popoverArrowDirection key="popoverArrowDirection" down="YES"/>
-                                            </segue>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CK1-fU-SXs">
                                         <rect key="frame" x="952" y="0.0" width="64" height="64"/>
                                         <constraints>
@@ -477,9 +464,7 @@
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="centerX" secondItem="3fa-i6-kmk" secondAttribute="centerX" id="0I0-f1-g2N"/>
-                                    <constraint firstItem="gKc-cj-1q2" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="0hF-HR-adp"/>
                                     <constraint firstItem="n4B-o3-BAE" firstAttribute="leading" secondItem="i1i-UJ-dEo" secondAttribute="trailing" constant="16" id="3ZO-4N-zIo"/>
-                                    <constraint firstAttribute="bottom" secondItem="gKc-cj-1q2" secondAttribute="bottom" id="9VS-29-eEn"/>
                                     <constraint firstItem="3fa-i6-kmk" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" constant="12" id="AVZ-8f-9Gj"/>
                                     <constraint firstItem="i1i-UJ-dEo" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="CeO-Lo-7NT"/>
                                     <constraint firstAttribute="centerY" secondItem="3fa-i6-kmk" secondAttribute="centerY" id="KW3-rS-MV3"/>
@@ -492,7 +477,6 @@
                                     <constraint firstItem="Yyj-0O-PBH" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="im2-3d-0xp"/>
                                     <constraint firstAttribute="height" constant="64" id="nDL-SD-TaS"/>
                                     <constraint firstAttribute="bottom" secondItem="CK1-fU-SXs" secondAttribute="bottom" id="rXN-sh-2CZ"/>
-                                    <constraint firstItem="gKc-cj-1q2" firstAttribute="leading" secondItem="n4B-o3-BAE" secondAttribute="trailing" constant="8" id="y2X-jd-50c"/>
                                     <constraint firstAttribute="bottom" secondItem="3fa-i6-kmk" secondAttribute="bottom" id="yGc-Up-3IW"/>
                                     <constraint firstAttribute="bottom" secondItem="i1i-UJ-dEo" secondAttribute="bottom" id="zHk-7a-BYy"/>
                                 </constraints>
@@ -667,7 +651,6 @@
                         <outlet property="modeLabel" destination="Yyj-0O-PBH" id="UTo-j9-BOf"/>
                         <outlet property="movieGLView" destination="eOu-L3-XOm" id="ZMm-nr-8uN"/>
                         <outlet property="rightJoystickView" destination="N6l-Yh-Btc" id="AKS-PB-7dw"/>
-                        <outlet property="temperatureButton" destination="gKc-cj-1q2" id="3jc-0C-CmH"/>
                         <outlet property="worldwideLocationButton" destination="CK1-fU-SXs" id="8zH-uD-dNa"/>
                         <segue destination="iIS-7C-Pul" kind="popoverPresentation" identifier="ShowBatteryStatus" popoverAnchorView="n4B-o3-BAE" id="9Zx-kf-RhW">
                             <popoverArrowDirection key="popoverArrowDirection" down="YES"/>
@@ -1114,7 +1097,6 @@
         <image name="JoystickControl" width="84" height="84"/>
         <image name="MunuIcon" width="32" height="32"/>
         <image name="Settings" width="50" height="50"/>
-        <image name="Temperature" width="25" height="25"/>
         <image name="WorldwideLocation" width="32" height="32"/>
     </resources>
     <color key="tintColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
