@@ -20,6 +20,7 @@
 #import "mavlink_types.h"
 #import "NSString+MAVLink.h"
 #import "NSData+MAVLink.h"
+#import <MBProgressHUD/MBProgressHUD.h>
 
 #endif
 

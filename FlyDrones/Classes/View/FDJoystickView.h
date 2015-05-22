@@ -25,5 +25,6 @@ typedef NS_ENUM(NSUInteger, FDJoystickViewMode) {
 
 - (CGFloat)stickHorisontalValue;
 - (CGFloat)stickVerticalValue;
+- (void)resetPosition;
 
 @end

@@ -28,6 +28,12 @@ typedef NS_ENUM(NSUInteger, FDJoystickViewDirection) {
 
 @implementation FDJoystickView
 
+#pragma mark - Public
+
+- (void)resetPosition {
+    [self resetTouchViewPosition];
+}
+
 #pragma mark - Custom Accessors
 
 - (CGFloat)stickHorisontalValue {

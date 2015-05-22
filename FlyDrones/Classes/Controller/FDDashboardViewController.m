@@ -18,6 +18,8 @@
 #import "FDCompassView.h"
 #import "FDJoystickView.h"
 
+static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
+
 @interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIButton *menuButton;
@@ -31,10 +33,14 @@
 @property (nonatomic, weak) IBOutlet FDJoystickView *rightJoystickView;
 @property (nonatomic, weak) IBOutlet UILabel *modeLabel;
 
+@property (nonatomic, assign, getter=isEnabledControls) BOOL enabledControls;
+
 @property (nonatomic, strong) FDConnectionManager *connectionManager;
 @property (nonatomic, strong) FDMovieDecoder *movieDecoder;
 @property (nonatomic, strong) FDDroneControlManager *droneControlManager;
 @property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, assign) CFTimeInterval lastReceivedHeartbeatMessageTimeInterval;
+
 @end
 
 @implementation FDDashboardViewController
@@ -45,6 +51,7 @@
     [super viewDidLoad];
     
     [self customSetup];
+    self.enabledControls = NO;
     self.leftJoystickView.mode = FDJoystickViewModeSavedVerticalPosition;
     self.leftJoystickView.isSingleActiveAxis = YES;
 }
@@ -122,6 +129,24 @@
     }
 }
 
+#pragma mark - Custom Accessors
+
+- (void)setEnabledControls:(BOOL)enabledControls {
+    _enabledControls = enabledControls;
+    
+    self.batteryButton.enabled = enabledControls;
+    self.altitudeButton.enabled = enabledControls;
+//    self.worldwideLocationButton.enabled = enabledControls;
+    self.leftJoystickView.userInteractionEnabled = enabledControls;
+    self.rightJoystickView.userInteractionEnabled = enabledControls;
+    
+    if (!enabledControls) {
+        [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+        [self.leftJoystickView resetPosition];
+        [self.rightJoystickView resetPosition];
+    }
+}
+
 #pragma mark - UIStateRestoration
 
 - (void)applicationFinishedRestoringState {
@@ -150,6 +175,8 @@
 }
 
 - (void)startTimer {
+    self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
+
     [self stopTimer];
     
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1f
@@ -171,7 +198,21 @@
     if (tickCounter % 10 == 0) {
         [self.connectionManager sendDataFromTCPConnection:[self.droneControlManager heartbeatData]];
     }
-
+    
+    CFTimeInterval delayHeartbeatMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedHeartbeatMessageTimeInterval;
+    if (delayHeartbeatMessageTimeInterval > 2.0f) {
+        MBProgressHUD *progressHUD = [MBProgressHUD HUDForView:self.movieGLView];
+        if (progressHUD == nil) {
+            progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
+            progressHUD.labelText = NSLocalizedString(@"Waiting heartbeat message", @"Waiting heartbeat message");
+            progressHUD.tag = FDDashboardViewControllerWaitingHeartbeatHUDTag;
+        }
+        progressHUD.detailsLabelText = [NSString stringWithFormat:@"%.1f sec", delayHeartbeatMessageTimeInterval];
+        self.enabledControls = NO;
+        return;
+    }
+    
+    //send control data
     NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
                                                                     roll:self.rightJoystickView.stickHorisontalValue
                                                                   thrust:self.leftJoystickView.stickVerticalValue
@@ -180,6 +221,14 @@
     [self.connectionManager sendDataFromTCPConnection:controlData];
 }
 
+- (void)dissmissProgressHUDForTag:(NSUInteger)tag {
+    for (UIView *hudView in [MBProgressHUD allHUDsForView:self.movieGLView]) {
+        if (hudView.tag == tag) {
+            [hudView removeFromSuperview];
+            break;
+        }
+    }
+}
 
 #pragma mark - UIAlertViewDelegate
 
@@ -230,7 +279,7 @@
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
-    self.worldwideLocationButton.enabled = CLLocationCoordinate2DIsValid(locationCoordinate);
+//    self.worldwideLocationButton.enabled =  CLLocationCoordinate2DIsValid(locationCoordinate);
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryRemaining:(CGFloat)batteryRemaining current:(CGFloat)current voltage:(CGFloat)voltage {
@@ -259,6 +308,11 @@
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleHeartbeatInfo:(uint32_t)mavCustomMode mavType:(uint8_t)mavType mavAutopilotType:(uint8_t)mavAutopilotType mavBaseMode:(uint8_t)mavBaseMode mavSystemStatus:(uint8_t)mavSystemStatus {
+    
+    [self dissmissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
+    
+    self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
+    
     NSMutableString *modeString = [NSMutableString string];
     [modeString appendString:@"Mode:\n"];
     if (mavBaseMode & MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) {
