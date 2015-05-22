@@ -135,26 +135,25 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
                 }
             });
         }
-            
-        case MAVLINK_MSG_ID_BATTERY_STATUS: {
-            mavlink_battery_status_t batteryStatus;
-            mavlink_msg_battery_status_decode(message, &batteryStatus);
-            droneStatus.batteryRemaining = batteryStatus.battery_remaining / 100.0f;
-            droneStatus.batteryAmperage = batteryStatus.current_battery / 100.0f;
-                
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleBatteryStatusNotification object:self];
-                
-                if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleBatteryRemaining:current:voltage:)]) {
-                    [self.delegate droneControlManager:self
-                             didHandleBatteryRemaining:droneStatus.batteryRemaining
-                                               current:droneStatus.batteryAmperage
-                                               voltage:-1];
-                }
-            });
-            
-            break;
-        }
+        //not in use temporarily
+//        case MAVLINK_MSG_ID_BATTERY_STATUS: {
+//            mavlink_battery_status_t batteryStatus;
+//            mavlink_msg_battery_status_decode(message, &batteryStatus);
+//            droneStatus.batteryRemaining = batteryStatus.battery_remaining / 100.0f;
+//            droneStatus.batteryAmperage = batteryStatus.current_battery / 100.0f;
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleBatteryStatusNotification object:self];
+//                
+//                if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleBatteryRemaining:current:voltage:)]) {
+//                    [self.delegate droneControlManager:self
+//                             didHandleBatteryRemaining:droneStatus.batteryRemaining
+//                                               current:droneStatus.batteryAmperage
+//                                               voltage:-1];
+//                }
+//            });
+//            
+//            break;
+//        }
             
         case MAVLINK_MSG_ID_SYS_STATUS: {
             mavlink_sys_status_t sysStatus;
@@ -239,7 +238,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
         }
             
         case MAVLINK_MSG_ID_HEARTBEAT: {
-            NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
+//            NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
             mavlink_heartbeat_t heartbeat;
             mavlink_msg_heartbeat_decode(message, &heartbeat);
             
@@ -274,7 +273,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
             CGFloat param_value = paramValue.param_value;
             
             [droneStatus.paramValues setObject:[NSNumber numberWithFloat:param_value] forKey:paramIdString];
-            NSLog(@"%@: %f", paramIdString, param_value);
+//            NSLog(@"%@: %f", paramIdString, param_value);
             break;
         }
     }
