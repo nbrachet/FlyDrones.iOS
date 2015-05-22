@@ -7,6 +7,7 @@
 //
 
 #import "FDJoystickView.h"
+static CFAbsoluteTime FDJoystickViewDelayBeforeZeroingDirection = 0.3f;
 
 typedef NS_ENUM(NSUInteger, FDJoystickViewDirection) {
     FDJoystickViewDirectionNone,
@@ -21,6 +22,7 @@ typedef NS_ENUM(NSUInteger, FDJoystickViewDirection) {
 @property (nonatomic, assign) BOOL isTracking;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) FDJoystickViewDirection direction;
+@property (nonatomic, assign) CFTimeInterval lastMovedEventTimeInterval;
 
 @end
 
@@ -83,6 +85,16 @@ typedef NS_ENUM(NSUInteger, FDJoystickViewDirection) {
         }
         
         if (self.isSingleActiveAxis && self.mode != FDJoystickViewModeAuto) {
+            //Resetting direction, if the delay is more than X second
+            
+            CFTimeInterval currentTime = CACurrentMediaTime();
+            CFTimeInterval delay = currentTime - self.lastMovedEventTimeInterval;
+            NSLog(@"%f", delay);
+            if (delay > FDJoystickViewDelayBeforeZeroingDirection) {
+                self.direction = FDJoystickViewDirectionNone;
+            }
+            self.lastMovedEventTimeInterval = currentTime;
+            
             //Detect direction
             if (self.direction == FDJoystickViewDirectionNone) {
                 CGFloat horizontalDifference = MAX(touchPoint.x, previousTouchPoint.x) - MIN(touchPoint.x, previousTouchPoint.x);
@@ -138,6 +150,7 @@ typedef NS_ENUM(NSUInteger, FDJoystickViewDirection) {
     if (CGPointEqualToPoint(self.prevTouchViewPosition, center)) {
         return;
     }
+    
     self.prevTouchViewPosition = center;
     
     void(^updateConstraints)() = ^() {
