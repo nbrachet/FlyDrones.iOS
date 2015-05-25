@@ -33,7 +33,7 @@ typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
 @property (nonatomic, assign) FDAutoPilotMode mavCustomMode;       //< A bitfield for use for autopilot-specific flags.
 @property (nonatomic, assign) uint8_t mavType;              // MAV_TYPE ENUM
 @property (nonatomic, assign) uint8_t mavAutopilotType;     // MAV_AUTOPILOT ENUM
-@property (nonatomic, assign) uint8_t mavBaseMode;          // MAV_MODE_FLAGS ENUM
+@property (nonatomic, assign) uint8_t mavBaseMode;          // MAV_MODE_FLAG ENUM
 @property (nonatomic, assign) uint8_t mavSystemStatus;      // MAV_STATE ENUM
 
 @property (nonatomic, strong) NSMutableDictionary *paramValues;

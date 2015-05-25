@@ -466,16 +466,22 @@
                                             </segue>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yyj-0O-PBH">
-                                        <rect key="frame" x="662" y="0.0" width="100" height="60"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7gQ-0E-RBJ">
+                                        <rect key="frame" x="778" y="0.0" width="64" height="64"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="100" id="pQo-hE-6Ro"/>
-                                            <constraint firstAttribute="height" constant="60" id="zOa-7a-qJ5"/>
+                                            <constraint firstAttribute="width" constant="64" id="4Bb-a3-P6a"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                        <color key="tintColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" image="Mode">
+                                            <color key="titleColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="Nyj-xv-HBc" kind="popoverPresentation" identifier="ShowSystemStatus" popoverAnchorView="7gQ-0E-RBJ" id="6uJ-Vg-Fhl">
+                                                <popoverArrowDirection key="popoverArrowDirection" down="YES"/>
+                                            </segue>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -487,15 +493,16 @@
                                     <constraint firstItem="i1i-UJ-dEo" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="CeO-Lo-7NT"/>
                                     <constraint firstItem="B5j-Cm-l8K" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="EMn-Uc-Vho"/>
                                     <constraint firstAttribute="centerY" secondItem="3fa-i6-kmk" secondAttribute="centerY" id="KW3-rS-MV3"/>
-                                    <constraint firstItem="Yyj-0O-PBH" firstAttribute="leading" secondItem="3fa-i6-kmk" secondAttribute="trailing" constant="10" id="Ppo-4I-VSX"/>
                                     <constraint firstItem="CK1-fU-SXs" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="PvP-bH-U9n"/>
+                                    <constraint firstItem="7gQ-0E-RBJ" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="ROI-ds-DNh"/>
                                     <constraint firstAttribute="trailing" secondItem="CK1-fU-SXs" secondAttribute="trailing" constant="8" id="Vtr-gL-ii3"/>
                                     <constraint firstAttribute="bottom" secondItem="n4B-o3-BAE" secondAttribute="bottom" id="aT1-ax-090"/>
                                     <constraint firstItem="n4B-o3-BAE" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="dhx-aE-3mC"/>
                                     <constraint firstItem="i1i-UJ-dEo" firstAttribute="leading" secondItem="c8e-mR-B3k" secondAttribute="leading" id="gtH-1x-BpP"/>
-                                    <constraint firstItem="Yyj-0O-PBH" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="im2-3d-0xp"/>
                                     <constraint firstAttribute="height" constant="64" id="nDL-SD-TaS"/>
+                                    <constraint firstItem="B5j-Cm-l8K" firstAttribute="leading" secondItem="7gQ-0E-RBJ" secondAttribute="trailing" id="nyu-tM-nkz"/>
                                     <constraint firstItem="CK1-fU-SXs" firstAttribute="leading" secondItem="B5j-Cm-l8K" secondAttribute="trailing" id="qzW-GY-jou"/>
+                                    <constraint firstAttribute="bottom" secondItem="7gQ-0E-RBJ" secondAttribute="bottom" id="r16-0p-lTn"/>
                                     <constraint firstAttribute="bottom" secondItem="CK1-fU-SXs" secondAttribute="bottom" id="rXN-sh-2CZ"/>
                                     <constraint firstAttribute="bottom" secondItem="3fa-i6-kmk" secondAttribute="bottom" id="yGc-Up-3IW"/>
                                     <constraint firstAttribute="bottom" secondItem="i1i-UJ-dEo" secondAttribute="bottom" id="zHk-7a-BYy"/>
@@ -633,13 +640,14 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="1024" height="768"/>
                     <connections>
+                        <outlet property="altitudeButton" destination="B5j-Cm-l8K" id="W2D-pX-Qey"/>
                         <outlet property="batteryButton" destination="n4B-o3-BAE" id="Nzh-75-pZf"/>
                         <outlet property="compassView" destination="3fa-i6-kmk" id="kve-xH-TAC"/>
                         <outlet property="leftJoystickView" destination="Zom-z6-iIl" id="gEH-Hr-LYA"/>
                         <outlet property="menuButton" destination="i1i-UJ-dEo" id="Fn0-wu-jvB"/>
-                        <outlet property="modeLabel" destination="Yyj-0O-PBH" id="UTo-j9-BOf"/>
                         <outlet property="movieGLView" destination="eOu-L3-XOm" id="ZMm-nr-8uN"/>
                         <outlet property="rightJoystickView" destination="N6l-Yh-Btc" id="AKS-PB-7dw"/>
+                        <outlet property="systemStatusButton" destination="7gQ-0E-RBJ" id="VL5-s6-naA"/>
                         <outlet property="worldwideLocationButton" destination="CK1-fU-SXs" id="8zH-uD-dNa"/>
                         <segue destination="iIS-7C-Pul" kind="popoverPresentation" identifier="ShowBatteryStatus" popoverAnchorView="n4B-o3-BAE" id="9Zx-kf-RhW">
                             <popoverArrowDirection key="popoverArrowDirection" down="YES"/>
@@ -1073,6 +1081,50 @@
             </objects>
             <point key="canvasLocation" x="1116" y="1106.5"/>
         </scene>
+        <!--System Status View Controller-->
+        <scene sceneID="uRa-cn-egY">
+            <objects>
+                <viewController id="Nyj-xv-HBc" customClass="FDSystemStatusViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="msR-uF-dLU"/>
+                        <viewControllerLayoutGuide type="bottom" id="PgO-U3-HLs"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Cc9-EX-LaJ">
+                        <rect key="frame" x="0.0" y="0.0" width="244" height="124"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fHP-uk-Sdv">
+                                <rect key="frame" x="0.0" y="0.0" width="244" height="124"/>
+                                <color key="backgroundColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <connections>
+                                    <outlet property="delegate" destination="Nyj-xv-HBc" id="bLo-1H-xVr"/>
+                                </connections>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="fHP-uk-Sdv" firstAttribute="leading" secondItem="Cc9-EX-LaJ" secondAttribute="leading" id="We9-VF-Bsi"/>
+                            <constraint firstItem="PgO-U3-HLs" firstAttribute="top" secondItem="fHP-uk-Sdv" secondAttribute="bottom" id="mTH-jm-lmh"/>
+                            <constraint firstItem="fHP-uk-Sdv" firstAttribute="top" secondItem="msR-uF-dLU" secondAttribute="bottom" id="srh-mn-abi"/>
+                            <constraint firstAttribute="trailing" secondItem="fHP-uk-Sdv" secondAttribute="trailing" id="yT0-hS-nSL"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="244" height="124"/>
+                    <connections>
+                        <outlet property="textView" destination="fHP-uk-Sdv" id="Jve-Qf-v05"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lMf-kV-Whp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1078" y="790"/>
+        </scene>
     </scenes>
     <resources>
         <image name="ArrowUp" width="18" height="20"/>
@@ -1084,6 +1136,7 @@
         <image name="BatteryNA" width="32" height="32"/>
         <image name="JoystickBase" width="225" height="225"/>
         <image name="JoystickControl" width="84" height="84"/>
+        <image name="Mode" width="32" height="32"/>
         <image name="MunuIcon" width="32" height="32"/>
         <image name="Settings" width="50" height="50"/>
         <image name="WorldwideLocation" width="32" height="32"/>

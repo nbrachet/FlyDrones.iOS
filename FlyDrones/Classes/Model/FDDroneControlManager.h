@@ -13,6 +13,7 @@ extern NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification;
 extern NSString * const FDDroneControlManagerDidHandleScaledPressureInfoNotification;
 extern NSString * const FDDroneControlManagerDidHandleVFRInfoNotification;
 extern NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotification;
+extern NSString * const FDDroneControlManagerDidHandleSystemInfoNotification;
 
 @class FDDroneControlManager;
 

@@ -14,6 +14,7 @@ NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"did
 NSString * const FDDroneControlManagerDidHandleScaledPressureInfoNotification = @"didHandleScaledPressureInfoNotification";
 NSString * const FDDroneControlManagerDidHandleVFRInfoNotification = @"didHandleVFRInfoNotification";
 NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotification = @"didHandleLocationCoordinate";
+NSString * const FDDroneControlManagerDidHandleSystemInfoNotification = @"didHandleSystemInfo";
 
 CGFloat static const FDDroneControlManagerMavLinkDefaultSystemId = 255;
 CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
@@ -158,6 +159,10 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
         case MAVLINK_MSG_ID_SYS_STATUS: {
             mavlink_sys_status_t sysStatus;
             mavlink_msg_sys_status_decode(message, &sysStatus);
+            if ((sysStatus.battery_remaining < 0 && sysStatus.battery_remaining != -1) ||
+                (sysStatus.current_battery < 0 && sysStatus.current_battery != -1)) {
+                break;
+            }
             droneStatus.batteryRemaining = sysStatus.battery_remaining / 100.0f;
             droneStatus.batteryAmperage = sysStatus.current_battery / 100.0f;
             droneStatus.batteryVoltage = sysStatus.voltage_battery / 1000.0f;
@@ -249,6 +254,8 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
             droneStatus.mavSystemStatus = heartbeat.system_status;
             
             dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleSystemInfoNotification object:self];
+
                 if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleHeartbeatInfo:mavType:mavAutopilotType:mavBaseMode:mavSystemStatus:)]) {
                     [self.delegate droneControlManager:self
                                 didHandleHeartbeatInfo:droneStatus.mavCustomMode
@@ -281,7 +288,10 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
 
 - (NSData *)messageDataWithPitch:(CGFloat)pitch roll:(CGFloat)roll thrust:(CGFloat)thrust yaw:(CGFloat)yaw sequenceNumber:(uint16_t)sequenceNumber {
     FDDroneStatus *currentStatus = [FDDroneStatus currentStatus];
-    if ((currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_DECODE_POSITION_MANUAL) ||
+    if (!(currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED)) {
+        return nil;
+    }
+    if ((currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_MANUAL_INPUT_ENABLED) ||
         (currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_HIL_ENABLED)) {
         mavlink_message_t message;
         mavlink_msg_manual_control_pack(FDDroneControlManagerMavLinkDefaultSystemId,
@@ -295,7 +305,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
                                         sequenceNumber);
     
         return [NSData dataWithMAVLinkMessage:&message];
-    } else if (currentStatus.mavBaseMode & (uint8_t)(MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)) {
+    } else if (currentStatus.mavBaseMode & (uint8_t)(MAV_MODE_FLAG_SAFETY_ARMED)) {
         @synchronized(currentStatus) {
             if (![currentStatus.paramValues objectForKey:@"RCMAP_PITCH"] ||
                 ![currentStatus.paramValues objectForKey:@"RCMAP_ROLL"] ||

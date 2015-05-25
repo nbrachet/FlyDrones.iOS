@@ -28,11 +28,10 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 @property (nonatomic, weak) IBOutlet FDCompassView *compassView;
 @property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
 @property (nonatomic, weak) IBOutlet UIButton *altitudeButton;
-@property (nonatomic, weak) IBOutlet UIButton *temperatureButton;
+@property (nonatomic, weak) IBOutlet UIButton *systemStatusButton;
 @property (nonatomic, weak) IBOutlet UIButton *worldwideLocationButton;
 @property (nonatomic, weak) IBOutlet FDJoystickView *leftJoystickView;
 @property (nonatomic, weak) IBOutlet FDJoystickView *rightJoystickView;
-@property (nonatomic, weak) IBOutlet UILabel *modeLabel;
 
 @property (nonatomic, assign, getter=isEnabledControls) BOOL enabledControls;
 
@@ -145,12 +144,9 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"ShowBatteryStatus"] ||
-        [segue.identifier isEqualToString:@"ShowScaledPressure"] ||
-        [segue.identifier isEqualToString:@"ShowVFRInfo"] ||
-        [segue.identifier isEqualToString:@"ShowLocationInfo"]) {
-        UIViewController *destinationViewController = segue.destinationViewController;
-        UIPopoverPresentationController *popoverPresentationController = destinationViewController.popoverPresentationController;
+    UIViewController *destinationViewController = segue.destinationViewController;
+    UIPopoverPresentationController *popoverPresentationController = destinationViewController.popoverPresentationController;
+    if (popoverPresentationController != nil) {
         popoverPresentationController.backgroundColor = destinationViewController.view.backgroundColor;
     }
 }
@@ -162,7 +158,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     
     self.batteryButton.enabled = enabledControls;
     self.altitudeButton.enabled = enabledControls;
-//    self.worldwideLocationButton.enabled = enabledControls;
+    self.systemStatusButton.enabled = enabledControls;
     self.leftJoystickView.userInteractionEnabled = enabledControls;
     self.rightJoystickView.userInteractionEnabled = enabledControls;
     
@@ -378,82 +374,6 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     
     self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
     self.enabledControls = YES;
-
-    NSMutableString *modeString = [NSMutableString string];
-    [modeString appendString:@"Mode:\n"];
-    if (mavBaseMode & MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) {
-        [modeString appendString:@"MAV_MODE_FLAG_CUSTOM_MODE_ENABLED"];
-    } else if (mavBaseMode & MAV_MODE_FLAG_TEST_ENABLED) {
-        [modeString appendString:@"MAV_MODE_FLAG_TEST_ENABLED"];
-    } else if (mavBaseMode & MAV_MODE_FLAG_AUTO_ENABLED) {
-        [modeString appendString:@"MAV_MODE_FLAG_AUTO_ENABLED"];
-    } else if (mavBaseMode & MAV_MODE_FLAG_STABILIZE_ENABLED) {
-        [modeString appendString:@"MAV_MODE_FLAG_STABILIZE_ENABLED"];
-    } else if (mavBaseMode & MAV_MODE_FLAG_HIL_ENABLED) {
-        [modeString appendString:@"MAV_MODE_FLAG_HIL_ENABLED"];
-    } else if (mavBaseMode & MAV_MODE_FLAG_MANUAL_INPUT_ENABLED) {
-        [modeString appendString:@"MAV_MODE_FLAG_MANUAL_INPUT_ENABLED"];
-    } else if (mavBaseMode & MAV_MODE_FLAG_SAFETY_ARMED) {
-        [modeString appendString:@"MAV_MODE_FLAG_SAFETY_ARMED"];
-    } else if (mavBaseMode & MAV_MODE_FLAG_ENUM_END) {
-        [modeString appendString:@"MAV_MODE_FLAG_ENUM_END"];
-    } else {
-        [modeString appendFormat:@"%d", mavBaseMode];
-    }
-    
-    [modeString appendFormat:@"\nCustom Mode:\n"];
-    switch (mavCustomMode) {
-        case FDAutoPilotModeAcro:
-            [modeString appendString:@"ACRO"];
-            break;
-        case FDAutoPilotModeAltHold:
-            [modeString appendString:@"ALT_HOLD"];
-            break;
-        case FDAutoPilotModeAuto:
-            [modeString appendString:@"AUTO"];
-            break;
-        case FDAutoPilotModeAutotune:
-            [modeString appendString:@"AUTOTUNE"];
-            break;
-        case FDAutoPilotModeCircle:
-            [modeString appendString:@"CIRCLE"];
-            break;
-        case FDAutoPilotModeDrift:
-            [modeString appendString:@"DRIFT"];
-            break;
-        case FDAutoPilotModeFlip:
-            [modeString appendString:@"FLIP"];
-            break;
-        case FDAutoPilotModeGuided:
-            [modeString appendString:@"GUIDED"];
-            break;
-        case FDAutoPilotModeLand:
-            [modeString appendString:@"LAND"];
-            break;
-        case FDAutoPilotModeLoiter:
-            [modeString appendString:@"LOITER"];
-            break;
-        case FDAutoPilotModeOfLoiter:
-            [modeString appendString:@"OF_LOITER"];
-            break;
-        case FDAutoPilotModePoshold:
-            [modeString appendString:@"POSHOLD"];
-            break;
-        case FDAutoPilotModeRTL:
-            [modeString appendString:@"RTL"];
-            break;
-        case FDAutoPilotModeSport:
-            [modeString appendString:@"SPORT"];
-            break;
-        case FDAutoPilotModeStabilize:
-            [modeString appendString:@"STABILIZE"];
-            break;
-        default:
-            [modeString appendFormat:@"%d", mavCustomMode];
-            break;
-    }
-    
-    self.modeLabel.text = modeString;
 }
 
 @end
