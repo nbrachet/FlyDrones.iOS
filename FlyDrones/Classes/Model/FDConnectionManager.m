@@ -75,13 +75,8 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (BOOL)isTCPConnected {
-    return !self.controlAsyncSocket.isDisconnected;
+    return self.controlAsyncSocket.isConnected;
 }
-
-- (BOOL)isUDPConnected {
-    return !self.videoAsyncUdpSocket.isClosed;
-}
-
 
 - (BOOL)receiveTCPServer:(NSString *)host port:(NSUInteger)port {
     self.controlAsyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:self.controlSocketQueue socketQueue:self.controlSocketDelegateQueue];

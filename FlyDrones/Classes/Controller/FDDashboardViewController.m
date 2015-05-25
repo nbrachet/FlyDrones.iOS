@@ -19,6 +19,7 @@
 #import "FDJoystickView.h"
 
 static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
+static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8411;
 
 @interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate>
 
@@ -61,8 +62,6 @@ static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
     
     self.droneControlManager = [[FDDroneControlManager alloc] init];
     self.droneControlManager.delegate = self;
-
-    [self connectToServers];
     
     if (![self.timer isValid]) {
         [self startTimer];
@@ -71,35 +70,56 @@ static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
 }
 
 - (void)connectToServers {
-    if (self.connectionManager != nil) {
-        return;
+    if (self.connectionManager == nil) {
+        self.connectionManager = [[FDConnectionManager alloc] init];
+        self.connectionManager.delegate = self;
+        
+        BOOL isConnectedToUDPServer = [self.connectionManager connectToServer:[FDDroneStatus currentStatus].pathForUDPConnection
+                                                            portForConnection:[FDDroneStatus currentStatus].portForUDPConnection
+                                                              portForReceived:[FDDroneStatus currentStatus].portForUDPConnection];
+        if (!isConnectedToUDPServer) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:@"Used UDP port is blocked. Please shut all of the applications that use data streaming"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
     }
     
-    self.connectionManager = [[FDConnectionManager alloc] init];
-    self.connectionManager.delegate = self;
+        
     
-    BOOL isConnectedToUDPServer = [self.connectionManager connectToServer:[FDDroneStatus currentStatus].pathForUDPConnection
-                                                        portForConnection:[FDDroneStatus currentStatus].portForUDPConnection
-                                                          portForReceived:[FDDroneStatus currentStatus].portForUDPConnection];
-    if (!isConnectedToUDPServer) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:@"Used UDP port is blocked. Please shut all of the applications that use data streaming"
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-    }
+    if (![self.connectionManager isTCPConnected]) {
+        self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
+        self.enabledControls = NO;
+        
+        MBProgressHUD *progressHUD;
+        for (MBProgressHUD *hud in [MBProgressHUD allHUDsForView:self.movieGLView]) {
+            if (hud.tag == FDDashboardViewControllerConnectingToTCPServerHUDTag) {
+                progressHUD = hud;
+            } else {
+                [MBProgressHUD hideHUDForView:hud animated:NO];
+            }
+        }
+        if (progressHUD == nil) {
+            MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
+            progressHUD.labelText = NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server");
+            progressHUD.tag = FDDashboardViewControllerConnectingToTCPServerHUDTag;
+        }
 
-    BOOL isConnectedToTCPServer = [self.connectionManager receiveTCPServer:[FDDroneStatus currentStatus].pathForTCPConnection
-                                                                      port:[FDDroneStatus currentStatus].portForTCPConnection];
-    if (!isConnectedToTCPServer) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:@"Used TCP port is blocked. Please shut all of the applications that use data streaming"
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        BOOL isConnectedToTCPServer = [self.connectionManager receiveTCPServer:[FDDroneStatus currentStatus].pathForTCPConnection
+                                                                          port:[FDDroneStatus currentStatus].portForTCPConnection];
+        if (!isConnectedToTCPServer) {
+            [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:YES];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:@"Used TCP port is blocked. Please shut all of the applications that use data streaming"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
     }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -147,7 +167,7 @@ static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
     self.rightJoystickView.userInteractionEnabled = enabledControls;
     
     if (!enabledControls) {
-        [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+        [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
         [self.leftJoystickView resetPosition];
         [self.rightJoystickView resetPosition];
     }
@@ -230,13 +250,27 @@ static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
 - (void)timerTick:(NSTimer *)timer {
     static NSUInteger tickCounter = 0;
     tickCounter++;
+    
+    if (![self.connectionManager isTCPConnected]) {
+        if ((tickCounter % 15 == 0)) {
+            [self connectToServers];
+        }
+        return;
+    }
+    
     if (tickCounter % 10 == 0) {
         [self.connectionManager sendDataFromTCPConnection:[self.droneControlManager heartbeatData]];
     }
     
     CFTimeInterval delayHeartbeatMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedHeartbeatMessageTimeInterval;
     if (delayHeartbeatMessageTimeInterval > 2.0f) {
-        MBProgressHUD *progressHUD = [MBProgressHUD HUDForView:self.movieGLView];
+        MBProgressHUD *progressHUD;
+        for (MBProgressHUD *hud in [MBProgressHUD allHUDsForView:self.movieGLView]) {
+            if (hud.tag == FDDashboardViewControllerWaitingHeartbeatHUDTag) {
+                progressHUD = hud;
+                break;
+            }
+        }
         if (progressHUD == nil) {
             progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
             progressHUD.labelText = NSLocalizedString(@"Waiting heartbeat message", @"Waiting heartbeat message");
@@ -246,6 +280,8 @@ static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
         self.enabledControls = NO;
         return;
     }
+    
+    [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:YES];
     
     //send control data
     NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
