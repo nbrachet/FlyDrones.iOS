@@ -44,6 +44,13 @@
     [self refreshImageView];
 }
 
+- (void)setEnabled:(BOOL)enabled {
+    [super setEnabled:enabled];
+    if (!enabled) {
+        self.imageView.image = self.notAvailableBatteryImage;
+    }
+}
+
 #pragma mark - Private
 
 - (void)refreshImageView {

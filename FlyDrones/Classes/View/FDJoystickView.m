@@ -95,7 +95,6 @@ typedef NS_ENUM(NSUInteger, FDJoystickViewDirection) {
             
             CFTimeInterval currentTime = CACurrentMediaTime();
             CFTimeInterval delay = currentTime - self.lastMovedEventTimeInterval;
-            NSLog(@"%f", delay);
             if (delay > FDJoystickViewDelayBeforeZeroingDirection) {
                 self.direction = FDJoystickViewDirectionNone;
             }

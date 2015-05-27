@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B0042CA1AEA49C6007B1B35 /* FDConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0042C91AEA49C6007B1B35 /* FDConnectionManager.m */; };
+		1B35F19C1B13839000F42305 /* FDSystemStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B35F19B1B13839000F42305 /* FDSystemStatusViewController.m */; };
 		1B38826F1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B38826E1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.m */; };
 		1B43711C1AFBAA8300004CCD /* FDRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B43711B1AFBAA8300004CCD /* FDRootViewController.m */; };
 		1B43711F1AFBAABD00004CCD /* FDLeftSideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B43711E1AFBAABD00004CCD /* FDLeftSideViewController.m */; };
@@ -40,7 +41,6 @@
 		1BC8F9C11B04E4D9003D5EAC /* NSData+MAVLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BC8F9C01B04E4D9003D5EAC /* NSData+MAVLink.m */; };
 		1BDB2A011AF170F800B2A465 /* FDDroneControlManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A001AF170F800B2A465 /* FDDroneControlManager.m */; };
 		1BDB2A041AF291B000B2A465 /* FDFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A031AF291B000B2A465 /* FDFileReader.m */; };
-		1BDB2A061AF295B000B2A465 /* 2015-04-15 10-57-47.tlog in Resources */ = {isa = PBXBuildFile; fileRef = 1BDB2A051AF295B000B2A465 /* 2015-04-15 10-57-47.tlog */; };
 		1BDB2A0A1AF2C68000B2A465 /* NSString+MAVLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB2A091AF2C68000B2A465 /* NSString+MAVLink.m */; };
 		1BE363D51B00EB8200F880F3 /* FDScaledPressureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE363D41B00EB8200F880F3 /* FDScaledPressureViewController.m */; };
 		1BE363D81B0124C800F880F3 /* FDVFRInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE363D71B0124C800F880F3 /* FDVFRInfoViewController.m */; };
@@ -64,6 +64,8 @@
 		0F276A55EA306C80D69E7558 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B0042C81AEA49C6007B1B35 /* FDConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDConnectionManager.h; sourceTree = "<group>"; };
 		1B0042C91AEA49C6007B1B35 /* FDConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConnectionManager.m; sourceTree = "<group>"; };
+		1B35F19A1B13839000F42305 /* FDSystemStatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSystemStatusViewController.h; sourceTree = "<group>"; };
+		1B35F19B1B13839000F42305 /* FDSystemStatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSystemStatusViewController.m; sourceTree = "<group>"; };
 		1B38826D1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDConnectionSettingsViewController.h; sourceTree = "<group>"; };
 		1B38826E1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConnectionSettingsViewController.m; sourceTree = "<group>"; };
 		1B43711A1AFBAA8300004CCD /* FDRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRootViewController.h; sourceTree = "<group>"; };
@@ -424,7 +426,6 @@
 		1BDB2A001AF170F800B2A465 /* FDDroneControlManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDroneControlManager.m; sourceTree = "<group>"; };
 		1BDB2A021AF291B000B2A465 /* FDFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFileReader.h; sourceTree = "<group>"; };
 		1BDB2A031AF291B000B2A465 /* FDFileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFileReader.m; sourceTree = "<group>"; };
-		1BDB2A051AF295B000B2A465 /* 2015-04-15 10-57-47.tlog */ = {isa = PBXFileReference; lastKnownFileType = file; path = "2015-04-15 10-57-47.tlog"; sourceTree = "<group>"; };
 		1BDB2A081AF2C68000B2A465 /* NSString+MAVLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MAVLink.h"; sourceTree = "<group>"; };
 		1BDB2A091AF2C68000B2A465 /* NSString+MAVLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MAVLink.m"; sourceTree = "<group>"; };
 		1BE363D31B00EB8200F880F3 /* FDScaledPressureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDScaledPressureViewController.h; sourceTree = "<group>"; };
@@ -1059,7 +1060,6 @@
 		371526191A77B59E00F885B8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1BDB2A051AF295B000B2A465 /* 2015-04-15 10-57-47.tlog */,
 				1BED467A1AE56D79008EA8C8 /* Images.xcassets */,
 			);
 			path = Resources;
@@ -1096,6 +1096,8 @@
 				1BE363D71B0124C800F880F3 /* FDVFRInfoViewController.m */,
 				1BE363D91B0124E400F880F3 /* FDLocationInfoViewController.h */,
 				1BE363DA1B0124E400F880F3 /* FDLocationInfoViewController.m */,
+				1B35F19A1B13839000F42305 /* FDSystemStatusViewController.h */,
+				1B35F19B1B13839000F42305 /* FDSystemStatusViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1178,6 +1180,7 @@
 				TargetAttributes = {
 					371525EA1A77B28A00F885B8 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = PVDZWY67J6;
 					};
 				};
 			};
@@ -1206,7 +1209,6 @@
 			files = (
 				1BED468A1AE56DC2008EA8C8 /* LaunchScreen.xib in Resources */,
 				1BED46891AE56DC2008EA8C8 /* Main.storyboard in Resources */,
-				1BDB2A061AF295B000B2A465 /* 2015-04-15 10-57-47.tlog in Resources */,
 				1BED467B1AE56D79008EA8C8 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1291,6 +1293,7 @@
 				1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */,
 				1BE363DB1B0124E400F880F3 /* FDLocationInfoViewController.m in Sources */,
 				1BDB2A011AF170F800B2A465 /* FDDroneControlManager.m in Sources */,
+				1B35F19C1B13839000F42305 /* FDSystemStatusViewController.m in Sources */,
 				1B9552391AE7BBA30054BA0C /* FDVideoFrame.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1351,7 +1354,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
@@ -1388,7 +1391,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -1403,7 +1406,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1416,14 +1419,14 @@
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/FlyDrones/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
+				PROVISIONING_PROFILE = "891fa8f0-988c-42af-ab3d-7690adfc256e";
 			};
 			name = Debug;
 		};
@@ -1433,7 +1436,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1446,14 +1449,14 @@
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/FlyDrones/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
+				PROVISIONING_PROFILE = "891fa8f0-988c-42af-ab3d-7690adfc256e";
 			};
 			name = Release;
 		};

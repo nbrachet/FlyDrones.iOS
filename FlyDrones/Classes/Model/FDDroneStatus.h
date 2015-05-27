@@ -57,6 +57,8 @@ typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
 
 @property (nonatomic, assign) CLLocationCoordinate2D locationCoordinate;
 
+@property (nonatomic, assign) BOOL needSelectArmedMode;
+
 //temponary
 @property (nonatomic, copy) NSString *pathForUDPConnection;
 @property (nonatomic, assign) NSInteger portForUDPConnection;

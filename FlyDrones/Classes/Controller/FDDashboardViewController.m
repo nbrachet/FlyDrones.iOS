@@ -27,7 +27,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 @property (nonatomic, weak) IBOutlet FDBatteryButton *batteryButton;
 @property (nonatomic, weak) IBOutlet FDCompassView *compassView;
 @property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
-@property (nonatomic, weak) IBOutlet UIButton *altitudeButton;
+@property (nonatomic, weak) IBOutlet UIButton *armedStatusButton;
 @property (nonatomic, weak) IBOutlet UIButton *systemStatusButton;
 @property (nonatomic, weak) IBOutlet UIButton *worldwideLocationButton;
 @property (nonatomic, weak) IBOutlet FDJoystickView *leftJoystickView;
@@ -157,11 +157,12 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     _enabledControls = enabledControls;
     
     self.batteryButton.enabled = enabledControls;
-    self.altitudeButton.enabled = enabledControls;
     self.systemStatusButton.enabled = enabledControls;
+    self.armedStatusButton.enabled = enabledControls;
+    self.worldwideLocationButton.enabled = enabledControls && CLLocationCoordinate2DIsValid([FDDroneStatus currentStatus].locationCoordinate);
+    
     self.leftJoystickView.userInteractionEnabled = enabledControls;
     self.rightJoystickView.userInteractionEnabled = enabledControls;
-    
     if (!enabledControls) {
         [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
         [self.leftJoystickView resetPosition];
@@ -186,6 +187,10 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 
 - (IBAction)showBatteryStatus:(id)sender {
     [self performSegueWithIdentifier:@"ShowBatteryStatus" sender:sender];
+}
+
+- (IBAction)armed:(id)sender {
+    [FDDroneStatus currentStatus].needSelectArmedMode = ![FDDroneStatus currentStatus].needSelectArmedMode;
 }
 
 #pragma mark - Private
@@ -346,34 +351,38 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
-//    self.worldwideLocationButton.enabled =  CLLocationCoordinate2DIsValid(locationCoordinate);
+    self.worldwideLocationButton.enabled = self.isEnabledControls && CLLocationCoordinate2DIsValid(locationCoordinate);
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryRemaining:(CGFloat)batteryRemaining current:(CGFloat)current voltage:(CGFloat)voltage {
-    
+    if (!self.isEnabledControls) {
+        return;
+    }
     self.batteryButton.batteryRemainingPercent = batteryRemaining;
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading altitude:(CGFloat)altitude airspeed:(CGFloat)airspeed groundspeed:(CGFloat)groundspeed climbRate:(CGFloat)climbRate throttleSetting:(CGFloat)throttleSetting {
+    if (!self.isEnabledControls) {
+        return;
+    }
     self.compassView.heading = heading;
-
-    NSString *altitudeString = (altitude != FDNotAvailable) ? [NSString stringWithFormat:@"%0.2f m", altitude] : @"N/A";
-    [UIView performWithoutAnimation:^{
-        self.altitudeButton.titleLabel.text = altitudeString;
-        [self.altitudeButton setTitle:altitudeString forState:UIControlStateNormal];
-    }];
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleNavigationInfo:(CGFloat)navigationBearing {
+    if (!self.isEnabledControls) {
+        return;
+    }
     self.compassView.navigationBearing = navigationBearing;
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleHeartbeatInfo:(uint32_t)mavCustomMode mavType:(uint8_t)mavType mavAutopilotType:(uint8_t)mavAutopilotType mavBaseMode:(uint8_t)mavBaseMode mavSystemStatus:(uint8_t)mavSystemStatus {
+    NSLog(@"%s", __FUNCTION__);
     
     [self dissmissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
     
     self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
     self.enabledControls = YES;
+    self.armedStatusButton.selected = (mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) || [FDDroneStatus currentStatus].needSelectArmedMode;
 }
 
 @end

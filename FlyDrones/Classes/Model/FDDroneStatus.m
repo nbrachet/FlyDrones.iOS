@@ -56,6 +56,8 @@
     self.differentialPressure = FDNotAvailable;
     
     self.locationCoordinate = kCLLocationCoordinate2DInvalid;
+    
+    self.needSelectArmedMode = NO;
 }
 
 @end

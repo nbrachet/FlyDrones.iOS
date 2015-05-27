@@ -291,21 +291,21 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
     if (!(currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED)) {
         return nil;
     }
-    if ((currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_MANUAL_INPUT_ENABLED) ||
-        (currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_HIL_ENABLED)) {
-        mavlink_message_t message;
-        mavlink_msg_manual_control_pack(FDDroneControlManagerMavLinkDefaultSystemId,
-                                        FDDroneControlManagerMavLinkDefaultComponentId,
-                                        &message,
-                                        currentStatus.mavType,
-                                        pitch * 1000.0f,
-                                        roll * 1000.0f,
-                                        thrust * 1000.0f,
-                                        yaw * 1000.0f,
-                                        sequenceNumber);
-    
-        return [NSData dataWithMAVLinkMessage:&message];
-    } else if (currentStatus.mavBaseMode & (uint8_t)(MAV_MODE_FLAG_SAFETY_ARMED)) {
+//    if ((currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_MANUAL_INPUT_ENABLED) ||
+//        (currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_HIL_ENABLED)) {
+//        mavlink_message_t message;
+//        mavlink_msg_manual_control_pack(FDDroneControlManagerMavLinkDefaultSystemId,
+//                                        FDDroneControlManagerMavLinkDefaultComponentId,
+//                                        &message,
+//                                        currentStatus.mavType,
+//                                        pitch * 1000.0f,
+//                                        roll * 1000.0f,
+//                                        thrust * 1000.0f,
+//                                        yaw * 1000.0f,
+//                                        sequenceNumber);
+//    
+//        return [NSData dataWithMAVLinkMessage:&message];
+//    } else if (currentStatus.mavBaseMode & (uint8_t)(MAV_MODE_FLAG_SAFETY_ARMED)) {
         @synchronized(currentStatus) {
             if (![currentStatus.paramValues objectForKey:@"RCMAP_PITCH"] ||
                 ![currentStatus.paramValues objectForKey:@"RCMAP_ROLL"] ||
@@ -355,18 +355,27 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
                                                   [rcChannelsRaw[7] integerValue]);
             return [NSData dataWithMAVLinkMessage:&message];
         }
-    }
-    return nil;
+//    }
+//    return nil;
 }
 
 - (NSData *)heartbeatData {
+    FDDroneStatus *currentStatus = [FDDroneStatus currentStatus];
+
+    uint8_t baseMode;
+    if (currentStatus.needSelectArmedMode) {
+        baseMode = MAV_MODE_FLAG_MANUAL_INPUT_ENABLED|MAV_MODE_FLAG_SAFETY_ARMED;
+    } else {
+        baseMode = MAV_MODE_FLAG_MANUAL_INPUT_ENABLED;
+    }
+    
     mavlink_message_t message;
     mavlink_msg_heartbeat_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                                FDDroneControlManagerMavLinkDefaultComponentId,
                                &message,
                                MAV_TYPE_GCS,
                                MAV_AUTOPILOT_INVALID,
-                               MAV_MODE_FLAG_MANUAL_INPUT_ENABLED|MAV_MODE_FLAG_SAFETY_ARMED,
+                               baseMode,
                                0,
                                MAV_STATE_ACTIVE);
     

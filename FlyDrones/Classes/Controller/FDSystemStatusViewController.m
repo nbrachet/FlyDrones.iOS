@@ -38,61 +38,6 @@
 
     NSMutableString *sysStatusString = [NSMutableString string];
     [sysStatusString appendString:NSLocalizedString(@"Base Mode:", @"Base Mode:")];
-    
-    if (currentDroneStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) {
-        [sysStatusString appendString:@"\n - Custom Mode Enabled"];
-        switch (currentDroneStatus.mavBaseMode) {
-            case FDAutoPilotModeAcro:
-                [sysStatusString appendString:@" (ACRO)"];
-                break;
-            case FDAutoPilotModeAltHold:
-                [sysStatusString appendString:@" (ALT_HOLD)"];
-                break;
-            case FDAutoPilotModeAuto:
-                [sysStatusString appendString:@" (AUTO)"];
-                break;
-            case FDAutoPilotModeAutotune:
-                [sysStatusString appendString:@" (AUTOTUNE)"];
-                break;
-            case FDAutoPilotModeCircle:
-                [sysStatusString appendString:@" (CIRCLE)"];
-                break;
-            case FDAutoPilotModeDrift:
-                [sysStatusString appendString:@" (DRIFT)"];
-                break;
-            case FDAutoPilotModeFlip:
-                [sysStatusString appendString:@" (FLIP)"];
-                break;
-            case FDAutoPilotModeGuided:
-                [sysStatusString appendString:@" (GUIDED)"];
-                break;
-            case FDAutoPilotModeLand:
-                [sysStatusString appendString:@" (LAND)"];
-                break;
-            case FDAutoPilotModeLoiter:
-                [sysStatusString appendString:@" (LOITER)"];
-                break;
-            case FDAutoPilotModeOfLoiter:
-                [sysStatusString appendString:@" (OF_LOITER)"];
-                break;
-            case FDAutoPilotModePoshold:
-                [sysStatusString appendString:@" (POSHOLD)"];
-                break;
-            case FDAutoPilotModeRTL:
-                [sysStatusString appendString:@" (RTL)"];
-                break;
-            case FDAutoPilotModeSport:
-                [sysStatusString appendString:@" (SPORT)"];
-                break;
-            case FDAutoPilotModeStabilize:
-                [sysStatusString appendString:@" (STABILIZE)"];
-                break;
-            default:
-                [sysStatusString appendFormat:@" (%d)", currentDroneStatus.mavBaseMode];
-                break;
-        }
-
-    }
     if (currentDroneStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_TEST_ENABLED) {
         [sysStatusString appendString:@"\n - Test Enabled"];
     }
@@ -111,7 +56,59 @@
     if (currentDroneStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) {
         [sysStatusString appendString:@"\n - Safety Armed Enabled"];
     }
-    
+    if (currentDroneStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) {
+        switch (currentDroneStatus.mavBaseMode) {
+            case FDAutoPilotModeAcro:
+                [sysStatusString appendString:@" - ACRO"];
+                break;
+            case FDAutoPilotModeAltHold:
+                [sysStatusString appendString:@" - ALT_HOLD"];
+                break;
+            case FDAutoPilotModeAuto:
+                [sysStatusString appendString:@" - AUTO"];
+                break;
+            case FDAutoPilotModeAutotune:
+                [sysStatusString appendString:@" - AUTOTUNE"];
+                break;
+            case FDAutoPilotModeCircle:
+                [sysStatusString appendString:@" - CIRCLE"];
+                break;
+            case FDAutoPilotModeDrift:
+                [sysStatusString appendString:@" - DRIFT"];
+                break;
+            case FDAutoPilotModeFlip:
+                [sysStatusString appendString:@" - FLIP"];
+                break;
+            case FDAutoPilotModeGuided:
+                [sysStatusString appendString:@" - GUIDED"];
+                break;
+            case FDAutoPilotModeLand:
+                [sysStatusString appendString:@" - LAND"];
+                break;
+            case FDAutoPilotModeLoiter:
+                [sysStatusString appendString:@" - LOITER"];
+                break;
+            case FDAutoPilotModeOfLoiter:
+                [sysStatusString appendString:@" - OF_LOITER"];
+                break;
+            case FDAutoPilotModePoshold:
+                [sysStatusString appendString:@" - POSHOLD"];
+                break;
+            case FDAutoPilotModeRTL:
+                [sysStatusString appendString:@" - RTL"];
+                break;
+            case FDAutoPilotModeSport:
+                [sysStatusString appendString:@" - SPORT"];
+                break;
+            case FDAutoPilotModeStabilize:
+                [sysStatusString appendString:@" - STABILIZE"];
+                break;
+            default:
+                [sysStatusString appendFormat:@" (%d)", currentDroneStatus.mavBaseMode];
+                break;
+        }
+        
+    }
     self.textView.text = sysStatusString;
 }
 

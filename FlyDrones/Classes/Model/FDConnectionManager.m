@@ -113,7 +113,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (void)stopConnecting {
-    NSLog(@"Stop connecting");
+//    NSLog(@"Stop connecting");
 
     @synchronized(self) {
         [self.connectingTimer invalidate];
@@ -125,7 +125,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     NSDictionary *serverInfo = [timer userInfo];
 
     NSData *packetData = [NSData RTCPDataWithVersion:2 packetType:RTCPPacketTypeRR];
-    NSLog(@"Send data: %@", [packetData hexadecimalString]);
+//    NSLog(@"Send data: %@", [packetData hexadecimalString]);
 
     [self.videoAsyncUdpSocket sendData:packetData
                                 toHost:serverInfo[@"host"]
@@ -137,7 +137,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 - (void)closeConnection {
     [self stopConnecting];
 
-    NSLog(@"Close connection");
+//    NSLog(@"Close connection");
     [self.videoAsyncUdpSocket close];
     self.videoAsyncUdpSocket.delegate = nil;
     self.videoAsyncUdpSocket = nil;
@@ -161,7 +161,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 #pragma mark - GCDAsyncUdpSocketDelegate
 
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didConnectToAddress:(NSData *)address {
-    NSLog(@"%s", __FUNCTION__);
+//    NSLog(@"%s", __FUNCTION__);
 }
 
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address withFilterContext:(id)filterContext {
@@ -198,17 +198,17 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (void)udpSocketDidClose:(GCDAsyncUdpSocket *)sock withError:(NSError *)error {
-    NSLog(@"%s", __FUNCTION__);
+//    NSLog(@"%s", __FUNCTION__);
 }
 
 #pragma mark - GCDAsyncSocketDelegate
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
-    NSLog(@"%s", __FUNCTION__);
+//    NSLog(@"%s", __FUNCTION__);
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
-    NSLog(@"%s", __FUNCTION__);
+//    NSLog(@"%s", __FUNCTION__);
 
     [self.controlAsyncSocket readDataWithTimeout:-1 tag:10];
 
@@ -219,7 +219,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
-    NSLog(@"Did send control data");
+//    NSLog(@"Did send control data");
 }
 
 @end
