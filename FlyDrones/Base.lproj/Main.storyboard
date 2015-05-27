@@ -463,7 +463,6 @@
                                             <constraint firstAttribute="width" secondItem="7gQ-0E-RBJ" secondAttribute="height" multiplier="1:1" id="v5m-sB-Blo"/>
                                         </constraints>
                                         <color key="tintColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
-                                        <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" image="Mode">
                                             <color key="titleColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
@@ -768,6 +767,7 @@
                             <constraint firstItem="4ua-c7-tmK" firstAttribute="trailing" secondItem="grR-0U-un5" secondAttribute="trailingMargin" id="ybB-SU-pmj"/>
                         </constraints>
                     </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="200" height="96"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -848,6 +848,7 @@
                             <constraint firstItem="Kcm-ZA-loX" firstAttribute="top" secondItem="CFJ-ap-Vye" secondAttribute="bottom" constant="8" id="ydg-Hj-3at"/>
                         </constraints>
                     </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="302" height="68"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -947,6 +948,7 @@
                             </mask>
                         </variation>
                     </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="320" height="367"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -992,6 +994,7 @@
                             <constraint firstAttribute="trailing" secondItem="fHP-uk-Sdv" secondAttribute="trailing" id="yT0-hS-nSL"/>
                         </constraints>
                     </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="244" height="124"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
