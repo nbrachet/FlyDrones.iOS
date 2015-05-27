@@ -385,8 +385,11 @@
                                                 <real key="value" value="-1"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="image" keyPath="notAvailableBatteryImage" value="BatteryNA"/>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="customTintColor">
+                                            <userDefinedRuntimeAttribute type="color" keyPath="enabledTintColor">
                                                 <color key="value" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="disabledTintColor">
+                                                <color key="value" red="0.37993213380000002" green="0.37993213380000002" blue="0.37993213380000002" alpha="1" colorSpace="calibratedRGB"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <variation key="default">
@@ -495,7 +498,6 @@
                                         <state key="disabled">
                                             <color key="titleColor" red="0.37993213383838365" green="0.37993213383838365" blue="0.37993213383838365" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
-                                        <state key="selected" title="ARM"/>
                                         <connections>
                                             <action selector="armed:" destination="oOi-SA-tRy" eventType="touchUpInside" id="6ct-9c-k42"/>
                                         </connections>

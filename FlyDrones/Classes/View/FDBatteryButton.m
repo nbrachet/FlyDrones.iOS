@@ -15,13 +15,13 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    [self refreshImageView];
+    [self refreshImageViewForce:YES];
 }
 
 - (void)prepareForInterfaceBuilder {
     [super prepareForInterfaceBuilder];
     
-    [self refreshImageView];
+    [self refreshImageViewForce:YES];
 }
 
 #pragma mark - Custom Accessors
@@ -41,25 +41,22 @@
     
     _batteryRemainingPercent = batteryRemainingPercent;
     
-    [self refreshImageView];
+    [self refreshImageViewForce:NO];
 }
 
 - (void)setEnabled:(BOOL)enabled {
+    BOOL prevEnabled = self.enabled;
     [super setEnabled:enabled];
     
-    if (!enabled) {
-        self.imageView.tintColor = [UIColor colorWithWhite:0.4f alpha:1];
-        UIImage *image = [self.notAvailableBatteryImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        self.imageView.image = image;
-    } else {
-        [self refreshImageView];
+    if (enabled != prevEnabled) {
+        [self refreshImageViewForce:YES];
     }
 }
 
 #pragma mark - Private
 
-- (void)refreshImageView {
-    if (!self.enabled) {
+- (void)refreshImageViewForce:(BOOL)forced {
+    if (!self.enabled && !forced) {
         return;
     }
     UIImage *image;
@@ -76,13 +73,10 @@
     } else {
         image = self.fullBatteryImage;
     }
-    self.imageView.tintColor = self.customTintColor;
-    [UIView transitionWithView:self
-                      duration:0.2f
-                       options:UIViewAnimationOptionTransitionCrossDissolve
-                    animations:^{
-                        self.imageView.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-                    } completion:nil];
+    self.imageView.tintColor = self.enabled ? self.enabledTintColor : self.disabledTintColor;
+    [UIView transitionWithView:self duration:0.2f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+        self.imageView.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    } completion:nil];
 }
 
 @end
