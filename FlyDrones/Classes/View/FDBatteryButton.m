@@ -46,14 +46,22 @@
 
 - (void)setEnabled:(BOOL)enabled {
     [super setEnabled:enabled];
+    
     if (!enabled) {
-        self.imageView.image = self.notAvailableBatteryImage;
+        self.imageView.tintColor = [UIColor colorWithWhite:0.4f alpha:1];
+        UIImage *image = [self.notAvailableBatteryImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        self.imageView.image = image;
+    } else {
+        [self refreshImageView];
     }
 }
 
 #pragma mark - Private
 
 - (void)refreshImageView {
+    if (!self.enabled) {
+        return;
+    }
     UIImage *image;
     if (self.batteryRemainingPercent == -1) {
         image = self.notAvailableBatteryImage;
@@ -68,8 +76,13 @@
     } else {
         image = self.fullBatteryImage;
     }
-    
-    self.imageView.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.imageView.tintColor = self.customTintColor;
+    [UIView transitionWithView:self
+                      duration:0.2f
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{
+                        self.imageView.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                    } completion:nil];
 }
 
 @end

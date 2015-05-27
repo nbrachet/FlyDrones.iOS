@@ -23,5 +23,6 @@
 
 @property (nonatomic, assign) IBInspectable CGFloat heading;
 @property (nonatomic, assign) IBInspectable CGFloat navigationBearing;
+@property (nonatomic, assign) BOOL enabled;
 
 @end

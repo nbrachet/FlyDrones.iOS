@@ -19,5 +19,6 @@
 @property (nonatomic, copy) IBInspectable UIImage *emptyBatteryImage;           //  <= 0.1f
 @property (nonatomic, copy) IBInspectable UIImage *notAvailableBatteryImage;    //  -1
 @property (nonatomic, assign) IBInspectable CGFloat batteryRemainingPercent;    //  0..1 or -1
+@property (nonatomic, copy) IBInspectable UIColor *customTintColor;           //  <= 0.1f
 
 @end

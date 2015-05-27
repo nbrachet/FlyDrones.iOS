@@ -21,7 +21,7 @@ def bytes_from_file(filename):
 class App():
     def __init__(self, filename):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind(('0.0.0.0', 5555))
+        s.bind(('0.0.0.0', 5556))
         s.listen(1)
         conn, addr = s.accept()
         print 'Connection address:', addr

@@ -158,6 +158,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     
     self.batteryButton.enabled = enabledControls;
     self.systemStatusButton.enabled = enabledControls;
+    self.compassView.enabled = enabledControls;
     self.armedStatusButton.enabled = enabledControls;
     self.worldwideLocationButton.enabled = enabledControls && CLLocationCoordinate2DIsValid([FDDroneStatus currentStatus].locationCoordinate);
     
@@ -167,6 +168,11 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
         [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
         [self.leftJoystickView resetPosition];
         [self.rightJoystickView resetPosition];
+        
+        [self.armedStatusButton setTitle:@"N/A" forState:UIControlStateNormal];
+    } else {
+        NSString *armedStatusButtonTitle = ([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) || [FDDroneStatus currentStatus].needSelectArmedMode ? @"ARMED" : @"DISARM";
+        [self.armedStatusButton setTitle:armedStatusButtonTitle forState:UIControlStateNormal];
     }
 }
 
@@ -355,23 +361,14 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryRemaining:(CGFloat)batteryRemaining current:(CGFloat)current voltage:(CGFloat)voltage {
-    if (!self.isEnabledControls) {
-        return;
-    }
     self.batteryButton.batteryRemainingPercent = batteryRemaining;
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading altitude:(CGFloat)altitude airspeed:(CGFloat)airspeed groundspeed:(CGFloat)groundspeed climbRate:(CGFloat)climbRate throttleSetting:(CGFloat)throttleSetting {
-    if (!self.isEnabledControls) {
-        return;
-    }
     self.compassView.heading = heading;
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleNavigationInfo:(CGFloat)navigationBearing {
-    if (!self.isEnabledControls) {
-        return;
-    }
     self.compassView.navigationBearing = navigationBearing;
 }
 
@@ -382,7 +379,6 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     
     self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
     self.enabledControls = YES;
-    self.armedStatusButton.selected = (mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) || [FDDroneStatus currentStatus].needSelectArmedMode;
 }
 
 @end

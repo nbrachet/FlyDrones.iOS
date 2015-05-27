@@ -29,6 +29,10 @@
     [self redraw];
 }
 
+- (void)setEnabled:(BOOL)enabled {
+    [self redraw];
+}
+
 #pragma mark - Lifecycle
 
 - (void)drawRect:(CGRect)rect {
@@ -232,6 +236,9 @@
 #pragma mark - Private
 
 - (void)redraw {
+    if (!self.enabled) {
+        return;
+    }
     [self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
 }
 //
