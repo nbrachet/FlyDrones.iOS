@@ -398,10 +398,20 @@
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3fa-i6-kmk" customClass="FDCompassView">
                                         <rect key="frame" x="372" y="12" width="280" height="52"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RzC-gA-E1x">
+                                                <rect key="frame" x="0.0" y="0.0" width="280" height="52"/>
+                                            </imageView>
+                                        </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="tintColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="46" id="7x8-5T-HiJ"/>
+                                            <constraint firstAttribute="trailing" secondItem="RzC-gA-E1x" secondAttribute="trailing" id="CFx-JU-DKR"/>
+                                            <constraint firstItem="RzC-gA-E1x" firstAttribute="leading" secondItem="3fa-i6-kmk" secondAttribute="leading" id="QB2-Wi-oFL"/>
                                             <constraint firstAttribute="width" constant="280" id="bMU-OJ-QJk"/>
+                                            <constraint firstItem="RzC-gA-E1x" firstAttribute="top" secondItem="3fa-i6-kmk" secondAttribute="top" id="qqe-Rw-cpr"/>
+                                            <constraint firstAttribute="bottom" secondItem="RzC-gA-E1x" secondAttribute="bottom" id="wUf-iP-6Fa"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="color" keyPath="bearingChevronColor">
@@ -426,7 +436,10 @@
                                                 <color key="value" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="color" keyPath="lettersColor">
-                                                <color key="value" red="1" green="0.27955386513157893" blue="0.27993935032894735" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="value" red="0.98039215686274506" green="0.11764705882352941" blue="0.11764705882352941" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="navigationBearing">
+                                                <real key="value" value="0.0"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <variation key="default">
@@ -434,6 +447,9 @@
                                                 <exclude reference="7x8-5T-HiJ"/>
                                             </mask>
                                         </variation>
+                                        <connections>
+                                            <outlet property="imageView" destination="RzC-gA-E1x" id="v8u-P6-hU0"/>
+                                        </connections>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CK1-fU-SXs">
                                         <rect key="frame" x="952" y="0.0" width="64" height="64"/>

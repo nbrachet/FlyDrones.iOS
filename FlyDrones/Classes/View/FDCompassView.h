@@ -10,6 +10,7 @@
 
 @interface FDCompassView : UIView
 
+@property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, copy) IBInspectable UIColor *numbersColor;
 @property (nonatomic, copy) IBInspectable UIColor *lettersColor;
 @property (nonatomic, copy) IBInspectable UIColor *centerPointerColor;

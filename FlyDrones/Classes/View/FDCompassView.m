@@ -7,8 +7,23 @@
 //
 
 #import "FDCompassView.h"
+#import "UIImage+Utils.h"
 
 @implementation FDCompassView
+
+#pragma mark - Lifecycle
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    [self redraw];
+}
+
+- (void)prepareForInterfaceBuilder {
+    [super prepareForInterfaceBuilder];
+    
+    [self redraw];
+}
 
 #pragma mark - Custom Accessors
 
@@ -17,7 +32,10 @@
         return;
     }
     _heading = heading;
-    [self redraw];
+    
+    if (self.enabled) {
+        [self redraw];
+    }
 }
 
 - (void)setNavigationBearing:(CGFloat)navigationBearing {
@@ -26,35 +44,59 @@
     }
     
     _navigationBearing = navigationBearing;
-    [self redraw];
+    
+    if (self.enabled) {
+        [self redraw];
+    }
 }
 
 - (void)setEnabled:(BOOL)enabled {
+    if (enabled == _enabled) {
+        return;
+    }
+    
     _enabled = enabled;
-    [self redraw];
+    self.alpha = enabled ? 1.0f : 0.4f;
+
+    if (enabled) {
+        [self redraw];
+    } else {
+        UIImage *grayImage = [self.imageView.image convertToGrayscale];
+        self.imageView.image = grayImage;
+    }
 }
 
-#pragma mark - Lifecycle
+#pragma mark - Private
 
-- (void)drawRect:(CGRect)rect {
-    [super drawRect:rect];
+- (void)redraw {
+    if (!self.enabled) {
+        return;
+    }
     
-    const float oneDegX = 1.0f / 75 * CGRectGetWidth(rect);
-    CGPoint centerPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
+    UIImage *image = [self imageCompassWithSize:self.bounds.size];
+    self.imageView.image = image;
+}
+
+- (UIImage *)imageCompassWithSize:(CGSize)size {
+    size = CGSizeMake(size.width * 2.0f, size.height * 2.0f);
+    const float oneDegX = 1.0f / 75 * size.width;
+    CGPoint centerPoint = CGPointMake(size.width / 2.0f, size.height / 2.0f);
     
-    const float tickBase = centerPoint.y + CGRectGetHeight(rect) / 2.0f - CGRectGetHeight(rect) / 20.0f;
-    const float tickMajorHeight = CGRectGetHeight(rect) / 3.0f;
-    const float tickMinorHeight = CGRectGetHeight(rect) / 6.0f;
-    const float tickWidth = CGRectGetWidth(rect) * 0.01f;
-    const float chevronSide = CGRectGetWidth(rect) * 0.018f;
-    const float fontSize = CGRectGetHeight(rect) * 0.6f;
+    const float tickBase = centerPoint.y + size.height / 2.0f - size.height / 20.0f;
+    const float tickMajorHeight = size.height / 3.0f;
+    const float tickMinorHeight = size.height / 6.0f;
+    const float tickWidth = size.width * 0.01f;
+    const float chevronSide = size.width * 0.018f;
+    const float fontSize = size.height * 0.6f;
+    
+    UIGraphicsBeginImageContext(size);
+
     
     CGContextRef context = UIGraphicsGetCurrentContext();
-    
     //Fill Background
-    CGContextClearRect(context, rect);
+    CGContextClearRect(context, CGRectMake(0.0f, 0.0f, size.width, size.height));
     CGContextSetFillColorWithColor(context, [self.backgroundColor CGColor]);
-    CGContextFillRect(context, rect);
+    CGContextFillRect(context, CGRectMake(0.0f, 0.0f, size.width, size.height));
     
     // Draw text and tick lines
     // Draw 360 degrees, centered on current position.
@@ -76,7 +118,7 @@
     NSDictionary *lettersTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSize],
                                             NSForegroundColorAttributeName: self.lettersColor};
     CGContextSetLineWidth(context, tickWidth);
-
+    
     CGFloat startAngle = ((NSInteger)self.heading - 180) /5 * 5;
     const float startX = centerPoint.x + (startAngle - self.heading) * oneDegX;
     NSInteger angle = (startAngle < 0) ? startAngle += 360 : startAngle;
@@ -86,7 +128,7 @@
         CGContextSetFillColorWithColor(context, [self.numbersColor CGColor]);
         // Find the x position of this tick
         const float x = startX + i * oneDegX;
-        if (x < -20 || x > CGRectGetWidth(rect) + 20) {
+        if (x < -20 || x > size.width + 20) {
             continue;
         }
         
@@ -126,8 +168,8 @@
     CGContextSetShadow (context, CGSizeMake (tickWidth, tickWidth), 2.5f);
     for (NSUInteger i = 0; i < 2; i++) {
         CGContextBeginPath(context);
-        CGContextMoveToPoint(context, centerPoint.x, centerPoint.y - CGRectGetHeight(rect) / 2.0f);
-        CGContextAddLineToPoint(context, centerPoint.x, centerPoint.y + CGRectGetHeight(rect) / 2.0f);
+        CGContextMoveToPoint(context, centerPoint.x, centerPoint.y - size.height / 2.0f);
+        CGContextAddLineToPoint(context, centerPoint.x, centerPoint.y + size.height / 2.0f);
         if (i == 0) {
             CGContextSetLineWidth(context, tickWidth);
             CGContextSetStrokeColorWithColor(context, self.centerPointerBorderColor.CGColor);
@@ -145,22 +187,22 @@
         NSArray *colors;
         if (self.firstGradientColor != nil && self.secondGradientColor != nil) {
             colors = @[(__bridge id)self.firstGradientColor.CGColor,
-                      (__bridge id)self.secondGradientColor.CGColor];
+                       (__bridge id)self.secondGradientColor.CGColor];
         } else if (self.firstGradientColor != nil) {
             colors = @[(__bridge id)self.firstGradientColor.CGColor,
-                      (__bridge id)[UIColor clearColor].CGColor];
+                       (__bridge id)[UIColor clearColor].CGColor];
         } else {
             colors = @[(__bridge id)[UIColor clearColor].CGColor,
-                      (__bridge id)self.secondGradientColor.CGColor];
+                       (__bridge id)self.secondGradientColor.CGColor];
         }
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGFloat locations[] = {0.0, 1.0};
         CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
         for (int i = 0; i < 2; i++) {
-            CGRect subRect = CGRectMake(((i == 0) ? centerPoint.x - CGRectGetWidth(rect)/2 : centerPoint.x + CGRectGetWidth(rect)/6),
-                                        centerPoint.y - CGRectGetHeight(rect)/2,
-                                        CGRectGetWidth(rect)/3,
-                                        CGRectGetHeight(rect));
+            CGRect subRect = CGRectMake(((i == 0) ? centerPoint.x - size.width/2 : centerPoint.x + size.width/6),
+                                        centerPoint.y - size.height/2,
+                                        size.width/3,
+                                        size.height);
             CGPoint startPoint = CGPointMake(CGRectGetMinX(subRect), CGRectGetMinY(subRect));
             CGPoint endPoint = CGPointMake(CGRectGetMaxX(subRect), CGRectGetMinY(subRect));
             if (i == 0) {
@@ -178,10 +220,10 @@
         CGColorSpaceRelease(colorSpace);
     }
     
-    CGRect gaugeBoundary = CGRectMake(centerPoint.x - CGRectGetWidth(rect) / 2.0f,
-                                      centerPoint.y - CGRectGetHeight(rect) / 2.0f,
-                                      CGRectGetWidth(rect),
-                                      CGRectGetHeight(rect));
+    CGRect gaugeBoundary = CGRectMake(centerPoint.x - size.width / 2.0f,
+                                      centerPoint.y - size.height / 2.0f,
+                                      size.width,
+                                      size.height);
     
     // Draw bearing chevron
     if (self.bearingChevronColor != nil) {
@@ -194,17 +236,17 @@
         }
         
         float chevronX = centerPoint.x + bearingError * oneDegX;
-        if (chevronX > centerPoint.x + CGRectGetWidth(rect) / 2.0f) {
-            chevronX = centerPoint.x + CGRectGetWidth(rect) / 2.0f;
+        if (chevronX > centerPoint.x + size.width / 2.0f) {
+            chevronX = centerPoint.x + size.width / 2.0f;
         }
-        if (chevronX < centerPoint.x - CGRectGetWidth(rect) / 2.0f) {
-            chevronX = centerPoint.x - CGRectGetWidth(rect) / 2.0f;
+        if (chevronX < centerPoint.x - size.width / 2.0f) {
+            chevronX = centerPoint.x - size.width / 2.0f;
         }
         CGContextBeginPath(context);
-        CGContextMoveToPoint(context, chevronX, centerPoint.y + CGRectGetHeight(rect) / 2.0f - chevronSide);
-        CGContextAddLineToPoint(context, chevronX + chevronSide, centerPoint.y + CGRectGetHeight(rect) / 2.0f);
-        CGContextAddLineToPoint(context, chevronX - chevronSide, centerPoint.y + CGRectGetHeight(rect) / 2.0f);
-        CGContextAddLineToPoint(context, chevronX, centerPoint.y + CGRectGetHeight(rect) / 2.0f - chevronSide);
+        CGContextMoveToPoint(context, chevronX, centerPoint.y + size.height / 2.0f - chevronSide);
+        CGContextAddLineToPoint(context, chevronX + chevronSide, centerPoint.y + size.height / 2.0f);
+        CGContextAddLineToPoint(context, chevronX - chevronSide, centerPoint.y + size.height / 2.0f);
+        CGContextAddLineToPoint(context, chevronX, centerPoint.y + size.height / 2.0f - chevronSide);
         CGContextSetLineWidth(context, tickWidth / 9.0f);
         CGContextSetFillColorWithColor(context, self.bearingChevronColor.CGColor);
         CGContextSetStrokeColorWithColor(context, ((self.bearingChevronBorderColor != nil) ? self.bearingChevronBorderColor.CGColor : self.bearingChevronColor.CGColor));
@@ -232,22 +274,11 @@
         CGContextSetLineWidth(context, self.borderWidth);
         CGContextStrokePath(context);
     }
+    
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
-#pragma mark - Private
-
-- (void)redraw {
-    if (!self.enabled) {
-        return;
-    }
-    [self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
-}
-//
-//- (float)getTextWidth:(NSString *)text withContext:(CGContextRef)ctx {
-//    CGContextSetTextDrawingMode(ctx, kCGTextInvisible);
-//    CGContextSetTextPosition(ctx, 0, 0);
-//    CGContextShowText(ctx, [text cStringUsingEncoding:NSASCIIStringEncoding], text.length);
-//    CGPoint newPos = CGContextGetTextPosition(ctx);
-//    return newPos.x;
-//}
 @end
