@@ -51,7 +51,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     [super viewDidLoad];
     
     [self customSetup];
-    self.enabledControls = NO;
+    self.enabledControls = YES;
     self.leftJoystickView.mode = FDJoystickViewModeSavedVerticalPosition;
     self.leftJoystickView.isSingleActiveAxis = YES;
 }
@@ -59,6 +59,8 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    self.enabledControls = NO;
+
     self.droneControlManager = [[FDDroneControlManager alloc] init];
     self.droneControlManager.delegate = self;
     
@@ -168,8 +170,6 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
         [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
         [self.leftJoystickView resetPosition];
         [self.rightJoystickView resetPosition];
-        
-        [self.armedStatusButton setTitle:@"N/A" forState:UIControlStateNormal];
     } else {
         NSString *armedStatusButtonTitle = ([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) || [FDDroneStatus currentStatus].needSelectArmedMode ? @"ARMED" : @"DISARM";
         [self.armedStatusButton setTitle:armedStatusButtonTitle forState:UIControlStateNormal];

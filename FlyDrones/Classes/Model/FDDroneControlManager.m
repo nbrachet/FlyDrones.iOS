@@ -188,6 +188,10 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
             mavlink_msg_gps_raw_int_decode(message, &gpsRawIntPkt);
             CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(gpsRawIntPkt.lat/10000000.0f,
                                                                                    gpsRawIntPkt.lon/10000000.0f);
+            if (!CLLocationCoordinate2DIsValid(locationCoordinate)) {
+                break;
+            }
+            
             droneStatus.locationCoordinate = locationCoordinate;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleLocationCoordinateNotification object:self];

@@ -15,13 +15,13 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    [self refreshImageViewForce:YES];
+    [self refreshImageView];
 }
 
 - (void)prepareForInterfaceBuilder {
     [super prepareForInterfaceBuilder];
     
-    [self refreshImageViewForce:YES];
+    [self refreshImageView];
 }
 
 #pragma mark - Custom Accessors
@@ -40,25 +40,24 @@
     }
     
     _batteryRemainingPercent = batteryRemainingPercent;
-    
-    [self refreshImageViewForce:NO];
+    if (self.enabled) {
+        [self refreshImageView];
+    }
 }
 
 - (void)setEnabled:(BOOL)enabled {
-    BOOL prevEnabled = self.enabled;
     [super setEnabled:enabled];
     
-    if (enabled != prevEnabled) {
-        [self refreshImageViewForce:YES];
+    self.tintAdjustmentMode = enabled ? UIViewTintAdjustmentModeNormal : UIViewTintAdjustmentModeDimmed;
+    self.alpha = enabled ? 1.0f : 0.4f;
+    if (enabled) {
+        [self refreshImageView];
     }
 }
 
 #pragma mark - Private
 
-- (void)refreshImageViewForce:(BOOL)forced {
-    if (!self.enabled && !forced) {
-        return;
-    }
+- (void)refreshImageView {
     UIImage *image;
     if (self.batteryRemainingPercent == -1) {
         image = self.notAvailableBatteryImage;
@@ -73,7 +72,6 @@
     } else {
         image = self.fullBatteryImage;
     }
-    self.imageView.tintColor = self.enabled ? self.enabledTintColor : self.disabledTintColor;
     [UIView transitionWithView:self duration:0.2f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         self.imageView.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } completion:nil];

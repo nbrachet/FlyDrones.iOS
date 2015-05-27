@@ -12,14 +12,12 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
+@property (nonatomic, copy) IBInspectable UIImage *notAvailableBatteryImage;    //  -1
 @property (nonatomic, copy) IBInspectable UIImage *fullBatteryImage;            //  > 0.8f
 @property (nonatomic, copy) IBInspectable UIImage *highBatteryImage;            //  <= 0.8f
 @property (nonatomic, copy) IBInspectable UIImage *mediumBatteryImage;          //  <= 0.6f
 @property (nonatomic, copy) IBInspectable UIImage *lowBatteryImage;             //  <= 0.35f
 @property (nonatomic, copy) IBInspectable UIImage *emptyBatteryImage;           //  <= 0.1f
-@property (nonatomic, copy) IBInspectable UIImage *notAvailableBatteryImage;    //  -1
 @property (nonatomic, assign) IBInspectable CGFloat batteryRemainingPercent;    //  0..1 or -1
-@property (nonatomic, copy) IBInspectable UIColor *enabledTintColor;             //  <= 0.1f
-@property (nonatomic, copy) IBInspectable UIColor *disabledTintColor;           //  <= 0.1f
 
 @end

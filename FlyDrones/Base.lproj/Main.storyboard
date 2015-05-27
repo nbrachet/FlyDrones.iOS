@@ -376,6 +376,7 @@
                                             <constraint firstAttribute="trailing" secondItem="JXI-IQ-LyN" secondAttribute="trailing" id="jmU-BE-s9r"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="notAvailableBatteryImage" value="BatteryNA"/>
                                             <userDefinedRuntimeAttribute type="image" keyPath="fullBatteryImage" value="BatteryFull"/>
                                             <userDefinedRuntimeAttribute type="image" keyPath="highBatteryImage" value="BatteryHigh"/>
                                             <userDefinedRuntimeAttribute type="image" keyPath="mediumBatteryImage" value="BatteryMedium"/>
@@ -383,13 +384,6 @@
                                             <userDefinedRuntimeAttribute type="image" keyPath="emptyBatteryImage" value="BatteryEmpty"/>
                                             <userDefinedRuntimeAttribute type="number" keyPath="batteryRemainingPercent">
                                                 <real key="value" value="-1"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="image" keyPath="notAvailableBatteryImage" value="BatteryNA"/>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="enabledTintColor">
-                                                <color key="value" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="disabledTintColor">
-                                                <color key="value" red="0.37993213380000002" green="0.37993213380000002" blue="0.37993213380000002" alpha="1" colorSpace="calibratedRGB"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <variation key="default">
