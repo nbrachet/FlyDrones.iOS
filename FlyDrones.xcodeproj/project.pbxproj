@@ -21,6 +21,8 @@
 		1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E81AD5519300051601 /* NSString+Network.m */; };
 		1B9B07831B17369C00662300 /* UIImage+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B07821B17369C00662300 /* UIImage+Utils.m */; };
 		1B9B07861B173D5100662300 /* FDCustomModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B07851B173D5100662300 /* FDCustomModeViewController.m */; };
+		1B9B078A1B17563300662300 /* FDEnableArmedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B07891B17563300662300 /* FDEnableArmedViewController.m */; };
+		1B9B078D1B17578400662300 /* FDOptionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B078C1B17578400662300 /* FDOptionTableViewCell.m */; };
 		1B9C88C11B0372BC00270E08 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B9C88C01B0372BC00270E08 /* SpriteKit.framework */; };
 		1B9C88C41B0377DB00270E08 /* FDJoystickView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9C88C31B0377DB00270E08 /* FDJoystickView.m */; };
 		1BAC812F1AF101FE00D77B65 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAC812E1AF101FE00D77B65 /* AppDelegate.m */; };
@@ -305,6 +307,10 @@
 		1B9B07821B17369C00662300 /* UIImage+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Utils.m"; sourceTree = "<group>"; };
 		1B9B07841B173D5100662300 /* FDCustomModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCustomModeViewController.h; sourceTree = "<group>"; };
 		1B9B07851B173D5100662300 /* FDCustomModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDCustomModeViewController.m; sourceTree = "<group>"; };
+		1B9B07881B17563300662300 /* FDEnableArmedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDEnableArmedViewController.h; sourceTree = "<group>"; };
+		1B9B07891B17563300662300 /* FDEnableArmedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDEnableArmedViewController.m; sourceTree = "<group>"; };
+		1B9B078B1B17578400662300 /* FDOptionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDOptionTableViewCell.h; sourceTree = "<group>"; };
+		1B9B078C1B17578400662300 /* FDOptionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDOptionTableViewCell.m; sourceTree = "<group>"; };
 		1B9C88C01B0372BC00270E08 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
 		1B9C88C21B0377DB00270E08 /* FDJoystickView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDJoystickView.h; sourceTree = "<group>"; };
 		1B9C88C31B0377DB00270E08 /* FDJoystickView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDJoystickView.m; sourceTree = "<group>"; };
@@ -1103,6 +1109,8 @@
 				1BE363DA1B0124E400F880F3 /* FDLocationInfoViewController.m */,
 				1B9B07841B173D5100662300 /* FDCustomModeViewController.h */,
 				1B9B07851B173D5100662300 /* FDCustomModeViewController.m */,
+				1B9B07881B17563300662300 /* FDEnableArmedViewController.h */,
+				1B9B07891B17563300662300 /* FDEnableArmedViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1120,6 +1128,8 @@
 				1BC5E9011AFD02DC006C5AD1 /* FDCompassView.m */,
 				1B9C88C21B0377DB00270E08 /* FDJoystickView.h */,
 				1B9C88C31B0377DB00270E08 /* FDJoystickView.m */,
+				1B9B078B1B17578400662300 /* FDOptionTableViewCell.h */,
+				1B9B078C1B17578400662300 /* FDOptionTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1295,9 +1305,11 @@
 				1B955E361ACEBBFE00B33BDD /* FDDashboardViewController.m in Sources */,
 				1B43711F1AFBAABD00004CCD /* FDLeftSideViewController.m in Sources */,
 				1B955E331ACEB55500B33BDD /* FDMovieDecoder.m in Sources */,
+				1B9B078D1B17578400662300 /* FDOptionTableViewCell.m in Sources */,
 				371525F11A77B28A00F885B8 /* main.m in Sources */,
 				1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */,
 				1BE363DB1B0124E400F880F3 /* FDLocationInfoViewController.m in Sources */,
+				1B9B078A1B17563300662300 /* FDEnableArmedViewController.m in Sources */,
 				1B9B07831B17369C00662300 /* UIImage+Utils.m in Sources */,
 				1BDB2A011AF170F800B2A465 /* FDDroneControlManager.m in Sources */,
 				1B9552391AE7BBA30054BA0C /* FDVideoFrame.m in Sources */,

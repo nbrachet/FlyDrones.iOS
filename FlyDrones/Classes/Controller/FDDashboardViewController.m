@@ -18,11 +18,12 @@
 #import "FDCompassView.h"
 #import "FDJoystickView.h"
 #import "FDCustomModeViewController.h"
+#import "FDEnableArmedViewController.h"
 
 static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
 static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8411;
 
-@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDCustomModeViewControllerDelegate>
+@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDCustomModeViewControllerDelegate, FDEnableArmedViewControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIButton *menuButton;
 @property (nonatomic, weak) IBOutlet FDBatteryButton *batteryButton;
@@ -156,6 +157,10 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     if ([destinationViewController isKindOfClass:[FDCustomModeViewController class]]) {
         [((FDCustomModeViewController *)destinationViewController) setDelegate:self];
     }
+    if ([destinationViewController isKindOfClass:[FDEnableArmedViewController class]]) {
+        [((FDEnableArmedViewController *)destinationViewController) setDelegate:self];
+    }
+
 }
 
 #pragma mark - Custom Accessors
@@ -176,7 +181,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
         [self.leftJoystickView resetPosition];
         [self.rightJoystickView resetPosition];
     } else {
-        NSString *armedStatusButtonTitle = ([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) || [FDDroneStatus currentStatus].needSelectArmedMode ? @"ARMED" : @"DISARM";
+        NSString *armedStatusButtonTitle = ([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) ? @"ARMED" : @"DISARM";
         [self.armedStatusButton setTitle:armedStatusButtonTitle forState:UIControlStateNormal];
     }
 }
@@ -198,10 +203,6 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 
 - (IBAction)showBatteryStatus:(id)sender {
     [self performSegueWithIdentifier:@"ShowBatteryStatus" sender:sender];
-}
-
-- (IBAction)armed:(id)sender {
-    [FDDroneStatus currentStatus].needSelectArmedMode = ![FDDroneStatus currentStatus].needSelectArmedMode;
 }
 
 #pragma mark - Private
@@ -448,6 +449,13 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 
 - (void)didSelectNewMode:(FDAutoPilotMode)mode {
     NSData *messageData = [self.droneControlManager messageDataWithNewCustomMode:mode];
+    [self.connectionManager sendDataFromTCPConnection:messageData];
+}
+
+#pragma mark - FDEnableArmedViewController
+
+- (void)didEnableArmedStatus:(BOOL)armed {
+    NSData *messageData = [self.droneControlManager messageDataWithArmedEnable:armed];
     [self.connectionManager sendDataFromTCPConnection:messageData];
 }
 

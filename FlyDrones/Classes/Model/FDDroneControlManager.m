@@ -364,22 +364,13 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
 }
 
 - (NSData *)heartbeatData {
-    FDDroneStatus *currentStatus = [FDDroneStatus currentStatus];
-
-    uint8_t baseMode;
-    if (currentStatus.needSelectArmedMode) {
-        baseMode = MAV_MODE_FLAG_MANUAL_INPUT_ENABLED|MAV_MODE_FLAG_SAFETY_ARMED;
-    } else {
-        baseMode = MAV_MODE_FLAG_MANUAL_INPUT_ENABLED;
-    }
-    
     mavlink_message_t message;
     mavlink_msg_heartbeat_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                                FDDroneControlManagerMavLinkDefaultComponentId,
                                &message,
                                MAV_TYPE_GCS,
                                MAV_AUTOPILOT_INVALID,
-                               baseMode,
+                               MAV_MODE_FLAG_MANUAL_INPUT_ENABLED|MAV_MODE_FLAG_SAFETY_ARMED,
                                0,
                                MAV_STATE_ACTIVE);
     
@@ -398,6 +389,26 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
                               MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
                               mode);
     return [NSData dataWithMAVLinkMessage:&message];
+}
+
+- (NSData *)messageDataWithArmedEnable:(BOOL)armed {
+    mavlink_message_t message;
+    mavlink_msg_command_long_pack(FDDroneControlManagerMavLinkDefaultSystemId,
+                                  FDDroneControlManagerMavLinkDefaultComponentId,
+                                  &message,
+                                  MAV_COMP_ID_ALL,
+                                  MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+                                  MAV_CMD_COMPONENT_ARM_DISARM,
+                                  1,
+                                  armed ? 1 : 0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0);
+    return [NSData dataWithMAVLinkMessage:&message];
+
 }
 
 #pragma mark - Private
