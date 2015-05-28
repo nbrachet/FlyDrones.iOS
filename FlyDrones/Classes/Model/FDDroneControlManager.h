@@ -47,5 +47,6 @@ extern NSString * const FDDroneControlManagerDidHandleSystemInfoNotification;
 
 - (NSData *)messageDataWithPitch:(CGFloat)pitch roll:(CGFloat)roll thrust:(CGFloat)thrust yaw:(CGFloat)yaw sequenceNumber:(uint16_t)sequenceNumber;
 - (NSData *)heartbeatData;
+- (NSData *)messageDataWithNewCustomMode:(FDAutoPilotMode)mode;
 
 @end

@@ -17,11 +17,12 @@
 #import "FDDroneStatus.h"
 #import "FDCompassView.h"
 #import "FDJoystickView.h"
+#import "FDCustomModeViewController.h"
 
 static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
 static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8411;
 
-@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate>
+@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDCustomModeViewControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIButton *menuButton;
 @property (nonatomic, weak) IBOutlet FDBatteryButton *batteryButton;
@@ -150,6 +151,10 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     UIPopoverPresentationController *popoverPresentationController = destinationViewController.popoverPresentationController;
     if (popoverPresentationController != nil) {
         popoverPresentationController.backgroundColor = destinationViewController.view.backgroundColor;
+    }
+    
+    if ([destinationViewController isKindOfClass:[FDCustomModeViewController class]]) {
+        [((FDCustomModeViewController *)destinationViewController) setDelegate:self];
     }
 }
 
@@ -409,7 +414,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
                 [sysStatusString appendString:@"LOITER"];
                 break;
             case FDAutoPilotModeOfLoiter:
-                [sysStatusString appendString:@"OF LOITER"];
+                [sysStatusString appendString:@"OF_LOITER"];
                 break;
             case FDAutoPilotModePoshold:
                 [sysStatusString appendString:@"POSHOLD"];
@@ -437,6 +442,13 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     
     self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
     self.enabledControls = YES;
+}
+
+#pragma mark - FDCustomModeViewControllerDelegate
+
+- (void)didSelectNewMode:(FDAutoPilotMode)mode {
+    NSData *messageData = [self.droneControlManager messageDataWithNewCustomMode:mode];
+    [self.connectionManager sendDataFromTCPConnection:messageData];
 }
 
 @end

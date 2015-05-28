@@ -386,6 +386,20 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
     return [NSData dataWithMAVLinkMessage:&message];
 }
 
+- (NSData *)messageDataWithNewCustomMode:(FDAutoPilotMode)mode {
+    if (mode == FDAutoPilotModeNA) {
+        return nil;
+    }
+    mavlink_message_t message;
+    mavlink_msg_set_mode_pack(FDDroneControlManagerMavLinkDefaultSystemId,
+                              FDDroneControlManagerMavLinkDefaultComponentId,
+                              &message,
+                              MAV_COMP_ID_ALL,
+                              MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+                              mode);
+    return [NSData dataWithMAVLinkMessage:&message];
+}
+
 #pragma mark - Private
 
 - (NSInteger)rcValueFromManualControlValue:(CGFloat)value rcChannelIndex:(NSInteger)rcChannelIndex {

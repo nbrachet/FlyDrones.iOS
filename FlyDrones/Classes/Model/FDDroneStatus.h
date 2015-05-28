@@ -25,7 +25,8 @@ typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
     FDAutoPilotModeSport = 13,
     FDAutoPilotModeFlip = 14,
     FDAutoPilotModeAutotune = 15,
-    FDAutoPilotModePoshold = 16
+    FDAutoPilotModePoshold = 16,
+    FDAutoPilotModeNA = 1000,
 };
 
 @interface FDDroneStatus : NSObject
