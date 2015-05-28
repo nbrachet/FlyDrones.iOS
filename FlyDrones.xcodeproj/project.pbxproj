@@ -20,6 +20,7 @@
 		1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E61AD5519300051601 /* NSString+Datetime.m */; };
 		1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E81AD5519300051601 /* NSString+Network.m */; };
 		1B9B07831B17369C00662300 /* UIImage+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B07821B17369C00662300 /* UIImage+Utils.m */; };
+		1B9B07861B173D5100662300 /* FDCustomModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B07851B173D5100662300 /* FDCustomModeViewController.m */; };
 		1B9C88C11B0372BC00270E08 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B9C88C01B0372BC00270E08 /* SpriteKit.framework */; };
 		1B9C88C41B0377DB00270E08 /* FDJoystickView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9C88C31B0377DB00270E08 /* FDJoystickView.m */; };
 		1BAC812F1AF101FE00D77B65 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAC812E1AF101FE00D77B65 /* AppDelegate.m */; };
@@ -302,6 +303,8 @@
 		1B97E9E81AD5519300051601 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
 		1B9B07811B17369C00662300 /* UIImage+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Utils.h"; sourceTree = "<group>"; };
 		1B9B07821B17369C00662300 /* UIImage+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Utils.m"; sourceTree = "<group>"; };
+		1B9B07841B173D5100662300 /* FDCustomModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCustomModeViewController.h; sourceTree = "<group>"; };
+		1B9B07851B173D5100662300 /* FDCustomModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDCustomModeViewController.m; sourceTree = "<group>"; };
 		1B9C88C01B0372BC00270E08 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
 		1B9C88C21B0377DB00270E08 /* FDJoystickView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDJoystickView.h; sourceTree = "<group>"; };
 		1B9C88C31B0377DB00270E08 /* FDJoystickView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDJoystickView.m; sourceTree = "<group>"; };
@@ -1098,6 +1101,8 @@
 				1BE363D71B0124C800F880F3 /* FDVFRInfoViewController.m */,
 				1BE363D91B0124E400F880F3 /* FDLocationInfoViewController.h */,
 				1BE363DA1B0124E400F880F3 /* FDLocationInfoViewController.m */,
+				1B9B07841B173D5100662300 /* FDCustomModeViewController.h */,
+				1B9B07851B173D5100662300 /* FDCustomModeViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1180,6 +1185,7 @@
 				TargetAttributes = {
 					371525EA1A77B28A00F885B8 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = PVDZWY67J6;
 					};
 				};
 			};
@@ -1267,6 +1273,7 @@
 			files = (
 				1BE363D81B0124C800F880F3 /* FDVFRInfoViewController.m in Sources */,
 				1BC5E8FB1AFCEAAA006C5AD1 /* FDDroneStatus.m in Sources */,
+				1B9B07861B173D5100662300 /* FDCustomModeViewController.m in Sources */,
 				1BB00CA21AEE6D9900FF787B /* NSData+RTCP.m in Sources */,
 				1BE363D51B00EB8200F880F3 /* FDScaledPressureViewController.m in Sources */,
 				1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */,
@@ -1405,7 +1412,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1425,7 +1432,7 @@
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
+				PROVISIONING_PROFILE = "891fa8f0-988c-42af-ab3d-7690adfc256e";
 			};
 			name = Debug;
 		};
@@ -1435,7 +1442,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1455,7 +1462,7 @@
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
+				PROVISIONING_PROFILE = "891fa8f0-988c-42af-ab3d-7690adfc256e";
 			};
 			name = Release;
 		};
