@@ -375,6 +375,64 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleHeartbeatInfo:(uint32_t)mavCustomMode mavType:(uint8_t)mavType mavAutopilotType:(uint8_t)mavAutopilotType mavBaseMode:(uint8_t)mavBaseMode mavSystemStatus:(uint8_t)mavSystemStatus {
     NSLog(@"%s", __FUNCTION__);
     
+    NSMutableString *sysStatusString = [NSMutableString string];
+    if (mavBaseMode & (uint8_t)MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) {
+        switch (mavCustomMode) {
+            case FDAutoPilotModeAcro:
+                [sysStatusString appendString:@"ACRO"];
+                break;
+            case FDAutoPilotModeAltHold:
+                [sysStatusString appendString:@"ALT_HOLD"];
+                break;
+            case FDAutoPilotModeAuto:
+                [sysStatusString appendString:@"AUTO"];
+                break;
+            case FDAutoPilotModeAutotune:
+                [sysStatusString appendString:@"AUTOTUNE"];
+                break;
+            case FDAutoPilotModeCircle:
+                [sysStatusString appendString:@"CIRCLE"];
+                break;
+            case FDAutoPilotModeDrift:
+                [sysStatusString appendString:@"DRIFT"];
+                break;
+            case FDAutoPilotModeFlip:
+                [sysStatusString appendString:@"FLIP"];
+                break;
+            case FDAutoPilotModeGuided:
+                [sysStatusString appendString:@"GUIDED"];
+                break;
+            case FDAutoPilotModeLand:
+                [sysStatusString appendString:@"LAND"];
+                break;
+            case FDAutoPilotModeLoiter:
+                [sysStatusString appendString:@"LOITER"];
+                break;
+            case FDAutoPilotModeOfLoiter:
+                [sysStatusString appendString:@"OF LOITER"];
+                break;
+            case FDAutoPilotModePoshold:
+                [sysStatusString appendString:@"POSHOLD"];
+                break;
+            case FDAutoPilotModeRTL:
+                [sysStatusString appendString:@"RTL"];
+                break;
+            case FDAutoPilotModeSport:
+                [sysStatusString appendString:@"SPORT"];
+                break;
+            case FDAutoPilotModeStabilize:
+                [sysStatusString appendString:@"STABILIZE"];
+                break;
+            default:
+                [sysStatusString appendFormat:@"N/A (%d)", mavCustomMode];
+                break;
+        }
+    } else {
+        [sysStatusString appendString:@"N/A"];
+    }
+
+    [self.systemStatusButton setTitle:sysStatusString forState:UIControlStateNormal];
+
     [self dissmissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
     
     self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
