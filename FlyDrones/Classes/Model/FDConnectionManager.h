@@ -13,7 +13,7 @@
 @protocol FDConnectionManagerDelegate <NSObject>
 
 @optional
-- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveData:(NSData *)data;
+- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveUDPData:(NSData *)data;
 - (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveTCPData:(NSData *)data;
 
 @end
@@ -26,8 +26,10 @@
 
 - (void)closeConnection;
 
-- (BOOL)isConnected;
+- (BOOL)isTCPConnected;
 
 - (BOOL)receiveTCPServer:(NSString *)host port:(NSUInteger)port;
+
+- (BOOL)sendDataFromTCPConnection:(NSData *)data;
 
 @end

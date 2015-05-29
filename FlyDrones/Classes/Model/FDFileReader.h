@@ -10,13 +10,9 @@
 
 @interface FDFileReader : NSObject
 
-//@property (nonatomic, )
-
 - (id)initWithFilePath:(NSString *)path;
 - (NSData *)readBytes:(NSUInteger)count;
-//- (NSString *)readLine;
-//- (NSString *)readTrimmedLine;
-//
+
 #if NS_BLOCKS_AVAILABLE
 - (void)asyncEnumerateBytesUsingBlock:(void(^)(NSData *data, BOOL *stop))block;
 #endif

@@ -12,23 +12,36 @@
 #import "FDDisplayInfoView.h"
 #import "FDConnectionManager.h"
 #import "FDDroneControlManager.h"
+#import <SWRevealViewController/SWRevealViewController.h>
+#import "FDBatteryButton.h"
+#import "FDDroneStatus.h"
+#import "FDCompassView.h"
+#import "FDJoystickView.h"
+#import "FDCustomModeViewController.h"
+#import "FDEnableArmedViewController.h"
 
-@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate>
+static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
+static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8411;
 
+@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDCustomModeViewControllerDelegate, FDEnableArmedViewControllerDelegate>
+
+@property (nonatomic, weak) IBOutlet UIButton *menuButton;
+@property (nonatomic, weak) IBOutlet FDBatteryButton *batteryButton;
+@property (nonatomic, weak) IBOutlet FDCompassView *compassView;
 @property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
-@property (nonatomic, weak) IBOutlet UILabel *locationLabel;
-@property (nonatomic, weak) IBOutlet UILabel *batteryRemainingLabel;
-@property (nonatomic, weak) IBOutlet UILabel *batteryCurrentLabel;
-@property (nonatomic, weak) IBOutlet UILabel *batteryVoltageLabel;
-@property (nonatomic, weak) IBOutlet UILabel *attitudeStatusLabel;
-@property (nonatomic, weak) IBOutlet UILabel *altitudeLabel;
+@property (nonatomic, weak) IBOutlet UIButton *armedStatusButton;
+@property (nonatomic, weak) IBOutlet UIButton *systemStatusButton;
+@property (nonatomic, weak) IBOutlet UIButton *worldwideLocationButton;
+@property (nonatomic, weak) IBOutlet FDJoystickView *leftJoystickView;
+@property (nonatomic, weak) IBOutlet FDJoystickView *rightJoystickView;
 
-@property (nonatomic, weak) IBOutlet UITextView *outputTextView;
+@property (nonatomic, assign, getter=isEnabledControls) BOOL enabledControls;
 
 @property (nonatomic, strong) FDConnectionManager *connectionManager;
 @property (nonatomic, strong) FDMovieDecoder *movieDecoder;
-
 @property (nonatomic, strong) FDDroneControlManager *droneControlManager;
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, assign) CFTimeInterval lastReceivedHeartbeatMessageTimeInterval;
 
 @end
 
@@ -38,41 +51,92 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    self.connectionManager = [[FDConnectionManager alloc] init];
-    self.connectionManager.delegate = self;
+    
+    [self customSetup];
+    self.enabledControls = YES;
+    self.leftJoystickView.mode = FDJoystickViewModeSavedVerticalPosition;
+    self.leftJoystickView.isSingleActiveAxis = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    self.enabledControls = NO;
+
+    self.droneControlManager = [[FDDroneControlManager alloc] init];
+    self.droneControlManager.delegate = self;
+    
+    if (![self.timer isValid]) {
+        [self startTimer];
+    }
+    [self registerForNotifications];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-
-    BOOL isConnected = [self.connectionManager connectToServer:self.hostForConnection portForConnection:self.portForConnection portForReceived:self.portForReceived];
-    if (!isConnected) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:@"Used port is blocked. Please shut all of the applications that use data streaming"
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+- (void)connectToServers {
+    if (self.connectionManager == nil) {
+        self.connectionManager = [[FDConnectionManager alloc] init];
+        self.connectionManager.delegate = self;
+        
+        BOOL isConnectedToUDPServer = [self.connectionManager connectToServer:[FDDroneStatus currentStatus].pathForUDPConnection
+                                                            portForConnection:[FDDroneStatus currentStatus].portForUDPConnection
+                                                              portForReceived:[FDDroneStatus currentStatus].portForUDPConnection];
+        if (!isConnectedToUDPServer) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:@"Used UDP port is blocked. Please shut all of the applications that use data streaming"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
     }
-    [self.connectionManager receiveTCPServer:self.hostForTCPConnection port:self.portForTCPConnection];
     
-//    [self.droneControlManager parseLogFile:@"2015-04-15 10-57-47" ofType:@"tlog"];
+        
+    
+    if (![self.connectionManager isTCPConnected]) {
+        self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
+        self.enabledControls = NO;
+        
+        MBProgressHUD *progressHUD;
+        for (MBProgressHUD *hud in [MBProgressHUD allHUDsForView:self.movieGLView]) {
+            if (hud.tag == FDDashboardViewControllerConnectingToTCPServerHUDTag) {
+                progressHUD = hud;
+            } else {
+                [MBProgressHUD hideHUDForView:hud animated:NO];
+            }
+        }
+        if (progressHUD == nil) {
+            MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
+            progressHUD.labelText = NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server");
+            progressHUD.tag = FDDashboardViewControllerConnectingToTCPServerHUDTag;
+        }
+
+        BOOL isConnectedToTCPServer = [self.connectionManager receiveTCPServer:[FDDroneStatus currentStatus].pathForTCPConnection
+                                                                          port:[FDDroneStatus currentStatus].portForTCPConnection];
+        if (!isConnectedToTCPServer) {
+            [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:YES];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:@"Used TCP port is blocked. Please shut all of the applications that use data streaming"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
+    [self stopTimer];
+    [self unregisterFromNotifications];
+    
     [self.connectionManager closeConnection];
     self.connectionManager = nil;
-    
     self.movieDecoder = nil;
     self.droneControlManager = nil;
+    
+    [[FDDroneStatus currentStatus] clearStatus];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -83,21 +147,182 @@
     return YES;
 }
 
-#pragma mark - Public
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    UIViewController *destinationViewController = segue.destinationViewController;
+    UIPopoverPresentationController *popoverPresentationController = destinationViewController.popoverPresentationController;
+    if (popoverPresentationController != nil) {
+        popoverPresentationController.backgroundColor = destinationViewController.view.backgroundColor;
+    }
+    
+    if ([destinationViewController isKindOfClass:[FDCustomModeViewController class]]) {
+        [((FDCustomModeViewController *)destinationViewController) setDelegate:self];
+    }
+    if ([destinationViewController isKindOfClass:[FDEnableArmedViewController class]]) {
+        [((FDEnableArmedViewController *)destinationViewController) setDelegate:self];
+    }
 
+}
+
+#pragma mark - Custom Accessors
+
+- (void)setEnabledControls:(BOOL)enabledControls {
+    _enabledControls = enabledControls;
+    
+    self.batteryButton.enabled = enabledControls;
+    self.systemStatusButton.enabled = enabledControls;
+    self.compassView.enabled = enabledControls;
+    self.armedStatusButton.enabled = enabledControls;
+    self.worldwideLocationButton.enabled = enabledControls && CLLocationCoordinate2DIsValid([FDDroneStatus currentStatus].locationCoordinate);
+    
+    self.leftJoystickView.userInteractionEnabled = enabledControls;
+    self.rightJoystickView.userInteractionEnabled = enabledControls;
+    if (!enabledControls) {
+        [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
+        [self.leftJoystickView resetPosition];
+        [self.rightJoystickView resetPosition];
+    } else {
+        NSString *armedStatusButtonTitle = ([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) ? @"ARMED" : @"DISARM";
+        [self.armedStatusButton setTitle:armedStatusButtonTitle forState:UIControlStateNormal];
+    }
+}
+
+#pragma mark - UIStateRestoration
+
+- (void)applicationFinishedRestoringState {
+    [super applicationFinishedRestoringState];
+    [self customSetup];
+}
 
 #pragma mark - IBActions
 
-- (IBAction)back:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+- (IBAction)menu:(id)sender {
+    if (self.revealViewController != nil) {
+        [self.revealViewController revealToggle:sender];
+    }
+}
+
+- (IBAction)showBatteryStatus:(id)sender {
+    [self performSegueWithIdentifier:@"ShowBatteryStatus" sender:sender];
 }
 
 #pragma mark - Private
 
+- (void)customSetup {
+    if (self.revealViewController != nil) {
+        [self.navigationController.navigationBar addGestureRecognizer:self.revealViewController.panGestureRecognizer];
+    }
+}
+
+- (void)registerForNotifications {
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(applicationDidEnterBackground)
+                                                name:UIApplicationDidEnterBackgroundNotification
+                                              object:nil];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(applicationDidBecomeActive)
+                                                name:UIApplicationDidBecomeActiveNotification
+                                              object:nil];
+}
+
+- (void)unregisterFromNotifications {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)applicationDidEnterBackground {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self stopTimer];
+    [self.connectionManager closeConnection];
+    self.connectionManager = nil;
+}
+
+- (void)applicationDidBecomeActive {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self connectToServers];
+    [self startTimer];
+}
+
+- (void)startTimer {
+    self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
+
+    [self stopTimer];
+    
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1f
+                                                  target:self
+                                                selector:@selector(timerTick:)
+                                                userInfo:nil
+                                                 repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
+}
+
+- (void)stopTimer {
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+- (void)timerTick:(NSTimer *)timer {
+    static NSUInteger tickCounter = 0;
+    tickCounter++;
+    
+    if (![self.connectionManager isTCPConnected]) {
+        if ((tickCounter % 15 == 0)) {
+            [self connectToServers];
+        }
+        return;
+    }
+    
+    if (tickCounter % 10 == 0) {
+        [self.connectionManager sendDataFromTCPConnection:[self.droneControlManager heartbeatData]];
+    }
+    
+    CFTimeInterval delayHeartbeatMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedHeartbeatMessageTimeInterval;
+    if (delayHeartbeatMessageTimeInterval > 2.0f) {
+        MBProgressHUD *progressHUD;
+        for (MBProgressHUD *hud in [MBProgressHUD allHUDsForView:self.movieGLView]) {
+            if (hud.tag == FDDashboardViewControllerWaitingHeartbeatHUDTag) {
+                progressHUD = hud;
+                break;
+            }
+        }
+        if (progressHUD == nil) {
+            progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
+            progressHUD.labelText = NSLocalizedString(@"Waiting heartbeat message", @"Waiting heartbeat message");
+            progressHUD.tag = FDDashboardViewControllerWaitingHeartbeatHUDTag;
+        }
+        progressHUD.detailsLabelText = [NSString stringWithFormat:@"%.1f sec", delayHeartbeatMessageTimeInterval];
+        self.enabledControls = NO;
+        return;
+    }
+    
+    [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:YES];
+    
+    //send control data
+    NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
+                                                                    roll:self.rightJoystickView.stickHorisontalValue
+                                                                  thrust:self.leftJoystickView.stickVerticalValue
+                                                                     yaw:self.leftJoystickView.stickHorisontalValue
+                                                          sequenceNumber:1];
+    [self.connectionManager sendDataFromTCPConnection:controlData];
+}
+
+- (void)dissmissProgressHUDForTag:(NSUInteger)tag {
+    for (UIView *hudView in [MBProgressHUD allHUDsForView:self.movieGLView]) {
+        if (hudView.tag == tag) {
+            [hudView removeFromSuperview];
+            break;
+        }
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    //    [self back:nil];
+}
 
 #pragma mark - FDConnectionManagerDelegate
 
-- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveData:(NSData *)data {
+- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveUDPData:(NSData *)data {
     if (data.length == 0) {
         return;
     }
@@ -112,11 +337,6 @@
 - (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveTCPData:(NSData *)data {
     if (data.length == 0) {
         return;
-    }
-    
-    if (self.droneControlManager == nil) {
-        self.droneControlManager = [[FDDroneControlManager alloc] init];
-        self.droneControlManager.delegate = self;
     }
     
     [self.droneControlManager parseInputData:data];
@@ -136,77 +356,107 @@
     });
 }
 
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    [self back:nil];
-}
-
 #pragma mark - FDDroneControlManagerDelegate
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didParseMessage:(NSString *)messageDescription {
-    NSLog(@"%@", messageDescription);
-
-    if (self.outputTextView.text.length == 0) {
-        self.outputTextView.text = messageDescription;
-    } else {
-        self.outputTextView.text = [self.outputTextView.text stringByAppendingFormat:@"\n%@", messageDescription];
-    }
-    self.outputTextView.textColor = [UIColor whiteColor];
-    
-    [self.outputTextView scrollRangeToVisible:NSMakeRange(self.outputTextView.text.length, 0)];
-}
-
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryRemaining:(NSInteger)batteryRemaining current:(CGFloat)current voltage:(CGFloat)voltage {
-    NSMutableString *batteryRemainingString = [NSMutableString stringWithString:@"Battery Remaining: "];
-    if (batteryRemaining == -1) {
-        [batteryRemainingString appendString:@"unknown"];
-    } else {
-        [batteryRemainingString appendFormat:@"%ld%%", (long)batteryRemaining];
-    }
-    self.batteryRemainingLabel.text = batteryRemainingString;
-    
-    NSMutableString *batteryCurrentString = [NSMutableString stringWithString:@"Battery Current: "];
-    if (current == -1) {
-        [batteryCurrentString appendString:@"unknown"];
-    } else {
-        [batteryCurrentString appendFormat:@"%0.3fA", current];
-    }
-    self.batteryCurrentLabel.text = batteryCurrentString;
-    
-    NSMutableString *batteryVoltageString = [NSMutableString stringWithString:@"Battery Voltage: "];
-    if (voltage == -1) {
-        [batteryVoltageString appendString:@"unknown"];
-    } else {
-        [batteryVoltageString appendFormat:@"%0.3fV", voltage];
-    }
-    self.batteryVoltageLabel.text = batteryVoltageString;
+//    NSLog(@"%@", messageDescription);
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
-    NSMutableString *location = [NSMutableString stringWithString:@"Location Coordinate: "];
-    if (locationCoordinate.latitude == 0.0f || locationCoordinate.longitude == 0.0f) {
-        [location appendString:@"unknown"];
+    self.worldwideLocationButton.enabled = self.isEnabledControls && CLLocationCoordinate2DIsValid(locationCoordinate);
+}
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryRemaining:(CGFloat)batteryRemaining current:(CGFloat)current voltage:(CGFloat)voltage {
+    self.batteryButton.batteryRemainingPercent = batteryRemaining;
+}
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading altitude:(CGFloat)altitude airspeed:(CGFloat)airspeed groundspeed:(CGFloat)groundspeed climbRate:(CGFloat)climbRate throttleSetting:(CGFloat)throttleSetting {
+    self.compassView.heading = heading;
+}
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleNavigationInfo:(CGFloat)navigationBearing {
+    self.compassView.navigationBearing = navigationBearing;
+}
+
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleHeartbeatInfo:(uint32_t)mavCustomMode mavType:(uint8_t)mavType mavAutopilotType:(uint8_t)mavAutopilotType mavBaseMode:(uint8_t)mavBaseMode mavSystemStatus:(uint8_t)mavSystemStatus {
+    NSLog(@"%s", __FUNCTION__);
+    
+    NSMutableString *sysStatusString = [NSMutableString string];
+    if (mavBaseMode & (uint8_t)MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) {
+        switch (mavCustomMode) {
+            case FDAutoPilotModeAcro:
+                [sysStatusString appendString:@"ACRO"];
+                break;
+            case FDAutoPilotModeAltHold:
+                [sysStatusString appendString:@"ALT_HOLD"];
+                break;
+            case FDAutoPilotModeAuto:
+                [sysStatusString appendString:@"AUTO"];
+                break;
+            case FDAutoPilotModeAutotune:
+                [sysStatusString appendString:@"AUTOTUNE"];
+                break;
+            case FDAutoPilotModeCircle:
+                [sysStatusString appendString:@"CIRCLE"];
+                break;
+            case FDAutoPilotModeDrift:
+                [sysStatusString appendString:@"DRIFT"];
+                break;
+            case FDAutoPilotModeFlip:
+                [sysStatusString appendString:@"FLIP"];
+                break;
+            case FDAutoPilotModeGuided:
+                [sysStatusString appendString:@"GUIDED"];
+                break;
+            case FDAutoPilotModeLand:
+                [sysStatusString appendString:@"LAND"];
+                break;
+            case FDAutoPilotModeLoiter:
+                [sysStatusString appendString:@"LOITER"];
+                break;
+            case FDAutoPilotModeOfLoiter:
+                [sysStatusString appendString:@"OF_LOITER"];
+                break;
+            case FDAutoPilotModePoshold:
+                [sysStatusString appendString:@"POSHOLD"];
+                break;
+            case FDAutoPilotModeRTL:
+                [sysStatusString appendString:@"RTL"];
+                break;
+            case FDAutoPilotModeSport:
+                [sysStatusString appendString:@"SPORT"];
+                break;
+            case FDAutoPilotModeStabilize:
+                [sysStatusString appendString:@"STABILIZE"];
+                break;
+            default:
+                [sysStatusString appendFormat:@"N/A (%d)", mavCustomMode];
+                break;
+        }
     } else {
-        [location appendFormat:@"%f %f", locationCoordinate.latitude, locationCoordinate.longitude];
+        [sysStatusString appendString:@"N/A"];
     }
-    self.locationLabel.text = location;
+
+    [self.systemStatusButton setTitle:sysStatusString forState:UIControlStateNormal];
+
+    [self dissmissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
+    
+    self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
+    self.enabledControls = YES;
 }
 
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading airspeed:(CGFloat)airspeed altitude:(CGFloat)altitude {
-    
-    
-    self.altitudeLabel.text = [NSString stringWithFormat:@"Altitude: %0.2f", altitude];
+#pragma mark - FDCustomModeViewControllerDelegate
+
+- (void)didSelectNewMode:(FDAutoPilotMode)mode {
+    NSData *messageData = [self.droneControlManager messageDataWithNewCustomMode:mode];
+    [self.connectionManager sendDataFromTCPConnection:messageData];
 }
 
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleAttitudeRoll:(CGFloat)roll pitch:(CGFloat)pitch yaw:(CGFloat)yaw rollspeed:(CGFloat)rollspeed pitchspeed:(CGFloat)pitchspeed yawspeed:(CGFloat)yawspeed {
-    
-    NSMutableString *attitudeStatusString = [NSMutableString string];
-    [attitudeStatusString appendFormat:@"Roll:  %f\n", roll];
-    [attitudeStatusString appendFormat:@"Pitch: %f\n", pitch];
-    [attitudeStatusString appendFormat:@"Yaw:   %f", yaw];
-    
-    self.attitudeStatusLabel.text = attitudeStatusString;
+#pragma mark - FDEnableArmedViewController
+
+- (void)didEnableArmedStatus:(BOOL)armed {
+    NSData *messageData = [self.droneControlManager messageDataWithArmedEnable:armed];
+    [self.connectionManager sendDataFromTCPConnection:messageData];
 }
 
 @end

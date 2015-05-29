@@ -16,14 +16,20 @@
 #import <Availability.h>
 #import <CoreLocation/CoreLocation.h>
 
+#import "mavlink.h"
+#import "mavlink_types.h"
+#import "NSString+MAVLink.h"
+#import "NSData+MAVLink.h"
+#import <MBProgressHUD/MBProgressHUD.h>
+
 #endif
 
-#import "mavlink.h"
+
 
 #pragma GCC diagnostic ignored "-Wwarning-flag"
 
 //#ifdef DEBUG
 //#define NSLog(__FORMAT__, ...) NSLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 //#else
-//    #define NSLog(...)
+    #define NSLog(...)
 //#endif
