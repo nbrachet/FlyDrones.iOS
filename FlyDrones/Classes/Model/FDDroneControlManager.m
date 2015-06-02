@@ -16,8 +16,9 @@ NSString * const FDDroneControlManagerDidHandleVFRInfoNotification = @"didHandle
 NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotification = @"didHandleLocationCoordinate";
 NSString * const FDDroneControlManagerDidHandleSystemInfoNotification = @"didHandleSystemInfo";
 
-CGFloat static const FDDroneControlManagerMavLinkDefaultSystemId = 255;
+CGFloat static const FDDroneControlManagerMavLinkDefaultSystemId = 1;
 CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
+CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 
 @interface FDDroneControlManager () {
     mavlink_message_t msg;
@@ -347,7 +348,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
             mavlink_msg_rc_channels_override_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                                                   FDDroneControlManagerMavLinkDefaultComponentId,
                                                   &message,
-                                                  msg.sysid,
+                                                  FDDroneControlManagerMavLinkDefaultTargetSystem,
                                                   MAV_COMP_ID_ALL,
                                                   [rcChannelsRaw[0] integerValue],
                                                   [rcChannelsRaw[1] integerValue],
@@ -385,7 +386,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
     mavlink_msg_set_mode_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                               FDDroneControlManagerMavLinkDefaultComponentId,
                               &message,
-                              MAV_COMP_ID_ALL,
+                              FDDroneControlManagerMavLinkDefaultTargetSystem,
                               MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
                               mode);
     return [NSData dataWithMAVLinkMessage:&message];
@@ -396,8 +397,8 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
     mavlink_msg_command_long_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                                   FDDroneControlManagerMavLinkDefaultComponentId,
                                   &message,
+                                  FDDroneControlManagerMavLinkDefaultTargetSystem,
                                   MAV_COMP_ID_ALL,
-                                  MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
                                   MAV_CMD_COMPONENT_ARM_DISARM,
                                   1,
                                   armed ? 1 : 0,

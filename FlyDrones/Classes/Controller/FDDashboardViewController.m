@@ -181,7 +181,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
         [self.leftJoystickView resetPosition];
         [self.rightJoystickView resetPosition];
     } else {
-        NSString *armedStatusButtonTitle = ([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) ? @"ARMED" : @"DISARM";
+        NSString *armedStatusButtonTitle = ([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) ? @"ARM" : @"DISARM";
         [self.armedStatusButton setTitle:armedStatusButtonTitle forState:UIControlStateNormal];
     }
 }

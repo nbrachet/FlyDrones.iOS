@@ -80,7 +80,7 @@
     static NSString *CellIdentifier = @"ArmedOptionCellIdentifier";
     
     FDOptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    cell.optionTextLabel.text = ([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) ? @"DISARMED" : @"ARMED";
+    cell.optionTextLabel.text = ([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) ? @"DISARM" : @"ARM";
     return cell;
 }
 
