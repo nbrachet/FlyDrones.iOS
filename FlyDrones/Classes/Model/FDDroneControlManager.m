@@ -127,8 +127,6 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
             droneStatus.absolutePressure = scaledPressure.press_abs;
             droneStatus.differentialPressure = scaledPressure.press_diff;
             
-            
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleScaledPressureInfoNotification object:self];
                 
@@ -136,6 +134,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                     [self.delegate droneControlManager:self didHandleScaledPressureInfo:droneStatus.temperature absolutePressure:droneStatus.absolutePressure differentialPressure:droneStatus.differentialPressure];
                 }
             });
+            break;
         }
         //not in use temporarily
 //        case MAVLINK_MSG_ID_BATTERY_STATUS: {
@@ -178,13 +177,13 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                                                voltage:droneStatus.batteryVoltage];
                 }
             });
+            break;
         }
 
         case MAVLINK_MSG_ID_GPS_RAW_INT: {
             if (![self.delegate respondsToSelector:@selector(droneControlManager:didHandleLocationCoordinate:)]) {
                 break;
             }
-            
             mavlink_gps_raw_int_t gpsRawIntPkt;
             mavlink_msg_gps_raw_int_decode(message, &gpsRawIntPkt);
             CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(gpsRawIntPkt.lat/10000000.0f,

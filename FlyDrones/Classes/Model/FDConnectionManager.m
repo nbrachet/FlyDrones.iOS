@@ -227,7 +227,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
-    NSLog(@"Did send data for tag:%d", tag);
+//    NSLog(@"Did send data for tag:%d", tag);
 }
 
 @end
