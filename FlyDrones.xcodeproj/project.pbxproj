@@ -50,6 +50,7 @@
 		1BE363D81B0124C800F880F3 /* FDVFRInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE363D71B0124C800F880F3 /* FDVFRInfoViewController.m */; };
 		1BE363DB1B0124E400F880F3 /* FDLocationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE363DA1B0124E400F880F3 /* FDLocationInfoViewController.m */; };
 		1BE363DD1B0134E300F880F3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BE363DC1B0134E300F880F3 /* MapKit.framework */; };
+		1BE628181B1F3CF600EED069 /* CLLocation+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE628171B1F3CF600EED069 /* CLLocation+Utils.m */; };
 		1BED467B1AE56D79008EA8C8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BED467A1AE56D79008EA8C8 /* Images.xcassets */; };
 		1BED46891AE56DC2008EA8C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46851AE56DC2008EA8C8 /* Main.storyboard */; };
 		1BED468A1AE56DC2008EA8C8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46871AE56DC2008EA8C8 /* LaunchScreen.xib */; };
@@ -446,6 +447,8 @@
 		1BE363D91B0124E400F880F3 /* FDLocationInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDLocationInfoViewController.h; sourceTree = "<group>"; };
 		1BE363DA1B0124E400F880F3 /* FDLocationInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDLocationInfoViewController.m; sourceTree = "<group>"; };
 		1BE363DC1B0134E300F880F3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		1BE628161B1F3CF600EED069 /* CLLocation+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CLLocation+Utils.h"; sourceTree = "<group>"; };
+		1BE628171B1F3CF600EED069 /* CLLocation+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CLLocation+Utils.m"; sourceTree = "<group>"; };
 		1BED467A1AE56D79008EA8C8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1BED467C1AE56D8E008EA8C8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BED46861AE56DC2008EA8C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -802,6 +805,8 @@
 				1BDB2A091AF2C68000B2A465 /* NSString+MAVLink.m */,
 				1BC8F9BF1B04E4D9003D5EAC /* NSData+MAVLink.h */,
 				1BC8F9C01B04E4D9003D5EAC /* NSData+MAVLink.m */,
+				1BE628161B1F3CF600EED069 /* CLLocation+Utils.h */,
+				1BE628171B1F3CF600EED069 /* CLLocation+Utils.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1312,6 +1317,7 @@
 				1B9B078D1B17578400662300 /* FDOptionTableViewCell.m in Sources */,
 				371525F11A77B28A00F885B8 /* main.m in Sources */,
 				1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */,
+				1BE628181B1F3CF600EED069 /* CLLocation+Utils.m in Sources */,
 				1BE363DB1B0124E400F880F3 /* FDLocationInfoViewController.m in Sources */,
 				1B9B078A1B17563300662300 /* FDEnableArmedViewController.m in Sources */,
 				1B9B07831B17369C00662300 /* UIImage+Utils.m in Sources */,

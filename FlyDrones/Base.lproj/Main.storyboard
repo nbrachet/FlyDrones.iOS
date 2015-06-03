@@ -817,7 +817,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" mapType="standard" zoomEnabled="NO" scrollEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0AA-4N-toX">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="satellite" zoomEnabled="NO" scrollEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0AA-4N-toX">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="0AA-4N-toX" secondAttribute="height" multiplier="1:1" id="2G7-8l-EvV"/>

@@ -8,6 +8,13 @@
 
 #import "FDLocationInfoViewController.h"
 #import "FDDroneControlManager.h"
+#import "CLLocation+Utils.h"
+
+@interface FDLocationInfoViewController ()
+
+@property (nonatomic, assign) CLLocationCoordinate2D prevRegionLocationCoordinate;
+
+@end
 
 @implementation FDLocationInfoViewController
 
@@ -16,13 +23,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    self.mapView.zoomEnabled = NO;
-    self.mapView.scrollEnabled = NO;
-    self.mapView.userInteractionEnabled = NO;
-
-    self.mapView.showsUserLocation = NO;
-    self.mapView.mapType = MKMapTypeSatellite;
-
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(refreshInfo:)
                                                  name:FDDroneControlManagerDidHandleLocationCoordinateNotification
@@ -54,16 +54,26 @@
 
 - (void)refreshInfo:(NSNotification *)notification {
     CLLocationCoordinate2D locationCoordinate = [FDDroneStatus currentStatus].locationCoordinate;
+    
     if (!CLLocationCoordinate2DIsValid(locationCoordinate)) {
         return;
     }
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(locationCoordinate, 160, 160);
-    [self.mapView setRegion:region animated:NO];
     
-    [self.mapView removeAnnotations:self.mapView.annotations];
-    MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
-    annotation.coordinate = locationCoordinate;
-    [self.mapView addAnnotation:annotation];
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate];
+    CLLocation *prevLocation = [[CLLocation alloc] initWithCoordinate:self.prevRegionLocationCoordinate];
+    CLLocationDistance distance = [location distanceFromLocation:prevLocation];
+    if (distance > 100) {
+        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(locationCoordinate, 160, 160);
+        [self.mapView setRegion:region animated:NO];
+        self.prevRegionLocationCoordinate = locationCoordinate;
+    }
+    if (distance > 1) {
+        [self.mapView removeAnnotations:self.mapView.annotations];
+        MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+        annotation.coordinate = locationCoordinate;
+        [self.mapView addAnnotation:annotation];
+    }
+    
 }
 
 #pragma mark - MKMapViewDelegate
