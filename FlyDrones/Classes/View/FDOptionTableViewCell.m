@@ -11,7 +11,7 @@
 @implementation FDOptionTableViewCell
 
 - (void)awakeFromNib {
-    // Initialization code
+    self.backgroundView = nil;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

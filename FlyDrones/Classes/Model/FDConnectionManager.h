@@ -32,4 +32,6 @@
 
 - (BOOL)sendDataFromTCPConnection:(NSData *)data;
 
+- (BOOL)sendDataFromTCPConnection:(NSData *)data tag:(NSUInteger)tag;
+
 @end

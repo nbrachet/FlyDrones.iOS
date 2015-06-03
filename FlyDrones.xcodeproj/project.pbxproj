@@ -19,6 +19,7 @@
 		1B97E9EC1AD5519300051601 /* NSFileManager+ANUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E41AD5519300051601 /* NSFileManager+ANUtils.m */; };
 		1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E61AD5519300051601 /* NSString+Datetime.m */; };
 		1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E81AD5519300051601 /* NSString+Network.m */; };
+		1B99FE151B1E1B6F00D3E0D6 /* 2015-05-01 20-19-25.tlog in Resources */ = {isa = PBXBuildFile; fileRef = 1B99FE141B1E1B6F00D3E0D6 /* 2015-05-01 20-19-25.tlog */; };
 		1B9B07831B17369C00662300 /* UIImage+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B07821B17369C00662300 /* UIImage+Utils.m */; };
 		1B9B07861B173D5100662300 /* FDCustomModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B07851B173D5100662300 /* FDCustomModeViewController.m */; };
 		1B9B078A1B17563300662300 /* FDEnableArmedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B07891B17563300662300 /* FDEnableArmedViewController.m */; };
@@ -303,6 +304,7 @@
 		1B97E9E61AD5519300051601 /* NSString+Datetime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Datetime.m"; sourceTree = "<group>"; };
 		1B97E9E71AD5519300051601 /* NSString+Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Network.h"; sourceTree = "<group>"; };
 		1B97E9E81AD5519300051601 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
+		1B99FE141B1E1B6F00D3E0D6 /* 2015-05-01 20-19-25.tlog */ = {isa = PBXFileReference; lastKnownFileType = file; name = "2015-05-01 20-19-25.tlog"; path = "Development resources/Resources/2015-05-01 20-19-25.tlog"; sourceTree = SOURCE_ROOT; };
 		1B9B07811B17369C00662300 /* UIImage+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Utils.h"; sourceTree = "<group>"; };
 		1B9B07821B17369C00662300 /* UIImage+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Utils.m"; sourceTree = "<group>"; };
 		1B9B07841B173D5100662300 /* FDCustomModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCustomModeViewController.h; sourceTree = "<group>"; };
@@ -1061,6 +1063,7 @@
 		371525EE1A77B28A00F885B8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1B99FE141B1E1B6F00D3E0D6 /* 2015-05-01 20-19-25.tlog */,
 				1BED467C1AE56D8E008EA8C8 /* Info.plist */,
 				371525F01A77B28A00F885B8 /* main.m */,
 				37431F991A7A65F5007CDD6F /* FlyDrones-Prefix.pch */,
@@ -1195,6 +1198,7 @@
 				TargetAttributes = {
 					371525EA1A77B28A00F885B8 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = PVDZWY67J6;
 					};
 				};
 			};
@@ -1222,6 +1226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BED468A1AE56DC2008EA8C8 /* LaunchScreen.xib in Resources */,
+				1B99FE151B1E1B6F00D3E0D6 /* 2015-05-01 20-19-25.tlog in Resources */,
 				1BED46891AE56DC2008EA8C8 /* Main.storyboard in Resources */,
 				1BED467B1AE56D79008EA8C8 /* Images.xcassets in Resources */,
 			);
@@ -1443,7 +1448,7 @@
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
+				PROVISIONING_PROFILE = "1369a741-ef21-40b7-bd76-5a6b4e6f5319";
 			};
 			name = Debug;
 		};
@@ -1473,7 +1478,7 @@
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
+				PROVISIONING_PROFILE = "1369a741-ef21-40b7-bd76-5a6b4e6f5319";
 			};
 			name = Release;
 		};

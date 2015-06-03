@@ -62,7 +62,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         const char *bytes = (const char *) [data bytes];
         BOOL isMessageDetected = [self parseMessageChar:bytes[0]];
         if (isMessageDetected) {
-            sleep(1);
+            usleep(1000);
         }
     }];
 }

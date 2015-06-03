@@ -20,10 +20,12 @@
 #import "FDCustomModeViewController.h"
 #import "FDEnableArmedViewController.h"
 
+#define debugWithLocalLogFile NO
+
 static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
 static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8411;
 
-@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDCustomModeViewControllerDelegate, FDEnableArmedViewControllerDelegate>
+@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDCustomModeViewControllerDelegate, FDEnableArmedViewControllerDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIButton *menuButton;
 @property (nonatomic, weak) IBOutlet FDBatteryButton *batteryButton;
@@ -70,6 +72,10 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
         [self startTimer];
     }
     [self registerForNotifications];
+    
+    if (debugWithLocalLogFile) {
+        [self.droneControlManager parseLogFile:@"2015-05-01 20-19-25" ofType:@"tlog"];
+    }
 }
 
 - (void)connectToServers {
@@ -151,7 +157,8 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     UIViewController *destinationViewController = segue.destinationViewController;
     UIPopoverPresentationController *popoverPresentationController = destinationViewController.popoverPresentationController;
     if (popoverPresentationController != nil) {
-        popoverPresentationController.backgroundColor = destinationViewController.view.backgroundColor;
+        popoverPresentationController.delegate = self;
+        popoverPresentationController.backgroundColor = [UIColor clearColor];
     }
     
     if ([destinationViewController isKindOfClass:[FDCustomModeViewController class]]) {
@@ -177,7 +184,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     self.leftJoystickView.userInteractionEnabled = enabledControls;
     self.rightJoystickView.userInteractionEnabled = enabledControls;
     if (!enabledControls) {
-        [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
+        [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
         [self.leftJoystickView resetPosition];
         [self.rightJoystickView resetPosition];
     } else {
@@ -264,7 +271,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     static NSUInteger tickCounter = 0;
     tickCounter++;
     
-    if (![self.connectionManager isTCPConnected]) {
+    if (![self.connectionManager isTCPConnected] && ! debugWithLocalLogFile) {
         if ((tickCounter % 15 == 0)) {
             [self connectToServers];
         }
@@ -302,7 +309,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
                                                                   thrust:self.leftJoystickView.stickVerticalValue
                                                                      yaw:self.leftJoystickView.stickHorisontalValue
                                                           sequenceNumber:1];
-    [self.connectionManager sendDataFromTCPConnection:controlData];
+    [self.connectionManager sendDataFromTCPConnection:controlData tag:12];
 }
 
 - (void)dissmissProgressHUDForTag:(NSUInteger)tag {
@@ -457,6 +464,13 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 - (void)didEnableArmedStatus:(BOOL)armed {
     NSData *messageData = [self.droneControlManager messageDataWithArmedEnable:armed];
     [self.connectionManager sendDataFromTCPConnection:messageData];
+}
+
+#pragma mark -
+
+- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
+    [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
+    return NO;
 }
 
 @end
