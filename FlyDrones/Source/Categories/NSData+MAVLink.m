@@ -8,6 +8,7 @@
 
 #import "NSData+MAVLink.h"
 #import "NSString+MAVLink.h"
+#import "mavlink.h"
 
 @implementation NSData (MAVLink)
 

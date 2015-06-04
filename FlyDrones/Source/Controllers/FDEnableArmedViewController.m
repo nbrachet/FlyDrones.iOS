@@ -10,6 +10,7 @@
 #import "FDOptionTableViewCell.h"
 #import "FDDroneStatus.h"
 #import "FDDroneControlManager.h"
+#import "mavlink.h"
 
 @interface FDEnableArmedViewController () <UITableViewDataSource, UITableViewDelegate>
 

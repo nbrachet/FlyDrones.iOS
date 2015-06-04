@@ -2,29 +2,26 @@
 //  AppDelegate.m
 //  FlyDrones
 //
-//  Created by Sergey Galagan on 1/27/15.
-//  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
+//  Created by Oleksii Naboichenko on 6/4/15.
+//  Copyright (c) 2015 QArea. All rights reserved.
 //
 
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 
+@interface AppDelegate ()
+
+@end
+
 @implementation AppDelegate
 
-#pragma mark - UIApplication delegate methods
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self enableParseCrashReporting];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-
-//    [self performSelector:@selector(crash) withObject:nil afterDelay:5.0f];
     return YES;
 }
-
-//- (void)crash {
-//    [[NSData data] subdataWithRange:NSMakeRange(0, 1000)];
-//}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 
 @interface NSString (Network)
 

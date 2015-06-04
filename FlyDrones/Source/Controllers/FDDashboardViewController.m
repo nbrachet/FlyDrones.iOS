@@ -7,18 +7,19 @@
 //
 
 #import "FDDashboardViewController.h"
+#import <SWRevealViewController/SWRevealViewController.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 #import "FDMovieDecoder.h"
 #import "FDMovieGLView.h"
-#import "FDDisplayInfoView.h"
 #import "FDConnectionManager.h"
 #import "FDDroneControlManager.h"
-#import <SWRevealViewController/SWRevealViewController.h>
 #import "FDBatteryButton.h"
 #import "FDDroneStatus.h"
 #import "FDCompassView.h"
 #import "FDJoystickView.h"
 #import "FDCustomModeViewController.h"
 #import "FDEnableArmedViewController.h"
+#import "mavlink.h"
 
 static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
 static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8411;

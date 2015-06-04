@@ -10,7 +10,6 @@
 #import <CocoaAsyncSocket/GCDAsyncSocket.h>
 #import <CocoaAsyncSocket/GCDAsyncUdpSocket.h>
 #import "NSData+RTCP.h"
-#import "RTP.h"
 
 static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 

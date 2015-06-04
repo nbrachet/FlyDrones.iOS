@@ -1,0 +1,39 @@
+//
+//  FlyDrones-Prefix.pch
+//  FlyDrones
+//
+//  Created by Oleksii Naboichenko on 6/4/15.
+//  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
+//
+
+#ifndef FlyDrones_PrefixHeader_pch
+#define FlyDrones_PrefixHeader_pch
+
+//#import "mavlink.h"
+
+#endif
+
+//#ifdef __OBJC__
+//
+//#import <UIKit/UIKit.h>
+//#import <Foundation/Foundation.h>
+//#import <CoreGraphics/CoreGraphics.h>
+//#import <Accelerate/Accelerate.h>
+//#import <AVFoundation/AVFoundation.h>
+//#import <Availability.h>
+//#import <CoreLocation/CoreLocation.h>
+//
+//#import "mavlink.h"
+//#import "mavlink_types.h"
+//#import "NSString+MAVLink.h"
+//#import "NSData+MAVLink.h"
+//#import <MBProgressHUD/MBProgressHUD.h>
+//
+//#endif
+//
+//
+//#ifdef DEBUG
+//#define NSLog(__FORMAT__, ...) NSLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+//#else
+//    #define NSLog(...)
+//#endif

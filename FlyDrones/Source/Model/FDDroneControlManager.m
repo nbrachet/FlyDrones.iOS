@@ -9,6 +9,8 @@
 #import "FDDroneControlManager.h"
 #import "FDFileReader.h"
 #import "NSString+MAVLink.h"
+#import "NSData+MAVLink.h"
+#import "mavlink.h"
 
 NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"didHandleBatteryStatusNotification";
 NSString * const FDDroneControlManagerDidHandleScaledPressureInfoNotification = @"didHandleScaledPressureInfoNotification";

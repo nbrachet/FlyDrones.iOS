@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <CoreLocation/CoreLocation.h>
 
 #define FDNotAvailable NSIntegerMin
 

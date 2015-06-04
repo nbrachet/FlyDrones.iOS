@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "mavlink_types.h"
 
 @interface NSData (MAVLink)
 
