@@ -46,7 +46,6 @@
 		1B83A3941B206321009384AA /* libpostproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A2961B206320009384AA /* libpostproc.a */; };
 		1B83A3951B206321009384AA /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A2971B206320009384AA /* libswresample.a */; };
 		1B83A3961B206321009384AA /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A2981B206320009384AA /* libswscale.a */; };
-		1B83A3971B206321009384AA /* librtp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A3771B206321009384AA /* librtp.a */; };
 		1B83A3981B206321009384AA /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A38E1B206321009384AA /* libx264.a */; };
 		1B83A39A1B2065A7009384AA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A3991B2065A7009384AA /* MapKit.framework */; };
 		1B83A39C1B2065B5009384AA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A39B1B2065B5009384AA /* CoreLocation.framework */; };
@@ -56,6 +55,7 @@
 		1B83A3A41B2065DE009384AA /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A3A31B2065DE009384AA /* libz.dylib */; };
 		1B83A3A61B2065ED009384AA /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A3A51B2065ED009384AA /* libbz2.dylib */; };
 		1B83A3A81B206603009384AA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A3A71B206603009384AA /* AVFoundation.framework */; };
+		1BD7E54C1B21E9940025576B /* librtp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BD7E54B1B21E9940025576B /* librtp.a */; };
 		8E45496B6B26D5C83ECB289C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 499C5DD6DCB9887D93A42B9F /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -434,25 +434,6 @@
 		1B83A3721B206321009384AA /* sensesoar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sensesoar.h; sourceTree = "<group>"; };
 		1B83A3731B206321009384AA /* testsuite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testsuite.h; sourceTree = "<group>"; };
 		1B83A3741B206321009384AA /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
-		1B83A3761B206321009384AA /* HTTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTP.h; sourceTree = "<group>"; };
-		1B83A3771B206321009384AA /* librtp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librtp.a; sourceTree = "<group>"; };
-		1B83A3781B206321009384AA /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
-		1B83A3791B206321009384AA /* MavLink.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MavLink.hh; sourceTree = "<group>"; };
-		1B83A37A1B206321009384AA /* Net.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Net.h; sourceTree = "<group>"; };
-		1B83A37B1B206321009384AA /* NetLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetLink.h; sourceTree = "<group>"; };
-		1B83A37C1B206321009384AA /* NetStats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetStats.h; sourceTree = "<group>"; };
-		1B83A37D1B206321009384AA /* RDPLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDPLite.h; sourceTree = "<group>"; };
-		1B83A37E1B206321009384AA /* RTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTP.h; sourceTree = "<group>"; };
-		1B83A37F1B206321009384AA /* SCTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCTP.h; sourceTree = "<group>"; };
-		1B83A3801B206321009384AA /* SerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialPort.h; sourceTree = "<group>"; };
-		1B83A3811B206321009384AA /* SignalFD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignalFD.h; sourceTree = "<group>"; };
-		1B83A3821B206321009384AA /* SysLog.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SysLog.hh; sourceTree = "<group>"; };
-		1B83A3831B206321009384AA /* TCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCP.h; sourceTree = "<group>"; };
-		1B83A3841B206321009384AA /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
-		1B83A3851B206321009384AA /* TimeOperators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeOperators.h; sourceTree = "<group>"; };
-		1B83A3861B206321009384AA /* UDP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDP.h; sourceTree = "<group>"; };
-		1B83A3871B206321009384AA /* UDPLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPLite.h; sourceTree = "<group>"; };
-		1B83A3881B206321009384AA /* UML295.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UML295.h; sourceTree = "<group>"; };
 		1B83A38B1B206321009384AA /* x264.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x264.h; sourceTree = "<group>"; };
 		1B83A38C1B206321009384AA /* x264_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x264_config.h; sourceTree = "<group>"; };
 		1B83A38E1B206321009384AA /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libx264.a; sourceTree = "<group>"; };
@@ -464,6 +445,25 @@
 		1B83A3A31B2065DE009384AA /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1B83A3A51B2065ED009384AA /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		1B83A3A71B206603009384AA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		1BD7E5381B21E9940025576B /* HTTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTP.h; sourceTree = "<group>"; };
+		1BD7E5391B21E9940025576B /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
+		1BD7E53A1B21E9940025576B /* MavLink.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MavLink.hh; sourceTree = "<group>"; };
+		1BD7E53B1B21E9940025576B /* Net.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Net.h; sourceTree = "<group>"; };
+		1BD7E53C1B21E9940025576B /* NetLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetLink.h; sourceTree = "<group>"; };
+		1BD7E53D1B21E9940025576B /* NetStats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetStats.h; sourceTree = "<group>"; };
+		1BD7E53E1B21E9940025576B /* RDPLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDPLite.h; sourceTree = "<group>"; };
+		1BD7E53F1B21E9940025576B /* RTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTP.h; sourceTree = "<group>"; };
+		1BD7E5401B21E9940025576B /* SCTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCTP.h; sourceTree = "<group>"; };
+		1BD7E5411B21E9940025576B /* SerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialPort.h; sourceTree = "<group>"; };
+		1BD7E5421B21E9940025576B /* SignalFD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignalFD.h; sourceTree = "<group>"; };
+		1BD7E5431B21E9940025576B /* SysLog.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SysLog.hh; sourceTree = "<group>"; };
+		1BD7E5441B21E9940025576B /* TCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCP.h; sourceTree = "<group>"; };
+		1BD7E5451B21E9940025576B /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
+		1BD7E5461B21E9940025576B /* TimeOperators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeOperators.h; sourceTree = "<group>"; };
+		1BD7E5471B21E9940025576B /* UDP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDP.h; sourceTree = "<group>"; };
+		1BD7E5481B21E9940025576B /* UDPLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPLite.h; sourceTree = "<group>"; };
+		1BD7E5491B21E9940025576B /* UML295.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UML295.h; sourceTree = "<group>"; };
+		1BD7E54B1B21E9940025576B /* librtp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librtp.a; sourceTree = "<group>"; };
 		499C5DD6DCB9887D93A42B9F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		75987A981305CA1A257DE4FD /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		F091E30F45CCCE4BEF426F37 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -488,10 +488,10 @@
 				1B83A3911B206321009384AA /* libavfilter.a in Frameworks */,
 				8E45496B6B26D5C83ECB289C /* libPods.a in Frameworks */,
 				1B83A3901B206321009384AA /* libavdevice.a in Frameworks */,
+				1BD7E54C1B21E9940025576B /* librtp.a in Frameworks */,
 				1B83A3961B206321009384AA /* libswscale.a in Frameworks */,
 				1B83A3921B206321009384AA /* libavformat.a in Frameworks */,
 				1B83A3981B206321009384AA /* libx264.a in Frameworks */,
-				1B83A3971B206321009384AA /* librtp.a in Frameworks */,
 				1B83A38F1B206321009384AA /* libavcodec.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -645,9 +645,9 @@
 		1B83A22A1B206320009384AA /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				1BD7E5361B21E9940025576B /* librtp */,
 				1B83A22B1B206320009384AA /* Ffmpeg */,
 				1B83A2991B206320009384AA /* MAVLink */,
-				1B83A3751B206321009384AA /* RTPlib */,
 				1B83A3891B206321009384AA /* x264 */,
 			);
 			path = Libraries;
@@ -1107,32 +1107,6 @@
 			path = sensesoar;
 			sourceTree = "<group>";
 		};
-		1B83A3751B206321009384AA /* RTPlib */ = {
-			isa = PBXGroup;
-			children = (
-				1B83A3761B206321009384AA /* HTTP.h */,
-				1B83A3771B206321009384AA /* librtp.a */,
-				1B83A3781B206321009384AA /* Logger.h */,
-				1B83A3791B206321009384AA /* MavLink.hh */,
-				1B83A37A1B206321009384AA /* Net.h */,
-				1B83A37B1B206321009384AA /* NetLink.h */,
-				1B83A37C1B206321009384AA /* NetStats.h */,
-				1B83A37D1B206321009384AA /* RDPLite.h */,
-				1B83A37E1B206321009384AA /* RTP.h */,
-				1B83A37F1B206321009384AA /* SCTP.h */,
-				1B83A3801B206321009384AA /* SerialPort.h */,
-				1B83A3811B206321009384AA /* SignalFD.h */,
-				1B83A3821B206321009384AA /* SysLog.hh */,
-				1B83A3831B206321009384AA /* TCP.h */,
-				1B83A3841B206321009384AA /* Thread.h */,
-				1B83A3851B206321009384AA /* TimeOperators.h */,
-				1B83A3861B206321009384AA /* UDP.h */,
-				1B83A3871B206321009384AA /* UDPLite.h */,
-				1B83A3881B206321009384AA /* UML295.h */,
-			);
-			path = RTPlib;
-			sourceTree = "<group>";
-		};
 		1B83A3891B206321009384AA /* x264 */ = {
 			isa = PBXGroup;
 			children = (
@@ -1155,6 +1129,48 @@
 			isa = PBXGroup;
 			children = (
 				1B83A38E1B206321009384AA /* libx264.a */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		1BD7E5361B21E9940025576B /* librtp */ = {
+			isa = PBXGroup;
+			children = (
+				1BD7E5371B21E9940025576B /* include */,
+				1BD7E54A1B21E9940025576B /* lib */,
+			);
+			path = librtp;
+			sourceTree = "<group>";
+		};
+		1BD7E5371B21E9940025576B /* include */ = {
+			isa = PBXGroup;
+			children = (
+				1BD7E5381B21E9940025576B /* HTTP.h */,
+				1BD7E5391B21E9940025576B /* Logger.h */,
+				1BD7E53A1B21E9940025576B /* MavLink.hh */,
+				1BD7E53B1B21E9940025576B /* Net.h */,
+				1BD7E53C1B21E9940025576B /* NetLink.h */,
+				1BD7E53D1B21E9940025576B /* NetStats.h */,
+				1BD7E53E1B21E9940025576B /* RDPLite.h */,
+				1BD7E53F1B21E9940025576B /* RTP.h */,
+				1BD7E5401B21E9940025576B /* SCTP.h */,
+				1BD7E5411B21E9940025576B /* SerialPort.h */,
+				1BD7E5421B21E9940025576B /* SignalFD.h */,
+				1BD7E5431B21E9940025576B /* SysLog.hh */,
+				1BD7E5441B21E9940025576B /* TCP.h */,
+				1BD7E5451B21E9940025576B /* Thread.h */,
+				1BD7E5461B21E9940025576B /* TimeOperators.h */,
+				1BD7E5471B21E9940025576B /* UDP.h */,
+				1BD7E5481B21E9940025576B /* UDPLite.h */,
+				1BD7E5491B21E9940025576B /* UML295.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		1BD7E54A1B21E9940025576B /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				1BD7E54B1B21E9940025576B /* librtp.a */,
 			);
 			path = lib;
 			sourceTree = "<group>";
@@ -1392,6 +1408,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"/opt/local/lib/**",
+					"/opt/local/lib/**/**",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1430,6 +1452,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"/opt/local/lib/**",
+					"/opt/local/lib/**/**",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
@@ -1447,16 +1475,18 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(PROJECT_DIR)/Libraries/**",
+					"$(PROJECT_DIR)/Libraries/Ffmpeg/include",
+					"$(PROJECT_DIR)/Libraries/MAVLink",
+					"$(PROJECT_DIR)/Libraries/x264/include",
+					"$(PROJECT_DIR)/Libraries/librtp/include",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/FlyDrones/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Libraries/**",
 					"$(PROJECT_DIR)/Libraries/Ffmpeg/lib",
-					"$(PROJECT_DIR)/Libraries/RTPlib",
 					"$(PROJECT_DIR)/Libraries/x264/lib",
+					"$(PROJECT_DIR)/Libraries/librtp/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1369a741-ef21-40b7-bd76-5a6b4e6f5319";
@@ -1472,16 +1502,18 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(PROJECT_DIR)/Libraries/**",
+					"$(PROJECT_DIR)/Libraries/Ffmpeg/include",
+					"$(PROJECT_DIR)/Libraries/MAVLink",
+					"$(PROJECT_DIR)/Libraries/x264/include",
+					"$(PROJECT_DIR)/Libraries/librtp/include",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/FlyDrones/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Libraries/**",
 					"$(PROJECT_DIR)/Libraries/Ffmpeg/lib",
-					"$(PROJECT_DIR)/Libraries/RTPlib",
 					"$(PROJECT_DIR)/Libraries/x264/lib",
+					"$(PROJECT_DIR)/Libraries/librtp/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1369a741-ef21-40b7-bd76-5a6b4e6f5319";
