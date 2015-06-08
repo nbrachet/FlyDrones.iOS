@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B4A91D61B2594B90029BA4F /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B4A91D51B2594B90029BA4F /* libc++.dylib */; };
 		1B83A2091B205E83009384AA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B83A1C61B205E83009384AA /* Images.xcassets */; };
 		1B83A20A1B205E83009384AA /* NSData+MAVLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1CA1B205E83009384AA /* NSData+MAVLink.m */; };
 		1B83A20B1B205E83009384AA /* NSData+RTCP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1CC1B205E83009384AA /* NSData+RTCP.m */; };
@@ -24,7 +25,7 @@
 		1B83A2171B205E83009384AA /* FDLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1E51B205E83009384AA /* FDLoginViewController.m */; };
 		1B83A2181B205E83009384AA /* FDRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1E71B205E83009384AA /* FDRootViewController.m */; };
 		1B83A2191B205E83009384AA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1EA1B205E83009384AA /* AppDelegate.m */; };
-		1B83A21A1B205E83009384AA /* FDConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1EC1B205E83009384AA /* FDConnectionManager.m */; };
+		1B83A21A1B205E83009384AA /* FDConnectionManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1EC1B205E83009384AA /* FDConnectionManager.mm */; };
 		1B83A21B1B205E83009384AA /* FDDroneControlManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1EE1B205E83009384AA /* FDDroneControlManager.m */; };
 		1B83A21C1B205E83009384AA /* FDDroneStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1F01B205E83009384AA /* FDDroneStatus.m */; };
 		1B83A21D1B205E83009384AA /* FDFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1F21B205E83009384AA /* FDFileReader.m */; };
@@ -35,7 +36,7 @@
 		1B83A2221B205E83009384AA /* FDJoystickView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1FE1B205E83009384AA /* FDJoystickView.m */; };
 		1B83A2231B205E83009384AA /* FDMovieGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A2001B205E83009384AA /* FDMovieGLView.m */; };
 		1B83A2241B205E83009384AA /* FDOptionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A2021B205E83009384AA /* FDOptionTableViewCell.m */; };
-		1B83A2261B205E83009384AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A2061B205E83009384AA /* main.m */; };
+		1B83A2261B205E83009384AA /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A2061B205E83009384AA /* main.mm */; };
 		1B83A2271B205F47009384AA /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B83A1C11B205E83009384AA /* LaunchScreen.xib */; };
 		1B83A2281B205F47009384AA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B83A1C31B205E83009384AA /* Main.storyboard */; };
 		1B83A38F1B206321009384AA /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A2911B206320009384AA /* libavcodec.a */; };
@@ -60,6 +61,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B4A91D51B2594B90029BA4F /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		1B83A1961B2058BD009384AA /* FlyDrones.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlyDrones.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B83A1C21B205E83009384AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		1B83A1C41B205E83009384AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -97,7 +99,7 @@
 		1B83A1E91B205E83009384AA /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1B83A1EA1B205E83009384AA /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1B83A1EB1B205E83009384AA /* FDConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDConnectionManager.h; sourceTree = "<group>"; };
-		1B83A1EC1B205E83009384AA /* FDConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConnectionManager.m; sourceTree = "<group>"; };
+		1B83A1EC1B205E83009384AA /* FDConnectionManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FDConnectionManager.mm; sourceTree = "<group>"; };
 		1B83A1ED1B205E83009384AA /* FDDroneControlManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDroneControlManager.h; sourceTree = "<group>"; };
 		1B83A1EE1B205E83009384AA /* FDDroneControlManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDroneControlManager.m; sourceTree = "<group>"; };
 		1B83A1EF1B205E83009384AA /* FDDroneStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDroneStatus.h; sourceTree = "<group>"; };
@@ -121,7 +123,7 @@
 		1B83A2021B205E83009384AA /* FDOptionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDOptionTableViewCell.m; sourceTree = "<group>"; };
 		1B83A2041B205E83009384AA /* FlyDrones-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FlyDrones-Prefix.pch"; sourceTree = "<group>"; };
 		1B83A2051B205E83009384AA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1B83A2061B205E83009384AA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1B83A2061B205E83009384AA /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		1B83A22E1B206320009384AA /* avcodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avcodec.h; sourceTree = "<group>"; };
 		1B83A22F1B206320009384AA /* avfft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avfft.h; sourceTree = "<group>"; };
 		1B83A2301B206320009384AA /* dv_profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dv_profile.h; sourceTree = "<group>"; };
@@ -474,6 +476,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B4A91D61B2594B90029BA4F /* libc++.dylib in Frameworks */,
 				1B83A3A61B2065ED009384AA /* libbz2.dylib in Frameworks */,
 				1B83A3A41B2065DE009384AA /* libz.dylib in Frameworks */,
 				1B83A3A21B2065D5009384AA /* libiconv.2.4.0.dylib in Frameworks */,
@@ -599,7 +602,7 @@
 				1B83A1E91B205E83009384AA /* AppDelegate.h */,
 				1B83A1EA1B205E83009384AA /* AppDelegate.m */,
 				1B83A1EB1B205E83009384AA /* FDConnectionManager.h */,
-				1B83A1EC1B205E83009384AA /* FDConnectionManager.m */,
+				1B83A1EC1B205E83009384AA /* FDConnectionManager.mm */,
 				1B83A1ED1B205E83009384AA /* FDDroneControlManager.h */,
 				1B83A1EE1B205E83009384AA /* FDDroneControlManager.m */,
 				1B83A1EF1B205E83009384AA /* FDDroneStatus.h */,
@@ -637,7 +640,7 @@
 			children = (
 				1B83A2041B205E83009384AA /* FlyDrones-Prefix.pch */,
 				1B83A2051B205E83009384AA /* Info.plist */,
-				1B83A2061B205E83009384AA /* main.m */,
+				1B83A2061B205E83009384AA /* main.mm */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -1187,6 +1190,7 @@
 		EB28EECBA8D1051F77C15F5E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1B4A91D51B2594B90029BA4F /* libc++.dylib */,
 				1B83A3A71B206603009384AA /* AVFoundation.framework */,
 				1B83A3A51B2065ED009384AA /* libbz2.dylib */,
 				1B83A3A31B2065DE009384AA /* libz.dylib */,
@@ -1336,7 +1340,7 @@
 				1B83A20A1B205E83009384AA /* NSData+MAVLink.m in Sources */,
 				1B83A2151B205E83009384AA /* FDLeftSideViewController.m in Sources */,
 				1B83A2211B205E83009384AA /* FDCompassView.m in Sources */,
-				1B83A21A1B205E83009384AA /* FDConnectionManager.m in Sources */,
+				1B83A21A1B205E83009384AA /* FDConnectionManager.mm in Sources */,
 				1B83A20C1B205E83009384AA /* NSFileManager+ANUtils.m in Sources */,
 				1B83A2121B205E83009384AA /* FDCustomModeViewController.m in Sources */,
 				1B83A20F1B205E83009384AA /* UIImage+Utils.m in Sources */,
@@ -1345,7 +1349,7 @@
 				1B83A20D1B205E83009384AA /* NSString+MAVLink.m in Sources */,
 				1B83A2171B205E83009384AA /* FDLoginViewController.m in Sources */,
 				1B83A21D1B205E83009384AA /* FDFileReader.m in Sources */,
-				1B83A2261B205E83009384AA /* main.m in Sources */,
+				1B83A2261B205E83009384AA /* main.mm in Sources */,
 				1B83A20B1B205E83009384AA /* NSData+RTCP.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1411,8 +1415,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"/opt/local/lib/**",
-					"/opt/local/lib/**/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1455,11 +1457,10 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"/opt/local/lib/**",
-					"/opt/local/lib/**/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -1471,6 +1472,9 @@
 			baseConfigurationReference = 75987A981305CA1A257DE4FD /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1488,8 +1492,10 @@
 					"$(PROJECT_DIR)/Libraries/x264/lib",
 					"$(PROJECT_DIR)/Libraries/librtp/lib",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1369a741-ef21-40b7-bd76-5a6b4e6f5319";
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Debug;
 		};
@@ -1498,6 +1504,9 @@
 			baseConfigurationReference = F091E30F45CCCE4BEF426F37 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1515,8 +1524,10 @@
 					"$(PROJECT_DIR)/Libraries/x264/lib",
 					"$(PROJECT_DIR)/Libraries/librtp/lib",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1369a741-ef21-40b7-bd76-5a6b4e6f5319";
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Release;
 		};
