@@ -4,8 +4,8 @@
 
 #include <ctype.h>
 #include <string.h>
+
 #include "TCP.h"
-#include "Net.h"
 
 ///////////////////////////////////////////////////////////////////////
 //                                                                   //
@@ -50,7 +50,7 @@ public:
 
         *((char*)buffer + n) = '\0';
 
-        LOGGER_DEBUG("< %*s", n, buffer);
+        LOGGER_DEBUG("< %*s", (unsigned)n, buffer);
 
         return n;
     }
@@ -59,7 +59,7 @@ public:
     {
         ssize_t query = parse_query();
         if (query <= 0)
-            return query;
+            return (int)query;
 
         if (handle_protocol() == -1)
             return -1;
@@ -117,9 +117,13 @@ protected:
 
         ssize_t recv = recv_until((void**)&_query, 0, 0, "\r\n\r\n", 4);
         if (recv <= 0)
-            return recv;
+            return (int)recv;
 
         int headers = 0;
+
+#ifdef _GNU_SOURCE
+        // TODO: switch to using the m modifier instead of the a modifier
+        //       ie. %ms instead of %as
         if (sscanf(_query,
                    "%as%*[ \t]%as%*[ \t]%as\r\n%n",
                    &_method,
@@ -132,6 +136,30 @@ protected:
             free(_query); _query = NULL;
             return 0;
         }
+#else
+        _method = (char*) malloc(recv);
+        _url = (char*) malloc(recv);
+        _protocol = (char*) malloc(recv);
+        if (_method == NULL || _url == NULL || _protocol == NULL)
+        {
+            errno = ENOMEM;
+            LOGGER_PERROR("malloc(%zd)", recv);
+            free(_query); _query = NULL;
+            return 0;
+        }
+        if (sscanf(_query,
+                   "%s%*[ \t]%s%*[ \t]%s\r\n%n",
+                   _method,
+                   _url,
+                   _protocol,
+                   &headers) != 3
+            || headers == 0)
+        {
+            LOGGER_ERROR("parse_query: %*s", (int)recv, _query);
+            free(_query); _query = NULL;
+            return 0;
+        }
+#endif
 
         _headers = _query + headers;
 
@@ -211,7 +239,7 @@ protected:
         n = sendv(0, "\r\n\r\n");
         if (n == -1)
             return -1;
-        return sent + n;
+        return (int)(sent + n);
     }
 
     int sendv_200(int flags, const char* fmt, ...)
@@ -248,7 +276,7 @@ protected:
         n = sendv(flags, "\r\n");
         if (n == -1)
             return -1;
-        return sent + n;
+        return (int)(sent + n);
     }
 
     virtual int send_extra_headers(int flags)

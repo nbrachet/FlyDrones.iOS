@@ -2,7 +2,6 @@
 #ifndef _LOGGER_H_
 #define _LOGGER_H_
 
-//#define LOGGER_PTHREAD
 //#define LOGGER_OSTREAM
 
 // TODO: Add filtering by file and function regexp
@@ -28,10 +27,6 @@
 #ifndef NDEBUG
 #  include <execinfo.h>
 #  include <cxxabi.h>
-#endif
-
-#ifdef LOGGER_PTHREAD
-#  include <pthread.h>
 #endif
 
 #ifdef LOGGER_OSTREAM
@@ -636,6 +631,7 @@ public:
 
     FileLoggerImpl()
         : _stream(NULL)
+        , _sigmask(NULL)
     {
 #ifdef __APPLE__
         _printf_domain = new_printf_domain();
@@ -680,16 +676,17 @@ private:
 
 #endif
 
-protected:
+private:
+
+    typedef int (*pthread_sigmask_pfn)(int, const /*sigset_t*/ void*, /*sigset_t*/ void*);
+
+    FILE* _stream;
+    bool _has_colors;
+    pthread_sigmask_pfn _sigmask;
 
 #ifdef __APPLE__
     printf_domain_t _printf_domain;
 #endif
-
-private:
-
-    FILE* _stream;
-    bool _has_colors;
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -777,7 +774,7 @@ public:
 
     bool is_enabled() const
     {
-        return true;
+        return _asl != NULL;
     }
 
     void log(int level, const char* fmt, va_list args) const
@@ -1174,12 +1171,7 @@ private:
 };
 
 typedef MagnitudeTmpl<1024> MagnitudeBinary;
-template <>
-/*static*/ const char MagnitudeTmpl<1024>::UNITS[] = "\0KMGTPEZY";
-
 typedef MagnitudeTmpl<1000> MagnitudeDecimal;
-template <>
-/*static*/ const char MagnitudeTmpl<1000>::UNITS[] = "\0kmgtpezy";
 
 #endif // LOGGER_OSTREAM
 
@@ -1396,11 +1388,11 @@ private:
             return std::num_put<CharT, OutputIterator>::do_put(out, str, fill, val);
         }
 
-        const unsigned width = str.width();
+        const std::streamsize width = str.width();
 
         const std::string grouping = std::use_facet< std::numpunct<CharT> >(str.getloc()).grouping();
-        unsigned group1 = 0;
-        unsigned group2 = 0;
+        std::streamsize group1 = 0;
+        std::streamsize group2 = 0;
         if (grouping.empty())
         {
             // no grouping
@@ -1420,19 +1412,19 @@ private:
             return std::num_put<CharT, OutputIterator>::do_put(out, str, fill, val);
         }
 
-        int m; // length of the output (with separator)
+        std::streamsize m; // length of the output (with separator)
         m = width + sizeof(CharT); // 6 char + right most separator
         if (width - group1 > group2)
             m += (width - group1) / group2 * sizeof(CharT);
 
         size_t len = 5 * sizeof(T) * sizeof(CharT);
-        if (len <= width)
+        if (len <= (size_t)width)
             len = width + 1;
         CharT* tmp = reinterpret_cast<CharT*>(alloca(len));
         const int n = snprintf(tmp, len, fmt, val);
         LOGGER_ASSERT1((size_t)n <= len, n);
 
-        if ((unsigned)n < width)
+        if ((std::streamsize)n < width)
         {
             // pad with fill
             std::copy_backward(&tmp[0], &tmp[n+1], &tmp[width+1]);
@@ -1440,11 +1432,11 @@ private:
         }
 
         const CharT sep = std::use_facet< std::numpunct<CharT> >(str.getloc()).thousands_sep();
-        for (unsigned i = 0; i < width; ++i)
+        for (std::streamsize i = 0; i < width; ++i)
         {
             if (i > 0)
             {
-                const unsigned j = width - i;
+                const std::streamsize j = width - i;
                 if (j > group1 && (j - group1) % group2 == 0)
                     out = sep; // write sep to out
                 else if (j == group1)

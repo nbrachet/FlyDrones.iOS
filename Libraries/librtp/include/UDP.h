@@ -161,6 +161,9 @@ public:
     {
         if (dest)
         {
+            if (memcmp(dest, &_dest, sizeof(_dest)) == 0)
+                return;
+
             memcpy(&_dest, dest, sizeof(_dest));
 
             if (inet_ntop(_dest.sin_family, &_dest.sin_addr, _destname, sizeof(_destname)) == NULL)
@@ -178,9 +181,12 @@ public:
         }
         else
         {
-            LOGGER_DEBUG("destaddr = NULL");
+            if (_dest.sin_family == AF_UNSPEC)
+                return;
+
             memset(&_dest, 0, sizeof(_dest));
             _destname[0] = '\0';
+            LOGGER_DEBUG("destaddr = NULL");
         }
     }
 
@@ -781,7 +787,8 @@ protected:
     }
 
     ssize_t sendv_locked(UpgradableRWLock::ReaderWriterGuard& rwguard,
-                         struct iovec* iov, unsigned iovlen, int flags,
+                         struct iovec* iov, unsigned iovlen,
+                         int flags,
                          const struct sockaddr_in* dest = NULL);
 
     void next_locked(UpgradableRWLock::ReaderWriterGuard& rwguard,

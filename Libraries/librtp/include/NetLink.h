@@ -75,7 +75,7 @@ private:
                      void* data,
                      unsigned short datalen);
 
-#elif defined(__APPLE__) && !defined(TARGET_OS_IPHONE)
+#elif defined(__APPLE__) && !TARGET_OS_IPHONE
 
     NetLink()
         : Socket(socket(PF_ROUTE, SOCK_RAW, AF_UNSPEC))

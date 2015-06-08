@@ -17,7 +17,7 @@
 
 #include "UDP.h"
 
-static const int _rtp_srand = ( srand(time(NULL)), 0 );
+static const int _rtp_srand = ( srand((unsigned)time(NULL)), 0 );
 
 ///////////////////////////////////////////////////////////////////////
 //                                                                   //
@@ -676,8 +676,8 @@ public:
 
     static uint32_t rtp_compute_ts(const struct timeval* tv, unsigned frequency)
     {
-        return tv->tv_sec * (int64_t)frequency
-             + tv->tv_usec * (int64_t)frequency / 1000000;
+        return (uint32_t)(tv->tv_sec * (int64_t)frequency
+                        + tv->tv_usec * (int64_t)frequency / 1000000);
     }
 
     static uint32_t rtp_compute_ts(int64_t pts, unsigned frequency)
@@ -705,8 +705,8 @@ public:
         // CLOCK_FREQ is 1000000
 
         lldiv_t q = lldiv(pts, (int64_t)1000000);
-        return q.quot * (int64_t)frequency
-             + q.rem * (int64_t)frequency / (int64_t)1000000;
+        return (uint32_t)(q.quot * (int64_t)frequency
+                        + q.rem * (int64_t)frequency / (int64_t)1000000);
     }
 
 private:
@@ -765,16 +765,27 @@ private:
     struct SRPacket1
         : public RTCP::SRPacket
     {
+        uint32_t        last_seq;   /* extended last seq. no. sent */
+
         SRPacket1()
             : RTCP::SRPacket(0)
         {}
 
+        SRPacket1(const SRPacket1& rhs)
+            : RTCP::SRPacket(rhs)
+        {
+            memcpy(this, &rhs, sizeof(SRPacket1));
+            count = 0;
+            length = sizeof(RTCP::SRPacket); // FIXME: that's going to be trouble
+        }
+
         SRPacket1(const RTCP::SRPacket& rhs)
             : RTCP::SRPacket(rhs)
+            , last_seq(0)
         {
             memcpy(this, &rhs, sizeof(RTCP::SRPacket));
             count = 0;
-            length = sizeof(RTCP::SRPacket);
+            length = sizeof(RTCP::SRPacket); // FIXME: that's going to be trouble
         }
 
         // order by ntp_sec, ntp_frac, ssrc
@@ -884,10 +895,13 @@ private:
         return udp == NULL ? INADDR_ANY : udp->addr()->sin_addr.s_addr;
     }
 
-    RTCP::SRPacket* srpackets_find(UpgradableRWLock::ReaderWriterGuard&,
-                                   uint32_t ssrc)
+    SRPacket1* srpackets_find(UpgradableRWLock::ReaderWriterGuard&,
+                              uint32_t ssrc)
     {
-        for (std::vector<RTCP::SRPacket>::iterator it = _srpackets.begin();
+        // Note: although this is a non-const version
+        //       it is not necessary to create a WriterGuard
+        //       to manipulate elements of _srpackets
+        for (std::vector<SRPacket1>::iterator it = _srpackets.begin();
              it != _srpackets.end();
              ++it)
         {
@@ -897,7 +911,7 @@ private:
         return NULL;
     }
 
-    const RTCP::SRPacket* lsr_find(uint32_t ssrc, uint32_t lsr) const
+    const SRPacket1* lsr_find(uint32_t ssrc, uint32_t lsr) const
     {
         for (std::set<SRPacket1>::const_reverse_iterator it = _lsr.rbegin();
              it != _lsr.rend();
@@ -1110,9 +1124,12 @@ private:
 
     // SR / RR
 
-    // *** _srpackets, _t0, _pratio must be guarded ***
+    // *** _srpackets, _last_seq, _t0, _pratio must be guarded ***
+    // but elements of _srpackets, _last_seq, _t0 don't need to be guarded
+    // elements of _pratio must be guarded too
 
-    std::vector<RTCP::SRPacket> _srpackets; // next compound SRPacket to send
+    std::vector<SRPacket1> _srpackets; // next compound SRPacket to send
+    std::map<uint32_t, uint32_t> _last_seq; // <seq, ssrc>
     std::map<uint32_t, struct timeval> _t0; // <ssrc, t0> TODO: remove (just add a fake entry in lrr)
     std::map<uint32_t, float> _pratio; // <ssrc, packets ratio>
 
@@ -1167,7 +1184,7 @@ public:
 
     uint32_t last_seq() const
     {
-        return _cycles + _curr_seq;
+        return (uint32_t)(_cycles + _curr_seq);
     }
 
     uint32_t last_ts() const
@@ -1424,6 +1441,7 @@ public:
         , _dropped(0)
         , _strays(0)
         , _reset(0)
+        , _remote_lost(-1)
         , _transit(0)
         , _jitter(0)
         , _frequency(frequency)
@@ -1495,6 +1513,11 @@ public:
         return _lost;
     }
 
+    unsigned long remote_lost() const
+    {
+        return _remote_lost;
+    }
+
     unsigned long packets_dropped() const
     {
         return _dropped;
@@ -1517,7 +1540,7 @@ public:
 
     unsigned queue_count() const
     {
-        return _queue.size();
+        return (unsigned)_queue.size();
     }
 
     unsigned queue_count_marked() const
@@ -1585,6 +1608,7 @@ private:
         _received = 0;
         _lost = _dropped = _strays = 0;
         _reset += 1;
+        _remote_lost = 0;
         _transit = 0;
         _jitter = 0;
         _curr_ts = 0;
@@ -1823,6 +1847,8 @@ private:
     unsigned long _dropped;     /* # packets dropped                 */
     unsigned long _strays;      /* # stray packets (ie. resent)      */
     unsigned _reset;            /* # resets                          */
+
+    unsigned long _remote_lost;
 
     // jitter
 

@@ -190,7 +190,8 @@ private:
 
     ///////////////////////////////////////////////////////////////////
 
-std::ostream& operator<<(std::ostream& out, ARDUCOPTER_MODE mode)
+inline std::ostream&
+operator<<(std::ostream& out, ARDUCOPTER_MODE mode)
 {
     switch (mode)
     {
@@ -219,7 +220,8 @@ std::ostream& operator<<(std::ostream& out, ARDUCOPTER_MODE mode)
     return out << (unsigned)mode;
 }
 
-std::ostream& operator<<(std::ostream& out, MAV_TYPE type)
+inline std::ostream&
+operator<<(std::ostream& out, MAV_TYPE type)
 {
     switch (type)
     {
@@ -252,7 +254,8 @@ std::ostream& operator<<(std::ostream& out, MAV_TYPE type)
     return out << (unsigned)type;
 }
 
-std::ostream& operator<<(std::ostream& out, MAV_AUTOPILOT autopilot)
+inline std::ostream&
+operator<<(std::ostream& out, MAV_AUTOPILOT autopilot)
 {
     switch (autopilot)
     {
@@ -283,7 +286,8 @@ std::ostream& operator<<(std::ostream& out, MAV_AUTOPILOT autopilot)
     return out << (unsigned)autopilot;
 }
 
-std::ostream& operator<<(std::ostream& out, MAV_MODE_FLAG mode)
+inline std::ostream&
+operator<<(std::ostream& out, MAV_MODE_FLAG mode)
 {
     bool first = true;
 
@@ -311,7 +315,8 @@ std::ostream& operator<<(std::ostream& out, MAV_MODE_FLAG mode)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, MAV_STATE state)
+inline std::ostream&
+operator<<(std::ostream& out, MAV_STATE state)
 {
     switch (state)
     {
@@ -333,7 +338,8 @@ std::ostream& operator<<(std::ostream& out, MAV_STATE state)
     return out << (unsigned)state;
 }
 
-std::ostream& operator<<(std::ostream& out, const mavlink_heartbeat_t& msg)
+inline std::ostream&
+operator<<(std::ostream& out, const mavlink_heartbeat_t& msg)
 {
     if (! out)
         return out;
@@ -353,12 +359,14 @@ std::ostream& operator<<(std::ostream& out, const mavlink_heartbeat_t& msg)
 
     ///////////////////////////////////////////////////////////////////
 
-std::ostream& operator<<(std::ostream& out, const mavlink_set_mode_t& msg)
+inline std::ostream&
+operator<<(std::ostream& out, const mavlink_set_mode_t& msg)
 {
     if (! out)
         return out;
 
-    out << "custom_mode=" << msg.custom_mode << ' '
+    out << "custom_mode=" << msg.custom_mode
+        << " (" << (ARDUCOPTER_MODE)msg.custom_mode << ") " // FIXME: only if it is ARDUCOPTER
         << "target_system=" << (unsigned)msg.target_system << ' '
         << "base_mode=" << (MAV_MODE_FLAG)msg.base_mode;
     return out;
@@ -449,7 +457,8 @@ struct _MavSysStatusSensor
 
 }
 
-std::ostream& operator<<(std::ostream& out, const mavlink_sys_status_t& msg)
+inline std::ostream&
+operator<<(std::ostream& out, const mavlink_sys_status_t& msg)
 {
     if (! out)
         return out;
@@ -475,7 +484,8 @@ std::ostream& operator<<(std::ostream& out, const mavlink_sys_status_t& msg)
 
     ///////////////////////////////////////////////////////////////////
 
-std::ostream& operator<<(std::ostream& out, const mavlink_battery_status_t& msg)
+inline std::ostream&
+operator<<(std::ostream& out, const mavlink_battery_status_t& msg)
 {
     if (! out)
         return out;
@@ -515,7 +525,8 @@ std::ostream& operator<<(std::ostream& out, const mavlink_battery_status_t& msg)
 
     ///////////////////////////////////////////////////////////////////
 
-std::ostream& operator<<(std::ostream& out, MAV_DATA_STREAM data_stream)
+inline std::ostream&
+operator<<(std::ostream& out, MAV_DATA_STREAM data_stream)
 {
     switch (data_stream)
     {
@@ -538,7 +549,8 @@ std::ostream& operator<<(std::ostream& out, MAV_DATA_STREAM data_stream)
     return out << (unsigned) data_stream;
 }
 
-std::ostream& operator<<(std::ostream& out, const mavlink_request_data_stream_t& msg)
+inline std::ostream&
+operator<<(std::ostream& out, const mavlink_request_data_stream_t& msg)
 {
     if (! out)
         return out;
@@ -554,7 +566,8 @@ std::ostream& operator<<(std::ostream& out, const mavlink_request_data_stream_t&
 
     ///////////////////////////////////////////////////////////////////
 
-std::ostream& operator<<(std::ostream& out, MAV_CMD cmd)
+inline std::ostream&
+operator<<(std::ostream& out, MAV_CMD cmd)
 {
     switch (cmd)
     {
@@ -631,12 +644,15 @@ std::ostream& operator<<(std::ostream& out, MAV_CMD cmd)
     return out << "MAV_CMD_" << (uint16_t)cmd;
 }
 
-std::ostream& operator<<(std::ostream& out, const mavlink_command_long_t& msg)
+inline std::ostream&
+operator<<(std::ostream& out, const mavlink_command_long_t& msg)
 {
     if (! out)
         return out;
 
-    out << (MAV_CMD)msg.command << ':';
+    out << (MAV_CMD)msg.command << ':'
+        << " target_sys=" << (unsigned)msg.target_system
+        << " target_comp=" << (unsigned)msg.target_component;
 
     switch (msg.command)
     {
@@ -647,6 +663,13 @@ std::ostream& operator<<(std::ostream& out, const mavlink_command_long_t& msg)
             << " Radio=" << (bool)msg.param4
             << " Accelerometer=" << (bool)msg.param5
             << " Compass/Motor interference=" << (bool)msg.param6;
+        break;
+
+    case MAV_CMD_COMPONENT_ARM_DISARM:
+        if (msg.param1)
+            out << " ARM";
+        else
+            out << " DISARM";
         break;
 
     default:
@@ -665,9 +688,40 @@ std::ostream& operator<<(std::ostream& out, const mavlink_command_long_t& msg)
     return out;
 }
 
+inline std::ostream&
+operator<<(std::ostream& out, MAV_RESULT result)
+{
+    switch (result)
+    {
+#define DO(x)   case MAV_RESULT_##x: return out << #x;
+
+        DO(ACCEPTED)
+        DO(TEMPORARILY_REJECTED)
+        DO(DENIED)
+        DO(UNSUPPORTED)
+        DO(FAILED)
+
+#undef DO
+
+        case MAV_RESULT_ENUM_END:
+            break;
+    }
+    return out << "MAV_RESULT_" << (uint16_t)result;
+}
+
+inline std::ostream&
+operator<<(std::ostream& out, const mavlink_command_ack_t& msg)
+{
+    if (! out)
+        return out;
+
+    return out << (MAV_CMD)msg.command << ": " << (MAV_RESULT)msg.result;
+}
+
     ///////////////////////////////////////////////////////////////////
 
-std::ostream& operator<<(std::ostream& out, const mavlink_message_t& msg)
+inline std::ostream&
+operator<<(std::ostream& out, const mavlink_message_t& msg)
 {
     if (! out)
         return out;
@@ -700,6 +754,8 @@ std::ostream& operator<<(std::ostream& out, const mavlink_message_t& msg)
         return out << *reinterpret_cast<const mavlink_set_mode_t*>(_MAV_PAYLOAD(&msg));
     case MAVLINK_MSG_ID_COMMAND_LONG:
         return out << *reinterpret_cast<const mavlink_command_long_t*>(_MAV_PAYLOAD(&msg));
+    case MAVLINK_MSG_ID_COMMAND_ACK:
+        return out << *reinterpret_cast<const mavlink_command_ack_t*>(_MAV_PAYLOAD(&msg));
     }
 
     for (unsigned i = 0; i < info->num_fields; ++i)

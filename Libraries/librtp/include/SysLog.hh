@@ -352,15 +352,6 @@ protected:
 
     int _fd;
     struct sockaddr_un _addr;
-
-private:
-
-#ifdef __APPLE__
-    regex_t _regex;
-#else
-    pcre* _re;
-    pcre_extra* _extra;
-#endif
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -456,11 +447,6 @@ protected:
     {
         logger.log(priority, "<kern>%s %s", timestamp, msg);
     }
-
-private:
-
-    pcre* _re;
-    pcre_extra* _extra;
 };
 
 #endif

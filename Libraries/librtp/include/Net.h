@@ -342,6 +342,74 @@ public:
         return 0;
     }
 
+#if 0
+    // should be the interface
+
+    virtual ssize_t read(void* buffer, size_t len,
+                         struct timeval* timeout = NULL)
+    {
+        struct iovec iov;
+        iov.iov_base = buffer;
+        iov.iov_len = len;
+        return read(&iov, 1, timeout);
+    }
+    virtual ssize_t read(const struct iovec* iov, unsigned iovcnt,
+                         struct timeval* timeout = NULL)
+    {
+        for (;;)
+        {
+            if (timeout)
+            {
+                switch (wait_for_input(timeout))
+                {
+                case -1:    return -1;
+                case 0:     return -1;
+                case 1:     break;
+                default:    UNREACHABLE();
+                }
+            }
+
+            ssize_t n = ::readv(_sockfd, iov, iovcnt);
+            if (n == -1)
+            {
+#ifndef NDEBUG
+                // running inside the debugger causes EINTR
+                if (errno == EINTR)
+                    continue;
+#endif
+                if (errno == EWOULDBLOCK)
+                    continue;
+                LOGGER_ERROR("read: %s", strerror(errno));
+                return -1;
+            }
+            if (n == 0)
+            {
+                if (timeout && (timeout->tv_sec > 0 || timeout->tv_usec > 0))
+                    continue;
+            }
+
+            return n;
+        }
+        UNREACHABLE();
+    }
+
+    virtual ssize_t write(const void* buffer, size_t len)
+    {
+        struct iovec iovec;
+        iovec.iov_base = const_cast<void*>(buffer);
+        iovec.iov_len = len;
+        return write(&iovec, 1);
+    }
+    virtual ssize_t write(const struct iovec* iov, unsigned iovcnt)
+    {
+        ssize_t n = ::writev(_sockfd, iov, iovcnt);
+        if (n == -1)
+            LOGGER_ERROR("write: %s", strerror(errno));
+        return n;
+    }
+
+#endif
+
 protected:
 
     bool f_getfl(int flag) const
@@ -1750,8 +1818,6 @@ protected:
 
         return 0;
     }
-
-private:
 
     int getsockname()
     {

@@ -21,7 +21,8 @@
 ///////////////////////////////////////////////////////////////////////
 
 #ifdef LOGGER_OSTREAM
-std::ostream& operator<<(std::ostream& out, const struct timeval& tv)
+static std::ostream&
+operator<<(std::ostream& out, const struct timeval& tv)
 {
     if (! out)
         return out;
@@ -75,7 +76,7 @@ static inline void
 timespec_to_timeval(const struct timespec& ts, struct timeval& tv)
 {
     tv.tv_sec = ts.tv_sec;
-    tv.tv_usec = ts.tv_nsec / 1000;
+    tv.tv_usec = (suseconds_t) (ts.tv_nsec / 1000);
 }
 
 inline struct timeval&
@@ -205,7 +206,8 @@ elapsed(struct timeval a, const struct timeval& b)
 ///////////////////////////////////////////////////////////////////////
 
 #ifdef LOGGER_OSTREAM
-std::ostream& operator<<(std::ostream& out, const struct timespec& ts)
+static std::ostream&
+operator<<(std::ostream& out, const struct timespec& ts)
 {
     if (! out)
         return out;

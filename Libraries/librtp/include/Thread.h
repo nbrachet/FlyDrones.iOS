@@ -351,7 +351,7 @@ public:
     {
     public:
 
-        WriterGuard(ReaderWriterGuard& rwguard)
+        explicit WriterGuard(ReaderWriterGuard& rwguard)
             : _rwguard(rwguard)
         {
             _rwguard.upgrade();
@@ -635,7 +635,7 @@ protected:
 
     virtual void run() =0;
 
-    unsigned int sleep(int secs)
+    time_t sleep(time_t secs)
     {
         // sleep(3) uses SIGALRM
 
@@ -648,7 +648,7 @@ protected:
         return 0;
     }
 
-    unsigned int usleep(useconds_t usecs)
+    time_t usleep(useconds_t usecs)
     {
         // sleep(3) uses SIGALRM
 
@@ -666,7 +666,7 @@ protected:
 
 private:
 
-    static inline int round_up(int x, int n)
+    static inline size_t round_up(size_t x, size_t n)
     {
         return ((x + n - 1) / n) * n;
     }

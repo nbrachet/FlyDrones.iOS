@@ -83,7 +83,8 @@ protected:
     ///////////////////////////////////////////////////////////////////
 
 #if defined(__linux__) && defined(LOGGER_OSTREAM)
-std::ostream& operator<<(std::ostream& out, const struct tcp_info& tcpi)
+static std::ostream&
+operator<<(std::ostream& out, const struct tcp_info& tcpi)
 {
     if (! out)
         return out;
@@ -169,7 +170,10 @@ public:
             this->peeraddr(NULL);
             return -1;
         }
-        LOGGER_DEBUG("Connected to %s:%u", peername(), peerport());
+
+        (void) getsockname();
+
+        LOGGER_DEBUG("Connected to %s:%u via %s:%u", peername(), peerport(), name(), port());
         return 0;
     }
 
@@ -180,12 +184,12 @@ public:
         {
             if (LIKELY(errno != EINPROGRESS) && LIKELY(errno != EALREADY))
             {
-                LOGGER_PERROR("connect(%s:%u)", peername(), peerport());
+                LOGGER_PERROR("connect_async(%s:%u)", peername(), peerport());
                 this->peeraddr(NULL);
                 return -1;
             }
         }
-        LOGGER_DEBUG("Connecting to %s:%u", peername(), peerport());
+        LOGGER_DEBUG("Connecting to %s:%u...", peername(), peerport());
         return 0;
     }
 
@@ -210,12 +214,12 @@ public:
                 ||        err == EHOSTUNREACH
                 || LIKELY(err == ETIMEDOUT))
             {
-                LOGGER_DEBUG("connect(%s:%u): %s", peername(), peerport(), strerror(err));
+                LOGGER_DEBUG("connect_async_complete(%s:%u): %s", peername(), peerport(), strerror(err));
             }
             else
             {
                 errno = err;
-                LOGGER_PERROR("connect(%s:%u)", peername(), peerport());
+                LOGGER_PERROR("connect_async_complete(%s:%u)", peername(), peerport());
                 this->peeraddr(NULL);
             }
         }
@@ -230,7 +234,9 @@ public:
                 LOGGER_ASSERT(memcmp(&_peeraddr, &sockaddr, sizeof(_peeraddr)) == 0);
 #endif
 
-            LOGGER_DEBUG("Connected to %s:%u", peername(), peerport());
+            (void) getsockname();
+
+            LOGGER_DEBUG("Connected to %s:%u via %s:%u", peername(), peerport(), name(), port());
         }
         return err;
     }
