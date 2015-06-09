@@ -92,6 +92,14 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
     return YES;
 }
 
+- (BOOL)sendDataFromTCPConnection:(NSData *)data tag:(NSUInteger)tag {
+    if (data.length == 0) {
+        return NO;
+    }
+    [self.controlAsyncSocket writeData:data withTimeout:-1 tag:tag];
+    return YES;
+}
+
 - (BOOL)sendDataFromTCPConnection:(NSData *)data {
     if (data.length == 0) {
         return NO;
@@ -219,7 +227,7 @@ static NSUInteger const FDConnectionManagerStandardRTPHeaderLength = 12;
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
-//    NSLog(@"Did send control data");
+//    NSLog(@"Did send data for tag:%d", tag);
 }
 
 @end

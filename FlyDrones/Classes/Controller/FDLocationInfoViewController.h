@@ -12,6 +12,6 @@
 @interface FDLocationInfoViewController : UIViewController <MKMapViewDelegate>
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
-@property (nonatomic, weak) IBOutlet UISwitch *mapTypeSwitch;
+@property (nonatomic, weak) IBOutlet UILabel *satelliteInfoLabel;
 
 @end

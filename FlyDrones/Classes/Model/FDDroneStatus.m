@@ -106,7 +106,8 @@
     self.absolutePressure = FDNotAvailable;
     self.differentialPressure = FDNotAvailable;
     
-    self.locationCoordinate = kCLLocationCoordinate2DInvalid;
+    self.gpsInfo = [[FDGPSInfo alloc] init];
+    self.gpsInfo.locationCoordinate = kCLLocationCoordinate2DInvalid;
 }
 
 @end

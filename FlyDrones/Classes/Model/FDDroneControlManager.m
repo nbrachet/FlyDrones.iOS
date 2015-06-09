@@ -16,8 +16,9 @@ NSString * const FDDroneControlManagerDidHandleVFRInfoNotification = @"didHandle
 NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotification = @"didHandleLocationCoordinate";
 NSString * const FDDroneControlManagerDidHandleSystemInfoNotification = @"didHandleSystemInfo";
 
-CGFloat static const FDDroneControlManagerMavLinkDefaultSystemId = 255;
+CGFloat static const FDDroneControlManagerMavLinkDefaultSystemId = 1;
 CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
+CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 
 @interface FDDroneControlManager () {
     mavlink_message_t msg;
@@ -61,7 +62,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
         const char *bytes = (const char *) [data bytes];
         BOOL isMessageDetected = [self parseMessageChar:bytes[0]];
         if (isMessageDetected) {
-            sleep(1);
+            usleep(1000);
         }
     }];
 }
@@ -126,8 +127,6 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
             droneStatus.absolutePressure = scaledPressure.press_abs;
             droneStatus.differentialPressure = scaledPressure.press_diff;
             
-            
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleScaledPressureInfoNotification object:self];
                 
@@ -135,6 +134,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
                     [self.delegate droneControlManager:self didHandleScaledPressureInfo:droneStatus.temperature absolutePressure:droneStatus.absolutePressure differentialPressure:droneStatus.differentialPressure];
                 }
             });
+            break;
         }
         //not in use temporarily
 //        case MAVLINK_MSG_ID_BATTERY_STATUS: {
@@ -177,22 +177,25 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
                                                voltage:droneStatus.batteryVoltage];
                 }
             });
+            break;
         }
 
         case MAVLINK_MSG_ID_GPS_RAW_INT: {
             if (![self.delegate respondsToSelector:@selector(droneControlManager:didHandleLocationCoordinate:)]) {
                 break;
             }
-            
             mavlink_gps_raw_int_t gpsRawIntPkt;
             mavlink_msg_gps_raw_int_decode(message, &gpsRawIntPkt);
             CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(gpsRawIntPkt.lat/10000000.0f,
                                                                                    gpsRawIntPkt.lon/10000000.0f);
+            
             if (!CLLocationCoordinate2DIsValid(locationCoordinate)) {
                 break;
             }
-            
-            droneStatus.locationCoordinate = locationCoordinate;
+            droneStatus.gpsInfo.locationCoordinate = locationCoordinate;
+            droneStatus.gpsInfo.satelliteCount = gpsRawIntPkt.satellites_visible;
+            droneStatus.gpsInfo.hdop = gpsRawIntPkt.eph;
+            droneStatus.gpsInfo.fixType = gpsRawIntPkt.fix_type;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleLocationCoordinateNotification object:self];
                 
@@ -287,6 +290,19 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
 //            NSLog(@"%@: %f", paramIdString, param_value);
             break;
         }
+        case MAVLINK_MSG_ID_STATUSTEXT: {
+            mavlink_statustext_t statusText;
+            mavlink_msg_statustext_decode(message, &statusText);
+            if (statusText.severity == MAV_SEVERITY_ERROR) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSString *marketPacket = [NSString stringWithCString:statusText.text encoding:NSUTF8StringEncoding];
+                    if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleErrorMessage:)]) {
+                        [self.delegate droneControlManager:self didHandleErrorMessage:marketPacket];
+                    }
+                });
+            }
+            break;
+        }
     }
 }
 
@@ -347,7 +363,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
             mavlink_msg_rc_channels_override_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                                                   FDDroneControlManagerMavLinkDefaultComponentId,
                                                   &message,
-                                                  msg.sysid,
+                                                  FDDroneControlManagerMavLinkDefaultTargetSystem,
                                                   MAV_COMP_ID_ALL,
                                                   [rcChannelsRaw[0] integerValue],
                                                   [rcChannelsRaw[1] integerValue],
@@ -385,7 +401,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
     mavlink_msg_set_mode_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                               FDDroneControlManagerMavLinkDefaultComponentId,
                               &message,
-                              MAV_COMP_ID_ALL,
+                              FDDroneControlManagerMavLinkDefaultTargetSystem,
                               MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
                               mode);
     return [NSData dataWithMAVLinkMessage:&message];
@@ -396,8 +412,8 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
     mavlink_msg_command_long_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                                   FDDroneControlManagerMavLinkDefaultComponentId,
                                   &message,
+                                  FDDroneControlManagerMavLinkDefaultTargetSystem,
                                   MAV_COMP_ID_ALL,
-                                  MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
                                   MAV_CMD_COMPONENT_ARM_DISARM,
                                   1,
                                   armed ? 1 : 0,

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1B0042CA1AEA49C6007B1B35 /* FDConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0042C91AEA49C6007B1B35 /* FDConnectionManager.m */; };
 		1B38826F1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B38826E1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.m */; };
+		1B3CE0961B26F99800291944 /* FDGPSInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CE0951B26F99800291944 /* FDGPSInfo.m */; };
 		1B43711C1AFBAA8300004CCD /* FDRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B43711B1AFBAA8300004CCD /* FDRootViewController.m */; };
 		1B43711F1AFBAABD00004CCD /* FDLeftSideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B43711E1AFBAABD00004CCD /* FDLeftSideViewController.m */; };
 		1B9552391AE7BBA30054BA0C /* FDVideoFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9552381AE7BBA30054BA0C /* FDVideoFrame.m */; };
@@ -19,6 +20,7 @@
 		1B97E9EC1AD5519300051601 /* NSFileManager+ANUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E41AD5519300051601 /* NSFileManager+ANUtils.m */; };
 		1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E61AD5519300051601 /* NSString+Datetime.m */; };
 		1B97E9EE1AD5519300051601 /* NSString+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B97E9E81AD5519300051601 /* NSString+Network.m */; };
+		1B99FE151B1E1B6F00D3E0D6 /* 2015-05-01 20-19-25.tlog in Resources */ = {isa = PBXBuildFile; fileRef = 1B99FE141B1E1B6F00D3E0D6 /* 2015-05-01 20-19-25.tlog */; };
 		1B9B07831B17369C00662300 /* UIImage+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B07821B17369C00662300 /* UIImage+Utils.m */; };
 		1B9B07861B173D5100662300 /* FDCustomModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B07851B173D5100662300 /* FDCustomModeViewController.m */; };
 		1B9B078A1B17563300662300 /* FDEnableArmedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9B07891B17563300662300 /* FDEnableArmedViewController.m */; };
@@ -49,6 +51,7 @@
 		1BE363D81B0124C800F880F3 /* FDVFRInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE363D71B0124C800F880F3 /* FDVFRInfoViewController.m */; };
 		1BE363DB1B0124E400F880F3 /* FDLocationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE363DA1B0124E400F880F3 /* FDLocationInfoViewController.m */; };
 		1BE363DD1B0134E300F880F3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BE363DC1B0134E300F880F3 /* MapKit.framework */; };
+		1BE628181B1F3CF600EED069 /* CLLocation+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE628171B1F3CF600EED069 /* CLLocation+Utils.m */; };
 		1BED467B1AE56D79008EA8C8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BED467A1AE56D79008EA8C8 /* Images.xcassets */; };
 		1BED46891AE56DC2008EA8C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46851AE56DC2008EA8C8 /* Main.storyboard */; };
 		1BED468A1AE56DC2008EA8C8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BED46871AE56DC2008EA8C8 /* LaunchScreen.xib */; };
@@ -69,6 +72,8 @@
 		1B0042C91AEA49C6007B1B35 /* FDConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConnectionManager.m; sourceTree = "<group>"; };
 		1B38826D1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDConnectionSettingsViewController.h; sourceTree = "<group>"; };
 		1B38826E1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConnectionSettingsViewController.m; sourceTree = "<group>"; };
+		1B3CE0941B26F99800291944 /* FDGPSInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDGPSInfo.h; sourceTree = "<group>"; };
+		1B3CE0951B26F99800291944 /* FDGPSInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDGPSInfo.m; sourceTree = "<group>"; };
 		1B43711A1AFBAA8300004CCD /* FDRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRootViewController.h; sourceTree = "<group>"; };
 		1B43711B1AFBAA8300004CCD /* FDRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDRootViewController.m; sourceTree = "<group>"; };
 		1B43711D1AFBAABD00004CCD /* FDLeftSideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDLeftSideViewController.h; sourceTree = "<group>"; };
@@ -303,6 +308,7 @@
 		1B97E9E61AD5519300051601 /* NSString+Datetime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Datetime.m"; sourceTree = "<group>"; };
 		1B97E9E71AD5519300051601 /* NSString+Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Network.h"; sourceTree = "<group>"; };
 		1B97E9E81AD5519300051601 /* NSString+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Network.m"; sourceTree = "<group>"; };
+		1B99FE141B1E1B6F00D3E0D6 /* 2015-05-01 20-19-25.tlog */ = {isa = PBXFileReference; lastKnownFileType = file; name = "2015-05-01 20-19-25.tlog"; path = "Development resources/Resources/2015-05-01 20-19-25.tlog"; sourceTree = SOURCE_ROOT; };
 		1B9B07811B17369C00662300 /* UIImage+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Utils.h"; sourceTree = "<group>"; };
 		1B9B07821B17369C00662300 /* UIImage+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Utils.m"; sourceTree = "<group>"; };
 		1B9B07841B173D5100662300 /* FDCustomModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCustomModeViewController.h; sourceTree = "<group>"; };
@@ -444,6 +450,8 @@
 		1BE363D91B0124E400F880F3 /* FDLocationInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDLocationInfoViewController.h; sourceTree = "<group>"; };
 		1BE363DA1B0124E400F880F3 /* FDLocationInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDLocationInfoViewController.m; sourceTree = "<group>"; };
 		1BE363DC1B0134E300F880F3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		1BE628161B1F3CF600EED069 /* CLLocation+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CLLocation+Utils.h"; sourceTree = "<group>"; };
+		1BE628171B1F3CF600EED069 /* CLLocation+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CLLocation+Utils.m"; sourceTree = "<group>"; };
 		1BED467A1AE56D79008EA8C8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1BED467C1AE56D8E008EA8C8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BED46861AE56DC2008EA8C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -779,6 +787,8 @@
 				1BDB2A031AF291B000B2A465 /* FDFileReader.m */,
 				1BC5E8F91AFCEAAA006C5AD1 /* FDDroneStatus.h */,
 				1BC5E8FA1AFCEAAA006C5AD1 /* FDDroneStatus.m */,
+				1B3CE0941B26F99800291944 /* FDGPSInfo.h */,
+				1B3CE0951B26F99800291944 /* FDGPSInfo.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -800,6 +810,8 @@
 				1BDB2A091AF2C68000B2A465 /* NSString+MAVLink.m */,
 				1BC8F9BF1B04E4D9003D5EAC /* NSData+MAVLink.h */,
 				1BC8F9C01B04E4D9003D5EAC /* NSData+MAVLink.m */,
+				1BE628161B1F3CF600EED069 /* CLLocation+Utils.h */,
+				1BE628171B1F3CF600EED069 /* CLLocation+Utils.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1061,6 +1073,7 @@
 		371525EE1A77B28A00F885B8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1B99FE141B1E1B6F00D3E0D6 /* 2015-05-01 20-19-25.tlog */,
 				1BED467C1AE56D8E008EA8C8 /* Info.plist */,
 				371525F01A77B28A00F885B8 /* main.m */,
 				37431F991A7A65F5007CDD6F /* FlyDrones-Prefix.pch */,
@@ -1222,6 +1235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BED468A1AE56DC2008EA8C8 /* LaunchScreen.xib in Resources */,
+				1B99FE151B1E1B6F00D3E0D6 /* 2015-05-01 20-19-25.tlog in Resources */,
 				1BED46891AE56DC2008EA8C8 /* Main.storyboard in Resources */,
 				1BED467B1AE56D79008EA8C8 /* Images.xcassets in Resources */,
 			);
@@ -1284,6 +1298,7 @@
 				1BC5E8FB1AFCEAAA006C5AD1 /* FDDroneStatus.m in Sources */,
 				1B9B07861B173D5100662300 /* FDCustomModeViewController.m in Sources */,
 				1BB00CA21AEE6D9900FF787B /* NSData+RTCP.m in Sources */,
+				1B3CE0961B26F99800291944 /* FDGPSInfo.m in Sources */,
 				1BE363D51B00EB8200F880F3 /* FDScaledPressureViewController.m in Sources */,
 				1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */,
 				1BDB2A0A1AF2C68000B2A465 /* NSString+MAVLink.m in Sources */,
@@ -1307,6 +1322,7 @@
 				1B9B078D1B17578400662300 /* FDOptionTableViewCell.m in Sources */,
 				371525F11A77B28A00F885B8 /* main.m in Sources */,
 				1B97E9ED1AD5519300051601 /* NSString+Datetime.m in Sources */,
+				1BE628181B1F3CF600EED069 /* CLLocation+Utils.m in Sources */,
 				1BE363DB1B0124E400F880F3 /* FDLocationInfoViewController.m in Sources */,
 				1B9B078A1B17563300662300 /* FDEnableArmedViewController.m in Sources */,
 				1B9B07831B17369C00662300 /* UIImage+Utils.m in Sources */,
