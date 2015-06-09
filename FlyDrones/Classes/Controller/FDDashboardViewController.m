@@ -24,6 +24,7 @@
 
 static NSUInteger const FDDashboardViewControllerWaitingHeartbeatHUDTag = 8410;
 static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8411;
+static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 
 @interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDCustomModeViewControllerDelegate, FDEnableArmedViewControllerDelegate, UIPopoverPresentationControllerDelegate>
 
@@ -78,59 +79,6 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     }
 }
 
-- (void)connectToServers {
-    if (self.connectionManager == nil) {
-        self.connectionManager = [[FDConnectionManager alloc] init];
-        self.connectionManager.delegate = self;
-        
-        BOOL isConnectedToUDPServer = [self.connectionManager connectToServer:[FDDroneStatus currentStatus].pathForUDPConnection
-                                                            portForConnection:[FDDroneStatus currentStatus].portForUDPConnection
-                                                              portForReceived:[FDDroneStatus currentStatus].portForUDPConnection];
-        if (!isConnectedToUDPServer) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                            message:@"Used UDP port is blocked. Please shut all of the applications that use data streaming"
-                                                           delegate:self
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        }
-    }
-    
-        
-    
-    if (![self.connectionManager isTCPConnected]) {
-        self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
-        self.enabledControls = NO;
-        
-        MBProgressHUD *progressHUD;
-        for (MBProgressHUD *hud in [MBProgressHUD allHUDsForView:self.movieGLView]) {
-            if (hud.tag == FDDashboardViewControllerConnectingToTCPServerHUDTag) {
-                progressHUD = hud;
-            } else {
-                [MBProgressHUD hideHUDForView:hud animated:NO];
-            }
-        }
-        if (progressHUD == nil) {
-            MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
-            progressHUD.labelText = NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server");
-            progressHUD.tag = FDDashboardViewControllerConnectingToTCPServerHUDTag;
-        }
-
-        BOOL isConnectedToTCPServer = [self.connectionManager receiveTCPServer:[FDDroneStatus currentStatus].pathForTCPConnection
-                                                                          port:[FDDroneStatus currentStatus].portForTCPConnection];
-        if (!isConnectedToTCPServer) {
-            [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:YES];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                            message:@"Used TCP port is blocked. Please shut all of the applications that use data streaming"
-                                                           delegate:self
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        }
-    }
-    
-}
-
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
@@ -141,6 +89,8 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     self.connectionManager = nil;
     self.movieDecoder = nil;
     self.droneControlManager = nil;
+    
+    [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:NO];
     
     [[FDDroneStatus currentStatus] clearStatus];
 }
@@ -249,6 +199,54 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     [self startTimer];
 }
 
+
+- (void)connectToServers {
+    if (self.connectionManager == nil) {
+        self.connectionManager = [[FDConnectionManager alloc] init];
+        self.connectionManager.delegate = self;
+        
+        BOOL isConnectedToUDPServer = [self.connectionManager connectToServer:[FDDroneStatus currentStatus].pathForUDPConnection
+                                                            portForConnection:[FDDroneStatus currentStatus].portForUDPConnection
+                                                              portForReceived:[FDDroneStatus currentStatus].portForUDPConnection];
+        if (!isConnectedToUDPServer) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:@"Used UDP port is blocked. Please shut all of the applications that use data streaming"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    }
+    
+    if (![self.connectionManager isTCPConnected]) {
+
+        self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
+        self.enabledControls = NO;
+        
+        MBProgressHUD *progressHUD = [self progressHUDForTag:FDDashboardViewControllerConnectingToTCPServerHUDTag];
+        
+        if (progressHUD == nil) {
+            [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:NO];
+            MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
+            progressHUD.labelText = NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server");
+            progressHUD.tag = FDDashboardViewControllerConnectingToTCPServerHUDTag;
+        }
+        
+        BOOL isConnectedToTCPServer = [self.connectionManager receiveTCPServer:[FDDroneStatus currentStatus].pathForTCPConnection
+                                                                          port:[FDDroneStatus currentStatus].portForTCPConnection];
+        if (!isConnectedToTCPServer) {
+            [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:YES];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:@"Used TCP port is blocked. Please shut all of the applications that use data streaming"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    }
+    
+}
+
 - (void)startTimer {
     self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
 
@@ -284,13 +282,8 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     
     CFTimeInterval delayHeartbeatMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedHeartbeatMessageTimeInterval;
     if (delayHeartbeatMessageTimeInterval > 2.0f) {
-        MBProgressHUD *progressHUD;
-        for (MBProgressHUD *hud in [MBProgressHUD allHUDsForView:self.movieGLView]) {
-            if (hud.tag == FDDashboardViewControllerWaitingHeartbeatHUDTag) {
-                progressHUD = hud;
-                break;
-            }
-        }
+        [self dissmissErrorProgressHUD];
+        MBProgressHUD *progressHUD = [self progressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
         if (progressHUD == nil) {
             progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
             progressHUD.labelText = NSLocalizedString(@"Waiting heartbeat message", @"Waiting heartbeat message");
@@ -301,8 +294,9 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
         return;
     }
     
-    [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:YES];
-    
+    [self dissmissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
+    [self dissmissProgressHUDForTag:FDDashboardViewControllerConnectingToTCPServerHUDTag];
+
     //send control data
     NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
                                                                     roll:self.rightJoystickView.stickHorisontalValue
@@ -312,13 +306,37 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     [self.connectionManager sendDataFromTCPConnection:controlData tag:12];
 }
 
-- (void)dissmissProgressHUDForTag:(NSUInteger)tag {
+- (MBProgressHUD *)progressHUDForTag:(NSUInteger)tag {
+    MBProgressHUD *progressHUD;
     for (UIView *hudView in [MBProgressHUD allHUDsForView:self.movieGLView]) {
         if (hudView.tag == tag) {
-            [hudView removeFromSuperview];
+            progressHUD = (MBProgressHUD *)hudView;
             break;
         }
     }
+    return progressHUD;
+}
+
+- (void)dissmissProgressHUDForTag:(NSUInteger)tag {
+    MBProgressHUD *progressHUD = [self progressHUDForTag:tag];
+    [progressHUD hide:NO];
+}
+
+- (void)showErrorProgressHUDWithText:(NSString *)text {
+    MBProgressHUD *progressHUD = [self progressHUDForTag:FDDashboardViewControllerErrorHUDTag];
+    if (progressHUD == nil) {
+        progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
+        progressHUD.tag = FDDashboardViewControllerErrorHUDTag;
+        progressHUD.mode = MBProgressHUDModeText;
+    } else {
+        [NSObject cancelPreviousPerformRequestsWithTarget:progressHUD];
+    }
+    progressHUD.labelText = text;
+    [progressHUD hide:NO afterDelay:5.0f];
+}
+
+- (void)dissmissErrorProgressHUD {
+    [self dissmissProgressHUDForTag:FDDashboardViewControllerErrorHUDTag];
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -452,6 +470,13 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     self.enabledControls = YES;
 }
 
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleErrorMessage:(NSString *)errorText {
+    MBProgressHUD *waitingHeartbeatProgressHUD = [self progressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
+    if (waitingHeartbeatProgressHUD == nil) {
+        [self showErrorProgressHUDWithText:errorText];
+    }
+}
+
 #pragma mark - FDCustomModeViewControllerDelegate
 
 - (void)didSelectNewMode:(FDAutoPilotMode)mode {
@@ -466,7 +491,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     [self.connectionManager sendDataFromTCPConnection:messageData];
 }
 
-#pragma mark -
+#pragma mark - UIPopoverPresentationControllerDelegate
 
 - (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
     [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];

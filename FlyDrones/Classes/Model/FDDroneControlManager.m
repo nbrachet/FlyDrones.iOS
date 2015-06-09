@@ -287,6 +287,19 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 //            NSLog(@"%@: %f", paramIdString, param_value);
             break;
         }
+        case MAVLINK_MSG_ID_STATUSTEXT: {
+            mavlink_statustext_t statusText;
+            mavlink_msg_statustext_decode(message, &statusText);
+            if (statusText.severity == MAV_SEVERITY_ERROR) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSString *marketPacket = [NSString stringWithCString:statusText.text encoding:NSUTF8StringEncoding];
+                    if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleErrorMessage:)]) {
+                        [self.delegate droneControlManager:self didHandleErrorMessage:marketPacket];
+                    }
+                });
+            }
+            break;
+        }
     }
 }
 
