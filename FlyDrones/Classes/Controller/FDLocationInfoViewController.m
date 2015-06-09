@@ -36,24 +36,11 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - IBActions
-
-- (IBAction)choseMapType:(id)sender {
-    if (![sender isKindOfClass:UISwitch.class]) {
-        return;
-    }
-    UISwitch *mapTypeSwitch = (UISwitch *)sender;
-    if (mapTypeSwitch.on) {
-        self.mapView.mapType = MKMapTypeHybrid;
-    } else {
-        self.mapView.mapType = MKMapTypeSatellite;
-    }
-}
-
 #pragma mark - Private
 
 - (void)refreshInfo:(NSNotification *)notification {
-    CLLocationCoordinate2D locationCoordinate = [FDDroneStatus currentStatus].locationCoordinate;
+    FDGPSInfo *gpsInfo = [FDDroneStatus currentStatus].gpsInfo;
+    CLLocationCoordinate2D locationCoordinate = gpsInfo.locationCoordinate;
     
     if (!CLLocationCoordinate2DIsValid(locationCoordinate)) {
         return;
@@ -74,6 +61,13 @@
         [self.mapView addAnnotation:annotation];
     }
     
+    NSString *satelliteInfoString;
+    if (gpsInfo.fixType <= 2) {
+        satelliteInfoString = @"N/A";
+    } else {
+        satelliteInfoString = [NSString stringWithFormat:@"Satellites:%lu HDOP:%ld", (unsigned long)gpsInfo.satelliteCount, (long)gpsInfo.hdop];
+    }
+    self.satelliteInfoLabel.text = satelliteInfoString;
 }
 
 #pragma mark - MKMapViewDelegate

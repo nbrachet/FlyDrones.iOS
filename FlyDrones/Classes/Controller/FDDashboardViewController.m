@@ -129,7 +129,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     self.systemStatusButton.enabled = enabledControls;
     self.compassView.enabled = enabledControls;
     self.armedStatusButton.enabled = enabledControls;
-    self.worldwideLocationButton.enabled = enabledControls && CLLocationCoordinate2DIsValid([FDDroneStatus currentStatus].locationCoordinate);
+    self.worldwideLocationButton.enabled = enabledControls && CLLocationCoordinate2DIsValid([FDDroneStatus currentStatus].gpsInfo.locationCoordinate);
     
     self.leftJoystickView.userInteractionEnabled = enabledControls;
     self.rightJoystickView.userInteractionEnabled = enabledControls;

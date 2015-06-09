@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1B0042CA1AEA49C6007B1B35 /* FDConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0042C91AEA49C6007B1B35 /* FDConnectionManager.m */; };
 		1B38826F1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B38826E1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.m */; };
+		1B3CE0961B26F99800291944 /* FDGPSInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CE0951B26F99800291944 /* FDGPSInfo.m */; };
 		1B43711C1AFBAA8300004CCD /* FDRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B43711B1AFBAA8300004CCD /* FDRootViewController.m */; };
 		1B43711F1AFBAABD00004CCD /* FDLeftSideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B43711E1AFBAABD00004CCD /* FDLeftSideViewController.m */; };
 		1B9552391AE7BBA30054BA0C /* FDVideoFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9552381AE7BBA30054BA0C /* FDVideoFrame.m */; };
@@ -71,6 +72,8 @@
 		1B0042C91AEA49C6007B1B35 /* FDConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConnectionManager.m; sourceTree = "<group>"; };
 		1B38826D1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDConnectionSettingsViewController.h; sourceTree = "<group>"; };
 		1B38826E1AFD3F3300DF1E8E /* FDConnectionSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConnectionSettingsViewController.m; sourceTree = "<group>"; };
+		1B3CE0941B26F99800291944 /* FDGPSInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDGPSInfo.h; sourceTree = "<group>"; };
+		1B3CE0951B26F99800291944 /* FDGPSInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDGPSInfo.m; sourceTree = "<group>"; };
 		1B43711A1AFBAA8300004CCD /* FDRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRootViewController.h; sourceTree = "<group>"; };
 		1B43711B1AFBAA8300004CCD /* FDRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDRootViewController.m; sourceTree = "<group>"; };
 		1B43711D1AFBAABD00004CCD /* FDLeftSideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDLeftSideViewController.h; sourceTree = "<group>"; };
@@ -784,6 +787,8 @@
 				1BDB2A031AF291B000B2A465 /* FDFileReader.m */,
 				1BC5E8F91AFCEAAA006C5AD1 /* FDDroneStatus.h */,
 				1BC5E8FA1AFCEAAA006C5AD1 /* FDDroneStatus.m */,
+				1B3CE0941B26F99800291944 /* FDGPSInfo.h */,
+				1B3CE0951B26F99800291944 /* FDGPSInfo.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1293,6 +1298,7 @@
 				1BC5E8FB1AFCEAAA006C5AD1 /* FDDroneStatus.m in Sources */,
 				1B9B07861B173D5100662300 /* FDCustomModeViewController.m in Sources */,
 				1BB00CA21AEE6D9900FF787B /* NSData+RTCP.m in Sources */,
+				1B3CE0961B26F99800291944 /* FDGPSInfo.m in Sources */,
 				1BE363D51B00EB8200F880F3 /* FDScaledPressureViewController.m in Sources */,
 				1B955E3C1ACEC0F900B33BDD /* FDLoginViewController.m in Sources */,
 				1BDB2A0A1AF2C68000B2A465 /* NSString+MAVLink.m in Sources */,
@@ -1453,7 +1459,7 @@
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
+				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
 			};
 			name = Debug;
 		};
@@ -1483,7 +1489,7 @@
 					"$(PROJECT_DIR)/Libraries/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
+				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
 			};
 			name = Release;
 		};

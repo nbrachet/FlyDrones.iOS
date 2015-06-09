@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FDGPSInfo.h"
 
 #define FDNotAvailable NSIntegerMin
 
@@ -31,11 +32,11 @@ typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
 
 @interface FDDroneStatus : NSObject
 
-@property (nonatomic, assign) FDAutoPilotMode mavCustomMode;       //< A bitfield for use for autopilot-specific flags.
-@property (nonatomic, assign) uint8_t mavType;              // MAV_TYPE ENUM
-@property (nonatomic, assign) uint8_t mavAutopilotType;     // MAV_AUTOPILOT ENUM
-@property (nonatomic, assign) uint8_t mavBaseMode;          // MAV_MODE_FLAG ENUM
-@property (nonatomic, assign) uint8_t mavSystemStatus;      // MAV_STATE ENUM
+@property (nonatomic, assign) FDAutoPilotMode mavCustomMode;    // A bitfield for use for autopilot-specific flags.
+@property (nonatomic, assign) uint8_t mavType;                  // MAV_TYPE ENUM
+@property (nonatomic, assign) uint8_t mavAutopilotType;         // MAV_AUTOPILOT ENUM
+@property (nonatomic, assign) uint8_t mavBaseMode;              // MAV_MODE_FLAG ENUM
+@property (nonatomic, assign) uint8_t mavSystemStatus;          // MAV_STATE ENUM
 
 @property (nonatomic, strong) NSMutableDictionary *paramValues;
 
@@ -51,12 +52,11 @@ typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
 @property (nonatomic, assign) NSInteger throttleSetting;
 
 @property (nonatomic, assign) CGFloat navigationBearing;
-
+@property (nonatomic, strong) FDGPSInfo *gpsInfo;
 @property (nonatomic, assign) CGFloat temperature;
 @property (nonatomic, assign) CGFloat absolutePressure;
 @property (nonatomic, assign) CGFloat differentialPressure;
 
-@property (nonatomic, assign) CLLocationCoordinate2D locationCoordinate;
 
 //temponary
 @property (nonatomic, copy) NSString *pathForUDPConnection;

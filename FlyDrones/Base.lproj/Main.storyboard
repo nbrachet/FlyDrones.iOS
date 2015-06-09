@@ -826,70 +826,30 @@
                                     <outlet property="delegate" destination="4vn-Kq-gAb" id="1gt-Cn-rkU"/>
                                 </connections>
                             </mapView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JZu-B0-8M6">
-                                <rect key="frame" x="218" y="8" width="86" height="21"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="0hs-DJ-GMa"/>
-                                    <constraint firstAttribute="width" constant="86" id="MyV-QQ-meT"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="nNl-xp-Zlg">
-                                <rect key="frame" x="263" y="328" width="51" height="31"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="31" id="b69-IM-Z1Z"/>
-                                    <constraint firstAttribute="width" constant="49" id="dkP-rV-ACt"/>
-                                    <constraint firstAttribute="width" constant="49" id="hng-e1-g4m"/>
-                                    <constraint firstAttribute="height" constant="31" id="od1-hX-856"/>
-                                </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="dkP-rV-ACt"/>
-                                        <exclude reference="od1-hX-856"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="choseMapType:" destination="4vn-Kq-gAb" eventType="valueChanged" id="De6-MP-uRK"/>
-                                </connections>
-                            </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show legend" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T1q-M9-wjJ">
-                                <rect key="frame" x="8" y="333" width="247" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T1q-M9-wjJ">
+                                <rect key="frame" x="8" y="333" width="304" height="21"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="Z00-dq-WDy"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="nNl-xp-Zlg" secondAttribute="trailing" constant="8" id="BKe-B8-x8T"/>
+                            <constraint firstAttribute="trailing" secondItem="T1q-M9-wjJ" secondAttribute="trailing" constant="8" id="5my-kT-RBD"/>
                             <constraint firstItem="T1q-M9-wjJ" firstAttribute="leading" secondItem="iMl-q2-ag4" secondAttribute="leading" constant="8" id="K99-fY-N2C"/>
-                            <constraint firstAttribute="trailing" secondItem="nNl-xp-Zlg" secondAttribute="trailing" constant="8" id="KaD-my-MzK"/>
-                            <constraint firstItem="JZu-B0-8M6" firstAttribute="top" secondItem="IdF-OI-jYh" secondAttribute="bottom" constant="8" id="MZL-GK-UHs"/>
-                            <constraint firstItem="nNl-xp-Zlg" firstAttribute="leading" secondItem="T1q-M9-wjJ" secondAttribute="trailing" constant="8" id="OBp-BW-1qX"/>
                             <constraint firstAttribute="trailing" secondItem="0AA-4N-toX" secondAttribute="trailing" id="P6C-BX-HMW"/>
                             <constraint firstItem="0AA-4N-toX" firstAttribute="leading" secondItem="iMl-q2-ag4" secondAttribute="leading" id="QAP-OB-t9o"/>
-                            <constraint firstItem="JZu-B0-8M6" firstAttribute="trailing" secondItem="iMl-q2-ag4" secondAttribute="trailingMargin" id="REP-PD-hWF"/>
-                            <constraint firstItem="f2X-ty-1jj" firstAttribute="top" secondItem="nNl-xp-Zlg" secondAttribute="bottom" constant="8" id="VDm-mW-wx7"/>
-                            <constraint firstItem="nNl-xp-Zlg" firstAttribute="top" secondItem="0AA-4N-toX" secondAttribute="bottom" constant="8" id="akv-FE-0a8"/>
                             <constraint firstItem="f2X-ty-1jj" firstAttribute="top" secondItem="T1q-M9-wjJ" secondAttribute="bottom" constant="13" id="hCb-pR-zLI"/>
                             <constraint firstItem="0AA-4N-toX" firstAttribute="top" secondItem="IdF-OI-jYh" secondAttribute="bottom" id="l7m-nv-gYW"/>
-                            <constraint firstItem="f2X-ty-1jj" firstAttribute="top" secondItem="nNl-xp-Zlg" secondAttribute="bottom" constant="8" id="p2n-Mb-8pl"/>
                             <constraint firstItem="T1q-M9-wjJ" firstAttribute="top" secondItem="0AA-4N-toX" secondAttribute="bottom" constant="13" id="vMm-We-3SI"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="vMm-We-3SI"/>
-                                <exclude reference="VDm-mW-wx7"/>
-                                <exclude reference="BKe-B8-x8T"/>
-                                <exclude reference="akv-FE-0a8"/>
                             </mask>
                         </variation>
                     </view>
@@ -900,8 +860,8 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="367"/>
                     <connections>
-                        <outlet property="mapTypeSwitch" destination="nNl-xp-Zlg" id="3dt-07-rDA"/>
                         <outlet property="mapView" destination="0AA-4N-toX" id="W25-2T-1fT"/>
+                        <outlet property="satelliteInfoLabel" destination="T1q-M9-wjJ" id="6ci-Pt-fqm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JUz-DX-l3d" userLabel="First Responder" sceneMemberID="firstResponder"/>
