@@ -339,14 +339,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c8e-mR-B3k" userLabel="Top Panel View">
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="64"/>
                                 <subviews>
-                                    <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BR3-1r-Tnr">
-                                        <rect key="frame" x="0.0" y="0.0" width="1024" height="64"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="yuO-Lc-gzX">
-                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="64"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        </view>
-                                        <blurEffect style="light"/>
-                                    </visualEffectView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i1i-UJ-dEo" userLabel="Menu Button">
                                         <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                         <color key="backgroundColor" red="0.098039215686274508" green="0.34509803921568627" blue="0.86310135690789469" alpha="1" colorSpace="calibratedRGB"/>
@@ -490,9 +482,6 @@
                                         <connections>
                                             <segue destination="yiB-jb-Pdf" kind="popoverPresentation" popoverAnchorView="UEP-Nr-RNK" id="bOB-ka-wfe">
                                                 <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                                <popoverPassthroughViews>
-                                                    <button reference="UEP-Nr-RNK"/>
-                                                </popoverPassthroughViews>
                                             </segue>
                                         </connections>
                                     </button>
@@ -516,12 +505,12 @@
                                         </connections>
                                     </button>
                                 </subviews>
+                                <color key="backgroundColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="centerX" secondItem="3fa-i6-kmk" secondAttribute="centerX" id="0I0-f1-g2N"/>
                                     <constraint firstItem="YYR-sH-XM9" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="30a-jy-uTn"/>
                                     <constraint firstItem="n4B-o3-BAE" firstAttribute="leading" secondItem="i1i-UJ-dEo" secondAttribute="trailing" constant="16" id="3ZO-4N-zIo"/>
-                                    <constraint firstAttribute="trailing" secondItem="BR3-1r-Tnr" secondAttribute="trailing" id="6c8-Ow-QWN"/>
                                     <constraint firstItem="3fa-i6-kmk" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" constant="12" id="AVZ-8f-9Gj"/>
                                     <constraint firstItem="i1i-UJ-dEo" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="CeO-Lo-7NT"/>
                                     <constraint firstAttribute="centerY" secondItem="3fa-i6-kmk" secondAttribute="centerY" id="KW3-rS-MV3"/>
@@ -531,16 +520,13 @@
                                     <constraint firstAttribute="bottom" secondItem="n4B-o3-BAE" secondAttribute="bottom" id="aT1-ax-090"/>
                                     <constraint firstAttribute="bottom" secondItem="UEP-Nr-RNK" secondAttribute="bottom" id="bCs-Vz-bDi"/>
                                     <constraint firstItem="n4B-o3-BAE" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="dhx-aE-3mC"/>
-                                    <constraint firstItem="BR3-1r-Tnr" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="fGl-dK-4LS"/>
                                     <constraint firstItem="YYR-sH-XM9" firstAttribute="leading" secondItem="n4B-o3-BAE" secondAttribute="trailing" constant="16" id="gDD-pr-OEu"/>
                                     <constraint firstItem="i1i-UJ-dEo" firstAttribute="leading" secondItem="c8e-mR-B3k" secondAttribute="leading" id="gtH-1x-BpP"/>
                                     <constraint firstAttribute="height" constant="64" id="nDL-SD-TaS"/>
                                     <constraint firstAttribute="bottom" secondItem="CK1-fU-SXs" secondAttribute="bottom" id="rXN-sh-2CZ"/>
                                     <constraint firstItem="UEP-Nr-RNK" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="rxX-rB-Riv"/>
-                                    <constraint firstItem="BR3-1r-Tnr" firstAttribute="leading" secondItem="c8e-mR-B3k" secondAttribute="leading" id="sIm-hd-ZmY"/>
                                     <constraint firstAttribute="bottom" secondItem="YYR-sH-XM9" secondAttribute="bottom" id="xfq-EA-MzQ"/>
                                     <constraint firstAttribute="bottom" secondItem="3fa-i6-kmk" secondAttribute="bottom" id="yGc-Up-3IW"/>
-                                    <constraint firstAttribute="bottom" secondItem="BR3-1r-Tnr" secondAttribute="bottom" id="ypF-aJ-Fxu"/>
                                     <constraint firstAttribute="bottom" secondItem="i1i-UJ-dEo" secondAttribute="bottom" id="zHk-7a-BYy"/>
                                 </constraints>
                                 <variation key="default">
@@ -684,6 +670,7 @@
                         <outlet property="movieGLView" destination="eOu-L3-XOm" id="ZMm-nr-8uN"/>
                         <outlet property="rightJoystickView" destination="N6l-Yh-Btc" id="AKS-PB-7dw"/>
                         <outlet property="systemStatusButton" destination="YYR-sH-XM9" id="Twz-kI-HrA"/>
+                        <outlet property="topPanelView" destination="c8e-mR-B3k" id="SV3-xR-QjI"/>
                         <outlet property="worldwideLocationButton" destination="CK1-fU-SXs" id="8zH-uD-dNa"/>
                         <segue destination="iIS-7C-Pul" kind="popoverPresentation" identifier="ShowBatteryStatus" popoverAnchorView="n4B-o3-BAE" id="9Zx-kf-RhW">
                             <popoverArrowDirection key="popoverArrowDirection" down="YES"/>
@@ -910,6 +897,11 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="selectedBackgroundColor">
+                                                <color key="value" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="0.5" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="optionTextLabel" destination="HIz-Yq-a0k" id="2Ff-4s-Nm6"/>
                                         </connections>
@@ -983,6 +975,11 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="selectedBackgroundColor">
+                                                <color key="value" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="0.5" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="optionTextLabel" destination="hMY-pv-ieT" id="rHr-Qs-tSe"/>
                                         </connections>

@@ -19,6 +19,7 @@
 #import "FDJoystickView.h"
 #import "FDCustomModeViewController.h"
 #import "FDEnableArmedViewController.h"
+#import <DDPopoverBackgroundView/DDPopoverBackgroundView.h>
 
 #define debugWithLocalLogFile NO
 
@@ -28,6 +29,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 
 @interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDCustomModeViewControllerDelegate, FDEnableArmedViewControllerDelegate, UIPopoverPresentationControllerDelegate>
 
+@property (nonatomic, weak) IBOutlet UIView *topPanelView;
 @property (nonatomic, weak) IBOutlet UIButton *menuButton;
 @property (nonatomic, weak) IBOutlet FDBatteryButton *batteryButton;
 @property (nonatomic, weak) IBOutlet FDCompassView *compassView;
@@ -90,7 +92,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     self.movieDecoder = nil;
     self.droneControlManager = nil;
     
-    [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:NO];
+    [self dissmissAllProgressHUDs];
     
     [[FDDroneStatus currentStatus] clearStatus];
 }
@@ -105,10 +107,9 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     UIViewController *destinationViewController = segue.destinationViewController;
-    UIPopoverPresentationController *popoverPresentationController = destinationViewController.popoverPresentationController;
-    if (popoverPresentationController != nil) {
+    if ([destinationViewController respondsToSelector:@selector(popoverPresentationController)]) {
+        UIPopoverPresentationController *popoverPresentationController = destinationViewController.popoverPresentationController;
         popoverPresentationController.delegate = self;
-        popoverPresentationController.backgroundColor = [UIColor clearColor];
     }
     
     if ([destinationViewController isKindOfClass:[FDCustomModeViewController class]]) {
@@ -226,16 +227,15 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
         MBProgressHUD *progressHUD = [self progressHUDForTag:FDDashboardViewControllerConnectingToTCPServerHUDTag];
         
         if (progressHUD == nil) {
-            [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:NO];
-            MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
-            progressHUD.labelText = NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server");
-            progressHUD.tag = FDDashboardViewControllerConnectingToTCPServerHUDTag;
+            [self dissmissAllProgressHUDs];
         }
+        progressHUD = [self showProgressHUDWithTag:FDDashboardViewControllerConnectingToTCPServerHUDTag];
+        progressHUD.labelText = NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server");
         
         BOOL isConnectedToTCPServer = [self.connectionManager receiveTCPServer:[FDDroneStatus currentStatus].pathForTCPConnection
                                                                           port:[FDDroneStatus currentStatus].portForTCPConnection];
         if (!isConnectedToTCPServer) {
-            [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:YES];
+            [self dissmissAllProgressHUDs];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                             message:@"Used TCP port is blocked. Please shut all of the applications that use data streaming"
                                                            delegate:self
@@ -317,26 +317,41 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     return progressHUD;
 }
 
+- (MBProgressHUD *)showProgressHUDWithTag:(NSUInteger)tag {
+    MBProgressHUD *progressHUD = [self progressHUDForTag:tag];
+    if (progressHUD == nil) {
+        progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
+        progressHUD.tag = tag;
+        progressHUD.color = [UIColor colorWithRed:24.0f/255.0f green:43.0f/255.0f blue:72.0f/255.0f alpha:0.5f];
+    } else {
+        [NSObject cancelPreviousPerformRequestsWithTarget:progressHUD];
+    }
+    return progressHUD;
+}
+
+- (MBProgressHUD *)showErrorProgressHUDWithText:(NSString *)text {
+    MBProgressHUD *progressHUD = [self showProgressHUDWithTag:FDDashboardViewControllerErrorHUDTag];
+    progressHUD.mode = MBProgressHUDModeText;
+    progressHUD.labelText = text;
+    [progressHUD hide:NO afterDelay:5.0f];
+    return progressHUD;
+}
+
 - (void)dissmissProgressHUDForTag:(NSUInteger)tag {
     MBProgressHUD *progressHUD = [self progressHUDForTag:tag];
     [progressHUD hide:NO];
 }
 
-- (void)showErrorProgressHUDWithText:(NSString *)text {
-    MBProgressHUD *progressHUD = [self progressHUDForTag:FDDashboardViewControllerErrorHUDTag];
-    if (progressHUD == nil) {
-        progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
-        progressHUD.tag = FDDashboardViewControllerErrorHUDTag;
-        progressHUD.mode = MBProgressHUDModeText;
-    } else {
-        [NSObject cancelPreviousPerformRequestsWithTarget:progressHUD];
-    }
-    progressHUD.labelText = text;
-    [progressHUD hide:NO afterDelay:5.0f];
+- (void)dissmissAllProgressHUDs {
+    [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:NO];
 }
 
 - (void)dissmissErrorProgressHUD {
     [self dissmissProgressHUDForTag:FDDashboardViewControllerErrorHUDTag];
+}
+
+- (void)dismissPresentedPopoverAnimated:(BOOL)animated {
+    [self.presentedViewController dismissViewControllerAnimated:animated completion:nil];
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -482,6 +497,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 - (void)didSelectNewMode:(FDAutoPilotMode)mode {
     NSData *messageData = [self.droneControlManager messageDataWithNewCustomMode:mode];
     [self.connectionManager sendDataFromTCPConnection:messageData];
+    [self dismissPresentedPopoverAnimated:YES];
 }
 
 #pragma mark - FDEnableArmedViewController
@@ -489,12 +505,23 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 - (void)didEnableArmedStatus:(BOOL)armed {
     NSData *messageData = [self.droneControlManager messageDataWithArmedEnable:armed];
     [self.connectionManager sendDataFromTCPConnection:messageData];
+    [self dismissPresentedPopoverAnimated:YES];
 }
 
 #pragma mark - UIPopoverPresentationControllerDelegate
 
+- (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController {
+    popoverPresentationController.backgroundColor = [UIColor clearColor];
+    popoverPresentationController.passthroughViews = @[self.leftJoystickView, self.rightJoystickView];
+    popoverPresentationController.popoverBackgroundViewClass = [DDPopoverBackgroundView class];
+    [DDPopoverBackgroundView setTintColor:self.topPanelView.backgroundColor];
+    [DDPopoverBackgroundView setShadowEnabled:NO];
+    [DDPopoverBackgroundView setContentInset:0.0f];
+    [DDPopoverBackgroundView setBackgroundImageCornerRadius:10.0f];
+}
+
 - (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
-    [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
+    [self dismissPresentedPopoverAnimated:NO];
     return NO;
 }
 

@@ -10,6 +10,7 @@
 
 @interface FDOptionTableViewCell : UITableViewCell
 
+@property (nonatomic, copy) IBInspectable UIColor *selectedBackgroundColor;
 @property (nonatomic, weak) IBOutlet UILabel *optionTextLabel;
 
 @end

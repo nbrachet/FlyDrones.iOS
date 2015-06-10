@@ -12,6 +12,10 @@
 
 - (void)awakeFromNib {
     self.backgroundView = nil;
+    
+    UIView *selectedBackgroundView = [[UIView alloc] init];
+    selectedBackgroundView.backgroundColor = self.selectedBackgroundColor;
+    [self setSelectedBackgroundView:selectedBackgroundView];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
