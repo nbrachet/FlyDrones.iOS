@@ -44,7 +44,7 @@
 
     if (!CLLocationCoordinate2DIsValid(locationCoordinate) || gpsInfo.fixType < 1) {
         [self.mapView removeAnnotations:self.mapView.annotations];
-        self.satelliteInfoLabel.text = @"N/A";
+        self.satelliteInfoLabel.text = @"Satellites:N/A HDOP:N/A";
         return;
     }
     
