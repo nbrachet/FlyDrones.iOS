@@ -13,6 +13,6 @@
 @property (nonatomic, assign) CLLocationCoordinate2D locationCoordinate;
 @property (nonatomic, assign) NSUInteger fixType;
 @property (nonatomic, assign) NSUInteger satelliteCount;
-@property (nonatomic, assign) NSInteger hdop;   //Horizontal Dilution of Precision
+@property (nonatomic, assign) CGFloat hdop;   //Horizontal Dilution of Precision
 
 @end

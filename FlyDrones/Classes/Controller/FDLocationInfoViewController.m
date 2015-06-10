@@ -41,8 +41,10 @@
 - (void)refreshInfo:(NSNotification *)notification {
     FDGPSInfo *gpsInfo = [FDDroneStatus currentStatus].gpsInfo;
     CLLocationCoordinate2D locationCoordinate = gpsInfo.locationCoordinate;
-    
-    if (!CLLocationCoordinate2DIsValid(locationCoordinate)) {
+
+    if (!CLLocationCoordinate2DIsValid(locationCoordinate) || gpsInfo.fixType < 1) {
+        [self.mapView removeAnnotations:self.mapView.annotations];
+        self.satelliteInfoLabel.text = @"N/A";
         return;
     }
     
@@ -60,14 +62,7 @@
         annotation.coordinate = locationCoordinate;
         [self.mapView addAnnotation:annotation];
     }
-    
-    NSString *satelliteInfoString;
-    if (gpsInfo.fixType <= 2) {
-        satelliteInfoString = @"N/A";
-    } else {
-        satelliteInfoString = [NSString stringWithFormat:@"Satellites:%lu HDOP:%ld", (unsigned long)gpsInfo.satelliteCount, (long)gpsInfo.hdop];
-    }
-    self.satelliteInfoLabel.text = satelliteInfoString;
+    self.satelliteInfoLabel.text = [NSString stringWithFormat:@"Satellites:%lu HDOP:%0.1f", (unsigned long)gpsInfo.satelliteCount, gpsInfo.hdop];;
 }
 
 #pragma mark - MKMapViewDelegate
