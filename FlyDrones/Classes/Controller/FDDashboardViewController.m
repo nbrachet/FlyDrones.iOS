@@ -283,12 +283,8 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     CFTimeInterval delayHeartbeatMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedHeartbeatMessageTimeInterval;
     if (delayHeartbeatMessageTimeInterval > 2.0f) {
         [self dissmissErrorProgressHUD];
-        MBProgressHUD *progressHUD = [self progressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
-        if (progressHUD == nil) {
-            progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
-            progressHUD.labelText = NSLocalizedString(@"Waiting heartbeat message", @"Waiting heartbeat message");
-            progressHUD.tag = FDDashboardViewControllerWaitingHeartbeatHUDTag;
-        }
+        MBProgressHUD *progressHUD = [self showProgressHUDWithTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
+        progressHUD.labelText = NSLocalizedString(@"Waiting heartbeat message", @"Waiting heartbeat message");
         progressHUD.detailsLabelText = [NSString stringWithFormat:@"%.1f sec", delayHeartbeatMessageTimeInterval];
         self.enabledControls = NO;
         return;
