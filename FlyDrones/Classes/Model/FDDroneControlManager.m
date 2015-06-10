@@ -415,7 +415,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                                   FDDroneControlManagerMavLinkDefaultTargetSystem,
                                   MAV_COMP_ID_ALL,
                                   MAV_CMD_COMPONENT_ARM_DISARM,
-                                  1,
+                                  0,
                                   armed ? 1 : 0,
                                   0,
                                   0,
