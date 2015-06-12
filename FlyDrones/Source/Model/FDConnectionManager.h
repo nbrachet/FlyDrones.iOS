@@ -13,23 +13,20 @@
 @protocol FDConnectionManagerDelegate <NSObject>
 
 @optional
-- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveUDPData:(NSData *)data;
-- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveTCPData:(NSData *)data;
+- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveVideoData:(NSData *)data;
+- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveControlData:(NSData *)data;
 
 @end
 
 @interface FDConnectionManager : NSObject
 
-@property (nonatomic, weak) id <FDConnectionManagerDelegate> delegate;
+@property (nonatomic, weak) id<FDConnectionManagerDelegate> delegate;
 
-- (BOOL)connectToServer:(NSString *)host portForConnection:(NSUInteger)portForConnection portForReceived:(NSUInteger)portForReceived;
-
-- (void)closeConnection;
-
-- (BOOL)isTCPConnected;
-
-- (BOOL)receiveTCPServer:(NSString *)host port:(NSUInteger)port;
-
-- (BOOL)sendDataFromTCPConnection:(NSData *)data;
+- (void)closeConnections;
+- (BOOL)isConnectedToVideoHost;
+- (BOOL)connectToVideoHost:(NSString *)host port:(NSUInteger)port;
+- (BOOL)isConnectedToControlHost;
+- (BOOL)connectToControlHost:(NSString *)host port:(NSUInteger)port;
+- (BOOL)sendDataToControlServer:(NSData *)data;
 
 @end

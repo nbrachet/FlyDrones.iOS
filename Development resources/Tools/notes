@@ -1,0 +1,3 @@
+./h264cat --fps 25 -b 1M 127.0.0.1:5555 < ../Resources/2014-12-19.h264
+socat -v -v UDP-LISTEN:5555 UDP-LISTEN:5556,reuseaddr
+python testserver.py --filename=../Resources/2015-05-05\ 15-34-12.tlog

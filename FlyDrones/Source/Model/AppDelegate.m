@@ -7,8 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import <Parse/Parse.h>
-#import <ParseCrashReporting/ParseCrashReporting.h>
 
 @interface AppDelegate ()
 
@@ -18,8 +16,6 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [self enableParseCrashReporting];
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     return YES;
 }
 
@@ -43,15 +39,6 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-}
-
-#pragma mark - Private
-
-- (void)enableParseCrashReporting {
-    [ParseCrashReporting enable];
-    [Parse setApplicationId:@"ZynF8lZVcwF9hhJSMJ2uosi3gRIlzbayvsMcQBcS"
-                  clientKey:@"nKR9tHdgRT4kBx7UWTI1md0fETk1LI7zVEsMepyT"];
-    [Parse setLogLevel:PFLogLevelDebug];
 }
 
 @end

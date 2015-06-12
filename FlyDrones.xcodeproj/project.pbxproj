@@ -25,7 +25,7 @@
 		1B83A2171B205E83009384AA /* FDLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1E51B205E83009384AA /* FDLoginViewController.m */; };
 		1B83A2181B205E83009384AA /* FDRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1E71B205E83009384AA /* FDRootViewController.m */; };
 		1B83A2191B205E83009384AA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1EA1B205E83009384AA /* AppDelegate.m */; };
-		1B83A21A1B205E83009384AA /* FDConnectionManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1EC1B205E83009384AA /* FDConnectionManager.mm */; };
+		1B83A21A1B205E83009384AA /* FDConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1EC1B205E83009384AA /* FDConnectionManager.m */; };
 		1B83A21B1B205E83009384AA /* FDDroneControlManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1EE1B205E83009384AA /* FDDroneControlManager.m */; };
 		1B83A21C1B205E83009384AA /* FDDroneStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1F01B205E83009384AA /* FDDroneStatus.m */; };
 		1B83A21D1B205E83009384AA /* FDFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B83A1F21B205E83009384AA /* FDFileReader.m */; };
@@ -56,6 +56,7 @@
 		1B83A3A41B2065DE009384AA /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A3A31B2065DE009384AA /* libz.dylib */; };
 		1B83A3A61B2065ED009384AA /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A3A51B2065ED009384AA /* libbz2.dylib */; };
 		1B83A3A81B206603009384AA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B83A3A71B206603009384AA /* AVFoundation.framework */; };
+		1BC780021B2B106900460E60 /* FDRTPConnectionOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BC780011B2B106900460E60 /* FDRTPConnectionOperation.mm */; };
 		1BD7E54C1B21E9940025576B /* librtp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BD7E54B1B21E9940025576B /* librtp.a */; };
 		8E45496B6B26D5C83ECB289C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 499C5DD6DCB9887D93A42B9F /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -99,7 +100,7 @@
 		1B83A1E91B205E83009384AA /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1B83A1EA1B205E83009384AA /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1B83A1EB1B205E83009384AA /* FDConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDConnectionManager.h; sourceTree = "<group>"; };
-		1B83A1EC1B205E83009384AA /* FDConnectionManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FDConnectionManager.mm; sourceTree = "<group>"; };
+		1B83A1EC1B205E83009384AA /* FDConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConnectionManager.m; sourceTree = "<group>"; };
 		1B83A1ED1B205E83009384AA /* FDDroneControlManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDroneControlManager.h; sourceTree = "<group>"; };
 		1B83A1EE1B205E83009384AA /* FDDroneControlManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDroneControlManager.m; sourceTree = "<group>"; };
 		1B83A1EF1B205E83009384AA /* FDDroneStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDroneStatus.h; sourceTree = "<group>"; };
@@ -447,6 +448,8 @@
 		1B83A3A31B2065DE009384AA /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1B83A3A51B2065ED009384AA /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		1B83A3A71B206603009384AA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		1BC780001B2B106900460E60 /* FDRTPConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRTPConnectionOperation.h; sourceTree = "<group>"; };
+		1BC780011B2B106900460E60 /* FDRTPConnectionOperation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FDRTPConnectionOperation.mm; sourceTree = "<group>"; };
 		1BD7E5381B21E9940025576B /* HTTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTP.h; sourceTree = "<group>"; };
 		1BD7E5391B21E9940025576B /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
 		1BD7E53A1B21E9940025576B /* MavLink.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MavLink.hh; sourceTree = "<group>"; };
@@ -601,8 +604,6 @@
 			children = (
 				1B83A1E91B205E83009384AA /* AppDelegate.h */,
 				1B83A1EA1B205E83009384AA /* AppDelegate.m */,
-				1B83A1EB1B205E83009384AA /* FDConnectionManager.h */,
-				1B83A1EC1B205E83009384AA /* FDConnectionManager.mm */,
 				1B83A1ED1B205E83009384AA /* FDDroneControlManager.h */,
 				1B83A1EE1B205E83009384AA /* FDDroneControlManager.m */,
 				1B83A1EF1B205E83009384AA /* FDDroneStatus.h */,
@@ -614,6 +615,10 @@
 				1B83A1F51B205E83009384AA /* FDVideoFrame.h */,
 				1B83A1F61B205E83009384AA /* FDVideoFrame.m */,
 				1B83A1F71B205E83009384AA /* RTCPPacket.h */,
+				1B83A1EB1B205E83009384AA /* FDConnectionManager.h */,
+				1B83A1EC1B205E83009384AA /* FDConnectionManager.m */,
+				1BC780001B2B106900460E60 /* FDRTPConnectionOperation.h */,
+				1BC780011B2B106900460E60 /* FDRTPConnectionOperation.mm */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1215,7 +1220,6 @@
 				1B83A1921B2058BD009384AA /* Sources */,
 				1B83A1931B2058BD009384AA /* Frameworks */,
 				1B83A1941B2058BD009384AA /* Resources */,
-				1B83A1BF1B205D62009384AA /* ShellScript */,
 				0440582111AF82F177F2BDD9 /* Copy Pods Resources */,
 			);
 			buildRules = (
@@ -1303,19 +1307,6 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		1B83A1BF1B205D62009384AA /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export PATH=/usr/local/bin:$PATH\ncd /Users/nab0y4enko/Projects/FlyDrones.iOS/parse\n\nparse symbols -p \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1326,6 +1317,7 @@
 				1B83A21B1B205E83009384AA /* FDDroneControlManager.m in Sources */,
 				1B83A2141B205E83009384AA /* FDEnableArmedViewController.m in Sources */,
 				1B83A20E1B205E83009384AA /* NSString+Network.m in Sources */,
+				1BC780021B2B106900460E60 /* FDRTPConnectionOperation.mm in Sources */,
 				1B83A2111B205E83009384AA /* FDConnectionSettingsViewController.m in Sources */,
 				1B83A2101B205E83009384AA /* FDBatteryStatusViewController.m in Sources */,
 				1B83A2191B205E83009384AA /* AppDelegate.m in Sources */,
@@ -1340,7 +1332,7 @@
 				1B83A20A1B205E83009384AA /* NSData+MAVLink.m in Sources */,
 				1B83A2151B205E83009384AA /* FDLeftSideViewController.m in Sources */,
 				1B83A2211B205E83009384AA /* FDCompassView.m in Sources */,
-				1B83A21A1B205E83009384AA /* FDConnectionManager.mm in Sources */,
+				1B83A21A1B205E83009384AA /* FDConnectionManager.m in Sources */,
 				1B83A20C1B205E83009384AA /* NSFileManager+ANUtils.m in Sources */,
 				1B83A2121B205E83009384AA /* FDCustomModeViewController.m in Sources */,
 				1B83A20F1B205E83009384AA /* UIImage+Utils.m in Sources */,

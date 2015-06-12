@@ -77,23 +77,14 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     if (self.connectionManager == nil) {
         self.connectionManager = [[FDConnectionManager alloc] init];
         self.connectionManager.delegate = self;
-        
-        BOOL isConnectedToUDPServer = [self.connectionManager connectToServer:[FDDroneStatus currentStatus].pathForUDPConnection
-                                                            portForConnection:[FDDroneStatus currentStatus].portForUDPConnection
-                                                              portForReceived:[FDDroneStatus currentStatus].portForUDPConnection];
-        if (!isConnectedToUDPServer) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                            message:@"Used UDP port is blocked. Please shut all of the applications that use data streaming"
-                                                           delegate:self
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        }
     }
     
+    if (![self.connectionManager isConnectedToVideoHost]) {
+        [self.connectionManager connectToVideoHost:[FDDroneStatus currentStatus].pathForUDPConnection port:[FDDroneStatus currentStatus].portForUDPConnection];
+    }
         
     
-    if (![self.connectionManager isTCPConnected]) {
+    if (![self.connectionManager isConnectedToControlHost]) {
         self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
         self.enabledControls = NO;
         
@@ -111,8 +102,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
             progressHUD.tag = FDDashboardViewControllerConnectingToTCPServerHUDTag;
         }
 
-        BOOL isConnectedToTCPServer = [self.connectionManager receiveTCPServer:[FDDroneStatus currentStatus].pathForTCPConnection
-                                                                          port:[FDDroneStatus currentStatus].portForTCPConnection];
+        BOOL isConnectedToTCPServer = [self.connectionManager connectToControlHost:[FDDroneStatus currentStatus].pathForTCPConnection port:[FDDroneStatus currentStatus].portForTCPConnection];
         if (!isConnectedToTCPServer) {
             [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:YES];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
@@ -132,7 +122,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     [self stopTimer];
     [self unregisterFromNotifications];
     
-    [self.connectionManager closeConnection];
+    [self.connectionManager closeConnections];
     self.connectionManager = nil;
     self.movieDecoder = nil;
     self.droneControlManager = nil;
@@ -233,7 +223,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 - (void)applicationDidEnterBackground {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     [self stopTimer];
-    [self.connectionManager closeConnection];
+    [self.connectionManager closeConnections];
     self.connectionManager = nil;
 }
 
@@ -265,7 +255,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     static NSUInteger tickCounter = 0;
     tickCounter++;
     
-    if (![self.connectionManager isTCPConnected]) {
+    if (![self.connectionManager isConnectedToControlHost]) {
         if ((tickCounter % 15 == 0)) {
             [self connectToServers];
         }
@@ -273,7 +263,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     }
     
     if (tickCounter % 10 == 0) {
-        [self.connectionManager sendDataFromTCPConnection:[self.droneControlManager heartbeatData]];
+        [self.connectionManager sendDataToControlServer:[self.droneControlManager heartbeatData]];
     }
     
     CFTimeInterval delayHeartbeatMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedHeartbeatMessageTimeInterval;
@@ -303,7 +293,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
                                                                   thrust:self.leftJoystickView.stickVerticalValue
                                                                      yaw:self.leftJoystickView.stickHorisontalValue
                                                           sequenceNumber:1];
-    [self.connectionManager sendDataFromTCPConnection:controlData];
+    [self.connectionManager sendDataToControlServer:controlData];
 }
 
 - (void)dissmissProgressHUDForTag:(NSUInteger)tag {
@@ -323,7 +313,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 
 #pragma mark - FDConnectionManagerDelegate
 
-- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveUDPData:(NSData *)data {
+- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveVideoData:(NSData *)data {
     if (data.length == 0) {
         return;
     }
@@ -335,7 +325,7 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
     [self.movieDecoder parseAndDecodeInputData:data];
 }
 
-- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveTCPData:(NSData *)data {
+- (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveControlData:(NSData *)data {
     if (data.length == 0) {
         return;
     }
@@ -450,14 +440,14 @@ static NSUInteger const FDDashboardViewControllerConnectingToTCPServerHUDTag = 8
 
 - (void)didSelectNewMode:(FDAutoPilotMode)mode {
     NSData *messageData = [self.droneControlManager messageDataWithNewCustomMode:mode];
-    [self.connectionManager sendDataFromTCPConnection:messageData];
+    [self.connectionManager sendDataToControlServer:messageData];
 }
 
 #pragma mark - FDEnableArmedViewController
 
 - (void)didEnableArmedStatus:(BOOL)armed {
     NSData *messageData = [self.droneControlManager messageDataWithArmedEnable:armed];
-    [self.connectionManager sendDataFromTCPConnection:messageData];
+    [self.connectionManager sendDataToControlServer:messageData];
 }
 
 @end
