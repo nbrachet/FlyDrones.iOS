@@ -323,11 +323,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eOu-L3-XOm" customClass="FDMovieGLView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eOu-L3-XOm" userLabel="Movie Background View">
                                 <rect key="frame" x="-171" y="0.0" width="1366" height="768"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qeV-g8-0I1" customClass="FDMovieGLView">
+                                        <rect key="frame" x="0.0" y="0.0" width="1366" height="768"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="qeV-g8-0I1" firstAttribute="leading" secondItem="eOu-L3-XOm" secondAttribute="leading" id="5lu-Cl-HmE"/>
+                                    <constraint firstAttribute="trailing" secondItem="qeV-g8-0I1" secondAttribute="trailing" id="EjT-Bj-C2U"/>
                                     <constraint firstAttribute="width" constant="1024" id="XCc-iT-YpJ"/>
+                                    <constraint firstItem="qeV-g8-0I1" firstAttribute="top" secondItem="eOu-L3-XOm" secondAttribute="top" id="buj-UX-F1r"/>
+                                    <constraint firstAttribute="bottom" secondItem="qeV-g8-0I1" secondAttribute="bottom" id="i5L-GT-fhK"/>
                                     <constraint firstAttribute="width" secondItem="eOu-L3-XOm" secondAttribute="height" multiplier="854:480" id="vvW-hi-XVF"/>
                                 </constraints>
                                 <variation key="default">
@@ -667,7 +677,8 @@
                         <outlet property="compassView" destination="3fa-i6-kmk" id="kve-xH-TAC"/>
                         <outlet property="leftJoystickView" destination="Zom-z6-iIl" id="gEH-Hr-LYA"/>
                         <outlet property="menuButton" destination="i1i-UJ-dEo" id="Fn0-wu-jvB"/>
-                        <outlet property="movieGLView" destination="eOu-L3-XOm" id="ZMm-nr-8uN"/>
+                        <outlet property="movieBackgroundView" destination="eOu-L3-XOm" id="4vT-8I-b0R"/>
+                        <outlet property="movieGLView" destination="qeV-g8-0I1" id="5RM-A4-lpH"/>
                         <outlet property="rightJoystickView" destination="N6l-Yh-Btc" id="AKS-PB-7dw"/>
                         <outlet property="systemStatusButton" destination="YYR-sH-XM9" id="Twz-kI-HrA"/>
                         <outlet property="topPanelView" destination="c8e-mR-B3k" id="SV3-xR-QjI"/>

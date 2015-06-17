@@ -32,10 +32,13 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 @property (nonatomic, weak) IBOutlet UIButton *menuButton;
 @property (nonatomic, weak) IBOutlet FDBatteryButton *batteryButton;
 @property (nonatomic, weak) IBOutlet FDCompassView *compassView;
-@property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
 @property (nonatomic, weak) IBOutlet UIButton *armedStatusButton;
 @property (nonatomic, weak) IBOutlet UIButton *systemStatusButton;
 @property (nonatomic, weak) IBOutlet UIButton *worldwideLocationButton;
+
+@property (nonatomic, weak) IBOutlet UIView *movieBackgroundView;
+@property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
+
 @property (nonatomic, weak) IBOutlet FDJoystickView *leftJoystickView;
 @property (nonatomic, weak) IBOutlet FDJoystickView *rightJoystickView;
 
@@ -44,6 +47,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 @property (nonatomic, strong) FDConnectionManager *connectionManager;
 @property (nonatomic, strong) FDMovieDecoder *movieDecoder;
 @property (nonatomic, strong) FDDroneControlManager *droneControlManager;
+
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) CFTimeInterval lastReceivedHeartbeatMessageTimeInterval;
 
@@ -114,7 +118,6 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     if ([destinationViewController isKindOfClass:[FDEnableArmedViewController class]]) {
         [((FDEnableArmedViewController *)destinationViewController) setDelegate:self];
     }
-
 }
 
 #pragma mark - Custom Accessors
@@ -207,29 +210,20 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
                                               port:[FDDroneStatus currentStatus].portForUDPConnection];
     }
     
-    
     if (![self.connectionManager isConnectedToControlHost]) {
         self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
         self.enabledControls = NO;
         
-        MBProgressHUD *progressHUD;
-        for (MBProgressHUD *hud in [MBProgressHUD allHUDsForView:self.movieGLView]) {
-            if (hud.tag == FDDashboardViewControllerConnectingToTCPServerHUDTag) {
-                progressHUD = hud;
-            } else {
-                [MBProgressHUD hideHUDForView:hud animated:NO];
-            }
+        if (![self progressHUDForTag:FDDashboardViewControllerConnectingToTCPServerHUDTag]) {
+            [self dissmissAllProgressHUDs];
         }
-        if (progressHUD == nil) {
-            MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
-            progressHUD.labelText = NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server");
-            progressHUD.tag = FDDashboardViewControllerConnectingToTCPServerHUDTag;
-        }
+        MBProgressHUD *progressHUD = [self showProgressHUDWithTag:FDDashboardViewControllerConnectingToTCPServerHUDTag];
+        progressHUD.labelText = NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server");
         
         BOOL isConnectedToTCPServer = [self.connectionManager connectToControlHost:[FDDroneStatus currentStatus].pathForTCPConnection
                                                                               port:[FDDroneStatus currentStatus].portForTCPConnection];
         if (!isConnectedToTCPServer) {
-            [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:YES];
+            [self dissmissAllProgressHUDs];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                             message:@"Used TCP port is blocked. Please shut all of the applications that use data streaming"
                                                            delegate:self
@@ -298,7 +292,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 
 - (MBProgressHUD *)progressHUDForTag:(NSUInteger)tag {
     MBProgressHUD *progressHUD;
-    for (UIView *hudView in [MBProgressHUD allHUDsForView:self.movieGLView]) {
+    for (UIView *hudView in [MBProgressHUD allHUDsForView:self.movieBackgroundView]) {
         if (hudView.tag == tag) {
             progressHUD = (MBProgressHUD *)hudView;
             break;
@@ -310,7 +304,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 - (MBProgressHUD *)showProgressHUDWithTag:(NSUInteger)tag {
     MBProgressHUD *progressHUD = [self progressHUDForTag:tag];
     if (progressHUD == nil) {
-        progressHUD = [MBProgressHUD showHUDAddedTo:self.movieGLView animated:YES];
+        progressHUD = [MBProgressHUD showHUDAddedTo:self.movieBackgroundView animated:YES];
         progressHUD.tag = tag;
         progressHUD.color = [UIColor colorWithRed:24.0f/255.0f green:43.0f/255.0f blue:72.0f/255.0f alpha:0.5f];
     } else {
@@ -333,7 +327,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 }
 
 - (void)dissmissAllProgressHUDs {
-    [MBProgressHUD hideAllHUDsForView:self.movieGLView animated:NO];
+    [MBProgressHUD hideAllHUDsForView:self.movieBackgroundView animated:NO];
 }
 
 - (void)dissmissErrorProgressHUD {
@@ -514,4 +508,3 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 }
 
 @end
-

@@ -77,7 +77,6 @@
         }
         
         self.parsingQueue = dispatch_queue_create("Parsing Queue", DISPATCH_QUEUE_SERIAL);
-        
     }
     return self;
 }
@@ -161,7 +160,6 @@
     packet.stream_index = 0;
     packet.pts = 0x8000000000000000;
     packet.dts = 0x8000000000000000;
-    //packet.duration=
     
     while(packet.size > 0) {
         int got_picture;
@@ -175,7 +173,6 @@
                 FDVideoFrame *decodedVideoFrame = [[FDVideoFrame alloc] initWithFrame:decodedFrame
                                                                                 width:videoCodecContext->width
                                                                                height:videoCodecContext->height];
-//
                 if (decodedVideoFrame != nil) {
                     [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
                 }

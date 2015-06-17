@@ -58,6 +58,9 @@
 		1BB4C23E1B2B4CDB00C42211 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BB4C23D1B2B4CDB00C42211 /* libbz2.dylib */; };
 		1BB4C2431B2B4DD200C42211 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BB4C23F1B2B4DD200C42211 /* LaunchScreen.xib */; };
 		1BB4C2441B2B4DD200C42211 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BB4C2411B2B4DD200C42211 /* Main.storyboard */; };
+		1BBBE1BA1B31A1C500021FF4 /* FDMovieGLRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BBBE1B91B31A1C500021FF4 /* FDMovieGLRenderer.m */; };
+		1BBBE1BC1B31B04400021FF4 /* VertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 1BBBE1BB1B31B04400021FF4 /* VertexShader.glsl */; };
+		1BBBE1BE1B31B06400021FF4 /* YUVFragmentShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 1BBBE1BD1B31B06400021FF4 /* YUVFragmentShader.glsl */; };
 		4397FC0BED2F8F02C0BEE535 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ACFE6579CFB1309E8DBA081 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -471,6 +474,10 @@
 		1BB4C23D1B2B4CDB00C42211 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		1BB4C2401B2B4DD200C42211 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		1BB4C2421B2B4DD200C42211 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1BBBE1B81B31A1C500021FF4 /* FDMovieGLRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMovieGLRenderer.h; sourceTree = "<group>"; };
+		1BBBE1B91B31A1C500021FF4 /* FDMovieGLRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieGLRenderer.m; sourceTree = "<group>"; };
+		1BBBE1BB1B31B04400021FF4 /* VertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VertexShader.glsl; sourceTree = "<group>"; };
+		1BBBE1BD1B31B06400021FF4 /* YUVFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = YUVFragmentShader.glsl; sourceTree = "<group>"; };
 		70304537241E9E01FE1FA360 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		95DD9068FDA34E985D8714D9 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9ACFE6579CFB1309E8DBA081 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -548,9 +555,9 @@
 			isa = PBXGroup;
 			children = (
 				1B28077F1B2B46A40040A4B9 /* Categories */,
-				1B28078E1B2B46A40040A4B9 /* Controllers */,
 				1B2807A11B2B46A40040A4B9 /* Model */,
 				1B2807B51B2B46A40040A4B9 /* Views */,
+				1B28078E1B2B46A40040A4B9 /* Controllers */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -623,6 +630,8 @@
 				1B2807B21B2B46A40040A4B9 /* FDVideoFrame.h */,
 				1B2807B31B2B46A40040A4B9 /* FDVideoFrame.m */,
 				1B2807B41B2B46A40040A4B9 /* RTCPPacket.h */,
+				1BBBE1B81B31A1C500021FF4 /* FDMovieGLRenderer.h */,
+				1BBBE1B91B31A1C500021FF4 /* FDMovieGLRenderer.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -650,6 +659,8 @@
 				1B2807C11B2B46A40040A4B9 /* FlyDrones-Prefix.pch */,
 				1B2807C21B2B46A40040A4B9 /* Info.plist */,
 				1B2807C31B2B46A40040A4B9 /* main.mm */,
+				1BBBE1BB1B31B04400021FF4 /* VertexShader.glsl */,
+				1BBBE1BD1B31B06400021FF4 /* YUVFragmentShader.glsl */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -1272,7 +1283,9 @@
 			files = (
 				1BB4C2441B2B4DD200C42211 /* Main.storyboard in Resources */,
 				1BB4C2431B2B4DD200C42211 /* LaunchScreen.xib in Resources */,
+				1BBBE1BC1B31B04400021FF4 /* VertexShader.glsl in Resources */,
 				1B28092B1B2B46A40040A4B9 /* Images.xcassets in Resources */,
+				1BBBE1BE1B31B06400021FF4 /* YUVFragmentShader.glsl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1318,6 +1331,7 @@
 			files = (
 				1B28093F1B2B46A40040A4B9 /* FDDroneStatus.m in Sources */,
 				1B2809461B2B46A40040A4B9 /* FDCompassView.m in Sources */,
+				1BBBE1BA1B31A1C500021FF4 /* FDMovieGLRenderer.m in Sources */,
 				1B28092C1B2B46A40040A4B9 /* CLLocation+Utils.m in Sources */,
 				1B2809371B2B46A40040A4B9 /* FDEnableArmedViewController.m in Sources */,
 				1B28092F1B2B46A40040A4B9 /* NSFileManager+ANUtils.m in Sources */,
@@ -1480,7 +1494,7 @@
 					"$(PROJECT_DIR)/Libraries/x264/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
+				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
 			};
 			name = Debug;
 		};
@@ -1508,7 +1522,7 @@
 					"$(PROJECT_DIR)/Libraries/x264/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
+				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
 			};
 			name = Release;
 		};
