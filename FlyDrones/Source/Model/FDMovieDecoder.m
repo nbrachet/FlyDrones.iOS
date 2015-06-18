@@ -162,24 +162,26 @@
     packet.dts = 0x8000000000000000;
     
     while(packet.size > 0) {
-        int got_picture;
-        int length = avcodec_decode_video2(videoCodecContext, decodedFrame, &got_picture, &packet);
-        if (length < 0) {
-            NSLog(@"Decode video error, skip packet");
-            break;
-        }
-        if (got_picture) {
-            if (self.delegate != nil && [self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)]) {
-                FDVideoFrame *decodedVideoFrame = [[FDVideoFrame alloc] initWithFrame:decodedFrame
-                                                                                width:videoCodecContext->width
-                                                                               height:videoCodecContext->height];
-                if (decodedVideoFrame != nil) {
-                    [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
+        @autoreleasepool {
+            int isGotPicture;
+            int length = avcodec_decode_video2(videoCodecContext, decodedFrame, &isGotPicture, &packet);
+            if (length < 0) {
+                NSLog(@"Decode video error, skip packet");
+                break;
+            }
+            if (isGotPicture) {
+                if (self.delegate != nil && [self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)]) {
+                    FDVideoFrame *decodedVideoFrame = [[FDVideoFrame alloc] initWithFrame:decodedFrame
+                                                                                    width:videoCodecContext->width
+                                                                                   height:videoCodecContext->height];
+                    if (decodedVideoFrame != nil) {
+                        [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
+                    }
                 }
             }
+            packet.size -= length;
+            packet.data += length;
         }
-        packet.size -= length;
-        packet.data += length;
     }
     av_free_packet(&packet);
 }

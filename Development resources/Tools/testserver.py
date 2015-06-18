@@ -30,7 +30,7 @@ class App():
             for line in f:
                 print(line, '/n')
                 conn.send(line)
-                time.sleep(0.5)
+                time.sleep(0.1)
 
         conn.close()
 

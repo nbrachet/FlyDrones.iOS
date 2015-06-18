@@ -61,7 +61,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
             return;
         }
         
-        const char *bytes = (const char *) [data bytes];
+        const char *bytes = (const char *)[data bytes];
         BOOL isMessageDetected = [self parseMessageChar:bytes[0]];
         if (isMessageDetected) {
             usleep(1000);
@@ -86,9 +86,11 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 }
 
 - (void)parseData:(NSData *)data {
-    const char *bytes = (const char *) [data bytes];
-    for (int i = 0; i < data.length; i++) {
-        [self parseMessageChar:bytes[i]];
+    @autoreleasepool {
+        const char *bytes = (const char *)[data bytes];
+        for (int i = 0; i < data.length; i++) {
+            [self parseMessageChar:bytes[i]];
+        }
     }
 }
 
