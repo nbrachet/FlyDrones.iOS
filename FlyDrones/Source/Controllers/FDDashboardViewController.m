@@ -92,7 +92,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     self.movieDecoder = nil;
     self.droneControlManager = nil;
     
-    [self dissmissAllProgressHUDs];
+    [self dismissAllProgressHUDs];
     
     [[FDDroneStatus currentStatus] clearStatus];
 }
@@ -134,7 +134,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     self.leftJoystickView.userInteractionEnabled = enabledControls;
     self.rightJoystickView.userInteractionEnabled = enabledControls;
     if (!enabledControls) {
-        [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
+        [self dismissPresentedPopoverAnimated:YES];
         [self.leftJoystickView resetPosition];
         [self.rightJoystickView resetPosition];
     } else {
@@ -215,7 +215,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
         self.enabledControls = NO;
         
         if (![self progressHUDForTag:FDDashboardViewControllerConnectingToTCPServerHUDTag]) {
-            [self dissmissAllProgressHUDs];
+            [self dismissAllProgressHUDs];
         }
         MBProgressHUD *progressHUD = [self showProgressHUDWithTag:FDDashboardViewControllerConnectingToTCPServerHUDTag];
         progressHUD.labelText = NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server");
@@ -223,7 +223,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
         BOOL isConnectedToTCPServer = [self.connectionManager connectToControlHost:[FDDroneStatus currentStatus].pathForTCPConnection
                                                                               port:[FDDroneStatus currentStatus].portForTCPConnection];
         if (!isConnectedToTCPServer) {
-            [self dissmissAllProgressHUDs];
+            [self dismissAllProgressHUDs];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                             message:@"Used TCP port is blocked. Please shut all of the applications that use data streaming"
                                                            delegate:self
@@ -269,7 +269,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     
     CFTimeInterval delayHeartbeatMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedHeartbeatMessageTimeInterval;
     if (delayHeartbeatMessageTimeInterval > 2.0f) {
-        [self dissmissErrorProgressHUD];
+        [self dismissErrorProgressHUD];
         MBProgressHUD *progressHUD = [self showProgressHUDWithTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
         progressHUD.labelText = NSLocalizedString(@"Waiting heartbeat message", @"Waiting heartbeat message");
         progressHUD.detailsLabelText = [NSString stringWithFormat:@"%.1f sec", delayHeartbeatMessageTimeInterval];
@@ -277,8 +277,8 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
         return;
     }
     
-    [self dissmissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
-    [self dissmissProgressHUDForTag:FDDashboardViewControllerConnectingToTCPServerHUDTag];
+    [self dismissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
+    [self dismissProgressHUDForTag:FDDashboardViewControllerConnectingToTCPServerHUDTag];
 
     //send control data
     NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
@@ -310,6 +310,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     } else {
         [NSObject cancelPreviousPerformRequestsWithTarget:progressHUD];
     }
+    
     return progressHUD;
 }
 
@@ -321,17 +322,17 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     return progressHUD;
 }
 
-- (void)dissmissProgressHUDForTag:(NSUInteger)tag {
+- (void)dismissProgressHUDForTag:(NSUInteger)tag {
     MBProgressHUD *progressHUD = [self progressHUDForTag:tag];
     [progressHUD hide:NO];
 }
 
-- (void)dissmissAllProgressHUDs {
+- (void)dismissAllProgressHUDs {
     [MBProgressHUD hideAllHUDsForView:self.movieBackgroundView animated:NO];
 }
 
-- (void)dissmissErrorProgressHUD {
-    [self dissmissProgressHUDForTag:FDDashboardViewControllerErrorHUDTag];
+- (void)dismissErrorProgressHUD {
+    [self dismissProgressHUDForTag:FDDashboardViewControllerErrorHUDTag];
 }
 
 - (void)dismissPresentedPopoverAnimated:(BOOL)animated {
@@ -461,7 +462,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 
     [self.systemStatusButton setTitle:sysStatusString forState:UIControlStateNormal];
 
-    [self dissmissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
+    [self dismissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
     
     self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
     self.enabledControls = YES;
