@@ -71,6 +71,9 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     
     self.enabledControls = NO;
 
+    self.movieDecoder = [[FDMovieDecoder alloc] init];
+    self.movieDecoder.delegate = self;
+    
     self.droneControlManager = [[FDDroneControlManager alloc] init];
     self.droneControlManager.delegate = self;
     
@@ -86,6 +89,9 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 
     [self stopTimer];
     [self unregisterFromNotifications];
+    
+    [self.movieDecoder stopDecode];
+    self.movieDecoder = nil;
     
     [self.connectionManager closeConnections];
     self.connectionManager = nil;
@@ -350,10 +356,6 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 - (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveVideoData:(NSData *)data {
     if (data.length == 0) {
         return;
-    }
-
-    if (self.movieDecoder == nil) {
-        self.movieDecoder = [[FDMovieDecoder alloc] initFromReceivedData:data delegate:self];
     }
 
     [self.movieDecoder parseAndDecodeInputData:data];

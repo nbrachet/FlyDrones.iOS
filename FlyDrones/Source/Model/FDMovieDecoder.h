@@ -21,10 +21,7 @@
 
 @property (nonatomic, weak) id <FDMovieDecoderDelegate> delegate;
 
-- (instancetype)init __attribute__((unavailable("init not available")));
-
-- (instancetype)initFromReceivedData:(NSData *)data delegate:(id <FDMovieDecoderDelegate>)delegate;
-
 - (void)parseAndDecodeInputData:(NSData *)data;
+- (void)stopDecode;
 
 @end

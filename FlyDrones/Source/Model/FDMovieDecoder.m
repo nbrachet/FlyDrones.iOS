@@ -21,7 +21,7 @@
     struct AVFrame *decodedFrame;
 }
 
-@property (nonatomic, strong) dispatch_queue_t parsingQueue;
+@property (nonatomic, strong) NSOperationQueue *operationQueue;
 
 @end
 
@@ -36,63 +36,25 @@
     avcodec_register_all();
 }
 
-- (instancetype)initFromReceivedData:(NSData *)data delegate:(id<FDMovieDecoderDelegate>)delegate {
+- (instancetype)init {
     self = [super init];
     if (self) {
-        if (data == nil) {
-            self = nil;
-            return nil;
+        videoCodecContext = NULL;
+        videoCodecParserContext = NULL;
+        
+        self.operationQueue = [[NSOperationQueue alloc] init];
+        self.operationQueue.name = @"Movie decode queue";
+        self.operationQueue.maxConcurrentOperationCount = 1;
+        if ([self.operationQueue respondsToSelector:@selector(qualityOfService)]) {
+            self.operationQueue.qualityOfService = NSQualityOfServiceUserInitiated;
         }
-    
-        self.delegate = delegate;
-        
-        videoCodec = avcodec_find_decoder(CODEC_ID_H264);
-        
-        videoCodecContext = avcodec_alloc_context3(videoCodec);
-        
-        // Note: for H.264 RTSP streams, the width and height are usually not specified (width and height are 0).
-        // These fields will become filled in once the first frame is decoded and the SPS is processed.
-        videoCodecContext->width = 854;
-        videoCodecContext->height = 480;
-        
-        videoCodecContext->extradata = av_malloc(data.length);
-        videoCodecContext->extradata_size = (int)data.length;
-        [data getBytes:videoCodecContext->extradata length:videoCodecContext->extradata_size];
-        videoCodecContext->pix_fmt = PIX_FMT_YUV420P;
-  
-        //we can receive truncated frames
-        if(videoCodec->capabilities & CODEC_CAP_TRUNCATED) {
-            videoCodecContext->flags |= CODEC_FLAG_TRUNCATED;
-        }
-        
-        videoCodecParserContext = av_parser_init(AV_CODEC_ID_H264);
-
-        decodedFrame = av_frame_alloc();
-        
-        BOOL isInitializedDecoder = (avcodec_open2(videoCodecContext, videoCodec, NULL) < 0) ? NO : YES;
-        if (!isInitializedDecoder) {
-            NSLog(@"Failed to initialize decoder");
-            self = nil;
-            return nil;
-        }
-        
-        self.parsingQueue = dispatch_queue_create("Parsing Queue", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
 
 - (void)dealloc {
-    if (videoCodecContext) {
-        av_free(videoCodecContext->extradata);
-        avcodec_close(videoCodecContext);
-        av_free(videoCodecContext);
-    }
-    if (videoCodecParserContext) {
-        av_parser_close(videoCodecParserContext);
-    }
-    if (decodedFrame) {
-        av_free(decodedFrame);
-    }
+    [self stopDecode];
+    [self deinitializeCodec];
 }
 
 #pragma mark - Public
@@ -102,19 +64,79 @@
         return;
     }
     
+    if (![self isCodecInitialized]) {
+        [self initializeCodecWith:data];
+    }
+    
     __weak __typeof(self)weakSelf = self;
-    dispatch_async(self.parsingQueue, ^{
+    NSLog(@"Data size:%d  Operation Count:%d", data.length, self.operationQueue.operationCount);
+    
+    [self.operationQueue addOperationWithBlock:^{
         __strong __typeof(weakSelf) strongSelf = weakSelf;
         if (strongSelf == nil) {
             return;
         }
         
         [strongSelf parseData:data];
-    });
+    }];
+}
 
+- (void)stopDecode {
+    
 }
 
 #pragma mark - Private
+
+- (BOOL)isCodecInitialized {
+    return videoCodecContext && videoCodecParserContext;
+}
+
+- (void)initializeCodecWith:(NSData *)data {
+    videoCodec = avcodec_find_decoder(CODEC_ID_H264);
+    
+    videoCodecContext = avcodec_alloc_context3(videoCodec);
+    
+    // Note: for H.264 RTSP streams, the width and height are usually not specified (width and height are 0).
+    // These fields will become filled in once the first frame is decoded and the SPS is processed.
+    videoCodecContext->width = 854;
+    videoCodecContext->height = 480;
+    
+    videoCodecContext->extradata = av_malloc(data.length);
+    videoCodecContext->extradata_size = (int)data.length;
+    [data getBytes:videoCodecContext->extradata length:videoCodecContext->extradata_size];
+    videoCodecContext->pix_fmt = PIX_FMT_YUV420P;
+    
+    //we can receive truncated frames
+    if(videoCodec->capabilities & CODEC_CAP_TRUNCATED) {
+        videoCodecContext->flags |= CODEC_FLAG_TRUNCATED;
+    }
+    
+    videoCodecParserContext = av_parser_init(AV_CODEC_ID_H264);
+    
+    decodedFrame = av_frame_alloc();
+    
+    BOOL isInitializedDecoder = (avcodec_open2(videoCodecContext, videoCodec, NULL) < 0) ? NO : YES;
+    if (isInitializedDecoder == NO) {
+        NSLog(@"Failed to initialize decoder");
+        [self deinitializeCodec];
+    }
+}
+
+- (void)deinitializeCodec {
+    if (videoCodecContext) {
+        av_free(videoCodecContext->extradata);
+        avcodec_close(videoCodecContext);
+        av_free(videoCodecContext);
+        videoCodecContext = NULL;
+    }
+    if (videoCodecParserContext) {
+        av_parser_close(videoCodecParserContext);
+        videoCodecParserContext = NULL;
+    }
+    if (decodedFrame) {
+        av_free(decodedFrame);
+    }
+}
 
 - (void)parseData:(NSData *)data {
     if (data.length == 0) {
