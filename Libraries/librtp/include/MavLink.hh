@@ -217,7 +217,7 @@ operator<<(std::ostream& out, ARDUCOPTER_MODE mode)
 
     default:    break;
     }
-    return out << (unsigned)mode;
+    return out << "ARDUCOPTER_MODE_" << (unsigned)mode;
 }
 
 inline std::ostream&
@@ -251,7 +251,7 @@ operator<<(std::ostream& out, MAV_TYPE type)
 
     default:    break;
     }
-    return out << (unsigned)type;
+    return out << "MAV_TYPE_" << (unsigned)type;
 }
 
 inline std::ostream&
@@ -283,7 +283,7 @@ operator<<(std::ostream& out, MAV_AUTOPILOT autopilot)
 
         default:    break;
     }
-    return out << (unsigned)autopilot;
+    return out << "MAV_AUTOPILOT_" << (unsigned)autopilot;
 }
 
 inline std::ostream&
@@ -546,7 +546,7 @@ operator<<(std::ostream& out, MAV_DATA_STREAM data_stream)
 
     default:    break;
     }
-    return out << (unsigned) data_stream;
+    return out << "MAV_DATA_STREAM_" << (unsigned) data_stream;
 }
 
 inline std::ostream&
@@ -580,6 +580,8 @@ operator<<(std::ostream& out, MAV_CMD cmd)
         DO(NAV_RETURN_TO_LAUNCH)
         DO(NAV_LAND)
         DO(NAV_TAKEOFF)
+        DO(NAV_CONTINUE_AND_CHANGE_ALT)
+        DO(NAV_LOITER_TO_ALT)
         DO(NAV_ROI)
         DO(NAV_PATHPLANNING)
         DO(NAV_SPLINE_WAYPOINT)
@@ -600,6 +602,7 @@ operator<<(std::ostream& out, MAV_CMD cmd)
         DO(DO_SET_SERVO)
         DO(DO_REPEAT_SERVO)
         DO(DO_FLIGHTTERMINATION)
+        DO(DO_LAND_START)
         DO(DO_RALLY_LAND)
         DO(DO_GO_AROUND)
         DO(DO_CONTROL_VIDEO)
@@ -624,17 +627,29 @@ operator<<(std::ostream& out, MAV_CMD cmd)
         DO(MISSION_START)
         DO(COMPONENT_ARM_DISARM)
         DO(START_RX_PAIR)
+        DO(REQUEST_AUTOPILOT_CAPABILITIES)
         DO(IMAGE_START_CAPTURE)
         DO(IMAGE_STOP_CAPTURE)
+        DO(DO_TRIGGER_CONTROL)
         DO(VIDEO_START_CAPTURE)
         DO(VIDEO_STOP_CAPTURE)
         DO(PANORAMA_CREATE)
         DO(PAYLOAD_PREPARE_DEPLOY)
         DO(PAYLOAD_CONTROL_DEPLOY)
 
+#ifdef MAVLINK_ENABLED_ARDUPILOTMEGA
+        DO(DO_MOTOR_TEST)
+        DO(DO_GRIPPER)
+        DO(DO_START_MAG_CAL)
+        DO(DO_ACCEPT_MAG_CAL)
+        DO(DO_CANCEL_MAG_CAL)
+#endif
+
+#ifdef MAVLINK_ENABLED_PIXHAWK
         DO(DO_START_SEARCH)
         DO(DO_FINISH_SEARCH)
         DO(NAV_SWEEP)
+#endif
 
 #undef DO
 
