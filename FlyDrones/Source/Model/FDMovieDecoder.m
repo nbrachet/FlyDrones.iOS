@@ -69,8 +69,6 @@
     }
     
     __weak __typeof(self)weakSelf = self;
-    NSLog(@"Data size:%d  Operation Count:%d", data.length, self.operationQueue.operationCount);
-    
     [self.operationQueue addOperationWithBlock:^{
         __strong __typeof(weakSelf) strongSelf = weakSelf;
         if (strongSelf == nil) {
@@ -82,7 +80,7 @@
 }
 
 - (void)stopDecode {
-    
+    [self.operationQueue cancelAllOperations];
 }
 
 #pragma mark - Private
@@ -180,8 +178,8 @@
     packet.data = data;
     packet.size = size;
     packet.stream_index = 0;
-    packet.pts = 0x8000000000000000;
-    packet.dts = 0x8000000000000000;
+    packet.pts = AV_NOPTS_VALUE;
+    packet.dts = AV_NOPTS_VALUE;
     
     while(packet.size > 0) {
         @autoreleasepool {
@@ -197,7 +195,14 @@
                                                                                     width:videoCodecContext->width
                                                                                    height:videoCodecContext->height];
                     if (decodedVideoFrame != nil) {
-                        [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
+                        __weak __typeof(self) weakSelf = self;
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            __strong __typeof(weakSelf) strongSelf = weakSelf;
+                            if (strongSelf == nil) {
+                                return;
+                            }
+                            [strongSelf.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
+                        }];
                     }
                 }
             }

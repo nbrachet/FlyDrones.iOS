@@ -372,15 +372,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 #pragma mark - FDMovieDecoderDelegate
 
 - (void)movieDecoder:(FDMovieDecoder *)movieDecoder decodedVideoFrame:(FDVideoFrame *)videoFrame {
-    __weak __typeof(self) weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        __strong __typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        [strongSelf.movieGLView renderVideoFrame:videoFrame];
-    });
+    [self.movieGLView renderVideoFrame:videoFrame];
 }
 
 #pragma mark - FDDroneControlManagerDelegate

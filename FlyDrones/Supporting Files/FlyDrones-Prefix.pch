@@ -9,4 +9,9 @@
 #ifndef FlyDrones_PrefixHeader_pch
 #define FlyDrones_PrefixHeader_pch
 
+//Suppress NSLog when in release mode
+#ifdef NDEBUG
+    #define NSLog(...)
+#endif
+
 #endif
