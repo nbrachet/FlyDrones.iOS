@@ -238,6 +238,11 @@ protected:
             return _iovcnt_in_effective;
         }
 
+        size_t count() const
+        {
+            return (_remaining_siz + _bufsiz - 1.0) / _bufsiz;
+        }
+
         void* base()
         {
             while (_iovcnt_in > 0 && _iov_in->iov_len == 0)

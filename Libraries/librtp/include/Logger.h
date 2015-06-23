@@ -116,6 +116,7 @@ public:
         abort(); // will never happen
     }
 
+    // Override the logger's level to suppress (expected) log messages
     class LevelOverride
     {
     public:
@@ -159,6 +160,47 @@ public:
         Logger& _logger;
         const int _level;
     };
+
+    // temporarily increase the logger's level to be more verbose
+    class TemporaryLevel
+    {
+    public:
+
+        TemporaryLevel(Logger& logger)
+            : _logger(logger)
+            , _level(logger.level())
+        {}
+
+        TemporaryLevel(Logger& logger, int level)
+            : _logger(logger)
+            , _level(logger.level())
+        {
+            this->level(level);
+        }
+
+        ~TemporaryLevel()
+        {
+            release();
+        }
+
+        void level(int level)
+        {
+            if (level > _level && level <= LEVEL_DEBUG)
+                _logger.level(level);
+        }
+
+        void release()
+        {
+            if (_logger.level() > _level)
+                _logger.level(_level);
+        }
+
+    private:
+
+        Logger& _logger;
+        const int _level;
+    };
+
 
 #ifdef LOGGER_OSTREAM
     class OStream
@@ -949,7 +991,7 @@ LOGGER_CONVINIENCE(debug,     DEBUG)
 //
 
 // see include/linux/compiler.h in the Linux kernel
-#if !defined(likely) && !defined(unlikely)
+#if !defined(LIKELY) && !defined(UNLIKELY)
 #  if !defined(__GNUC__) || (__GNUC__ == 2 && __GNUC_MINOR__ < 96)
 #    define __builtin_expect(x, expected_value) (x)
 #  endif
@@ -1213,7 +1255,7 @@ public:
             ++f;
             break;
         default:
-            out.imbue(std::locale("C"));
+            out.imbue(std::locale::classic());
             break;
         }
 #endif

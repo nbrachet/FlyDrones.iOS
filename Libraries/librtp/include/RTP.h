@@ -32,6 +32,7 @@ struct RTP
     static const uint16_t MAX_DROPOUT       = 3000;
     static const uint16_t MAX_MISORDER      = 300; // 2MBits/s / (1400 - 12 - 2) = 190
 
+    static const uint8_t PT_PROBE = 127;  /* pt for probe/dup packet */
     static const struct timeval EPOCH;
 
 protected:
@@ -759,6 +760,10 @@ protected:
                                          + 0 * 90000 / 1000000; // 0usec
                                                                 // FIXME: frequency
     static const uint32_t   MIN_PROBES = 4; // must be <= SR_PTS_DELAY / 90000 * MAX_LSR;
+    static const uint32_t   MIN_PACKETS_PER_SEC = 25;   // FIXME: should be fps
+                                                        // so every modem is used to send at least 1 packet per frame
+                                                        // which smoothes differences in trip time
+    static const float      MIN_PRATIO;
 
 private:
 
@@ -840,6 +845,8 @@ public:
                   bool mark,
                   int pt,
                   uint32_t rtp_ts);
+
+    void skip(struct iovec* iov, unsigned iovcnt);
 
     void discontinuity()
     {
@@ -1431,6 +1438,7 @@ public:
     RTPReceiver(uint32_t frequency = 0)
         : UDPReceiver(), RTCPUDPSender(NULL)
         , _ssrc(0)
+        , _pt(PT_PROBE)
         , _base_seq(0)
         , _curr_seq(0)
         , _max_seq(0)
@@ -1466,6 +1474,11 @@ public:
     uint32_t ssrc() const
     {
         return _ssrc;
+    }
+
+    uint8_t pt() const
+    {
+        return _pt;
     }
 
     /**
@@ -1599,30 +1612,7 @@ protected:
 
 private:
 
-    void reset(const RTP::Header* hdr)
-    {
-        _base_seq = hdr->seq;
-        _curr_seq = (uint16_t)(hdr->seq - 1);
-        _max_seq = hdr->seq;
-        _probation = MIN_SEQUENTIAL;
-        _received = 0;
-        _lost = _dropped = _strays = 0;
-        _reset += 1;
-        _remote_lost = 0;
-        _transit = 0;
-        _jitter = 0;
-        _curr_ts = 0;
-        queue_clear();
-
-        _received_sr = false;
-        _precv.clear();
-        _last_seq.clear();
-        for (unsigned i = 0; i < hdr->cc; ++i)
-        {
-            const uint32_t csrc = hdr->csrc[i];
-            _last_seq[csrc] = hdr->seq;
-        }
-    }
+    void reset(const RTP::Header* hdr);
 
     ssize_t recv2(void* buffer, size_t length,
                   struct timeval* timeout);
@@ -1833,6 +1823,7 @@ private:
     Queue _queue;
 
     uint32_t _ssrc;
+    uint8_t _pt;
 
     uint16_t _base_seq;         /* base seq number                   */
     uint16_t _curr_seq;         /* last delivered seq number         */

@@ -401,9 +401,16 @@ private:
 
         ts->tv_sec = mts.tv_sec;
         ts->tv_nsec = mts.tv_nsec;
-#else
+#elif _POSIX_TIMERS > 0
         if (clock_gettime(CLOCK_MONOTONIC_RAW, ts) == -1)
             LOGGER_PWARN("clock_gettime(CLOCK_MONOTONIC_RAW)");
+#else
+#  warning "_POSIX_TIMERS not defined, using gettimeofday"
+        struct timeval tv;
+        if (gettimeofday(&tv, NULL) == -1)
+            LOGGER_PWARN("gettimeofday");
+        ts->tv_sec = tv.tv_sec;
+        tv->tv_nsec = tv.tv_usec * 1000;
 #endif
     }
 };
