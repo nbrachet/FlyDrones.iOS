@@ -96,8 +96,8 @@
     
     // Note: for H.264 RTSP streams, the width and height are usually not specified (width and height are 0).
     // These fields will become filled in once the first frame is decoded and the SPS is processed.
-    videoCodecContext->width = 854;
-    videoCodecContext->height = 480;
+    videoCodecContext->width = (int)kDefaultVideoSize.width;
+    videoCodecContext->height = (int)kDefaultVideoSize.height;
     
     videoCodecContext->extradata = av_malloc(data.length);
     videoCodecContext->extradata_size = (int)data.length;
@@ -195,14 +195,16 @@
                                                                                     width:videoCodecContext->width
                                                                                    height:videoCodecContext->height];
                     if (decodedVideoFrame != nil) {
-                        __weak __typeof(self) weakSelf = self;
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            __strong __typeof(weakSelf) strongSelf = weakSelf;
-                            if (strongSelf == nil) {
-                                return;
-                            }
-                            [strongSelf.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
-                        }];
+//                        __weak __typeof(self) weakSelf = self;
+//                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//                            __strong __typeof(weakSelf) strongSelf = weakSelf;
+//                            if (strongSelf == nil) {
+//                                return;
+//                            }
+//                            [strongSelf.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
+//                        }];
+                        [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
+
                     }
                 }
             }

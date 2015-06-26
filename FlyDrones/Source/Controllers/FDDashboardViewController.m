@@ -37,6 +37,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 @property (nonatomic, weak) IBOutlet UIButton *worldwideLocationButton;
 
 @property (nonatomic, weak) IBOutlet UIView *movieBackgroundView;
+
 @property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
 
 @property (nonatomic, weak) IBOutlet FDJoystickView *leftJoystickView;

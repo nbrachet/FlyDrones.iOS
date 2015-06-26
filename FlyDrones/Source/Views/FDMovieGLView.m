@@ -253,8 +253,8 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
 
 - (void)updateVertices {
     const BOOL fit = (self.contentMode == UIViewContentModeScaleAspectFit);
-    const float width = self.currentVideoFrame.width > 0 ? self.currentVideoFrame.width : 854;
-    const float height = self.currentVideoFrame.height > 0 ? self.currentVideoFrame.height : 480;
+    const float width = self.currentVideoFrame.width > 0 ? self.currentVideoFrame.width : kDefaultVideoSize.width;
+    const float height = self.currentVideoFrame.height > 0 ? self.currentVideoFrame.height : kDefaultVideoSize.height;
     const float dH = (float) _backingHeight / height;
     const float dW = (float) _backingWidth / width;
     const float dd = fit ? MIN(dH, dW) : MAX(dH, dW);
