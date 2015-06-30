@@ -52,6 +52,8 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) CFTimeInterval lastReceivedHeartbeatMessageTimeInterval;
 
+@property (nonatomic, assign, getter=isArm) BOOL arm;
+
 @end
 
 @implementation FDDashboardViewController
@@ -138,18 +140,38 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     self.armedStatusButton.enabled = enabledControls;
     self.worldwideLocationButton.enabled = enabledControls && CLLocationCoordinate2DIsValid([FDDroneStatus currentStatus].gpsInfo.locationCoordinate);
     
+    self.arm = [FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED;
+
     self.leftJoystickView.userInteractionEnabled = enabledControls;
     self.rightJoystickView.userInteractionEnabled = enabledControls;
+    
     if (!enabledControls) {
         [self dismissPresentedPopoverAnimated:YES];
         [self.leftJoystickView resetPosition];
         [self.rightJoystickView resetPosition];
     } else {
-        NSString *armedStatusButtonTitle = ([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) ? @"ARM" : @"DISARM";
+        NSString *armedStatusButtonTitle = self.isArm ? @"ARM" : @"DISARM";
         [self.armedStatusButton setTitle:armedStatusButtonTitle forState:UIControlStateNormal];
     }
 }
 
+- (void)setArm:(BOOL)arm {
+    if (_arm == arm) {
+        return;
+    }
+    
+    _arm = arm;
+    
+    NSData *controlData;
+    if (arm) {
+        controlData = [self.droneControlManager messageDataWithCaptureSettingsFps:kDefaultVideoFps bitrate:kDefaultVideoBitrate];
+    } else {
+        controlData = [self.droneControlManager messageDataWithCaptureDisable];
+    }
+    if (controlData.length > 0) {
+        [self.connectionManager sendDataToControlServer:controlData];
+    }
+}
 #pragma mark - UIStateRestoration
 
 - (void)applicationFinishedRestoringState {

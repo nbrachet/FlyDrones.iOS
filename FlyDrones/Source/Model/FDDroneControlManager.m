@@ -11,6 +11,7 @@
 #import "NSString+MAVLink.h"
 #import "NSData+MAVLink.h"
 #import "mavlink.h"
+#import "pixhawk.h"
 
 NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"didHandleBatteryStatusNotification";
 NSString * const FDDroneControlManagerDidHandleScaledPressureInfoNotification = @"didHandleScaledPressureInfoNotification";
@@ -428,7 +429,44 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                                   0,
                                   0);
     return [NSData dataWithMAVLinkMessage:&message];
+}
 
+- (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps bitrate:(CGFloat)bitrate {
+    mavlink_message_t message;
+    mavlink_msg_command_long_pack(FDDroneControlManagerMavLinkDefaultSystemId,
+                                  FDDroneControlManagerMavLinkDefaultComponentId,
+                                  &message,
+                                  FDDroneControlManagerMavLinkDefaultTargetSystem,
+                                  MAV_COMP_ID_ALL,
+                                  2500, //MAV_CMD_VIDEO_START_CAPTURE
+                                  0,
+                                  0,    //Camera ID (0 for all cameras)
+                                  fps,
+                                  bitrate,
+                                  0,
+                                  0,
+                                  0,
+                                  0);
+    return [NSData dataWithMAVLinkMessage:&message];
+}
+
+- (NSData *)messageDataWithCaptureDisable {
+    mavlink_message_t message;
+    mavlink_msg_command_long_pack(FDDroneControlManagerMavLinkDefaultSystemId,
+                                  FDDroneControlManagerMavLinkDefaultComponentId,
+                                  &message,
+                                  FDDroneControlManagerMavLinkDefaultTargetSystem,
+                                  MAV_COMP_ID_ALL,
+                                  2501, //MAV_CMD_VIDEO_STOP_CAPTURE
+                                  0,
+                                  0,    //Camera ID (0 for all cameras)
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0);
+    return [NSData dataWithMAVLinkMessage:&message];
 }
 
 #pragma mark - Private

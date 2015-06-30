@@ -137,7 +137,7 @@
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
-    //    NSLog(@"Did send control data");
+        NSLog(@"Did send control data");
 }
 
 @end
