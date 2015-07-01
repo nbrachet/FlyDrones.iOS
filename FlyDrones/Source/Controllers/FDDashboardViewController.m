@@ -150,7 +150,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
         [self.leftJoystickView resetPosition];
         [self.rightJoystickView resetPosition];
     } else {
-        NSString *armedStatusButtonTitle = self.isArm ? @"ARM" : @"DISARM";
+        NSString *armedStatusButtonTitle = self.isArm ? @"ARMED" : @"DISARMED";
         [self.armedStatusButton setTitle:armedStatusButtonTitle forState:UIControlStateNormal];
     }
 }
