@@ -142,7 +142,7 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
                                      kEAGLDrawablePropertyRetainedBacking: @NO};
     
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-
+    self.context.multiThreaded = YES;
     if (!self.context || ![EAGLContext setCurrentContext:self.context]) {
         NSLog(@"failed to setup EAGLContext");
         return;

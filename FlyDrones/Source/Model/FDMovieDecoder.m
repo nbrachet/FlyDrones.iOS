@@ -25,7 +25,6 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
 }
 
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
-@property (atomic, assign, getter=isOperationQueueFull) BOOL operationQueueFull;
 
 @end
 
@@ -70,18 +69,6 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
     
     if (![self isCodecInitialized]) {
         [self initializeCodecWith:data];
-    }
-    
-    @synchronized(self) {
-        if (self.operationQueue.operationCount == 0) {
-            self.operationQueueFull = NO;
-        } else if (self.operationQueue.operationCount >= FDMovieDecoderMaxOperationInQueue) {
-            self.operationQueueFull = YES;
-        }
-    }
-    
-    if ([FDDroneStatus currentStatus].limitNumberOfTasks && self.isOperationQueueFull) {
-        return;
     }
     
     __weak __typeof(self)weakSelf = self;
@@ -192,7 +179,7 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
     
     AVPacket packet;
     av_init_packet(&packet);
-    
+
     packet.data = data;
     packet.size = size;
     packet.stream_index = 0;
@@ -208,13 +195,24 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
                 break;
             }
             if (isGotPicture) {
-                if (self.delegate != nil && [self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)]) {
-                    FDVideoFrame *decodedVideoFrame = [[FDVideoFrame alloc] initWithFrame:decodedFrame
-                                                                                    width:videoCodecContext->width
-                                                                                   height:videoCodecContext->height];
+                BOOL isNeedRender;
+                @synchronized(self) {
+                    isNeedRender = [self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)];
+                    if ([self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)]) {
+                        if ([FDDroneStatus currentStatus].limitNumberOfTasks &&
+                            self.operationQueue.operationCount > FDMovieDecoderMaxOperationInQueue) {
+                            isNeedRender = NO;
+                        } else {
+                            isNeedRender = YES;
+                        }
+                    }
+                }
+                if (isNeedRender) {
+                    FDVideoFrame *decodedVideoFrame = [[FDVideoFrame alloc] initWithFrame:decodedFrame];
                     if (decodedVideoFrame != nil) {
-                        [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
-
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
+                        }];
                     }
                 }
             }
