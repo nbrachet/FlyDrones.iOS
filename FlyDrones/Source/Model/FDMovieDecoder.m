@@ -13,6 +13,8 @@
 #import "libavutil/pixdesc.h"
 #import "FDVideoFrame.h"
 
+static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
+
 @interface FDMovieDecoder () {
     struct AVCodec *videoCodec;
     struct AVCodecContext *videoCodecContext;
@@ -22,6 +24,7 @@
 }
 
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
+@property (atomic, assign, getter=isOperationQueueFull) BOOL operationQueueFull;
 
 @end
 
@@ -68,6 +71,18 @@
         [self initializeCodecWith:data];
     }
     
+    @synchronized(self) {
+        if (self.operationQueue.operationCount == 0) {
+            self.operationQueueFull = NO;
+        } else if (self.operationQueue.operationCount >= FDMovieDecoderMaxOperationInQueue) {
+            self.operationQueueFull = YES;
+        }
+    }
+    
+    if (self.isOperationQueueFull) {
+        return;
+    }
+    
     __weak __typeof(self)weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         __strong __typeof(weakSelf) strongSelf = weakSelf;
@@ -77,6 +92,8 @@
         
         [strongSelf parseData:data];
     }];
+    
+    NSLog(@"Tasks count:%lu", (unsigned long)self.operationQueue.operationCount);
 }
 
 - (void)stopDecode {
@@ -195,14 +212,6 @@
                                                                                     width:videoCodecContext->width
                                                                                    height:videoCodecContext->height];
                     if (decodedVideoFrame != nil) {
-//                        __weak __typeof(self) weakSelf = self;
-//                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-//                            __strong __typeof(weakSelf) strongSelf = weakSelf;
-//                            if (strongSelf == nil) {
-//                                return;
-//                            }
-//                            [strongSelf.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
-//                        }];
                         [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
 
                     }
