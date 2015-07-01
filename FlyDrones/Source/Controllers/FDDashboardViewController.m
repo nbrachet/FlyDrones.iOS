@@ -164,7 +164,8 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     
     NSData *controlData;
     if (arm) {
-        controlData = [self.droneControlManager messageDataWithCaptureSettingsFps:kDefaultVideoFps bitrate:kDefaultVideoBitrate];
+        controlData = [self.droneControlManager messageDataWithCaptureSettingsFps:[FDDroneStatus currentStatus].videoFps
+                                                                          bitrate:[FDDroneStatus currentStatus].videoBitrate];
     } else {
         controlData = [self.droneControlManager messageDataWithCaptureDisable];
     }

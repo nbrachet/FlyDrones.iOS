@@ -10,6 +10,7 @@
 #import <OpenGLES/ES2/gl.h>
 #import "FDMovieGLRenderer.h"
 #import "FDVideoFrame.h"
+#import "FDDroneStatus.h"
 
 typedef NS_ENUM(GLuint, FDMovieGLViewShaderAttribute) {
     FDMovieGLViewShaderAttributeVertex,
@@ -253,8 +254,8 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
 
 - (void)updateVertices {
     const BOOL fit = (self.contentMode == UIViewContentModeScaleAspectFit);
-    const float width = self.currentVideoFrame.width > 0 ? self.currentVideoFrame.width : kDefaultVideoSize.width;
-    const float height = self.currentVideoFrame.height > 0 ? self.currentVideoFrame.height : kDefaultVideoSize.height;
+    const float width = self.currentVideoFrame.width > 0 ? self.currentVideoFrame.width : [FDDroneStatus currentStatus].videoSize.width;
+    const float height = self.currentVideoFrame.height > 0 ? self.currentVideoFrame.height : [FDDroneStatus currentStatus].videoSize.height;
     const float dH = (float) _backingHeight / height;
     const float dW = (float) _backingWidth / width;
     const float dd = fit ? MIN(dH, dW) : MAX(dH, dW);

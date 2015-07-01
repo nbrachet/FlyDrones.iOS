@@ -12,6 +12,7 @@
 #import "libswresample/swresample.h"
 #import "libavutil/pixdesc.h"
 #import "FDVideoFrame.h"
+#import "FDDroneStatus.h"
 
 static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
 
@@ -113,8 +114,8 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
     
     // Note: for H.264 RTSP streams, the width and height are usually not specified (width and height are 0).
     // These fields will become filled in once the first frame is decoded and the SPS is processed.
-    videoCodecContext->width = (int)kDefaultVideoSize.width;
-    videoCodecContext->height = (int)kDefaultVideoSize.height;
+    videoCodecContext->width = (int)[FDDroneStatus currentStatus].videoSize.width;
+    videoCodecContext->height = (int)[FDDroneStatus currentStatus].videoSize.height;
     
     videoCodecContext->extradata = av_malloc(data.length);
     videoCodecContext->extradata_size = (int)data.length;
