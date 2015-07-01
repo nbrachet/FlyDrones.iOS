@@ -12,6 +12,9 @@
 #import "libswresample/swresample.h"
 #import "libavutil/pixdesc.h"
 #import "FDVideoFrame.h"
+#import "FDDroneStatus.h"
+
+static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
 
 @interface FDMovieDecoder () {
     struct AVCodec *videoCodec;
@@ -77,6 +80,8 @@
         
         [strongSelf parseData:data];
     }];
+    
+    NSLog(@"Tasks count:%lu", (unsigned long)self.operationQueue.operationCount);
 }
 
 - (void)stopDecode {
@@ -96,8 +101,8 @@
     
     // Note: for H.264 RTSP streams, the width and height are usually not specified (width and height are 0).
     // These fields will become filled in once the first frame is decoded and the SPS is processed.
-    videoCodecContext->width = (int)kDefaultVideoSize.width;
-    videoCodecContext->height = (int)kDefaultVideoSize.height;
+    videoCodecContext->width = (int)[FDDroneStatus currentStatus].videoSize.width;
+    videoCodecContext->height = (int)[FDDroneStatus currentStatus].videoSize.height;
     
     videoCodecContext->extradata = av_malloc(data.length);
     videoCodecContext->extradata_size = (int)data.length;
@@ -174,7 +179,7 @@
     
     AVPacket packet;
     av_init_packet(&packet);
-    
+
     packet.data = data;
     packet.size = size;
     packet.stream_index = 0;
@@ -190,21 +195,24 @@
                 break;
             }
             if (isGotPicture) {
-                if (self.delegate != nil && [self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)]) {
-                    FDVideoFrame *decodedVideoFrame = [[FDVideoFrame alloc] initWithFrame:decodedFrame
-                                                                                    width:videoCodecContext->width
-                                                                                   height:videoCodecContext->height];
+                BOOL isNeedRender;
+                @synchronized(self) {
+                    isNeedRender = [self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)];
+                    if ([self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)]) {
+                        if ([FDDroneStatus currentStatus].limitNumberOfTasks &&
+                            self.operationQueue.operationCount > FDMovieDecoderMaxOperationInQueue) {
+                            isNeedRender = NO;
+                        } else {
+                            isNeedRender = YES;
+                        }
+                    }
+                }
+                if (isNeedRender) {
+                    FDVideoFrame *decodedVideoFrame = [[FDVideoFrame alloc] initWithFrame:decodedFrame];
                     if (decodedVideoFrame != nil) {
-//                        __weak __typeof(self) weakSelf = self;
-//                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-//                            __strong __typeof(weakSelf) strongSelf = weakSelf;
-//                            if (strongSelf == nil) {
-//                                return;
-//                            }
-//                            [strongSelf.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
-//                        }];
-                        [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
-
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
+                        }];
                     }
                 }
             }

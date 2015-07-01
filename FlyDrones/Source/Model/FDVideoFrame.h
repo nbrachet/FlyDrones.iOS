@@ -17,6 +17,7 @@
 @property (nonatomic) NSUInteger width;
 @property (nonatomic) NSUInteger height;
 
-- (instancetype)initWithFrame:(AVFrame *)frame width:(NSUInteger)width height:(NSUInteger)height;
+- (instancetype)init __attribute__((unavailable("init not available")));
+- (instancetype)initWithFrame:(AVFrame *)frame;
 
 @end

@@ -67,6 +67,17 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     self.enabledControls = YES;
     self.leftJoystickView.mode = FDJoystickViewModeSavedVerticalPosition;
     self.leftJoystickView.isSingleActiveAxis = YES;
+    
+    //Correct size of video
+    CGSize movieSize = [FDDroneStatus currentStatus].videoSize;
+    NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.movieBackgroundView
+                                                                  attribute:NSLayoutAttributeWidth
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:self.movieBackgroundView
+                                                                  attribute:NSLayoutAttributeHeight
+                                                                 multiplier:movieSize.width/movieSize.height
+                                                                   constant:0.0f];
+    [self.movieBackgroundView addConstraint:constraint];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -163,11 +174,10 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     _arm = arm;
     
     NSData *controlData;
-    if (arm) {
-        controlData = [self.droneControlManager messageDataWithCaptureSettingsFps:kDefaultVideoFps bitrate:kDefaultVideoBitrate];
-    } else {
+    if (!arm) {
         controlData = [self.droneControlManager messageDataWithCaptureDisable];
     }
+    
     if (controlData.length > 0) {
         [self.connectionManager sendDataToControlServer:controlData];
     }
@@ -503,8 +513,11 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 #pragma mark - FDEnableArmedViewController
 
 - (void)didEnableArmedStatus:(BOOL)armed {
-    NSData *messageData = [self.droneControlManager messageDataWithArmedEnable:armed];
-    [self.connectionManager sendDataToControlServer:messageData];
+    if (armed) {
+        [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataWithCaptureSettingsFps:[FDDroneStatus currentStatus].videoFps
+                                                            bitrate:[FDDroneStatus currentStatus].videoBitrate]];
+    }
+    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataWithArmedEnable:armed]];
     [self dismissPresentedPopoverAnimated:YES];
 }
 

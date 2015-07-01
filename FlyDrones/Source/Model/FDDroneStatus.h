@@ -64,6 +64,10 @@ typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
 @property (nonatomic, assign) NSInteger portForUDPConnection;
 @property (nonatomic, copy) NSString *pathForTCPConnection;
 @property (nonatomic, assign) NSInteger portForTCPConnection;
+@property (nonatomic, assign) CGSize videoSize;
+@property (nonatomic, assign) NSUInteger videoFps;
+@property (nonatomic, assign) CGFloat videoBitrate;
+@property (nonatomic, assign) BOOL limitNumberOfTasks;
 
 + (instancetype)alloc __attribute__((unavailable("alloc not available")));
 + (instancetype)allocWithZone __attribute__((unavailable("allocWithZone not available")));

@@ -21,6 +21,14 @@ static NSString * const TCPHostKey = @"TCPHostKey";
 static NSString * const FDConnectionSettingsViewControllerCustomTCPPort = @"5555";
 static NSString * const TCPPortKey = @"TCPPortKey";
 
+static NSString * const ResolutionWKey = @"ResolutionWKey";
+static NSString * const ResolutionHKey = @"ResolutionHKey";
+static NSString * const FPSKey = @"FPSKey";
+static NSString * const BitrateKey = @"BitrateKey";
+static NSString * const LimitingTasksKey = @"LimitingTasksKey";
+
+
+
 @interface FDConnectionSettingsViewController ()
 
 @property (nonatomic, weak) IBOutlet UITextField *hostForConnectionTextField;
@@ -28,6 +36,12 @@ static NSString * const TCPPortKey = @"TCPPortKey";
 
 @property (nonatomic, weak) IBOutlet UITextField *hostForTCPConnectionTextField;
 @property (nonatomic, weak) IBOutlet UITextField *portForTCPConnectionTextField;
+
+@property (nonatomic, weak) IBOutlet UITextField *resolutionWTextField;
+@property (nonatomic, weak) IBOutlet UITextField *resolutionHTextField;
+@property (nonatomic, weak) IBOutlet UITextField *fpsTextField;
+@property (nonatomic, weak) IBOutlet UITextField *bitrateTextField;
+@property (nonatomic, weak) IBOutlet UISwitch *limitingNumberTasksSwitch;
 
 @end
 
@@ -62,6 +76,34 @@ static NSString * const TCPPortKey = @"TCPPortKey";
     } else {
         self.portForTCPConnectionTextField.text = FDConnectionSettingsViewControllerCustomTCPPort;
     }
+    
+    if ([userDefaults objectForKey:ResolutionWKey]) {
+        self.resolutionWTextField.text = [userDefaults objectForKey:ResolutionWKey];
+    } else {
+        self.resolutionWTextField.text = [NSString stringWithFormat:@"%d", (int)kDefaultVideoSize.width];
+    }
+    
+    if ([userDefaults objectForKey:ResolutionHKey]) {
+        self.resolutionHTextField.text = [userDefaults objectForKey:ResolutionHKey];
+    } else {
+        self.resolutionHTextField.text = [NSString stringWithFormat:@"%d", (int)kDefaultVideoSize.height];
+    }
+    
+    if ([userDefaults objectForKey:FPSKey]) {
+        self.fpsTextField.text = [userDefaults objectForKey:FPSKey];
+    } else {
+        self.fpsTextField.text = [NSString stringWithFormat:@"%d", (int)kDefaultVideoFps];
+    }
+    
+    if ([userDefaults objectForKey:BitrateKey]) {
+        self.bitrateTextField.text = [userDefaults objectForKey:BitrateKey];
+    } else {
+        self.bitrateTextField.text = [NSString stringWithFormat:@"%.1f", kDefaultVideoBitrate];
+    }
+    
+    if ([userDefaults objectForKey:LimitingTasksKey]) {
+        self.limitingNumberTasksSwitch.on = [[userDefaults objectForKey:LimitingTasksKey] boolValue];
+    }
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
@@ -71,8 +113,20 @@ static NSString * const TCPPortKey = @"TCPPortKey";
         NSString *portForUDPConnection = self.portForConnectionTextField.text;
         NSString *hostForTCPConnection = self.hostForTCPConnectionTextField.text;
         NSString *portForTCPConnection = self.portForTCPConnectionTextField.text;
+        NSString *resolutionW = self.resolutionWTextField.text;
+        NSString *resolutionH = self.resolutionHTextField.text;
+        NSString *fps = self.fpsTextField.text;
+        NSString *bitrate = self.bitrateTextField.text;
+        BOOL limitNumberOfTasks = self.limitingNumberTasksSwitch.on;
         
-        if (hostForUDPConnection.length == 0 || portForUDPConnection <= 0 || hostForTCPConnection.length == 0 || portForTCPConnection <= 0) {
+        if (hostForUDPConnection.length == 0 ||
+            portForUDPConnection.length == 0 ||
+            hostForTCPConnection.length == 0 ||
+            portForTCPConnection.length == 0 ||
+            resolutionH.length == 0 ||
+            resolutionW.length == 0 ||
+            fps.length == 0 ||
+            bitrate.length == 0) {
             [[[UIAlertView alloc] initWithTitle:@"Warning" message:@"Please fill all fields correctly" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
             return NO;
         }
@@ -83,11 +137,24 @@ static NSString * const TCPPortKey = @"TCPPortKey";
         [userDefaults setObject:hostForTCPConnection forKey:TCPHostKey];
         [userDefaults setObject:portForTCPConnection forKey:TCPPortKey];
 
+        [userDefaults setObject:resolutionW forKey:ResolutionWKey];
+        [userDefaults setObject:resolutionH forKey:ResolutionHKey];
+        [userDefaults setObject:fps forKey:FPSKey];
+        [userDefaults setObject:bitrate forKey:BitrateKey];
+
+        [userDefaults setObject:@(limitNumberOfTasks) forKey:LimitingTasksKey];
+
+        
         FDDroneStatus *currentDroneStatus = [FDDroneStatus currentStatus];
         currentDroneStatus.pathForUDPConnection = hostForUDPConnection;
         currentDroneStatus.portForUDPConnection = [portForUDPConnection integerValue];
         currentDroneStatus.pathForTCPConnection = hostForTCPConnection;
         currentDroneStatus.portForTCPConnection = [portForTCPConnection integerValue];
+        
+        currentDroneStatus.videoSize = CGSizeMake([resolutionW integerValue], [resolutionH integerValue]);
+        currentDroneStatus.videoFps = [fps integerValue];
+        currentDroneStatus.videoBitrate = [bitrate floatValue];
+        currentDroneStatus.limitNumberOfTasks = limitNumberOfTasks;
     }
     return YES;
 }
