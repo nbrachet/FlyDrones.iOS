@@ -80,7 +80,7 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
         }
     }
     
-    if (self.isOperationQueueFull) {
+    if ([FDDroneStatus currentStatus].limitNumberOfTasks && self.isOperationQueueFull) {
         return;
     }
     

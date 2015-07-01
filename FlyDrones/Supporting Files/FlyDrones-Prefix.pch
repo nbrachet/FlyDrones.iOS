@@ -16,7 +16,7 @@
     #define NSLog(...)
 #endif
 
-#define kDefaultVideoSize CGSizeMake(1024, 768)
+#define kDefaultVideoSize CGSizeMake(1280, 720)
 #define kDefaultVideoFps 25
 #define kDefaultVideoBitrate 0.4f
 

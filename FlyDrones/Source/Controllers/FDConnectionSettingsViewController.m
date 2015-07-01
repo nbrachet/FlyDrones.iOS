@@ -25,6 +25,7 @@ static NSString * const ResolutionWKey = @"ResolutionWKey";
 static NSString * const ResolutionHKey = @"ResolutionHKey";
 static NSString * const FPSKey = @"FPSKey";
 static NSString * const BitrateKey = @"BitrateKey";
+static NSString * const LimitingTasksKey = @"LimitingTasksKey";
 
 
 
@@ -40,7 +41,7 @@ static NSString * const BitrateKey = @"BitrateKey";
 @property (nonatomic, weak) IBOutlet UITextField *resolutionHTextField;
 @property (nonatomic, weak) IBOutlet UITextField *fpsTextField;
 @property (nonatomic, weak) IBOutlet UITextField *bitrateTextField;
-
+@property (nonatomic, weak) IBOutlet UISwitch *limitingNumberTasksSwitch;
 
 @end
 
@@ -99,6 +100,10 @@ static NSString * const BitrateKey = @"BitrateKey";
     } else {
         self.bitrateTextField.text = [NSString stringWithFormat:@"%.1f", kDefaultVideoBitrate];
     }
+    
+    if ([userDefaults objectForKey:LimitingTasksKey]) {
+        self.limitingNumberTasksSwitch.on = [[userDefaults objectForKey:LimitingTasksKey] boolValue];
+    }
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
@@ -112,6 +117,7 @@ static NSString * const BitrateKey = @"BitrateKey";
         NSString *resolutionH = self.resolutionHTextField.text;
         NSString *fps = self.fpsTextField.text;
         NSString *bitrate = self.bitrateTextField.text;
+        BOOL limitNumberOfTasks = self.limitingNumberTasksSwitch.on;
         
         if (hostForUDPConnection.length == 0 ||
             portForUDPConnection.length == 0 ||
@@ -136,6 +142,8 @@ static NSString * const BitrateKey = @"BitrateKey";
         [userDefaults setObject:fps forKey:FPSKey];
         [userDefaults setObject:bitrate forKey:BitrateKey];
 
+        [userDefaults setObject:@(limitNumberOfTasks) forKey:LimitingTasksKey];
+
         
         FDDroneStatus *currentDroneStatus = [FDDroneStatus currentStatus];
         currentDroneStatus.pathForUDPConnection = hostForUDPConnection;
@@ -146,7 +154,7 @@ static NSString * const BitrateKey = @"BitrateKey";
         currentDroneStatus.videoSize = CGSizeMake([resolutionW integerValue], [resolutionH integerValue]);
         currentDroneStatus.videoFps = [fps integerValue];
         currentDroneStatus.videoBitrate = [bitrate floatValue];
-        
+        currentDroneStatus.limitNumberOfTasks = limitNumberOfTasks;
     }
     return YES;
 }
