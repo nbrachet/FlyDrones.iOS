@@ -67,6 +67,17 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     self.enabledControls = YES;
     self.leftJoystickView.mode = FDJoystickViewModeSavedVerticalPosition;
     self.leftJoystickView.isSingleActiveAxis = YES;
+    
+    //Correct size of video
+    CGSize movieSize = [FDDroneStatus currentStatus].videoSize;
+    NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.movieBackgroundView
+                                                                  attribute:NSLayoutAttributeWidth
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:self.movieBackgroundView
+                                                                  attribute:NSLayoutAttributeHeight
+                                                                 multiplier:movieSize.width/movieSize.height
+                                                                   constant:0.0f];
+    [self.movieBackgroundView addConstraint:constraint];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
