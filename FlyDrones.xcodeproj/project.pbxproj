@@ -61,6 +61,10 @@
 		1BBBE1BA1B31A1C500021FF4 /* FDMovieGLRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BBBE1B91B31A1C500021FF4 /* FDMovieGLRenderer.m */; };
 		1BBBE1BC1B31B04400021FF4 /* VertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 1BBBE1BB1B31B04400021FF4 /* VertexShader.glsl */; };
 		1BBBE1BE1B31B06400021FF4 /* YUVFragmentShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 1BBBE1BD1B31B06400021FF4 /* YUVFragmentShader.glsl */; };
+		1BF6BD721B46745A006070F0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BF6BD711B46745A006070F0 /* Foundation.framework */; };
+		1BF6BD741B46746D006070F0 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BF6BD731B46746D006070F0 /* CoreVideo.framework */; };
+		1BF6BD761B46748B006070F0 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BF6BD751B46748B006070F0 /* CoreAudio.framework */; };
+		1BF6BD781B4674D0006070F0 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BF6BD771B4674D0006070F0 /* CoreMedia.framework */; };
 		4397FC0BED2F8F02C0BEE535 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ACFE6579CFB1309E8DBA081 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -482,6 +486,10 @@
 		1BBBE1B91B31A1C500021FF4 /* FDMovieGLRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieGLRenderer.m; sourceTree = "<group>"; };
 		1BBBE1BB1B31B04400021FF4 /* VertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VertexShader.glsl; sourceTree = "<group>"; };
 		1BBBE1BD1B31B06400021FF4 /* YUVFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = YUVFragmentShader.glsl; sourceTree = "<group>"; };
+		1BF6BD711B46745A006070F0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1BF6BD731B46746D006070F0 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		1BF6BD751B46748B006070F0 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		1BF6BD771B4674D0006070F0 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		70304537241E9E01FE1FA360 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		95DD9068FDA34E985D8714D9 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9ACFE6579CFB1309E8DBA081 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -492,16 +500,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B1651101B3E10CB00E2BF44 /* libavutil.a in Frameworks */,
-				1BB4C23E1B2B4CDB00C42211 /* libbz2.dylib in Frameworks */,
-				1BB4C23C1B2B4CCD00C42211 /* libz.dylib in Frameworks */,
-				1B16510E1B3E10CB00E2BF44 /* libavfilter.a in Frameworks */,
-				1BB4C23A1B2B4CBD00C42211 /* libiconv.2.4.0.dylib in Frameworks */,
-				1BB4C22D1B2B4A4A00C42211 /* libc++.dylib in Frameworks */,
-				1B1651131B3E10CB00E2BF44 /* libswscale.a in Frameworks */,
+				1BF6BD721B46745A006070F0 /* Foundation.framework in Frameworks */,
+				1BB4C22B1B2B4A3F00C42211 /* AVFoundation.framework in Frameworks */,
+				1BF6BD781B4674D0006070F0 /* CoreMedia.framework in Frameworks */,
+				1BF6BD761B46748B006070F0 /* CoreAudio.framework in Frameworks */,
+				1BF6BD741B46746D006070F0 /* CoreVideo.framework in Frameworks */,
 				1BB4C2311B2B4A6700C42211 /* CoreLocation.framework in Frameworks */,
 				1BB4C22F1B2B4A5800C42211 /* CoreGraphics.framework in Frameworks */,
-				1BB4C22B1B2B4A3F00C42211 /* AVFoundation.framework in Frameworks */,
+				1BB4C23E1B2B4CDB00C42211 /* libbz2.dylib in Frameworks */,
+				1BB4C23C1B2B4CCD00C42211 /* libz.dylib in Frameworks */,
+				1BB4C23A1B2B4CBD00C42211 /* libiconv.2.4.0.dylib in Frameworks */,
+				1BB4C22D1B2B4A4A00C42211 /* libc++.dylib in Frameworks */,
+				1B16510E1B3E10CB00E2BF44 /* libavfilter.a in Frameworks */,
+				1B1651101B3E10CB00E2BF44 /* libavutil.a in Frameworks */,
+				1B1651131B3E10CB00E2BF44 /* libswscale.a in Frameworks */,
 				1B2809541B2B46A40040A4B9 /* librtp.a in Frameworks */,
 				1B16510F1B3E10CB00E2BF44 /* libavformat.a in Frameworks */,
 				1B1651121B3E10CB00E2BF44 /* libswresample.a in Frameworks */,
@@ -1209,6 +1221,10 @@
 		A1711AA7402FEBC1D3F503F0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1BF6BD771B4674D0006070F0 /* CoreMedia.framework */,
+				1BF6BD751B46748B006070F0 /* CoreAudio.framework */,
+				1BF6BD731B46746D006070F0 /* CoreVideo.framework */,
+				1BF6BD711B46745A006070F0 /* Foundation.framework */,
 				1BB4C23D1B2B4CDB00C42211 /* libbz2.dylib */,
 				1BB4C23B1B2B4CCD00C42211 /* libz.dylib */,
 				1BB4C2391B2B4CBD00C42211 /* libiconv.2.4.0.dylib */,
@@ -1503,6 +1519,7 @@
 					"$(PROJECT_DIR)/Libraries/x264/lib",
 					"$(PROJECT_DIR)/Libraries/ffmpeg/lib",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
 			};

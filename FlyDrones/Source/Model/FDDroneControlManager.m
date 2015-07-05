@@ -332,10 +332,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 //        return [NSData dataWithMAVLinkMessage:&message];
 //    } else if (currentStatus.mavBaseMode & (uint8_t)(MAV_MODE_FLAG_SAFETY_ARMED)) {
         @synchronized(currentStatus) {
-            if (![currentStatus.paramValues objectForKey:@"RCMAP_PITCH"] ||
-                ![currentStatus.paramValues objectForKey:@"RCMAP_ROLL"] ||
-                ![currentStatus.paramValues objectForKey:@"RCMAP_THROTTLE"] ||
-                ![currentStatus.paramValues objectForKey:@"RCMAP_YAW"]) {
+            if (![self isRCMapDataVilid]) {
                 return nil;
             }
             
@@ -382,6 +379,19 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         }
 //    }
 //    return nil;
+}
+
+- (BOOL)isRCMapDataVilid {
+    FDDroneStatus *currentStatus = [FDDroneStatus currentStatus];
+    @synchronized(currentStatus) {
+        if ([currentStatus.paramValues objectForKey:@"RCMAP_PITCH"] == nil ||
+            [currentStatus.paramValues objectForKey:@"RCMAP_ROLL"] == nil ||
+            [currentStatus.paramValues objectForKey:@"RCMAP_THROTTLE"] == nil ||
+            [currentStatus.paramValues objectForKey:@"RCMAP_YAW"] == nil) {
+            return NO;
+        }
+    }
+    return YES;
 }
 
 - (NSData *)heartbeatData {
@@ -450,7 +460,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
     return [NSData dataWithMAVLinkMessage:&message];
 }
 
-- (NSData *)messageDataWithCaptureDisable {
+- (NSData *)messageDataForCaptureDisableCommand {
     mavlink_message_t message;
     mavlink_msg_command_long_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                                   FDDroneControlManagerMavLinkDefaultComponentId,
@@ -466,6 +476,16 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                                   0,
                                   0,
                                   0);
+    return [NSData dataWithMAVLinkMessage:&message];
+}
+
+- (NSData *)messageDataForParamRequestList {
+    mavlink_message_t message;
+    mavlink_msg_param_request_list_pack(FDDroneControlManagerMavLinkDefaultSystemId,
+                                        FDDroneControlManagerMavLinkDefaultComponentId,
+                                        &message,
+                                        FDDroneControlManagerMavLinkDefaultTargetSystem,
+                                        MAV_COMP_ID_ALL);
     return [NSData dataWithMAVLinkMessage:&message];
 }
 

@@ -47,10 +47,12 @@ extern NSString * const FDDroneControlManagerDidHandleSystemInfoNotification;
 - (void)parseInputData:(NSData *)data;
 
 - (NSData *)messageDataWithPitch:(CGFloat)pitch roll:(CGFloat)roll thrust:(CGFloat)thrust yaw:(CGFloat)yaw sequenceNumber:(uint16_t)sequenceNumber;
+- (BOOL)isRCMapDataVilid;
 - (NSData *)heartbeatData;
 - (NSData *)messageDataWithNewCustomMode:(FDAutoPilotMode)mode;
 - (NSData *)messageDataWithArmedEnable:(BOOL)armed;
 - (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps bitrate:(CGFloat)bitrate;
-- (NSData *)messageDataWithCaptureDisable;
+- (NSData *)messageDataForCaptureDisableCommand;
+- (NSData *)messageDataForParamRequestList;
 
 @end

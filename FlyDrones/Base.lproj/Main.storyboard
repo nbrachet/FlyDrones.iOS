@@ -587,9 +587,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UEP-Nr-RNK">
-                                        <rect key="frame" x="872" y="0.0" width="64" height="64"/>
+                                        <rect key="frame" x="846" y="0.0" width="90" height="64"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="64" id="CFn-A2-NCj"/>
+                                            <constraint firstAttribute="width" constant="90" id="CFn-A2-NCj"/>
                                             <constraint firstAttribute="height" constant="64" id="XNA-D6-kSN"/>
                                             <constraint firstAttribute="width" secondItem="UEP-Nr-RNK" secondAttribute="height" multiplier="1:1" id="inH-3Q-jEr"/>
                                         </constraints>
@@ -601,6 +601,11 @@
                                         <state key="disabled">
                                             <color key="titleColor" red="0.37993213383838365" green="0.37993213383838365" blue="0.37993213383838365" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="inH-3Q-jEr"/>
+                                            </mask>
+                                        </variation>
                                         <connections>
                                             <segue destination="yiB-jb-Pdf" kind="popoverPresentation" popoverAnchorView="UEP-Nr-RNK" id="bOB-ka-wfe">
                                                 <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
