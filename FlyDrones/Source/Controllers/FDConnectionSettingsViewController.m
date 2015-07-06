@@ -24,7 +24,7 @@ static NSString * const TCPPortKey = @"TCPPortKey";
 static NSString * const ResolutionWKey = @"ResolutionWKey";
 static NSString * const ResolutionHKey = @"ResolutionHKey";
 static NSString * const FPSKey = @"FPSKey";
-static NSString * const BitrateKey = @"BitrateKey";
+static NSString * const ResolutionKey = @"ResolutionKey";
 static NSString * const LimitingTasksKey = @"LimitingTasksKey";
 
 
@@ -40,7 +40,7 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
 @property (nonatomic, weak) IBOutlet UITextField *resolutionWTextField;
 @property (nonatomic, weak) IBOutlet UITextField *resolutionHTextField;
 @property (nonatomic, weak) IBOutlet UITextField *fpsTextField;
-@property (nonatomic, weak) IBOutlet UITextField *bitrateTextField;
+@property (nonatomic, weak) IBOutlet UITextField *resolutionTextField;
 @property (nonatomic, weak) IBOutlet UISwitch *limitingNumberTasksSwitch;
 
 @end
@@ -95,10 +95,10 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
         self.fpsTextField.text = [NSString stringWithFormat:@"%d", (int)kDefaultVideoFps];
     }
     
-    if ([userDefaults objectForKey:BitrateKey]) {
-        self.bitrateTextField.text = [userDefaults objectForKey:BitrateKey];
+    if ([userDefaults objectForKey:ResolutionKey]) {
+        self.resolutionTextField.text = [userDefaults objectForKey:ResolutionKey];
     } else {
-        self.bitrateTextField.text = [NSString stringWithFormat:@"%.1f", kDefaultVideoBitrate];
+        self.resolutionTextField.text = [NSString stringWithFormat:@"%.1f", kDefaultVideoResolution];
     }
     
     if ([userDefaults objectForKey:LimitingTasksKey]) {
@@ -116,7 +116,7 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
         NSString *resolutionW = self.resolutionWTextField.text;
         NSString *resolutionH = self.resolutionHTextField.text;
         NSString *fps = self.fpsTextField.text;
-        NSString *bitrate = self.bitrateTextField.text;
+        NSString *resolution = self.resolutionTextField.text;
         BOOL limitNumberOfTasks = self.limitingNumberTasksSwitch.on;
         
         if (hostForUDPConnection.length == 0 ||
@@ -126,7 +126,7 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
             resolutionH.length == 0 ||
             resolutionW.length == 0 ||
             fps.length == 0 ||
-            bitrate.length == 0) {
+            resolution.length == 0) {
             [[[UIAlertView alloc] initWithTitle:@"Warning" message:@"Please fill all fields correctly" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
             return NO;
         }
@@ -140,7 +140,7 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
         [userDefaults setObject:resolutionW forKey:ResolutionWKey];
         [userDefaults setObject:resolutionH forKey:ResolutionHKey];
         [userDefaults setObject:fps forKey:FPSKey];
-        [userDefaults setObject:bitrate forKey:BitrateKey];
+        [userDefaults setObject:resolution forKey:ResolutionKey];
 
         [userDefaults setObject:@(limitNumberOfTasks) forKey:LimitingTasksKey];
 
@@ -153,7 +153,7 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
         
         currentDroneStatus.videoSize = CGSizeMake([resolutionW integerValue], [resolutionH integerValue]);
         currentDroneStatus.videoFps = [fps integerValue];
-        currentDroneStatus.videoBitrate = [bitrate floatValue];
+        currentDroneStatus.videoResolution = [resolution floatValue];
         currentDroneStatus.limitNumberOfTasks = limitNumberOfTasks;
     }
     return YES;

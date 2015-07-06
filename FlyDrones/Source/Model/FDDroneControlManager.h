@@ -51,7 +51,7 @@ extern NSString * const FDDroneControlManagerDidHandleSystemInfoNotification;
 - (NSData *)heartbeatData;
 - (NSData *)messageDataWithNewCustomMode:(FDAutoPilotMode)mode;
 - (NSData *)messageDataWithArmedEnable:(BOOL)armed;
-- (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps bitrate:(CGFloat)bitrate;
+- (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps resolution:(CGFloat)resolution;
 - (NSData *)messageDataForCaptureDisableCommand;
 - (NSData *)messageDataForParamRequestList;
 

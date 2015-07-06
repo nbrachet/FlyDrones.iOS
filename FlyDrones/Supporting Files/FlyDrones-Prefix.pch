@@ -18,6 +18,6 @@
 
 #define kDefaultVideoSize CGSizeMake(1280, 720)
 #define kDefaultVideoFps 25
-#define kDefaultVideoBitrate 0.4f
+#define kDefaultVideoResolution 0.4f
 
 #endif
