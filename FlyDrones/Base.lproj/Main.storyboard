@@ -232,7 +232,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad"/>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resolution in megapixels" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TwO-d8-Sra">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bitrate" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TwO-d8-Sra">
                                 <rect key="frame" x="384" y="216" width="200" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="lei-B8-waD"/>
@@ -313,6 +313,7 @@
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="bitrateTextField" destination="PeC-sh-BB0" id="UA3-N0-5v8"/>
                         <outlet property="fpsTextField" destination="UD9-fx-d1H" id="LaW-1E-DNI"/>
                         <outlet property="hostForConnectionTextField" destination="l4F-fd-dQF" id="ev6-4Z-oiW"/>
                         <outlet property="hostForTCPConnectionTextField" destination="REe-bB-0TH" id="RgD-7T-eTk"/>
@@ -320,7 +321,6 @@
                         <outlet property="portForConnectionTextField" destination="9gZ-Pn-GH7" id="aAc-pg-e4K"/>
                         <outlet property="portForTCPConnectionTextField" destination="WqE-z4-iKl" id="Vv7-EO-6qD"/>
                         <outlet property="resolutionHTextField" destination="HtX-g0-fQy" id="c4B-wR-oaT"/>
-                        <outlet property="resolutionTextField" destination="PeC-sh-BB0" id="PSb-PH-lyk"/>
                         <outlet property="resolutionWTextField" destination="faR-4g-sQ5" id="lfq-jc-7jC"/>
                     </connections>
                 </viewController>

@@ -441,7 +441,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
     return [NSData dataWithMAVLinkMessage:&message];
 }
 
-- (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps resolution:(CGFloat)resolution {
+- (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps resolution:(CGFloat)resolution bitrate:(NSUInteger)bitrate {
     mavlink_message_t message;
     mavlink_msg_command_long_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                                   FDDroneControlManagerMavLinkDefaultComponentId,
@@ -453,7 +453,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                                   0,    //Camera ID (0 for all cameras)
                                   fps,
                                   resolution,
-                                  0,
+                                  bitrate,
                                   0,
                                   0,
                                   0);

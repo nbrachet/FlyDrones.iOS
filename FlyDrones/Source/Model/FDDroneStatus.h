@@ -67,6 +67,7 @@ typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
 @property (nonatomic, assign) CGSize videoSize;
 @property (nonatomic, assign) NSUInteger videoFps;
 @property (nonatomic, assign) CGFloat videoResolution;
+@property (nonatomic, assign) CGFloat videoBitrate;
 @property (nonatomic, assign) BOOL limitNumberOfTasks;
 
 + (instancetype)alloc __attribute__((unavailable("alloc not available")));

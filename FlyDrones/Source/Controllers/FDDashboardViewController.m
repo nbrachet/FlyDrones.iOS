@@ -525,8 +525,10 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 
 - (void)didEnableArmedStatus:(BOOL)armed {
     if (armed) {
-        [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataWithCaptureSettingsFps:[FDDroneStatus currentStatus].videoFps
-                                                            resolution:[FDDroneStatus currentStatus].videoResolution]];
+        NSData *data = [self.droneControlManager messageDataWithCaptureSettingsFps:[FDDroneStatus currentStatus].videoFps
+                                                                        resolution:[FDDroneStatus currentStatus].videoResolution
+                                                                           bitrate:[FDDroneStatus currentStatus].videoBitrate];
+        [self.connectionManager sendDataToControlServer:data];
     }
     [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataWithArmedEnable:armed]];
     [self dismissPresentedPopoverAnimated:YES];
