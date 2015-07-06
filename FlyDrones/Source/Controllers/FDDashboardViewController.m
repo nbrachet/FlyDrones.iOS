@@ -175,7 +175,11 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     _arm = arm;
     
     NSData *controlData;
-    if (!arm) {
+    if (arm) {
+        controlData = [self.droneControlManager messageDataWithCaptureSettingsFps:[FDDroneStatus currentStatus].videoFps
+                                                                       resolution:[FDDroneStatus currentStatus].videoResolution
+                                                                          bitrate:[FDDroneStatus currentStatus].videoBitrate];
+    } else {
         controlData = [self.droneControlManager messageDataForCaptureDisableCommand];
     }
     
@@ -531,12 +535,6 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 #pragma mark - FDEnableArmedViewController
 
 - (void)didEnableArmedStatus:(BOOL)armed {
-    if (armed) {
-        NSData *data = [self.droneControlManager messageDataWithCaptureSettingsFps:[FDDroneStatus currentStatus].videoFps
-                                                                        resolution:[FDDroneStatus currentStatus].videoResolution
-                                                                           bitrate:[FDDroneStatus currentStatus].videoBitrate];
-        [self.connectionManager sendDataToControlServer:data];
-    }
     [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataWithArmedEnable:armed]];
     [self dismissPresentedPopoverAnimated:YES];
 }
