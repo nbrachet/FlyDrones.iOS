@@ -442,6 +442,13 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleHeartbeatInfo:(uint32_t)mavCustomMode mavType:(uint8_t)mavType mavAutopilotType:(uint8_t)mavAutopilotType mavBaseMode:(uint8_t)mavBaseMode mavSystemStatus:(uint8_t)mavSystemStatus {
+    static BOOL firstHeartbeatMessage = YES;
+    if (firstHeartbeatMessage) {
+        firstHeartbeatMessage = NO;
+        self.skipSendingControlData = YES;
+        [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForParamRequestList]];
+    }
+    
     NSMutableString *sysStatusString = [NSMutableString string];
     if (mavBaseMode & (uint8_t)MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) {
         switch (mavCustomMode) {
