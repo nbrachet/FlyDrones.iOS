@@ -154,7 +154,7 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
         currentDroneStatus.videoFps = [fps integerValue];
         currentDroneStatus.videoResolution = currentDroneStatus.videoSize.width * currentDroneStatus.videoSize.height / 1000.0f / 1000.0f;
         currentDroneStatus.limitNumberOfTasks = limitNumberOfTasks;
-        currentDroneStatus.videoBitrate = [bitrate integerValue];
+        currentDroneStatus.videoBitrate = [bitrate floatValue];
     }
     return YES;
 }
