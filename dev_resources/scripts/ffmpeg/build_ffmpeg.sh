@@ -107,7 +107,7 @@ then
         CFLAGS="$CFLAGS -mios-simulator-version-min=$DEPLOYMENT_TARGET"
     else
         PLATFORM="iPhoneOS"
-        CFLAGS="$CFLAGS -mios-version-min=$DEPLOYMENT_TARGET"
+        CFLAGS="$CFLAGS -mios-version-min=$DEPLOYMENT_TARGET -mfpu=neon"
         if [ "$ARCH" = "arm64" ]
         then
             EXPORT="GASPP_FIX_XCODE5=1"

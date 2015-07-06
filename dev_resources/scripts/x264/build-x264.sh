@@ -20,7 +20,7 @@ fi
 
 ARCHS="arm64 armv7s armv7 x86_64 i386"
 
-CONFIGURE_FLAGS="--enable-static --enable-pic --disable-cli --enable-asm"
+CONFIGURE_FLAGS="--enable-static --enable-pic --disable-cli"
 
 COMPILE="y"
 LIPO="y"
