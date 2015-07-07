@@ -1258,6 +1258,7 @@
 				1B28074F1B2B465A0040A4B9 /* Frameworks */,
 				1B2807501B2B465A0040A4B9 /* Resources */,
 				8B2960F38EE7D68A7A14285B /* Copy Pods Resources */,
+				1BB144441B4BB322005E97E2 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1316,6 +1317,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1BB144441B4BB322005E97E2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Parse Crash Reporting\"\nexport PATH=/usr/local/bin:$PATH\nCLOUD_CODE_DIR=${PROJECT_DIR}/parse\n\nif [ -d ${CLOUD_CODE_DIR} ]; then\n    cd ${CLOUD_CODE_DIR}\n    parse symbols ${TARGET_NAME} --path=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n    echo \"Finished uploading symbol\"\nelse\n    echo \"Unable to upload symbols\"\nfi";
+		};
 		7198BE843FCAC6F87620A18B /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
