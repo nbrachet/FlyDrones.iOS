@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 QArea. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @class FDRTPConnectionOperation;
 
 @protocol FDRTPConnectionOperationDelegate <NSObject>

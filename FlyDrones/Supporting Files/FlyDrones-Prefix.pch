@@ -9,7 +9,9 @@
 #ifndef FlyDrones_PrefixHeader_pch
 #define FlyDrones_PrefixHeader_pch
 
+#import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import "libavformat/avformat.h"
 
 //Suppress NSLog when in release mode
 #ifdef NDEBUG

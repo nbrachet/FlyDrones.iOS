@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface FDFileReader : NSObject
 
 - (id)initWithFilePath:(NSString *)path;

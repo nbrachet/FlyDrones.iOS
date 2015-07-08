@@ -10,6 +10,7 @@
 #import "FDDroneStatus.h"
 
 static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"192.168.1.80";
+//static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"108.26.177.27";
 static NSString * const UDPHostKey = @"UDPHostKey";
 
 static NSString * const FDConnectionSettingsViewControllerCustomUDPPort = @"5556";

@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 QArea. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import <OpenGLES/ES2/gl.h>
 
 @class FDVideoFrame;
@@ -16,7 +15,7 @@
 @property (nonatomic, copy, readonly) NSString *fragmentShaderString;
 @property (nonatomic, copy, readonly) NSString *vertexShaderString;
 
-- (void)setVideoFrame:(FDVideoFrame *)videoFrame;
+- (void)setVideoFrame:(AVFrame)frame;
 - (BOOL)isValid;
 - (void)resolveUniforms:(GLuint)program;
 - (BOOL)prepareRender;

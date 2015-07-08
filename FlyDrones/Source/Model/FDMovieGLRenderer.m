@@ -7,7 +7,6 @@
 //
 
 #import "FDMovieGLRenderer.h"
-#import "FDVideoFrame.h"
 
 @interface FDMovieGLRenderer () {
     GLint _uniformSamplers[3];
@@ -51,13 +50,16 @@
     _uniformSamplers[2] = glGetUniformLocation(program, "s_texture_v");
 }
 
-- (void)setVideoFrame:(FDVideoFrame *)videoFrame {    
-    assert(videoFrame.luma.length == videoFrame.width * videoFrame.height);
-    assert(videoFrame.chromaB.length == (videoFrame.width * videoFrame.height) / 4);
-    assert(videoFrame.chromaR.length == (videoFrame.width * videoFrame.height) / 4);
+- (void)setVideoFrame:(AVFrame)frame {
+    if (!frame.data || !frame.linesize) {
+        return;
+    }
     
-    NSUInteger frameWidth = videoFrame.width;
-    NSUInteger frameHeight = videoFrame.height;
+    for (int i = 0; i < 3; ++i) {
+        if (!frame.data[i] || !frame.linesize[i]) {
+            return;
+        }
+    }
     
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     
@@ -65,13 +67,11 @@
         glGenTextures(3, _textures);
     }
     
-    const UInt8 *pixels[3] = {videoFrame.luma.bytes, videoFrame.chromaB.bytes, videoFrame.chromaR.bytes};
-    const NSInteger widths[3] = {frameWidth, frameWidth / 2, frameWidth / 2};
-    const NSInteger heights[3] = {frameHeight, frameHeight / 2, frameHeight / 2};
+    const NSInteger heights[3] = {frame.height, frame.height / 2, frame.height / 2};
     
     for (int i = 0; i < 3; ++i) {
         glBindTexture(GL_TEXTURE_2D, _textures[i]);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, (GLsizei)widths[i], (GLsizei)heights[i], 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pixels[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, (GLsizei)frame.linesize[i], (GLsizei)heights[i], 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, frame.data[i]);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

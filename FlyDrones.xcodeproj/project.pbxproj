@@ -40,7 +40,6 @@
 		1B2809411B2B46A40040A4B9 /* FDGPSInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807AD1B2B46A40040A4B9 /* FDGPSInfo.m */; };
 		1B2809421B2B46A40040A4B9 /* FDMovieDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807AF1B2B46A40040A4B9 /* FDMovieDecoder.m */; };
 		1B2809431B2B46A40040A4B9 /* FDRTPConnectionOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807B11B2B46A40040A4B9 /* FDRTPConnectionOperation.mm */; };
-		1B2809441B2B46A40040A4B9 /* FDVideoFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807B31B2B46A40040A4B9 /* FDVideoFrame.m */; };
 		1B2809451B2B46A40040A4B9 /* FDBatteryButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807B71B2B46A40040A4B9 /* FDBatteryButton.m */; };
 		1B2809461B2B46A40040A4B9 /* FDCompassView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807B91B2B46A40040A4B9 /* FDCompassView.m */; };
 		1B2809471B2B46A40040A4B9 /* FDJoystickView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807BB1B2B46A40040A4B9 /* FDJoystickView.m */; };
@@ -222,8 +221,6 @@
 		1B2807AF1B2B46A40040A4B9 /* FDMovieDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieDecoder.m; sourceTree = "<group>"; };
 		1B2807B01B2B46A40040A4B9 /* FDRTPConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRTPConnectionOperation.h; sourceTree = "<group>"; };
 		1B2807B11B2B46A40040A4B9 /* FDRTPConnectionOperation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FDRTPConnectionOperation.mm; sourceTree = "<group>"; };
-		1B2807B21B2B46A40040A4B9 /* FDVideoFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDVideoFrame.h; sourceTree = "<group>"; };
-		1B2807B31B2B46A40040A4B9 /* FDVideoFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDVideoFrame.m; sourceTree = "<group>"; };
 		1B2807B41B2B46A40040A4B9 /* RTCPPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPPacket.h; sourceTree = "<group>"; };
 		1B2807B61B2B46A40040A4B9 /* FDBatteryButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDBatteryButton.h; sourceTree = "<group>"; };
 		1B2807B71B2B46A40040A4B9 /* FDBatteryButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDBatteryButton.m; sourceTree = "<group>"; };
@@ -486,6 +483,7 @@
 		1BBBE1B91B31A1C500021FF4 /* FDMovieGLRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMovieGLRenderer.m; sourceTree = "<group>"; };
 		1BBBE1BB1B31B04400021FF4 /* VertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VertexShader.glsl; sourceTree = "<group>"; };
 		1BBBE1BD1B31B06400021FF4 /* YUVFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = YUVFragmentShader.glsl; sourceTree = "<group>"; };
+		1BD2C3B51B4D949D00A4FA34 /* FDGLHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDGLHelper.h; sourceTree = "<group>"; };
 		1BF6BD711B46745A006070F0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1BF6BD731B46746D006070F0 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		1BF6BD751B46748B006070F0 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
@@ -833,11 +831,10 @@
 				1B2807AF1B2B46A40040A4B9 /* FDMovieDecoder.m */,
 				1B2807B01B2B46A40040A4B9 /* FDRTPConnectionOperation.h */,
 				1B2807B11B2B46A40040A4B9 /* FDRTPConnectionOperation.mm */,
-				1B2807B21B2B46A40040A4B9 /* FDVideoFrame.h */,
-				1B2807B31B2B46A40040A4B9 /* FDVideoFrame.m */,
 				1B2807B41B2B46A40040A4B9 /* RTCPPacket.h */,
 				1BBBE1B81B31A1C500021FF4 /* FDMovieGLRenderer.h */,
 				1BBBE1B91B31A1C500021FF4 /* FDMovieGLRenderer.m */,
+				1BD2C3B51B4D949D00A4FA34 /* FDGLHelper.h */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1383,7 +1380,6 @@
 				1B2809481B2B46A40040A4B9 /* FDMovieGLView.m in Sources */,
 				1B28093A1B2B46A40040A4B9 /* FDLoginViewController.m in Sources */,
 				1B28092E1B2B46A40040A4B9 /* NSData+RTCP.m in Sources */,
-				1B2809441B2B46A40040A4B9 /* FDVideoFrame.m in Sources */,
 				1B2809341B2B46A40040A4B9 /* FDConnectionSettingsViewController.m in Sources */,
 				1B2809381B2B46A40040A4B9 /* FDLeftSideViewController.m in Sources */,
 				1B2809301B2B46A40040A4B9 /* NSString+MAVLink.m in Sources */,
@@ -1526,6 +1522,7 @@
 					"$(PROJECT_DIR)/Libraries/x264/include",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/FlyDrones/Supporting Files/Info.plist";
+				LD_NO_PIE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1557,6 +1554,7 @@
 					"$(PROJECT_DIR)/Libraries/x264/include",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/FlyDrones/Supporting Files/Info.plist";
+				LD_NO_PIE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

@@ -407,7 +407,7 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 
 #pragma mark - FDMovieDecoderDelegate
 
-- (void)movieDecoder:(FDMovieDecoder *)movieDecoder decodedVideoFrame:(FDVideoFrame *)videoFrame {
+- (void)movieDecoder:(FDMovieDecoder *)movieDecoder decodedVideoFrame:(AVFrame)videoFrame {
     [self.movieGLView renderVideoFrame:videoFrame];
 }
 

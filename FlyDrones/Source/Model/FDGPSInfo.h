@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
 @interface FDGPSInfo : NSObject

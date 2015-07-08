@@ -7,14 +7,10 @@
 //
 
 #import "FDMovieDecoder.h"
-#import "libavformat/avformat.h"
-#import "libswscale/swscale.h"
-#import "libswresample/swresample.h"
-#import "libavutil/pixdesc.h"
-#import "FDVideoFrame.h"
 #import "FDDroneStatus.h"
 
-static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
+static NSUInteger FDMovieDecoderMaxOperationInQueue = 3;
+static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 1;
 
 @interface FDMovieDecoder () {
     struct AVCodec *videoCodec;
@@ -67,6 +63,10 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
     
     if (![self isCodecInitialized]) {
         [self initializeCodecWith:data];
+    }
+    
+    if ([self isSkipDecode]) {
+        return;
     }
     
     __weak __typeof(self)weakSelf = self;
@@ -182,34 +182,24 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
     
     while(packet.size > 0) {
         @autoreleasepool {
-            AVFrame *decodedFrame = av_frame_alloc();
+            __block struct AVFrame *decodedFrame = av_frame_alloc();
             int isGotPicture;
             int length = avcodec_decode_video2(videoCodecContext, decodedFrame, &isGotPicture, &packet);
             if (length < 0) {
                 NSLog(@"Decode video error, skip packet");
                 break;
             }
-            if (isGotPicture) {
-                BOOL isNeedRender;
-                @synchronized(self) {
-                    isNeedRender = [self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)];
-                    if ([self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)]) {
-                        if (self.operationQueue.operationCount > FDMovieDecoderMaxOperationInQueue) {
-                            isNeedRender = NO;
-                        } else {
-                            isNeedRender = YES;
-                        }
+            if (isGotPicture && ![self isSkipRender]) {
+                __weak __typeof(self)weakSelf = self;
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    __strong __typeof(weakSelf) strongSelf = weakSelf;
+                    if (strongSelf == nil) {
+                        return;
                     }
-                }
-                if (isNeedRender) {
-                    FDVideoFrame *decodedVideoFrame = [[FDVideoFrame alloc] initWithFrame:decodedFrame];
-                    av_free(decodedFrame);
-                    if (decodedVideoFrame != nil) {
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
-                        }];
-                    }
-                }
+
+                    [strongSelf.delegate movieDecoder:strongSelf decodedVideoFrame:*decodedFrame];
+                    av_frame_free(&decodedFrame);
+                });
             }
 
             packet.size -= length;
@@ -217,6 +207,22 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
         }
     }
     av_free_packet(&packet);
+}
+
+- (BOOL)isSkipDecode {
+    BOOL isSkipDecode;
+    @synchronized(self) {
+        isSkipDecode = self.operationQueue.operationCount > FDMovieDecoderMaxOperationInQueue;
+    }
+    return isSkipDecode;
+}
+
+- (BOOL)isSkipRender {
+    BOOL isSkipRender;
+    @synchronized(self) {
+        isSkipRender = self.operationQueue.operationCount > FDMovieDecoderMaxOperationFromSkipRender;
+    }
+    return isSkipRender;
 }
 
 @end

@@ -12,6 +12,6 @@
 
 @interface FDMovieGLView : UIView
 
-- (void)renderVideoFrame:(FDVideoFrame *)videoFrame;
+- (void)renderVideoFrame:(AVFrame)videoFrame;
 
 @end

@@ -6,14 +6,12 @@
 //  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @class FDVideoFrame;
 @class FDMovieDecoder;
 
 @protocol FDMovieDecoderDelegate <NSObject>
 
-- (void)movieDecoder:(FDMovieDecoder *)movieDecoder decodedVideoFrame:(FDVideoFrame *)videoFrame;
+- (void)movieDecoder:(FDMovieDecoder *)movieDecoder decodedVideoFrame:(AVFrame)videoFrame;
 
 @end
 

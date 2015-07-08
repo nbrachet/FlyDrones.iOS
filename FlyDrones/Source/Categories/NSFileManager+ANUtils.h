@@ -6,8 +6,6 @@
 //  Copyright (c) 2013 Oleksii Naboichenko. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface NSFileManager (ANUtils)
 
 + (NSString *)applicationDocumentsDirectoryPath;
