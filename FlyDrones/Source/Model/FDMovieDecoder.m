@@ -20,8 +20,6 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
     struct AVCodec *videoCodec;
     struct AVCodecContext *videoCodecContext;
     struct AVCodecParserContext *videoCodecParserContext;   //parser that is used to decode the h264 bitstream
-
-    struct AVFrame *decodedFrame;
 }
 
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
@@ -116,8 +114,6 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
     
     videoCodecParserContext = av_parser_init(AV_CODEC_ID_H264);
     
-    decodedFrame = av_frame_alloc();
-    
     BOOL isInitializedDecoder = (avcodec_open2(videoCodecContext, videoCodec, NULL) < 0) ? NO : YES;
     if (isInitializedDecoder == NO) {
         NSLog(@"Failed to initialize decoder");
@@ -132,12 +128,10 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
         av_free(videoCodecContext);
         videoCodecContext = NULL;
     }
+    
     if (videoCodecParserContext) {
         av_parser_close(videoCodecParserContext);
         videoCodecParserContext = NULL;
-    }
-    if (decodedFrame) {
-        av_free(decodedFrame);
     }
 }
 
@@ -188,6 +182,7 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
     
     while(packet.size > 0) {
         @autoreleasepool {
+            AVFrame *decodedFrame = av_frame_alloc();
             int isGotPicture;
             int length = avcodec_decode_video2(videoCodecContext, decodedFrame, &isGotPicture, &packet);
             if (length < 0) {
@@ -199,8 +194,7 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
                 @synchronized(self) {
                     isNeedRender = [self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)];
                     if ([self.delegate respondsToSelector:@selector(movieDecoder:decodedVideoFrame:)]) {
-                        if ([FDDroneStatus currentStatus].limitNumberOfTasks &&
-                            self.operationQueue.operationCount > FDMovieDecoderMaxOperationInQueue) {
+                        if (self.operationQueue.operationCount > FDMovieDecoderMaxOperationInQueue) {
                             isNeedRender = NO;
                         } else {
                             isNeedRender = YES;
@@ -209,6 +203,7 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
                 }
                 if (isNeedRender) {
                     FDVideoFrame *decodedVideoFrame = [[FDVideoFrame alloc] initWithFrame:decodedFrame];
+                    av_free(decodedFrame);
                     if (decodedVideoFrame != nil) {
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                             [self.delegate movieDecoder:self decodedVideoFrame:decodedVideoFrame];
@@ -216,6 +211,7 @@ static NSUInteger FDMovieDecoderMaxOperationInQueue = 1;
                     }
                 }
             }
+
             packet.size -= length;
             packet.data += length;
         }

@@ -251,19 +251,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad"/>
                             </textField>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Gzb-3q-XkZ">
-                                <rect key="frame" x="535" y="299" width="51" height="31"/>
-                            </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="One packet in a decoder queue" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Swe-Jg-VJb">
-                                <rect key="frame" x="232" y="304" width="295" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="295" id="0no-fb-AMq"/>
-                                    <constraint firstAttribute="height" constant="21" id="mC6-fP-p8Z"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -272,7 +259,6 @@
                             <constraint firstItem="faR-4g-sQ5" firstAttribute="top" secondItem="1dm-wh-JiJ" secondAttribute="bottom" constant="8" id="7kD-l9-FZL"/>
                             <constraint firstItem="9gZ-Pn-GH7" firstAttribute="top" secondItem="VaT-3s-ESj" secondAttribute="bottom" constant="8" id="7nn-9G-Iwc"/>
                             <constraint firstItem="HtX-g0-fQy" firstAttribute="trailing" secondItem="29X-Ec-IDi" secondAttribute="trailingMargin" id="7xS-ae-wHr"/>
-                            <constraint firstAttribute="trailing" secondItem="Gzb-3q-XkZ" secondAttribute="trailing" constant="16" id="8Tl-3i-xwJ"/>
                             <constraint firstItem="Qva-iH-dE5" firstAttribute="top" secondItem="faR-4g-sQ5" secondAttribute="bottom" constant="26" id="9c1-aI-GCP"/>
                             <constraint firstItem="r3V-7Z-a5l" firstAttribute="top" secondItem="Uz5-PI-0gy" secondAttribute="bottom" constant="20" id="9vO-qS-E0j"/>
                             <constraint firstItem="Qva-iH-dE5" firstAttribute="trailing" secondItem="29X-Ec-IDi" secondAttribute="trailingMargin" id="BuD-8M-NO8"/>
@@ -285,13 +271,11 @@
                             <constraint firstItem="r3V-7Z-a5l" firstAttribute="leading" secondItem="29X-Ec-IDi" secondAttribute="leading" constant="16" id="Xtn-DZ-v1U"/>
                             <constraint firstItem="PeC-sh-BB0" firstAttribute="top" secondItem="TwO-d8-Sra" secondAttribute="bottom" constant="8" id="Z9O-YY-AnH"/>
                             <constraint firstItem="1dm-wh-JiJ" firstAttribute="top" secondItem="Uz5-PI-0gy" secondAttribute="bottom" constant="20" id="ZIk-LO-fEV"/>
-                            <constraint firstItem="Gzb-3q-XkZ" firstAttribute="top" secondItem="PeC-sh-BB0" secondAttribute="bottom" constant="24" id="aCg-5q-MdN"/>
                             <constraint firstItem="1dm-wh-JiJ" firstAttribute="trailing" secondItem="29X-Ec-IDi" secondAttribute="trailingMargin" id="aS8-Q9-th9"/>
                             <constraint firstItem="UD9-fx-d1H" firstAttribute="top" secondItem="Qva-iH-dE5" secondAttribute="bottom" constant="8" id="bFl-qB-6J7"/>
                             <constraint firstItem="VaT-3s-ESj" firstAttribute="top" secondItem="l4F-fd-dQF" secondAttribute="bottom" constant="8" id="c9l-2l-tiZ"/>
                             <constraint firstItem="WqE-z4-iKl" firstAttribute="leading" secondItem="29X-Ec-IDi" secondAttribute="leading" constant="16" id="dXZ-0P-Zyw"/>
                             <constraint firstItem="REe-bB-0TH" firstAttribute="leading" secondItem="29X-Ec-IDi" secondAttribute="leading" constant="16" id="g3V-Ty-3fu"/>
-                            <constraint firstItem="Gzb-3q-XkZ" firstAttribute="centerY" secondItem="Swe-Jg-VJb" secondAttribute="centerY" id="hwC-tw-Ljp"/>
                             <constraint firstItem="7j3-JE-SM1" firstAttribute="top" secondItem="REe-bB-0TH" secondAttribute="bottom" constant="8" id="lMs-1F-DBv"/>
                             <constraint firstItem="l4F-fd-dQF" firstAttribute="leading" secondItem="29X-Ec-IDi" secondAttribute="leading" constant="16" id="lrN-ce-R8w"/>
                             <constraint firstAttribute="centerX" secondItem="CrM-XE-Gkm" secondAttribute="centerX" id="mTL-eg-YUY"/>
@@ -302,7 +286,6 @@
                             <constraint firstItem="VaT-3s-ESj" firstAttribute="leading" secondItem="29X-Ec-IDi" secondAttribute="leading" constant="16" id="tSU-zE-uWS"/>
                             <constraint firstItem="iHo-nT-qNg" firstAttribute="leading" secondItem="29X-Ec-IDi" secondAttribute="leading" constant="16" id="v79-ey-gfd"/>
                             <constraint firstItem="HtX-g0-fQy" firstAttribute="leading" secondItem="faR-4g-sQ5" secondAttribute="trailing" constant="8" id="wgV-cd-Las"/>
-                            <constraint firstItem="Gzb-3q-XkZ" firstAttribute="leading" secondItem="Swe-Jg-VJb" secondAttribute="trailing" constant="8" id="yxt-oG-1C0"/>
                             <constraint firstItem="WqE-z4-iKl" firstAttribute="top" secondItem="7j3-JE-SM1" secondAttribute="bottom" constant="8" id="zC0-Lu-qVS"/>
                         </constraints>
                         <variation key="default">
@@ -317,7 +300,6 @@
                         <outlet property="fpsTextField" destination="UD9-fx-d1H" id="LaW-1E-DNI"/>
                         <outlet property="hostForConnectionTextField" destination="l4F-fd-dQF" id="ev6-4Z-oiW"/>
                         <outlet property="hostForTCPConnectionTextField" destination="REe-bB-0TH" id="RgD-7T-eTk"/>
-                        <outlet property="limitingNumberTasksSwitch" destination="Gzb-3q-XkZ" id="zgn-fE-O8L"/>
                         <outlet property="portForConnectionTextField" destination="9gZ-Pn-GH7" id="aAc-pg-e4K"/>
                         <outlet property="portForTCPConnectionTextField" destination="WqE-z4-iKl" id="Vv7-EO-6qD"/>
                         <outlet property="resolutionHTextField" destination="HtX-g0-fQy" id="c4B-wR-oaT"/>

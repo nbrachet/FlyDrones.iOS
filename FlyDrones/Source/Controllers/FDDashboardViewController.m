@@ -53,7 +53,6 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
 @property (nonatomic, assign) CFTimeInterval lastReceivedHeartbeatMessageTimeInterval;
 
 @property (nonatomic, assign, getter=isArm) BOOL arm;
-@property (atomic, assign, getter=isSkipSendingControlData) BOOL skipSendingControlData;
 
 @end
 
@@ -309,7 +308,6 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     
     if (tickCounter % 10 == 0) {
         [self.connectionManager sendDataToControlServer:[self.droneControlManager heartbeatData]];
-        self.skipSendingControlData = NO;
     }
     
     CFTimeInterval delayHeartbeatMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedHeartbeatMessageTimeInterval;
@@ -324,23 +322,13 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     
     [self dismissProgressHUDForTag:FDDashboardViewControllerWaitingHeartbeatHUDTag];
     [self dismissProgressHUDForTag:FDDashboardViewControllerConnectingToTCPServerHUDTag];
-
-    if (self.isSkipSendingControlData || !([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED)) {
-        return;
-    }
     
-    //send control data or request parameters
-    NSData *controlData;
-    if (![self.droneControlManager isRCMapDataVilid]) {
-        controlData = [self.droneControlManager messageDataForParamRequestList];
-        self.skipSendingControlData = YES;
-    } else {
-        controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
+    //send control data
+    NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
                                                                 roll:self.rightJoystickView.stickHorisontalValue
                                                               thrust:self.leftJoystickView.stickVerticalValue
                                                                  yaw:self.leftJoystickView.stickHorisontalValue
                                                       sequenceNumber:1];
-    }
     [self.connectionManager sendDataToControlServer:controlData];
 }
 
@@ -449,7 +437,6 @@ static NSUInteger const FDDashboardViewControllerErrorHUDTag = 8412;
     static BOOL firstHeartbeatMessage = YES;
     if (firstHeartbeatMessage) {
         firstHeartbeatMessage = NO;
-        self.skipSendingControlData = YES;
         [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForParamRequestList]];
     }
     

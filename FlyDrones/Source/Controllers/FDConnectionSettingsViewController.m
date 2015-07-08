@@ -25,9 +25,6 @@ static NSString * const ResolutionWKey = @"ResolutionWKey";
 static NSString * const ResolutionHKey = @"ResolutionHKey";
 static NSString * const FPSKey = @"FPSKey";
 static NSString * const BitrateKey = @"BitRateKey";
-static NSString * const LimitingTasksKey = @"LimitingTasksKey";
-
-
 
 @interface FDConnectionSettingsViewController ()
 
@@ -41,7 +38,6 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
 @property (nonatomic, weak) IBOutlet UITextField *resolutionHTextField;
 @property (nonatomic, weak) IBOutlet UITextField *fpsTextField;
 @property (nonatomic, weak) IBOutlet UITextField *bitrateTextField;
-@property (nonatomic, weak) IBOutlet UISwitch *limitingNumberTasksSwitch;
 
 @end
 
@@ -100,10 +96,6 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
     } else {
         self.bitrateTextField.text = @"0";
     }
-    
-    if ([userDefaults objectForKey:LimitingTasksKey]) {
-        self.limitingNumberTasksSwitch.on = [[userDefaults objectForKey:LimitingTasksKey] boolValue];
-    }
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
@@ -117,7 +109,6 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
         NSString *resolutionH = self.resolutionHTextField.text;
         NSString *fps = self.fpsTextField.text;
         NSString *bitrate = self.bitrateTextField.text;
-        BOOL limitNumberOfTasks = self.limitingNumberTasksSwitch.on;
         
         if (hostForUDPConnection.length == 0 ||
             portForUDPConnection.length == 0 ||
@@ -141,8 +132,6 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
         [userDefaults setObject:resolutionH forKey:ResolutionHKey];
         [userDefaults setObject:fps forKey:FPSKey];
         [userDefaults setObject:bitrate forKey:BitrateKey];
-        [userDefaults setObject:@(limitNumberOfTasks) forKey:LimitingTasksKey];
-
         
         FDDroneStatus *currentDroneStatus = [FDDroneStatus currentStatus];
         currentDroneStatus.pathForUDPConnection = hostForUDPConnection;
@@ -153,7 +142,6 @@ static NSString * const LimitingTasksKey = @"LimitingTasksKey";
         currentDroneStatus.videoSize = CGSizeMake([resolutionW integerValue], [resolutionH integerValue]);
         currentDroneStatus.videoFps = [fps integerValue];
         currentDroneStatus.videoResolution = currentDroneStatus.videoSize.width * currentDroneStatus.videoSize.height / 1000.0f / 1000.0f;
-        currentDroneStatus.limitNumberOfTasks = limitNumberOfTasks;
         currentDroneStatus.videoBitrate = [bitrate floatValue];
     }
     return YES;
