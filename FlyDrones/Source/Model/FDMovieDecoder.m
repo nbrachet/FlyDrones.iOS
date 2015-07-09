@@ -66,7 +66,7 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 1;
     }
     
     if ([self isSkipDecode]) {
-        [self.operationQueue cancelAllOperations];
+        return;
     }
     
     __weak __typeof(self)weakSelf = self;

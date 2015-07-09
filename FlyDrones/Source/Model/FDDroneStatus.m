@@ -8,6 +8,9 @@
 
 #import "FDDroneStatus.h"
 
+static NSString * const DroneStatusKey = @"DroneStatus";
+static NSString * const ParamValuesKey = @"paramValues";
+
 @implementation FDDroneStatus
 
 #pragma mark - Public
@@ -16,8 +19,14 @@
     static id currentStatus = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        currentStatus = [[super alloc] initInstance];
-        [currentStatus clearStatus];
+        NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:DroneStatusKey];
+        if (data) {
+            currentStatus = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        } else {
+            currentStatus = [[super alloc] initInstance];
+            [currentStatus clearStatus];
+            [currentStatus setParamValues:[NSMutableDictionary dictionary]];
+        }
     });
     return currentStatus;
 }
@@ -73,6 +82,13 @@
     }
 }
 
+- (void)synchronize {
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:data forKey:DroneStatusKey];
+    [userDefaults synchronize];
+}
+
 #pragma mark - Lifecycle
 
 - (void)dealloc {
@@ -85,13 +101,23 @@
     return [super init];
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        [self clearStatus];
+        self.paramValues = [NSMutableDictionary dictionaryWithDictionary:[coder decodeObjectForKey:ParamValuesKey]];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    [coder encodeObject:[self.paramValues copy] forKey:ParamValuesKey];
+}
+
 - (void)clearStatus {
     self.batteryRemaining = FDNotAvailable;
     self.batteryVoltage = FDNotAvailable;
     self.batteryAmperage = FDNotAvailable;
-    
-    [self.paramValues removeAllObjects];
-    self.paramValues = [NSMutableDictionary dictionary];
     
     self.altitude = FDNotAvailable;
     self.airspeed = FDNotAvailable;

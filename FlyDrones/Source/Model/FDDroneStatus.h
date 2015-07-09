@@ -78,6 +78,7 @@ typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
 
 + (instancetype)currentStatus;
 - (void)clearStatus;
+- (void)synchronize;
 
 + (NSString *)nameFromMode:(FDAutoPilotMode)mode;
 + (FDAutoPilotMode)modeFromName:(NSString *)name;

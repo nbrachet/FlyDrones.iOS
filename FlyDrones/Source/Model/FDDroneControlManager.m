@@ -292,7 +292,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
             CGFloat param_value = paramValue.param_value;
             
             [droneStatus.paramValues setObject:[NSNumber numberWithFloat:param_value] forKey:paramIdString];
-//            NSLog(@"%@: %f", paramIdString, param_value);
+            [droneStatus synchronize];
             break;
         }
         case MAVLINK_MSG_ID_STATUSTEXT: {
