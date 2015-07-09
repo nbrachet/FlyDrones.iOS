@@ -9,7 +9,7 @@
 #import "FDMovieDecoder.h"
 #import "FDDroneStatus.h"
 
-static NSUInteger FDMovieDecoderMaxOperationInQueue = 3;
+static NSUInteger FDMovieDecoderMaxOperationInQueue = 5;
 static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 1;
 
 @interface FDMovieDecoder () {
@@ -66,7 +66,7 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 1;
     }
     
     if ([self isSkipDecode]) {
-        return;
+        [self.operationQueue cancelAllOperations];
     }
     
     __weak __typeof(self)weakSelf = self;
