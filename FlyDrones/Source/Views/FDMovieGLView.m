@@ -70,7 +70,6 @@ typedef NS_ENUM(GLuint, FDMovieGLViewShaderAttribute) {
         0.0f, 0.0f,
         1.0f, 0.0f,
     };
-    
     [EAGLContext setCurrentContext:self.context];
     
     glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer);
@@ -79,22 +78,29 @@ typedef NS_ENUM(GLuint, FDMovieGLViewShaderAttribute) {
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(_program);
     
-    [self.renderer setVideoFrame:videoFrame];
+    if (![self.renderer setVideoFrame:videoFrame]) {
+        return;
+    };
     
-    if ([self.renderer prepareRender]) {
-        GLfloat modelviewProj[16];
-        mat4f_LoadOrtho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, modelviewProj);
-        glUniformMatrix4fv(_uniformMatrix, 1, GL_FALSE, modelviewProj);
+    @try {
+        if ([self.renderer prepareRender]) {
+            GLfloat modelviewProj[16];
+            mat4f_LoadOrtho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, modelviewProj);
+            glUniformMatrix4fv(_uniformMatrix, 1, GL_FALSE, modelviewProj);
+            
+            glVertexAttribPointer(FDMovieGLViewShaderAttributeVertex, 2, GL_FLOAT, 0, 0, _vertices);
+            glEnableVertexAttribArray(FDMovieGLViewShaderAttributeVertex);
+            glVertexAttribPointer(FDMovieGLViewShaderAttributeTexcoord, 2, GL_FLOAT, 0, 0, texCoords);
+            glEnableVertexAttribArray(FDMovieGLViewShaderAttributeTexcoord);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        }
         
-        glVertexAttribPointer(FDMovieGLViewShaderAttributeVertex, 2, GL_FLOAT, 0, 0, _vertices);
-        glEnableVertexAttribArray(FDMovieGLViewShaderAttributeVertex);
-        glVertexAttribPointer(FDMovieGLViewShaderAttributeTexcoord, 2, GL_FLOAT, 0, 0, texCoords);
-        glEnableVertexAttribArray(FDMovieGLViewShaderAttributeTexcoord);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
+        [self.context presentRenderbuffer:GL_RENDERBUFFER];
     }
-    
-    glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
-    [self.context presentRenderbuffer:GL_RENDERBUFFER];
+    @catch (NSException *exception) {
+        NSLog(@"Exception:%@",exception.description);
+    }
 }
 
 #pragma mark - Custom Accessors

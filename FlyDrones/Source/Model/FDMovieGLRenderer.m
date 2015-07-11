@@ -50,14 +50,17 @@
     _uniformSamplers[2] = glGetUniformLocation(program, "s_texture_v");
 }
 
-- (void)setVideoFrame:(AVFrame)frame {
-    if (!frame.data || !frame.linesize) {
-        return;
+- (BOOL)setVideoFrame:(AVFrame)frame {
+    if (!frame.data ||
+        !frame.linesize ||
+        frame.height < 1 ||
+        frame.width < 1) {
+        return NO;
     }
     
     for (int i = 0; i < 3; ++i) {
         if (!frame.data[i] || !frame.linesize[i]) {
-            return;
+            return NO;
         }
     }
     
@@ -77,6 +80,7 @@
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     }
+    return YES;
 }
 
 - (BOOL)prepareRender {

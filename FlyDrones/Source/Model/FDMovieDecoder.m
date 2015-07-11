@@ -125,7 +125,7 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 1;
     if (videoCodecContext) {
         av_free(videoCodecContext->extradata);
         avcodec_close(videoCodecContext);
-        av_free(videoCodecContext);
+        avcodec_free_context(&videoCodecContext);
         videoCodecContext = NULL;
     }
     
@@ -186,12 +186,13 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 1;
             int isGotPicture;
             int length = avcodec_decode_video2(videoCodecContext, decodedFrame, &isGotPicture, &packet);
             if (length < 0) {
+                av_frame_free(&decodedFrame);
                 NSLog(@"Decode video error, skip packet");
                 break;
             }
             if (isGotPicture && ![self isSkipRender]) {
                 __weak __typeof(self)weakSelf = self;
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     __strong __typeof(weakSelf) strongSelf = weakSelf;
                     if (strongSelf == nil) {
                         return;
@@ -199,7 +200,9 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 1;
 
                     [strongSelf.delegate movieDecoder:strongSelf decodedVideoFrame:*decodedFrame];
                     av_frame_free(&decodedFrame);
-                });
+                }];
+            } else {
+                av_frame_free(&decodedFrame);
             }
 
             packet.size -= length;

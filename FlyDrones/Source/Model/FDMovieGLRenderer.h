@@ -15,7 +15,7 @@
 @property (nonatomic, copy, readonly) NSString *fragmentShaderString;
 @property (nonatomic, copy, readonly) NSString *vertexShaderString;
 
-- (void)setVideoFrame:(AVFrame)frame;
+- (BOOL)setVideoFrame:(AVFrame)frame;
 - (BOOL)isValid;
 - (void)resolveUniforms:(GLuint)program;
 - (BOOL)prepareRender;
