@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Dsn-5U-Zsb">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -930,15 +931,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="satellite" zoomEnabled="NO" scrollEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0AA-4N-toX">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="0AA-4N-toX" secondAttribute="height" multiplier="1:1" id="2G7-8l-EvV"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="delegate" destination="4vn-Kq-gAb" id="1gt-Cn-rkU"/>
-                                </connections>
-                            </mapView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T1q-M9-wjJ">
                                 <rect key="frame" x="8" y="333" width="304" height="21"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -949,22 +941,23 @@
                                 <color key="textColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IiS-dA-MQ0" userLabel="Map Background View">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="IiS-dA-MQ0" secondAttribute="height" multiplier="1:1" id="JBE-o4-3eZ"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="T1q-M9-wjJ" secondAttribute="trailing" constant="8" id="5my-kT-RBD"/>
                             <constraint firstItem="T1q-M9-wjJ" firstAttribute="leading" secondItem="iMl-q2-ag4" secondAttribute="leading" constant="8" id="K99-fY-N2C"/>
-                            <constraint firstAttribute="trailing" secondItem="0AA-4N-toX" secondAttribute="trailing" id="P6C-BX-HMW"/>
-                            <constraint firstItem="0AA-4N-toX" firstAttribute="leading" secondItem="iMl-q2-ag4" secondAttribute="leading" id="QAP-OB-t9o"/>
+                            <constraint firstAttribute="trailing" secondItem="IiS-dA-MQ0" secondAttribute="trailing" id="Xhi-Vh-cdu"/>
                             <constraint firstItem="f2X-ty-1jj" firstAttribute="top" secondItem="T1q-M9-wjJ" secondAttribute="bottom" constant="13" id="hCb-pR-zLI"/>
-                            <constraint firstItem="0AA-4N-toX" firstAttribute="top" secondItem="IdF-OI-jYh" secondAttribute="bottom" id="l7m-nv-gYW"/>
-                            <constraint firstItem="T1q-M9-wjJ" firstAttribute="top" secondItem="0AA-4N-toX" secondAttribute="bottom" constant="13" id="vMm-We-3SI"/>
+                            <constraint firstItem="IiS-dA-MQ0" firstAttribute="top" secondItem="IdF-OI-jYh" secondAttribute="bottom" id="pKo-jw-COM"/>
+                            <constraint firstItem="IiS-dA-MQ0" firstAttribute="leading" secondItem="iMl-q2-ag4" secondAttribute="leading" id="q8d-vT-NWW"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="vMm-We-3SI"/>
-                            </mask>
-                        </variation>
                     </view>
                     <value key="contentSizeForViewInPopover" type="size" width="320" height="367"/>
                     <nil key="simulatedStatusBarMetrics"/>
@@ -973,7 +966,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="367"/>
                     <connections>
-                        <outlet property="mapView" destination="0AA-4N-toX" id="W25-2T-1fT"/>
+                        <outlet property="mapBackgroundView" destination="IiS-dA-MQ0" id="mbe-kv-hxd"/>
                         <outlet property="satelliteInfoLabel" destination="T1q-M9-wjJ" id="6ci-Pt-fqm"/>
                     </connections>
                 </viewController>

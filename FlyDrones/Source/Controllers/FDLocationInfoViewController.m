@@ -9,8 +9,9 @@
 #import "FDLocationInfoViewController.h"
 #import "FDDroneControlManager.h"
 #import "CLLocation+Utils.h"
+#import <MapKit/MapKit.h>
 
-@interface FDLocationInfoViewController ()
+@interface FDLocationInfoViewController () <MKMapViewDelegate>
 
 @property (nonatomic, assign) CLLocationCoordinate2D prevRegionLocationCoordinate;
 
@@ -22,6 +23,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [self.mapBackgroundView addSubview:[self mapView]];
+    [self mapView].delegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(refreshInfo:)
@@ -36,7 +40,30 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [[self mapView] removeFromSuperview];
+    [self mapView].delegate = nil;
+}
+
 #pragma mark - Private
+
+- (MKMapView *)mapView {
+    static MKMapView *mapView = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        mapView = [[MKMapView alloc] initWithFrame:self.mapBackgroundView.bounds];
+        mapView.mapType = MKMapTypeSatellite;
+        mapView.showsPointsOfInterest = NO;
+        mapView.pitchEnabled = NO;
+        mapView.zoomEnabled = NO;
+        mapView.scrollEnabled = NO;
+        mapView.rotateEnabled = NO;
+        mapView.showsUserLocation = NO;
+    });
+    return mapView;
+}
 
 - (void)refreshInfo:(NSNotification *)notification {
     FDGPSInfo *gpsInfo = [FDDroneStatus currentStatus].gpsInfo;

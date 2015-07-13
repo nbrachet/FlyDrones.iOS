@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MapKit/MapKit.h>
 
-@interface FDLocationInfoViewController : UIViewController <MKMapViewDelegate>
+@interface FDLocationInfoViewController : UIViewController
 
-@property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet UILabel *satelliteInfoLabel;
+@property (nonatomic, weak) IBOutlet UIView *mapBackgroundView;
 
 @end
