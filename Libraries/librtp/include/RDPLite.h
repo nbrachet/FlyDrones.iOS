@@ -308,9 +308,10 @@ public:
         UNREACHABLE();
     }
 
-    ssize_t recv(void* buffer, size_t len, struct timeval* timeout = NULL)
+    ssize_t recv(void* buffer, size_t buflen,
+                 struct timeval* timeout = NULL)
     {
-        LOGGER_DEBUG("User read request: len=%zu", len);
+        LOGGER_DEBUG("User read request: len=%zu", buflen);
 
         if (_state == STATE_CLOSED)
         {
@@ -347,9 +348,9 @@ public:
         InQ::iterator first = _inq.begin();
         LOGGER_ASSERT(first != _inq.end());
 
-        if ((*first)->datalen > len)
+        if ((*first)->datalen > buflen)
         {
-            LOGGER_ERROR("Not enough room for msg: %zu < %u", len, (*first)->datalen);
+            LOGGER_ERROR("Not enough room for msg: %zu < %u", buflen, (*first)->datalen);
             errno = EMSGSIZE;
             return -1;
         }
@@ -370,15 +371,16 @@ public:
         return hdr->datalen;
     }
 
-    ssize_t send(const void* buffer, size_t len, struct timeval* timeout = NULL)
+    ssize_t send(const void* buffer, size_t buflen,
+                 struct timeval* timeout = NULL)
     {
         struct iovec iovec;
         iovec.iov_base = const_cast<void*>(buffer);
-        iovec.iov_len = len;
+        iovec.iov_len = buflen;
         return sendv(&iovec, 1, timeout);
     }
 
-    ssize_t sendv(const struct iovec* iov, unsigned iovcnt,
+    ssize_t sendv(struct iovec* iov, unsigned iovcnt,
                   struct timeval* timeout = NULL)
     {
         LOGGER_DEBUG("User write request");
@@ -519,6 +521,31 @@ public:
         }
 
         return 0;
+    }
+
+    virtual ssize_t /*Socket::*/ read(void* buffer, size_t len,
+                                      struct timeval* timeout = NULL)
+    {
+        return recv(buffer, len, timeout);
+    }
+
+    virtual ssize_t /*Socket::*/ readv(struct iovec* iov, unsigned iovcnt,
+                                       struct timeval* timeout = NULL)
+    {
+        errno = ENOSYS;
+        return -1;
+    }
+
+    virtual ssize_t /*Socket::*/ write(const void* buffer, size_t len,
+                                       struct timeval* timeout = NULL)
+    {
+        return send(buffer, len, timeout);
+    }
+
+    virtual ssize_t /*Socket::*/ writev(struct iovec* iov, unsigned iovcnt,
+                                        struct timeval* timeout = NULL)
+    {
+        return sendv(iov, iovcnt, timeout);
     }
 
 protected:
@@ -951,17 +978,6 @@ protected:
                  struct timeval* timeout,
                  struct sockaddr_in* dest = NULL)
     {
-        if (timeout)
-        {
-            switch (wait_for_output(timeout))
-            {
-            case -1:    return -1;
-            case 0:     return -1;
-            case 1:     break;
-            default:    UNREACHABLE();
-            }
-        }
-
         if (! (less_or_equal16()(_sndnxt - _sndmns, hdr->seq) && less_or_equal16()(hdr->seq, _sndnxt)))
         {
             LOGGER_WARN("SND.NXT=%hu SND.MNS=%hu seq=%hu", _sndnxt, _sndmns, hdr->seq);
@@ -1016,9 +1032,9 @@ protected:
         hton(hdr);
 
 #ifdef IPPROTO_UDPLITE
-        ssize_t n = UDPLiteSender::send(hdr, len, MSG_NOSIGNAL, dest);
+        ssize_t n = UDPLiteSender::send(hdr, len, MSG_NOSIGNAL, timeout, dest);
 #else
-        ssize_t n = UDPSender::send(hdr, len, MSG_NOSIGNAL, dest);
+        ssize_t n = UDPSender::send(hdr, len, MSG_NOSIGNAL, timeout, dest);
 #endif
 
         ntoh(hdr);
@@ -1068,10 +1084,9 @@ protected:
             return -1;
 
         Header hdr2;
-        struct timeval notimeout = { 0, 0 };
         struct sockaddr_in peer2;
         ssize_t n2;
-        while ((n2 = peek(&hdr2, sizeof(hdr2), MSG_NOSIGNAL | MSG_TRUNC, &notimeout, &peer2)) == len
+        while ((n2 = peek(&hdr2, sizeof(hdr2), MSG_NOSIGNAL | MSG_TRUNC | MSG_DONTWAIT, NULL, &peer2)) == len
             && memcmp(&hdr1, &hdr2, sizeof(hdr2)) == 0
             && memcmp(peer, &peer2, sizeof(peer2)) == 0)
         {

@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////
 //                                                                   //
-//                               HTTP                                //
+//                          HTTPConnection                           //
 //                                                                   //
 ///////////////////////////////////////////////////////////////////////
 
@@ -40,9 +40,9 @@ protected:
 
 public:
 
-    ssize_t recv(void* buffer, size_t buflen,
-                 int flags,
-                 struct timeval* timeout = NULL)
+    virtual ssize_t /*TCPConnection::*/ recv(void* buffer, size_t buflen,
+                                             int flags,
+                                             struct timeval* timeout = NULL)
     {
         const ssize_t n = TCPConnection::recv(buffer, buflen - 1, flags, timeout);
         if (n <= 0)
@@ -226,7 +226,7 @@ protected:
     {
         va_list ap;
         va_start(ap, fmt);
-        ssize_t sent = sendva(MSG_MORE, fmt, ap);
+        ssize_t sent = vsendf(MSG_MORE, fmt, ap);
         va_end(ap);
         if (sent == -1)
             return -1;
@@ -236,7 +236,7 @@ protected:
             return -1;
         sent += n;
 
-        n = sendv(0, "\r\n\r\n");
+        n = sendf(0, "\r\n\r\n");
         if (n == -1)
             return -1;
         return (int)(sent + n);
@@ -245,7 +245,7 @@ protected:
     int sendv_200(int flags, const char* fmt, ...)
         __attribute__((__format__(__printf__, 3, 4)))
     {
-        ssize_t sent = sendv(flags | MSG_MORE, "%s 200\r\n", _protocol);
+        ssize_t sent = sendf(flags | MSG_MORE, "%s 200\r\n", _protocol);
         if (sent == -1)
             return -1;
 
@@ -256,7 +256,7 @@ protected:
 
         if (! BITMASK_ISSET(flags, MSG_MORE))
         {
-            n = sendv(MSG_MORE, "Content-Length: 0\r\n");
+            n = sendf(MSG_MORE, "Content-Length: 0\r\n");
             if (n == -1)
                 return -1;
             sent += n;
@@ -266,14 +266,14 @@ protected:
         {
             va_list ap;
             va_start(ap, fmt);
-            n = sendva(flags | MSG_MORE, fmt, ap);
+            n = vsendf(flags | MSG_MORE, fmt, ap);
             va_end(ap);
             if (n == -1)
                 return -1;
             sent += n;
         }
 
-        n = sendv(flags, "\r\n");
+        n = sendf(flags, "\r\n");
         if (n == -1)
             return -1;
         return (int)(sent + n);
@@ -294,7 +294,12 @@ protected:
 };
 
 ///////////////////////////////////////////////////////////////////////
+//                                                                   //
+//                            HTTPServer                             //
+//                                                                   //
+///////////////////////////////////////////////////////////////////////
 
+// No: not an "HTTP server", but an HTTPConnection "factory"
 class HTTPServer
     : public TCPServer
 {

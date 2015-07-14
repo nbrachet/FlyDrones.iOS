@@ -16,7 +16,7 @@
 
 ///////////////////////////////////////////////////////////////////////
 //                                                                   //
-//                            SERIAL PORT                            //
+//                            SerialPort                             //
 //                                                                   //
 ///////////////////////////////////////////////////////////////////////
 
@@ -192,42 +192,11 @@ public:
         return 0;
     }
 
-    ssize_t read(void* buffer, size_t len, struct timeval* timeout = NULL)
+    virtual ssize_t /*Socket::*/ writev(struct iovec* iov, unsigned iovcnt,
+                                        struct timeval* timeout = NULL)
     {
-        if (timeout)
-        {
-            switch (wait_for_input(timeout))
-            {
-            case -1:    return -1;
-            case 0:     return -1;
-            case 1:     break;
-            default:    UNREACHABLE();
-            }
-        }
-
-        ssize_t n = ::read(_sockfd, buffer, len);
-        if (n < 0)
-            LOGGER_PERROR("read");
-        return n;
-    }
-
-    ssize_t write(const void* buffer, size_t len, struct timeval* timeout = NULL)
-    {
-        if (timeout)
-        {
-            switch (wait_for_output(timeout))
-            {
-            case -1:    return -1;
-            case 0:     return -1;
-            case 1:     break;
-            default:    UNREACHABLE();
-            }
-        }
-
-        ssize_t n = ::write(_sockfd, buffer, len);
-        if (n < 0)
-            LOGGER_PERROR("write");
-        if (isatty())
+        const ssize_t n = Socket::writev(iov, iovcnt, timeout);
+        if (n > 0 && isatty())
         {
             if (tcdrain(_sockfd) != 0)
                 LOGGER_PWARN("tcdrain");

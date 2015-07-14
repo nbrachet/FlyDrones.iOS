@@ -115,7 +115,7 @@ protected:
         if (a >= b)
             return (uint16_t)(a - b);
         else
-            return (uint16_t)(((1<<16) - 1) + (a - b));
+            return (uint16_t)((1 << 16) + (a - b));
     }
 };
 
@@ -516,14 +516,6 @@ protected:
         }
     }
 
-    static inline uint32_t udiff32(uint32_t a, uint32_t b)
-    {
-        if (a >= b)
-            return (uint32_t)(a - b);
-        else
-            return (uint32_t)((uint32_t)0xFFFFFFFF - b + a);
-    }
-
 #ifdef LOGGER_OSTREAM
     friend std::ostream& operator<<(std::ostream& out, const Header* hdr)
     {
@@ -555,12 +547,14 @@ public:
 
     using UDPSender::send;
 
-    virtual ssize_t send(RTCP::Header* hdr, int flags,
+    virtual ssize_t send(RTCP::Header* hdr,
+                         int flags,
+                         struct timeval* timeout = NULL,
                          const struct sockaddr_in* dest = NULL)
     {
         const size_t len = hdr->length;
         hton(hdr);
-        return UDPSender::send(hdr, len, flags, dest);
+        return UDPSender::send(hdr, len, flags, timeout, dest);
     }
 };
 
@@ -569,7 +563,8 @@ class RTCPUDPReceiver
 {
 public:
 
-    virtual ssize_t recv(RTCP::Header* hdr, size_t len, int flags,
+    virtual ssize_t recv(RTCP::Header* hdr, size_t len,
+                         int flags,
                          struct timeval* timeout = NULL,
                          struct sockaddr_in* src = NULL)
     {
@@ -664,7 +659,7 @@ public:
                           int flags,
                           bool mark,
                           int pt,
-                          uint32_t ts);
+                          uint32_t rtp_ts);
 
     static uint32_t rtp_compute_ts(unsigned frequency)
     {
@@ -734,12 +729,12 @@ public:
         : RTPSender(dest)
     {}
 
-    ssize_t sendv(struct iovec* iov,
-                  unsigned iovcnt,
-                  int flags,
-                  bool mark,
-                  int pt,
-                  uint32_t ts);
+    virtual ssize_t /*RTPLargeSender::*/ sendv(struct iovec* iov,
+                                               unsigned iovcnt,
+                                               int flags,
+                                               bool mark,
+                                               int pt,
+                                               uint32_t rtp_ts);
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -839,12 +834,12 @@ public:
 
     float link_quality(UpgradableRWLock::ReaderWriterGuard& rwguard) const;
 
-    ssize_t sendv(struct iovec* iov,
-                  unsigned iovcnt,
-                  int flags,
-                  bool mark,
-                  int pt,
-                  uint32_t rtp_ts);
+    virtual ssize_t sendv(struct iovec* iov,
+                          unsigned iovcnt,
+                          int flags,
+                          bool mark,
+                          int pt,
+                          uint32_t rtp_ts);
 
     void skip(struct iovec* iov, unsigned iovcnt);
 
@@ -1090,12 +1085,12 @@ private:
                 cur_t = t;
                 const uint32_t lsr = it->lsr();
                 const double elapsed = ::elapsed(t0, t);
-                out << std::endl
+                out << '\n'
                     << '\t' << t << PrintF(" -%.1fs", elapsed) << " (" << lsr << "):";
             }
             out << " [ssrc=" << PrintF("%08x", it->ssrc) << " psent=" << it->psent << ']';
         }
-        return out << std::endl;
+        return out << '\n';
     }
 
     friend std::ostream& operator<<(std::ostream& out, const std::map<SRPacket1, RTCP::RRItem>& map) // LRR
@@ -1115,12 +1110,12 @@ private:
             {
                 t1 = t;
                 const double elapsed = ::elapsed(t0, t1);
-                out << std::endl
+                out << '\n'
                     << '\t' << it->first.ntp() << PrintF(" -%.1fs", elapsed) << PrintF("/%.1fs", (rtp_ts0 - it->first.rtp_ts) / 90000.0) << ':'; // FIXME: frequency
             }
             out << " [ssrc=" << PrintF("%08x", it->first.ssrc) << " psent=" << it->first.psent << " lost=" << it->second.lost << ']';
         }
-        return out << std::endl;
+        return out << '\n';
     }
 #endif
 
@@ -1181,8 +1176,8 @@ public:
         , _last_ts(0)
     {}
 
-    virtual ssize_t recv(void* buffer, size_t length,
-                         struct timeval* timeout = NULL);
+    virtual ssize_t /*DatagramReceiver::*/ recv(void* buffer, size_t buflen,
+                                                struct timeval* timeout = NULL);
 
     uint32_t ssrc() const
     {
@@ -1231,7 +1226,7 @@ public:
 
 private:
 
-    ssize_t recv2(void* buffer, size_t length,
+    ssize_t recv2(void* buffer, size_t buflen,
                   struct timeval* timeout);
 
     ssize_t recv2(RTP::Header* hdr, size_t length,
@@ -1468,8 +1463,8 @@ public:
                                 + sizeof(uint32_t)); // for one csrc
     }
 
-    ssize_t recv(void* buffer, size_t length,
-                 struct timeval* timeout = NULL);
+    virtual ssize_t /*DatagramReceiver::*/ recv(void* buffer, size_t buflen,
+                                                struct timeval* timeout = NULL);
 
     uint32_t ssrc() const
     {
@@ -1604,7 +1599,7 @@ public:
 
 protected:
 
-    ssize_t pop(void* buffer, size_t length);
+    ssize_t pop(void* buffer, size_t buflen);
 
     void drop();
 
@@ -1614,7 +1609,7 @@ private:
 
     void reset(const RTP::Header* hdr);
 
-    ssize_t recv2(void* buffer, size_t length,
+    ssize_t recv2(void* buffer, size_t buflen,
                   struct timeval* timeout);
 
     ssize_t recv2(RTP::Header* hdr, size_t length,
@@ -1623,11 +1618,11 @@ private:
 
     void update_jitter(const RTP::Header* hdr);
 
-    ssize_t recvSR(const struct sockaddr_in* peer, RTCP::SRPacket* sr, size_t n);
+    ssize_t recvSR(const struct sockaddr_in* peer, RTCP::SRPacket* sr, size_t packetlen);
 
     ssize_t sendRR(const struct sockaddr_in* dest, RTCP::RRPacket* rr)
     {
-        const ssize_t n = RTCPUDPSender::send(rr, MSG_DONTWAIT | MSG_NOSIGNAL, dest);
+        const ssize_t n = RTCPUDPSender::send(rr, MSG_DONTWAIT | MSG_NOSIGNAL, NULL, dest);
         if (n == -1 && errno == EWOULDBLOCK)
             return 0;
         return n;
@@ -1755,7 +1750,7 @@ protected:
 
     void queue_erase(const Queue::const_iterator& begin, const Queue::const_iterator& end);
 
-    ssize_t queue_pop(void* buffer, size_t length, Queue::const_iterator& end);
+    ssize_t queue_pop(void* buffer, size_t buflen, Queue::const_iterator& end);
 
 private:
 
@@ -1968,17 +1963,17 @@ public:
 
     ///////////////////////////////////////////////////////////////////
     //
-    // H264RTPSender
+    // H264RTPBoundedSender
     //
     ///////////////////////////////////////////////////////////////////
 
-class H264RTPSender
+class H264RTPBoundedSender
     : public RTPBoundedSender
     , protected H264
 {
 public:
 
-    H264RTPSender(const struct sockaddr_in* dest)
+    H264RTPBoundedSender(const struct sockaddr_in* dest)
         : RTPBoundedSender(dest)
     {}
 
@@ -1992,12 +1987,12 @@ public:
         RTPBoundedSender::sndbufsiz(bufsiz);
     }
 
-    ssize_t sendv(struct iovec* iov,
-                  unsigned iovcnt,
-                  int flags,
-                  bool mark,
-                  int pt,
-                  uint32_t ts);
+    virtual ssize_t /*RTPBoundedSender::*/ sendv(struct iovec* iov,
+                                                 unsigned iovcnt,
+                                                 int flags,
+                                                 bool mark,
+                                                 int pt,
+                                                 uint32_t rtp_ts);
 
     static uint32_t rtp_compute_ts()
     {
@@ -2026,8 +2021,8 @@ public:
         : RTPReceiver(H264::CLOCK_FREQUENCY)
     {}
 
-    ssize_t recv(void* buffer, size_t length,
-                 struct timeval* timeout = NULL);
+    virtual ssize_t /*DatagramReceiver::*/ recv(void* buffer, size_t buflen,
+                                                struct timeval* timeout = NULL);
 };
 
 #endif

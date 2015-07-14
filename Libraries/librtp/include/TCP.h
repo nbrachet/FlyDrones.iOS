@@ -36,6 +36,30 @@ public:
         return 0;
     }
 
+    // keepalive timeout = idle + intvl * cnt (in sec)
+    int tcp_keepalive(int idle, int intvl, int cnt)
+    {
+        if (so_keepalive(1) == -1)
+            return -1;
+#ifdef TCP_KEEPIDLE
+        if (setsockopt(IPPROTO_TCP, TCP_KEEPIDLE, idle) == -1)
+            return -1;
+#endif
+#ifdef TCP_KEEPALIVE
+        if (setsockopt(IPPROTO_TCP, TCP_KEEPALIVE, idle) == -1)
+            return -1;
+#endif
+#ifdef TCP_KEEPINTVL
+        if (setsockopt(IPPROTO_TCP, TCP_KEEPINTVL, intvl) == -1)
+        return -1;
+#endif
+#ifdef TCP_KEEPCNT
+        if (setsockopt(IPPROTO_TCP, TCP_KEEPCNT, cnt) == -1)
+            return -1;
+#endif
+        return 0;
+    }
+
     int tcp_nodelay(bool set)
     {
         if (setsockopt(IPPROTO_TCP, TCP_NODELAY, set) == -1)
@@ -278,12 +302,12 @@ public:
         StashErrno stasherrno;
 
         int c;
-        return recv(&c, 1, MSG_DONTWAIT | MSG_PEEK) == 0;
+        return recv(&c, 1, MSG_NOSIGNAL | MSG_DONTWAIT | MSG_PEEK) == 0;
     }
 
-    ssize_t recv(void* buffer, size_t buflen,
-                 int flags,
-                 struct timeval* timeout = NULL)
+    virtual ssize_t recv(void* buffer, size_t buflen,
+                         int flags,
+                         struct timeval* timeout = NULL)
     {
         ssize_t n;
         for (;;)
@@ -307,11 +331,11 @@ public:
                 if (errno == EINTR)
                     continue;
 #endif
-                if (errno == EAGAIN)
+                if (errno == EWOULDBLOCK)
                 {
                     if (BITMASK_ISSET(flags, MSG_DONTWAIT))
                         return -1;
-                    if (! timeout || (timeout->tv_sec > 0 || timeout->tv_usec > 0))
+                    if (timeout && (timeout->tv_sec > 0 || timeout->tv_usec > 0))
                         continue;
                 }
 
@@ -405,24 +429,13 @@ public:
         return read;
     }
 
-    ssize_t read(void* buffer, size_t len,
-                 struct timeval* timeout = NULL)
-    {
-        return recv(buffer, len, 0, timeout);
-    }
-
-    ssize_t write(const void* buf, size_t len)
-    {
-        return send(0, buf, len);
-    }
-
-    ssize_t send(int flags, const void* buf, size_t len)
+    virtual ssize_t send(int flags, const void* buffer, size_t buflen)
     {
 #if 0
-fprintf(stderr, "> %*s", len, buf);
+fprintf(stderr, "> %*s", buflen, buffer);
 #endif
 
-        const ssize_t n = ::send(_sockfd, buf, len, flags | MSG_NOSIGNAL);
+        const ssize_t n = ::send(_sockfd, buffer, buflen, flags | MSG_NOSIGNAL);
         if (n == -1)
         {
             LOGGER_PERROR("send");
@@ -445,17 +458,17 @@ fprintf(stderr, "> %*s", len, buf);
         return n;
     }
 
-    ssize_t sendv(int flags, const char* fmt, ...)
+    ssize_t sendf(int flags, const char* fmt, ...)
         __attribute__((__format__(__printf__, 3, 4)))
     {
         va_list ap;
         va_start(ap, fmt);
-        ssize_t s = sendva(flags, fmt, ap);
+        ssize_t s = vsendf(flags, fmt, ap);
         va_end(ap);
         return s;
     }
 
-    ssize_t sendva(int flags, const char* fmt, va_list ap)
+    ssize_t vsendf(int flags, const char* fmt, va_list ap)
         __attribute__((__format__(__printf__, 3, 0)))
     {
         char* buf;
@@ -469,6 +482,43 @@ fprintf(stderr, "> %*s", len, buf);
         ssize_t sent = send(flags, buf, n);
         free(buf);
         return sent;
+    }
+
+    virtual ssize_t /*Socket::*/ read(void* buffer, size_t buflen,
+                                      struct timeval* timeout = NULL)
+    {
+        return recv(buffer, buflen, 0, timeout);
+    }
+
+    virtual ssize_t /*Socket::*/ readv(struct iovec* iov, unsigned iovcnt,
+                                       struct timeval* timeout = NULL)
+    {
+        errno = ENOSYS;
+        return -1;
+    }
+
+    virtual ssize_t /*Socket::*/ write(const void* buffer, size_t buflen,
+                                       struct timeval* timeout = NULL)
+    {
+        if (timeout)
+        {
+            switch (wait_for_output(timeout))
+            {
+            case -1:
+            case 0:     return -1;
+            case 1:     break;
+            default:    UNREACHABLE();
+            }
+        }
+
+        return send(0, buffer, buflen);
+    }
+
+    virtual ssize_t /*Socket::*/ writev(struct iovec* iov, unsigned iovcnt,
+                                        struct timeval* timeout = NULL)
+    {
+        errno = ENOSYS;
+        return -1;
     }
 
 private:

@@ -66,6 +66,7 @@
 #  include <mach/mach.h>
 #  include <mach/mach_time.h>
 
+#  include <sys/uio.h>
 #  include <sys/sysctl.h>
 #  undef isset
 #  undef roundup
@@ -115,7 +116,8 @@
 ///////////////////////////////////////////////////////////////////////
 
 #ifndef htonll
-static inline uint64_t htonll(uint64_t hostlonglong)
+static inline uint64_t
+htonll(uint64_t hostlonglong)
 {
 #  ifdef __linux__
     return htobe64(hostlonglong);
@@ -128,7 +130,8 @@ static inline uint64_t htonll(uint64_t hostlonglong)
 #endif
 
 #ifndef ntohll
-static inline uint64_t ntohll(uint64_t netlonglong)
+static inline uint64_t
+ntohll(uint64_t netlonglong)
 {
 #  ifdef __linux__
     return be64toh(netlonglong);
@@ -165,7 +168,7 @@ operator<<(std::ostream& out, const struct sockaddr_in& addr)
 
 ///////////////////////////////////////////////////////////////////////
 //                                                                   //
-//                              SOCKET                               //
+//                              Socket                               //
 //                                                                   //
 ///////////////////////////////////////////////////////////////////////
 
@@ -173,6 +176,8 @@ class Socket
 {
 public:
 
+    ///////////////////////////////////////////////////////////////////
+    // Socket::FDSet
     ///////////////////////////////////////////////////////////////////
 
     class FDSet
@@ -342,19 +347,17 @@ public:
         return 0;
     }
 
-#if 0
-    // should be the interface
-
-    virtual ssize_t read(void* buffer, size_t len,
+    virtual ssize_t read(void* buffer, size_t buflen,
                          struct timeval* timeout = NULL)
     {
         struct iovec iov;
         iov.iov_base = buffer;
-        iov.iov_len = len;
-        return read(&iov, 1, timeout);
+        iov.iov_len = buflen;
+        return readv(&iov, 1, timeout);
     }
-    virtual ssize_t read(const struct iovec* iov, unsigned iovcnt,
-                         struct timeval* timeout = NULL)
+
+    virtual ssize_t readv(struct iovec* iov, unsigned iovcnt,
+                          struct timeval* timeout = NULL)
     {
         for (;;)
         {
@@ -362,14 +365,14 @@ public:
             {
                 switch (wait_for_input(timeout))
                 {
-                case -1:    return -1;
+                case -1:
                 case 0:     return -1;
                 case 1:     break;
                 default:    UNREACHABLE();
                 }
             }
 
-            ssize_t n = ::readv(_sockfd, iov, iovcnt);
+            const ssize_t n = ::readv(_sockfd, iov, iovcnt);
             if (n == -1)
             {
 #ifndef NDEBUG
@@ -377,38 +380,51 @@ public:
                 if (errno == EINTR)
                     continue;
 #endif
-                if (errno == EWOULDBLOCK)
+                if (errno == EWOULDBLOCK && timeout)
                     continue;
-                LOGGER_ERROR("read: %s", strerror(errno));
-                return -1;
+                LOGGER_PERROR("readv");
             }
-            if (n == 0)
-            {
-                if (timeout && (timeout->tv_sec > 0 || timeout->tv_usec > 0))
-                    continue;
-            }
-
             return n;
         }
         UNREACHABLE();
     }
 
-    virtual ssize_t write(const void* buffer, size_t len)
+    virtual ssize_t write(const void* buffer, size_t buflen,
+                          struct timeval* timeout = NULL)
     {
         struct iovec iovec;
         iovec.iov_base = const_cast<void*>(buffer);
-        iovec.iov_len = len;
-        return write(&iovec, 1);
-    }
-    virtual ssize_t write(const struct iovec* iov, unsigned iovcnt)
-    {
-        ssize_t n = ::writev(_sockfd, iov, iovcnt);
-        if (n == -1)
-            LOGGER_ERROR("write: %s", strerror(errno));
-        return n;
+        iovec.iov_len = buflen;
+        return writev(&iovec, 1, timeout);
     }
 
-#endif
+    virtual ssize_t writev(struct iovec* iov, unsigned iovcnt,
+                           struct timeval* timeout = NULL)
+    {
+        for (;;)
+        {
+            if (timeout)
+            {
+                switch (wait_for_output(timeout))
+                {
+                case -1:
+                case 0:     return -1;
+                case 1:     break;
+                default:    UNREACHABLE();
+                }
+            }
+
+            const ssize_t n = ::writev(_sockfd, iov, iovcnt);
+            if (n == -1)
+            {
+                if (errno == EWOULDBLOCK && timeout)
+                    continue;
+                LOGGER_PERROR("writev");
+            }
+            return n;
+        }
+        UNREACHABLE();
+    }
 
 protected:
 
@@ -1035,6 +1051,8 @@ public:
         mutable char* _service;
     };
 
+    ///////////////////////////////////////////////////////////////////
+
     static inline int is_multicast(const struct sockaddr_in* addr)
     {
         return (ntohl(addr->sin_addr.s_addr) >> 28) == 0xe;
@@ -1143,6 +1161,8 @@ public:
         uint32_t _sum;
     };
 
+    ///////////////////////////////////////////////////////////////////
+
 protected:
 
     /*
@@ -1176,9 +1196,8 @@ protected:
         , _mtu(-1)
         , _rcvbuf(-1)
         , _sndbuf(-1)
-#ifdef SO_PRIORITY
-        , _priority(-1)
-#endif
+        , _msg_controllen(0)
+        , _msg_control(NULL)
     {
         if (_sockfd == -1)
         {
@@ -1202,9 +1221,8 @@ protected:
         , _mtu(-1)
         , _rcvbuf(-1)
         , _sndbuf(-1)
-#ifdef SO_PRIORITY
-        , _priority(-1)
-#endif
+        , _msg_controllen(0)
+        , _msg_control(NULL)
     {
         LOGGER_ASSERT(_sockfd >= 0);
 
@@ -1214,6 +1232,12 @@ protected:
 #endif
 
         getsockname();
+    }
+
+    virtual ~INet()
+    {
+        if (_msg_control)
+            free(_msg_control);
     }
 
 public:
@@ -1252,37 +1276,36 @@ public:
                 {
                 case SO_SNDBUF:
                     _sndbuf = optval;
-                    LOGGER_DEBUG("SNDBUF = %'d (%.1biB)", _sndbuf, (float)_sndbuf);
+                    LOGGER_DEBUG("SO_SNDBUF = %'d (%.1biB)", _sndbuf, (float)_sndbuf);
                     break;
                 case SO_RCVBUF:
                     _rcvbuf = optval;
-                    LOGGER_DEBUG("RCVBUF = %'d (%.1biB)", _rcvbuf, (float)_rcvbuf);
+                    LOGGER_DEBUG("SO_RCVBUF = %'d (%.1biB)", _rcvbuf, (float)_rcvbuf);
                     break;
 #ifdef SO_PRIORITY
                 case SO_PRIORITY:
-                    _priority = optval;
-                    switch (_priority)
+                    switch (optval)
                     {
                     case TC_PRIO_BESTEFFORT:
-                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_BESTEFFORT (%d)", _priority);
+                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_BESTEFFORT (%d)", optval);
                         break;
                     case TC_PRIO_FILLER:
-                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_FILLER (%d)", _priority);
+                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_FILLER (%d)", optval);
                         break;
                     case TC_PRIO_BULK:
-                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_BULK (%d)", _priority);
+                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_BULK (%d)", optval);
                         break;
                     case TC_PRIO_INTERACTIVE_BULK:
-                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_INTERACTIVE_BULK (%d)", _priority);
+                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_INTERACTIVE_BULK (%d)", optval);
                         break;
                     case TC_PRIO_INTERACTIVE:
-                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_INTERACTIVE (%d)", _priority);
+                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_INTERACTIVE (%d)", optval);
                         break;
                     case TC_PRIO_CONTROL:
-                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_CONTROL (%d)", _priority);
+                        LOGGER_DEBUG("SO_PRIORITY = TC_PRIO_CONTROL (%d)", optval);
                         break;
                     default:
-                        LOGGER_DEBUG("SO_PRIORITY = %d", _priority);
+                        LOGGER_DEBUG("SO_PRIORITY = %d", optval);
                         break;
                     }
                     break;
@@ -1331,22 +1354,27 @@ public:
 #endif
                     {
                     case IPTOS_LOWDELAY:
-                        LOGGER_DEBUG("IP_TOS = LOWDELAY");
+                        LOGGER_DEBUG("IP_TOS = LOWDELAY (%d)", optval);
                         break;
                     case IPTOS_THROUGHPUT:
-                        LOGGER_DEBUG("IP_TOS = THROUGHPUT");
+                        LOGGER_DEBUG("IP_TOS = THROUGHPUT (%d)", optval);
                         break;
                     case IPTOS_RELIABILITY:
-                        LOGGER_DEBUG("IP_TOS = RELIABILITY");
+                        LOGGER_DEBUG("IP_TOS = RELIABILITY (%d)", optval);
                         break;
                     case IPTOS_MINCOST:
-                        LOGGER_DEBUG("IP_TOS = MINCOST");
+                        LOGGER_DEBUG("IP_TOS = MINCOST (%d)", optval);
                         break;
                     default:
                         LOGGER_DEBUG("IP_TOS = %d", optval);
                         break;
                     }
                     break;
+#ifdef IP_RECVTOS
+                case IP_RECVTOS:
+                    LOGGER_DEBUG("IP_RECVTOS = %s", optval ? "YES" : "NO");
+                    break;
+#endif
 #ifdef IP_BOUND_IF
                 case IP_BOUND_IF:
                     if (LOGGER_IS_DEBUG())
@@ -1456,9 +1484,9 @@ public:
         return _mtu;
     }
 
-    // @see <a href="http://lxr.free-electrons.com/source/net/ipv4/ip_sockglue.c#L249">ip_sockglue.c</a>
+    // @see <a href="http://lxr.free-electrons.com/source/net/ipv4/ip_sockglue.c#L282">ip_sockglue.c</a>
     // TOS also sets PRIORITY (on linux):
-    // IPTOS_LOWDELAY (0x10)    -> TC_PRIO_BULK (2)
+    // IPTOS_LOWDELAY (0x10)    -> TC_PRIO_INTERACTIVE (6)
     // IPTOS_THROUGHPUT (0x08)  -> TC_PRIO_BULK (2)
     // IPTOS_RELIABILITY (0x04) -> TC_PRIO_BESTEFFORT (0)
     // IPTOS_MINCOST (0x02)     -> TC_PRIO_BESTEFFORT (0)
@@ -1470,6 +1498,91 @@ public:
             return -1;
         }
         return 0;
+    }
+
+#if 0
+    // doesn't seem to work on linux or macosx: returned value is always 0
+    // use ip_recvtos(1) + ip_recvtos() instead (on linux)
+    int ip_tos()
+    {
+        int tos;
+        if (getsockopt(IPPROTO_IP, IP_TOS, &tos) == -1)
+        {
+            LOGGER_PERROR("getsockopt(IP_TOS)");
+            return -1;
+        }
+        return tos;
+    }
+#endif
+
+#ifdef IP_RECVTOS
+    int ip_recvtos(int flag)
+    {
+        if (setsockopt(IPPROTO_IP, IP_RECVTOS, flag) == -1)
+        {
+            LOGGER_PERROR("setsockopt(IP_RECVTOS, %d)", flag);
+            return -1;
+        }
+        if (flag)
+        {
+            // FIXME: if ip_recvtos(1) is called multiple times
+            //        _msg_controllen is too large
+            _msg_controllen += CMSG_SPACE(sizeof(char));
+            _msg_control = realloc(_msg_control, _msg_controllen);
+        }
+        else
+        {
+            // FIXME: how safely to decrement _msg_controllen
+            //        if ip_recvtos(0) is called multiple times?
+        }
+        return 0;
+    }
+
+    int ip_recvtos() const
+    {
+        char tos;
+        if (msg_control(IPPROTO_IP, IP_TOS, &tos) != 1)
+            return 0;
+
+#ifdef IPTOS_TOS
+        tos = IPTOS_TOS(tos);
+#endif
+
+        if (LOGGER_IS_DEBUG())
+        {
+            switch (tos)
+            {
+            case IPTOS_LOWDELAY:
+                LOGGER_DEBUG("IP_RECVTOS = IPTOS_LOWDELAY (%d)", tos);
+                break;
+            case IPTOS_THROUGHPUT:
+                LOGGER_DEBUG("IP_RECVTOS = IPTOS_THROUGHPUT (%d)", tos);
+                break;
+            case IPTOS_RELIABILITY:
+                LOGGER_DEBUG("IP_RECVTOS = IPTOS_RELIABILITY (%d)", tos);
+                break;
+            case IPTOS_MINCOST:
+                LOGGER_DEBUG("IP_RECVTOS = IPTOS_MINCOST (%d)", tos);
+                break;
+            default:
+                LOGGER_DEBUG("IP_RECVTOS = %d", tos);
+                break;
+            }
+        }
+
+        return tos;
+    }
+#endif
+
+    int ip_ttl()
+    {
+        int ttl;
+        if (getsockopt(IPPROTO_IP, IP_TTL, &ttl) == -1)
+        {
+            LOGGER_PERROR("getsockopt(IP_TTL)");
+            return -1;
+        }
+        return ttl;
     }
 
     int so_rcvbuf()
@@ -1554,17 +1667,33 @@ public:
 
 #ifdef SO_PRIORITY
     // @see <a href="http://lxr.free-electrons.com/source/include/uapi/linux/pkt_sched.h#L23">pkt_sched.h</a>
+    //  On linux: the default queuing discipline (pfifo_qdisc) has 3 bands:
+    //   0- interactive (TC_PRIO_INTERACTIVE)
+    //      will be reserved for other traffic (ie. TCP/MAVLink)
+    //   1- best effort (TC_PRIO_BESTEFFORT, TC_PRIO_INTERACTIVE_BULK)
+    //      KEYFRAME + CONFIG
+    //   2- bulk/filler (TC_PRIO_BULK, TC_PRIO_FILLER)
+    //      FRAME
+    //  (see http://lartc.org/howto/lartc.qdisc.classless.html)
     int so_priority(int priority)
     {
-        if (_priority == priority)
-            return 0;
-
         if (setsockopt(SOL_SOCKET, SO_PRIORITY, priority) == -1)
         {
             LOGGER_PERROR("setsockopt(SO_PRIORITY, %d)", priority);
             return -1;
         }
         return 0;
+    }
+
+    int so_priority()
+    {
+        int priority;
+        if (getsockopt(SOL_SOCKET, SO_PRIORITY, &priority) == -1)
+        {
+            LOGGER_PERROR("getsockopt(SO_PRIORITY)");
+            return -1;
+        }
+        return priority;
     }
 #endif
 
@@ -1756,7 +1885,7 @@ public:
             // try to detect connection close
 
             char c;
-            switch (::recv(_sockfd, &c, sizeof(c), MSG_PEEK | MSG_DONTWAIT))
+            switch (::recv(_sockfd, &c, sizeof(c), MSG_PEEK | MSG_DONTWAIT | MSG_NOSIGNAL))
             {
             case -1:    if (errno == EWOULDBLOCK && (timeout && (timeout->tv_sec > 0 || timeout->tv_usec > 0)))
                             continue;
@@ -1839,17 +1968,41 @@ protected:
         return 0;
     }
 
+    template <typename T>
+    int msg_control(int cmsg_level, int cmsg_type, T* x) const
+    {
+        struct msghdr msg;
+        memset(&msg, 0, sizeof(msg));
+        msg.msg_control = _msg_control;
+        msg.msg_controllen = _msg_controllen;
+        for (struct cmsghdr* cmsg = CMSG_FIRSTHDR(&msg);
+             cmsg != NULL;
+             cmsg = CMSG_NXTHDR(&msg, cmsg))
+        {
+            if (   cmsg->cmsg_level == cmsg_level
+                && cmsg->cmsg_type == cmsg_type
+                && cmsg->cmsg_len >= CMSG_LEN(sizeof(T)))
+            {
+                memcpy(x, CMSG_DATA(cmsg), sizeof(T));
+                return 1;
+            }
+        }
+        return 0;
+    }
+
 private:
 
     int _mtu;
     int _rcvbuf;
     int _sndbuf;
-#ifdef SO_PRIORITY
-    int _priority;
-#endif
 
     struct sockaddr_in _addr;
     char _name[INET_ADDRSTRLEN];
+
+protected:
+
+    size_t _msg_controllen;
+    void* _msg_control;
 };
 
 #endif

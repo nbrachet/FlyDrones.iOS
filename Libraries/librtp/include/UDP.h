@@ -34,7 +34,7 @@ struct udphdr {
 
 ///////////////////////////////////////////////////////////////////////
 //                                                                   //
-//                             DATAGRAM                              //
+//                             Datagram                              //
 //                                                                   //
 ///////////////////////////////////////////////////////////////////////
 
@@ -93,7 +93,7 @@ class DatagramSender
 {
 protected:
 
-    DatagramSender(int sockproto, const struct sockaddr_in* dest)
+    DatagramSender(int sockproto, const struct sockaddr_in* dest = NULL)
         : Datagram(sockproto)
     {
         destaddr(dest);
@@ -140,17 +140,33 @@ public:
         LOGGER_DEBUG("SNDBUFSIZ = %'zd (%.1biB)", _sndbufsiz, (float) _sndbufsiz);
     }
 
-    virtual ssize_t send(const void* buf, size_t len, int flags,
+    virtual ssize_t send(const void* buffer, size_t buflen,
+                         int flags,
+                         struct timeval* timeout = NULL,
                          const struct sockaddr_in* dest = NULL)
     {
         struct iovec iovec;
-        iovec.iov_base = const_cast<void*>(buf);
-        iovec.iov_len = len;
-        return sendv(&iovec, 1, flags, dest);
+        iovec.iov_base = const_cast<void*>(buffer);
+        iovec.iov_len = buflen;
+        return sendv(&iovec, 1, flags, timeout, dest);
     }
 
-    virtual ssize_t sendv(struct iovec* iov, unsigned iovlen, int flags,
+    virtual ssize_t sendv(struct iovec* iov, unsigned iovlen,
+                          int flags,
+                          struct timeval* timeout = NULL,
                           const struct sockaddr_in* dest = NULL);
+
+    virtual ssize_t /*Socket::*/ write(const void* buffer, size_t buflen,
+                                       struct timeval* timeout = NULL)
+    {
+        return send(buffer, buflen, 0, timeout);
+    }
+
+    virtual ssize_t /*Socket::*/ writev(struct iovec* iov, unsigned iovcnt,
+                                        struct timeval* timeout = NULL)
+    {
+        return sendv(iov, iovcnt, 0, timeout);
+    }
 
     const struct sockaddr_in* destaddr() const
     {
@@ -333,14 +349,14 @@ public:
         }
     }
 
-    virtual ssize_t recv(void* buffer, size_t len,
+    virtual ssize_t recv(void* buffer, size_t buflen,
                          int flags,
                          struct timeval* timeout = NULL,
                          struct sockaddr_in* src = NULL)
     {
         struct iovec iov;
         iov.iov_base = buffer;
-        iov.iov_len = len;
+        iov.iov_len = buflen;
         return recvv(&iov, 1, flags, timeout, src);
     }
 
@@ -349,7 +365,20 @@ public:
                           struct timeval* timeout = NULL,
                           struct sockaddr_in* src = NULL);
 
-    virtual ssize_t peek(void* buffer, size_t len, int flags,
+    virtual ssize_t /*Socket::*/ read(void* buffer, size_t buflen,
+                                      struct timeval* timeout = NULL)
+    {
+        return recv(buffer, buflen, 0, timeout);
+    }
+
+    virtual ssize_t /*Socket::*/ readv(struct iovec* iov, unsigned iovcnt,
+                                       struct timeval* timeout = NULL)
+    {
+        return recvv(iov, iovcnt, 0, timeout);
+    }
+
+    virtual ssize_t peek(void* buffer, size_t len,
+                         int flags,
                          struct timeval* timeout = NULL,
                          struct sockaddr_in* src = NULL)
     {
@@ -369,7 +398,7 @@ class UDPSender
 {
 public:
 
-    UDPSender(const struct sockaddr_in* dest)
+    UDPSender(const struct sockaddr_in* dest = NULL)
         : Datagram(IPPROTO_UDP)
         , DatagramSender(IPPROTO_UDP, dest)
     {}
@@ -398,7 +427,7 @@ public:
         return INet::resolve_sockaddr_in(addr, host, port, SOCK_DGRAM, IPPROTO_UDP);
     }
 
-    UDP(const struct sockaddr_in* dest)
+    UDP(const struct sockaddr_in* dest = NULL)
         : Datagram(IPPROTO_UDP)
         , UDPSender(dest)
         , UDPReceiver()
@@ -419,7 +448,7 @@ class UDPBounded
 {
 public:
 
-    UDPBounded(const struct sockaddr_in* dest)
+    UDPBounded(const struct sockaddr_in* dest = NULL)
         : _dest(dest)
         , _current(_sockets.end())
         , _monitor(5, this)
@@ -437,7 +466,7 @@ public:
     virtual ~UDPBounded()
     {
         (void) _monitor.cancel();
-        (void) _monitor.join(); // TODO: timeout!
+        (void) _monitor.join(); // TODO: timeout
 
         UpgradableRWLock::ReaderWriterGuard wrguard(_lock, true);
 
@@ -698,30 +727,34 @@ public:
         return wait_for_any_output_locked(rwguard, timeout);
     }
 
-    ssize_t send(const void* buf, size_t len, int flags,
+    ssize_t send(const void* buffer, size_t buflen, int flags,
+                 struct timeval* timeout = NULL,
                  const struct sockaddr_in* dest = NULL)
     {
         struct iovec iovec;
-        iovec.iov_base = const_cast<void*>(buf);
-        iovec.iov_len = len;
-        return sendv(&iovec, 1, flags, dest);
+        iovec.iov_base = const_cast<void*>(buffer);
+        iovec.iov_len = buflen;
+        return sendv(&iovec, 1, flags, timeout, dest);
     }
 
-    ssize_t sendv(struct iovec* iov, unsigned iovlen, int flags,
+    ssize_t sendv(struct iovec* iov, unsigned iovlen,
+                  int flags,
+                  struct timeval* timeout = NULL,
                   const struct sockaddr_in* dest = NULL)
     {
         UpgradableRWLock::ReaderWriterGuard rwguard(_lock);
-        return sendv_locked(rwguard, iov, iovlen, flags, dest);
+
+        return sendv_locked(rwguard, iov, iovlen, flags, timeout, dest);
     }
 
-    ssize_t recv(void* buffer, size_t len,
+    ssize_t recv(void* buffer, size_t buflen,
                  int flags,
                  struct timeval* timeout = NULL,
                  struct sockaddr_in* src = NULL)
     {
         struct iovec iov;
         iov.iov_base = buffer;
-        iov.iov_len = len;
+        iov.iov_len = buflen;
         return recvv(&iov, 1, flags, timeout, src);
     }
 
@@ -729,6 +762,32 @@ public:
                           int flags,
                           struct timeval* timeout = NULL,
                           struct sockaddr_in* src = NULL);
+
+    // "match" Socket interface
+
+    ssize_t read(void* buffer, size_t buflen,
+                 struct timeval* timeout = NULL)
+    {
+        return recv(buffer, buflen, 0, timeout);
+    }
+
+    ssize_t readv(struct iovec* iov, unsigned iovcnt,
+                  struct timeval* timeout = NULL)
+    {
+        return recvv(iov, iovcnt, 0, timeout);
+    }
+
+    ssize_t write(const void* buffer, size_t buflen,
+                  struct timeval* timeout = NULL)
+    {
+        return send(buffer, buflen, 0, timeout);
+    }
+
+    ssize_t writev(struct iovec* iov, unsigned iovlen,
+                   struct timeval* timeout = NULL)
+    {
+        return sendv(iov, iovlen, 0, timeout);
+    }
 
 protected:
 
@@ -794,6 +853,7 @@ protected:
     ssize_t sendv_locked(UpgradableRWLock::ReaderWriterGuard& rwguard,
                          struct iovec* iov, unsigned iovlen,
                          int flags,
+                         struct timeval* timeout = NULL,
                          const struct sockaddr_in* dest = NULL);
 
     void next_locked(UpgradableRWLock::ReaderWriterGuard& rwguard,
@@ -894,12 +954,11 @@ private:
     }
 
 #ifdef LOGGER_OSTREAM
-    std::ostream& active_interfaces(std::ostream& out)
+    std::ostream& active_interfaces(UpgradableRWLock::ReaderWriterGuard& rwguard,
+                                    std::ostream& out)
     {
         if (! out)
             return out;
-
-        // _lock must be help in read mode
 
         out << "Active interface(s):";
         for (std::list<UDP*>::const_iterator it = _sockets.begin();

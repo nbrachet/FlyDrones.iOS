@@ -340,6 +340,8 @@ public:
 
     void backtrace(int lvl, unsigned skip = 1) const
     {
+        // FIXME: output isn't "synchronized" and can therefore be intertwined
+
 #ifndef NDEBUG
 
         void* buffer[25];
@@ -598,7 +600,6 @@ private:
             if (pptr() > pbase())
             {
                 std::string s = str();
-                // TODO: deal with \n anywhere in the string
                 if (*(s.rbegin()) == '\n')
                     s.resize(s.size() - 1);
                 _impl->log(_level, "%s", s.c_str());
@@ -673,6 +674,7 @@ public:
 
     FileLoggerImpl()
         : _stream(NULL)
+        , _has_colors(false)
         , _sigmask(NULL)
     {
 #ifdef __APPLE__
@@ -680,8 +682,8 @@ public:
         register_printf_domain_function(_printf_domain, 'B', printf_size, printf_size_info, NULL);
         register_printf_domain_function(_printf_domain, 'b', printf_size, printf_size_info, NULL);
 #else
-        register_printf_function('B', printf_size, printf_size_info); // %B -> k, m, g. Powers of 1000
-        register_printf_function('b', printf_size, printf_size_info); // %b -> K, M, G. Powers of 1024
+        register_printf_function('B', printf_size, printf_size_info); // %B -> K, M, G. Powers of 1000
+        register_printf_function('b', printf_size, printf_size_info); // %b -> k, m, g. Powers of 1024
 #endif
     }
 
@@ -1168,12 +1170,12 @@ LOGGER_CONVINIENCE(debug,     DEBUG)
 
 ///////////////////////////////////////////////////////////////////////
 //
-// MagnitudeBinary -- prints number followed by 'K, 'M', 'G', ... (powers of 1024)
-// MagnitudeDecimal -- prints number followed by 'k', 'm', 'g', ... (powers of 1000)
+// MagnitudeBinary -- prints number followed by 'k', 'm', 'g', ... (powers of 1024)
+// MagnitudeDecimal -- prints number followed by 'K', 'M', 'G', ... (powers of 1000)
 //
 // Examples:
 //  1- LOGGER_ODEBUG(cdbg) << MagnitudeBinary(osent) << "iB" << std::flush;
-//     prints "100KiB"
+//     prints "100kiB"
 //  2- LOGGER_ODEBUG(cdbg) << MagnitudeDecimal(osent) << "B" << std::flush;
 //     prints "102KB"
 
@@ -1196,6 +1198,19 @@ public:
         {
             x /= DIVISOR;
             ++tag;
+        }
+
+        if (out.precision() > 0)
+        {
+            double modulor = DIVISOR / pow(10, out.precision());
+            if (tag[1] != '\0'
+                && x > modulor
+                && fmod(x, modulor) == 0)
+            {
+                // prefer 0.75M to 750.00K
+                x /= DIVISOR;
+                ++tag;
+            }
         }
 
         out << x;
