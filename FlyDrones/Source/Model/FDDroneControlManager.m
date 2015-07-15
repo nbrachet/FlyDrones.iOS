@@ -19,7 +19,7 @@ NSString * const FDDroneControlManagerDidHandleVFRInfoNotification = @"didHandle
 NSString * const FDDroneControlManagerDidHandleLocationCoordinateNotification = @"didHandleLocationCoordinate";
 NSString * const FDDroneControlManagerDidHandleSystemInfoNotification = @"didHandleSystemInfo";
 
-CGFloat static const FDDroneControlManagerMavLinkDefaultSystemId = 1;
+CGFloat static const FDDroneControlManagerMavLinkDefaultSystemId = 252;
 CGFloat static const FDDroneControlManagerMavLinkDefaultComponentId = 0;
 CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 
@@ -111,6 +111,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 
 - (void)handleMessage:(mavlink_message_t *)message {
     FDDroneStatus *droneStatus = [FDDroneStatus currentStatus];
+    NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
     switch (message->msgid) {
         case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT: {
             mavlink_nav_controller_output_t navControllerOutput;
