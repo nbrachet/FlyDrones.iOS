@@ -125,7 +125,7 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 1;
     if (videoCodecContext) {
         av_free(videoCodecContext->extradata);
         avcodec_close(videoCodecContext);
-        avcodec_free_context(&videoCodecContext);
+        av_free(videoCodecContext);
         videoCodecContext = NULL;
     }
     
