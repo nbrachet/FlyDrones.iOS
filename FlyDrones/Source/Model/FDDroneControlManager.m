@@ -111,7 +111,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 
 - (void)handleMessage:(mavlink_message_t *)message {
     FDDroneStatus *droneStatus = [FDDroneStatus currentStatus];
-    NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
+//    NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
     switch (message->msgid) {
         case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT: {
             mavlink_nav_controller_output_t navControllerOutput;
