@@ -56,7 +56,7 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 
 @property (nonatomic, assign, getter=isArm) BOOL arm;
 
-@property (nonatomic, strong) MBProgressHUD *currentProgressHUD;
+@property (nonatomic, weak) MBProgressHUD *currentProgressHUD;
 
 @end
 
@@ -370,6 +370,7 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 - (void)hideProgressHUDWithTag:(NSUInteger)tag {
     if (self.currentProgressHUD.tag == tag) {
         [self.currentProgressHUD hide:NO];
+        self.currentProgressHUD = nil;
     }
 }
 
