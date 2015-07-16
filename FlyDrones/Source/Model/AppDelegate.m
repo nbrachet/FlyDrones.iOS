@@ -18,7 +18,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [self setupParse];
+    [self setupParseWithOptions:launchOptions];
     
     return YES;
 }
@@ -47,9 +47,12 @@
 
 #pragma mark - Parse
 
-- (void)setupParse {
+- (void)setupParseWithOptions:(NSDictionary *)launchOptions {
     [ParseCrashReporting enable];
     [Parse setApplicationId:ParseApplicationID clientKey:ParseClientKey];
+    [Parse setLogLevel:PFLogLevelDebug];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    NSLog(@"ParseCrashReporting: %@", [ParseCrashReporting isCrashReportingEnabled] ? @"enabled" : @"disabled");
 }
 
 @end
