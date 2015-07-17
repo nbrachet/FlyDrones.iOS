@@ -78,7 +78,7 @@
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate];
     CLLocation *prevLocation = [[CLLocation alloc] initWithCoordinate:self.prevRegionLocationCoordinate];
     CLLocationDistance distance = [location distanceFromLocation:prevLocation];
-    if (distance > 100) {
+    if (distance > 10) {
         MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(locationCoordinate, 160, 160);
         [self.mapView setRegion:region animated:NO];
         self.prevRegionLocationCoordinate = locationCoordinate;
