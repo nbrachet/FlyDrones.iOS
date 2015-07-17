@@ -83,13 +83,18 @@
         [self.mapView setRegion:region animated:NO];
         self.prevRegionLocationCoordinate = locationCoordinate;
     }
+    self.satelliteInfoLabel.text = [NSString stringWithFormat:@"Satellites:%lu HDOP:%0.1f", (unsigned long)gpsInfo.satelliteCount, gpsInfo.hdop];;
+    
     if (distance > 1) {
         [self.mapView removeAnnotations:self.mapView.annotations];
-        MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
-        annotation.coordinate = locationCoordinate;
-        [self.mapView addAnnotation:annotation];
+        if (gpsInfo.fixType != 1) {
+            MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+            annotation.coordinate = locationCoordinate;
+            [self.mapView addAnnotation:annotation];
+        } else {
+            self.satelliteInfoLabel.text = @"Satellites:N/A HDOP:N/A";
+        }
     }
-    self.satelliteInfoLabel.text = [NSString stringWithFormat:@"Satellites:%lu HDOP:%0.1f", (unsigned long)gpsInfo.satelliteCount, gpsInfo.hdop];;
 }
 
 #pragma mark - MKMapViewDelegate
