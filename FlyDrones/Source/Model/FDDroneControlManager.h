@@ -7,6 +7,7 @@
 //
 
 #import "FDDroneStatus.h"
+#import "mavlink.h"
 
 extern NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification;
 extern NSString * const FDDroneControlManagerDidHandleScaledPressureInfoNotification;
@@ -53,5 +54,6 @@ extern NSString * const FDDroneControlManagerDidHandleSystemInfoNotification;
 - (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps resolution:(CGFloat)resolution bitrate:(CGFloat)bitrate;
 - (NSData *)messageDataForCaptureDisableCommand;
 - (NSData *)messageDataForParamRequestList;
+- (NSData *)messageDataForRequestDataStream:(enum MAV_DATA_STREAM)stream start:(BOOL)start;
 
 @end

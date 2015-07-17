@@ -389,6 +389,17 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     [self.presentedViewController dismissViewControllerAnimated:animated completion:nil];
 }
 
+- (void)requestDataStreams {
+    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_ALL start:NO]];
+    
+    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_RAW_SENSORS start:YES]];
+    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_RC_CHANNELS start:YES]];
+    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_RAW_CONTROLLER start:YES]];
+    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_EXTENDED_STATUS start:YES]];
+    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_EXTRA2 start:YES]];
+    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_EXTRA3 start:YES]];
+}
+
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -446,6 +457,7 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     if (firstHeartbeatMessage && !(mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED)) {
         firstHeartbeatMessage = NO;
         [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForParamRequestList]];
+        [self performSelector:@selector(requestDataStreams) withObject:nil afterDelay:3.0f];
     }
     
     NSMutableString *sysStatusString = [NSMutableString string];
@@ -515,7 +527,7 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleErrorMessage:(NSString *)errorText {
     if (self.currentProgressHUD.tag != FDDashboardViewControllerHUDTagWaitingHeartbeat) {
         [self showProgressHUDWithTag:FDDashboardViewControllerHUDTagWarning labelText:errorText detailLabelText:nil activityIndicator:NO];
-        [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagWarning afterDelay:1.0];
+        [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagWarning afterDelay:3.0];
     }
 }
 

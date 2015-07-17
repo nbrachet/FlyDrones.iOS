@@ -1351,6 +1351,7 @@
 				TargetAttributes = {
 					1B2807511B2B465A0040A4B9 = {
 						CreatedOnToolsVersion = 6.3.2;
+						DevelopmentTeam = PVDZWY67J6;
 					};
 				};
 			};
@@ -1615,7 +1616,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
+				PROVISIONING_PROFILE = "1369a741-ef21-40b7-bd76-5a6b4e6f5319";
 			};
 			name = Debug;
 		};
@@ -1655,7 +1656,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
+				PROVISIONING_PROFILE = "1369a741-ef21-40b7-bd76-5a6b4e6f5319";
 			};
 			name = Release;
 		};

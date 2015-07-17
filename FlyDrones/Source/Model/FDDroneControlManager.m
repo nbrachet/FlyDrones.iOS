@@ -10,7 +10,6 @@
 #import "FDFileReader.h"
 #import "NSString+MAVLink.h"
 #import "NSData+MAVLink.h"
-#import "mavlink.h"
 #import "pixhawk.h"
 
 NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification = @"didHandleBatteryStatusNotification";
@@ -111,7 +110,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 
 - (void)handleMessage:(mavlink_message_t *)message {
     FDDroneStatus *droneStatus = [FDDroneStatus currentStatus];
-//    NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
+    NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
     switch (message->msgid) {
         case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT: {
             mavlink_nav_controller_output_t navControllerOutput;
@@ -212,6 +211,8 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         }
             
         case MAVLINK_MSG_ID_VFR_HUD: {
+            NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
+
             mavlink_vfr_hud_t  vfrHudPkt;
             mavlink_msg_vfr_hud_decode(message, &vfrHudPkt);
             
@@ -256,7 +257,6 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         }
             
         case MAVLINK_MSG_ID_HEARTBEAT: {
-//            NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
             mavlink_heartbeat_t heartbeat;
             mavlink_msg_heartbeat_decode(message, &heartbeat);
             
@@ -280,6 +280,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
             });
             break;
         }
+            
         case MAVLINK_MSG_ID_PARAM_VALUE: {
             mavlink_param_value_t paramValue;
             mavlink_msg_param_value_decode(message, &paramValue);
@@ -295,6 +296,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
             [droneStatus.paramValues setObject:[NSNumber numberWithFloat:param_value] forKey:paramIdString];
             break;
         }
+            
         case MAVLINK_MSG_ID_STATUSTEXT: {
             mavlink_statustext_t statusText;
             mavlink_msg_statustext_decode(message, &statusText);
@@ -486,6 +488,19 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                                         &message,
                                         FDDroneControlManagerMavLinkDefaultTargetSystem,
                                         MAV_COMP_ID_ALL);
+    return [NSData dataWithMAVLinkMessage:&message];
+}
+
+- (NSData *)messageDataForRequestDataStream:(enum MAV_DATA_STREAM)stream start:(BOOL)start {
+    mavlink_message_t message;
+    mavlink_msg_request_data_stream_pack(FDDroneControlManagerMavLinkDefaultSystemId,
+                                         FDDroneControlManagerMavLinkDefaultComponentId,
+                                         &message,
+                                         FDDroneControlManagerMavLinkDefaultTargetSystem,
+                                         0,
+                                         stream,
+                                         3,         //requested interval
+                                         (int)start);
     return [NSData dataWithMAVLinkMessage:&message];
 }
 
