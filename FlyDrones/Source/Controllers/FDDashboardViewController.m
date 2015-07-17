@@ -53,6 +53,7 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) CFTimeInterval lastReceivedHeartbeatMessageTimeInterval;
+@property (nonatomic, assign) CFTimeInterval lastConnectionTimeInterval;
 
 @property (nonatomic, assign, getter=isArm) BOOL arm;
 
@@ -82,6 +83,8 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
                                                                  multiplier:movieSize.width/movieSize.height
                                                                    constant:0.0f];
     [self.movieBackgroundView addConstraint:constraint];
+    
+    self.lastConnectionTimeInterval = CACurrentMediaTime();
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -270,7 +273,10 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     
     if (![self.connectionManager isConnectedToControlHost]) {
         self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
-        self.enabledControls = NO;
+        CFTimeInterval disconnectedTimeInterval = CACurrentMediaTime() - self.lastConnectionTimeInterval;
+        if (disconnectedTimeInterval >= 2.0f) {
+            self.enabledControls = NO;
+        }
         [self showProgressHUDWithTag:FDDashboardViewControllerHUDTagConnectingToTCPServer
                            labelText:NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server")
                      detailLabelText:nil
@@ -318,6 +324,8 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
         }
         return;
     }
+
+    self.lastConnectionTimeInterval = CACurrentMediaTime();
     
     if (tickCounter % 10 == 0) {
         [self.connectionManager sendDataToControlServer:[self.droneControlManager heartbeatData]];
@@ -329,7 +337,9 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
                            labelText:NSLocalizedString(@"Waiting heartbeat message", @"Waiting heartbeat message")
                      detailLabelText:[NSString stringWithFormat:@"%.1f sec", delayHeartbeatMessageTimeInterval]
                    activityIndicator:YES];
-        self.enabledControls = NO;
+        if (delayHeartbeatMessageTimeInterval > 3.0f) {
+            self.enabledControls = NO;
+        }
         return;
     }
     
