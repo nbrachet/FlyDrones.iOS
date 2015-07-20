@@ -7,7 +7,6 @@
 //
 
 #import "FDDroneStatus.h"
-#import "mavlink.h"
 
 extern NSString * const FDDroneControlManagerDidHandleBatteryStatusNotification;
 extern NSString * const FDDroneControlManagerDidHandleScaledPressureInfoNotification;
@@ -30,7 +29,7 @@ extern NSString * const FDDroneControlManagerDidHandleSystemInfoNotification;
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleAttitudeRoll:(CGFloat)roll pitch:(CGFloat)pitch yaw:(CGFloat)yaw rollspeed:(CGFloat)rollspeed pitchspeed:(CGFloat)pitchspeed yawspeed:(CGFloat)yawspeed;
 
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleNavigationInfo:(CGFloat)navigationBearing;
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleNavigationInfo:(CGFloat)navigationBearing altitudeError:(CGFloat)altitudeError;
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleScaledPressureInfo:(CGFloat)temperature absolutePressure:(CGFloat)absolutePressure differentialPressure:(CGFloat)differentialPressure;
 

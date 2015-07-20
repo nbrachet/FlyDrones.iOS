@@ -20,7 +20,7 @@
 #import "FDJoystickView.h"
 #import "FDCustomModeViewController.h"
 #import "FDEnableArmedViewController.h"
-#import "mavlink.h"
+#import "FDVerticalScaleView.h"
 
 typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     FDDashboardViewControllerHUDTagWaitingHeartbeat = 8410,
@@ -41,6 +41,8 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 @property (nonatomic, weak) IBOutlet UIView *movieBackgroundView;
 
 @property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
+
+@property (nonatomic, weak) IBOutlet FDVerticalScaleView *altitudeVerticalScaleView;
 
 @property (nonatomic, weak) IBOutlet FDJoystickView *leftJoystickView;
 @property (nonatomic, weak) IBOutlet FDJoystickView *rightJoystickView;
@@ -69,9 +71,13 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     [super viewDidLoad];
     
     [self customSetup];
-    self.enabledControls = YES;
+    
     self.leftJoystickView.mode = FDJoystickViewModeSavedVerticalPosition;
     self.leftJoystickView.isSingleActiveAxis = YES;
+    
+    self.altitudeVerticalScaleView.title = @"m";
+    self.altitudeVerticalScaleView.scale = 10;
+    self.altitudeVerticalScaleView.value = 0;
     
     //Correct size of video
     CGSize movieSize = [FDDroneStatus currentStatus].videoSize;
@@ -83,6 +89,8 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
                                                                  multiplier:movieSize.width/movieSize.height
                                                                    constant:0.0f];
     [self.movieBackgroundView addConstraint:constraint];
+    
+    self.enabledControls = YES;
     
     self.lastConnectionTimeInterval = CACurrentMediaTime();
 }
@@ -161,6 +169,7 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     self.batteryButton.enabled = enabledControls;
     self.systemStatusButton.enabled = enabledControls;
     self.compassView.enabled = enabledControls;
+    self.altitudeVerticalScaleView.enabled = enabledControls;
     self.armedStatusButton.enabled = enabledControls;
     self.worldwideLocationButton.enabled = enabledControls && CLLocationCoordinate2DIsValid([FDDroneStatus currentStatus].gpsInfo.locationCoordinate);
     
@@ -456,10 +465,12 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading altitude:(CGFloat)altitude airspeed:(CGFloat)airspeed groundspeed:(CGFloat)groundspeed climbRate:(CGFloat)climbRate throttleSetting:(CGFloat)throttleSetting {
     self.compassView.heading = heading;
+    self.altitudeVerticalScaleView.value = altitude;
 }
 
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleNavigationInfo:(CGFloat)navigationBearing {
+- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleNavigationInfo:(CGFloat)navigationBearing altitudeError:(CGFloat)altitudeError {
     self.compassView.navigationBearing = navigationBearing;
+    self.altitudeVerticalScaleView.targetDelta = altitudeError;
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleHeartbeatInfo:(uint32_t)mavCustomMode mavType:(uint8_t)mavType mavAutopilotType:(uint8_t)mavAutopilotType mavBaseMode:(uint8_t)mavBaseMode mavSystemStatus:(uint8_t)mavSystemStatus {

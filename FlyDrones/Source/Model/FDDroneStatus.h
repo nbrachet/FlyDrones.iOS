@@ -52,6 +52,7 @@ typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
 @property (nonatomic, assign) NSInteger throttleSetting;
 
 @property (nonatomic, assign) CGFloat navigationBearing;
+@property (nonatomic, assign) CGFloat altitudeError;
 @property (nonatomic, strong) FDGPSInfo *gpsInfo;
 @property (nonatomic, assign) CGFloat temperature;
 @property (nonatomic, assign) CGFloat absolutePressure;

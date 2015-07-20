@@ -7,7 +7,6 @@
 //
 
 #import "NSString+MAVLink.h"
-#import "mavlink.h"
 
 static const mavlink_message_info_t message_info[256] = MAVLINK_MESSAGE_INFO;
 

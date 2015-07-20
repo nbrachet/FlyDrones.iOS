@@ -110,16 +110,19 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 
 - (void)handleMessage:(mavlink_message_t *)message {
     FDDroneStatus *droneStatus = [FDDroneStatus currentStatus];
-    NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
+//    NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
     switch (message->msgid) {
         case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT: {
             mavlink_nav_controller_output_t navControllerOutput;
             mavlink_msg_nav_controller_output_decode(message, &navControllerOutput);
             droneStatus.navigationBearing = navControllerOutput.nav_bearing;
+            droneStatus.altitudeError = navControllerOutput.alt_error;
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleNavigationInfo:)]) {
-                    [self.delegate droneControlManager:self didHandleNavigationInfo:droneStatus.navigationBearing];
+                if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleNavigationInfo: altitudeError:)]) {
+                    [self.delegate droneControlManager:self
+                               didHandleNavigationInfo:droneStatus.navigationBearing
+                                         altitudeError:droneStatus.altitudeError];
                 }
             });
             break;
@@ -211,7 +214,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         }
             
         case MAVLINK_MSG_ID_VFR_HUD: {
-            NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
+//            NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
 
             mavlink_vfr_hud_t  vfrHudPkt;
             mavlink_msg_vfr_hud_decode(message, &vfrHudPkt);

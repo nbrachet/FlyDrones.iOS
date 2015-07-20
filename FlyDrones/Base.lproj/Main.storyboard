@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Dsn-5U-Zsb">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -735,13 +734,47 @@
                                     <outlet property="touchImageViewCenterYLayoutConstraint" destination="BE5-XO-wz9" id="FuI-Nb-0qG"/>
                                 </connections>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zkl-Bm-4wD" userLabel="Altitude Vertical Scale View" customClass="FDVerticalScaleView">
+                                <rect key="frame" x="0.0" y="64" width="64" height="400"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6bR-b4-O14">
+                                        <rect key="frame" x="0.0" y="0.0" width="64" height="400"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="64" id="1bw-mX-hQ4"/>
+                                    <constraint firstItem="6bR-b4-O14" firstAttribute="leading" secondItem="Zkl-Bm-4wD" secondAttribute="leading" id="9Gq-ii-Xlr"/>
+                                    <constraint firstAttribute="height" constant="400" id="WvA-9M-ZKN"/>
+                                    <constraint firstAttribute="bottom" secondItem="6bR-b4-O14" secondAttribute="bottom" id="XSI-ai-vCr"/>
+                                    <constraint firstAttribute="trailing" secondItem="6bR-b4-O14" secondAttribute="trailing" id="k4x-ww-PeF"/>
+                                    <constraint firstItem="6bR-b4-O14" firstAttribute="top" secondItem="Zkl-Bm-4wD" secondAttribute="top" id="onQ-RI-F3W"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="labelStrokeColor">
+                                        <color key="value" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="0.82000000000000006" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="labelFillColor">
+                                        <color key="value" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="0.53000000000000003" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="imageView" destination="6bR-b4-O14" id="U9C-I6-sOa"/>
+                                </connections>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="qDH-KT-wm8" firstAttribute="top" secondItem="N6l-Yh-Btc" secondAttribute="bottom" constant="64" id="2HP-Bw-Lx3"/>
                             <constraint firstAttribute="centerY" secondItem="eOu-L3-XOm" secondAttribute="centerY" id="2o6-ib-Vui"/>
+                            <constraint firstItem="Zkl-Bm-4wD" firstAttribute="leading" secondItem="uB9-Yc-A79" secondAttribute="leading" id="4BR-U9-PlT"/>
                             <constraint firstAttribute="centerY" secondItem="eOu-L3-XOm" secondAttribute="centerY" id="4KT-eL-aB0"/>
                             <constraint firstItem="eOu-L3-XOm" firstAttribute="top" secondItem="VWN-Yu-ZJD" secondAttribute="bottom" id="8Se-KS-Fyj"/>
+                            <constraint firstItem="Zkl-Bm-4wD" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="bottom" id="9oK-Vg-y2C"/>
                             <constraint firstAttribute="centerX" secondItem="eOu-L3-XOm" secondAttribute="centerX" id="All-yg-cFw"/>
                             <constraint firstItem="Zom-z6-iIl" firstAttribute="leading" secondItem="uB9-Yc-A79" secondAttribute="leading" constant="24" id="EPP-t2-4iS"/>
                             <constraint firstAttribute="centerX" secondItem="eOu-L3-XOm" secondAttribute="centerX" id="Efe-6j-W7Z"/>
@@ -788,6 +821,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="1024" height="768"/>
                     <connections>
+                        <outlet property="altitudeVerticalScaleView" destination="Zkl-Bm-4wD" id="Fg6-gs-Xe6"/>
                         <outlet property="armedStatusButton" destination="UEP-Nr-RNK" id="vTN-4e-GsM"/>
                         <outlet property="batteryButton" destination="n4B-o3-BAE" id="Nzh-75-pZf"/>
                         <outlet property="compassView" destination="3fa-i6-kmk" id="kve-xH-TAC"/>

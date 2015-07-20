@@ -79,7 +79,7 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 1;
         [strongSelf parseData:data];
     }];
     
-    NSLog(@"Tasks count:%lu", (unsigned long)self.operationQueue.operationCount);
+//    NSLog(@"Tasks count:%lu", (unsigned long)self.operationQueue.operationCount);
 }
 
 - (void)stopDecode {
