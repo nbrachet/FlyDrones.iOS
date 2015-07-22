@@ -1,13 +1,11 @@
-e#!/bin/sh
+#!/bin/sh
 
-#Create by Sergey Galagan
-#Builds the ffmpeg libs with support x264 encoder for
-#the next architectures armv7, armv7s and arm64
-#After successful building combines libs into one universal lib
-#
+#Builds the ffmpeg libs with support x264 encoder
+#As a basis is taken the script developed by Changbeom Ahn
+#https://github.com/kewlbear/FFmpeg-iOS-build-script/blob/master/build-ffmpeg.sh
 
 # directories
-SOURCE="ffmpeg-2.7.1"
+SOURCE="ffmpeg-2.7.2"
 OUTPUT="ffmpeg"
 
 TEMP_DIR="temp"
