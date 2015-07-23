@@ -14,6 +14,7 @@
 @property (nonatomic, copy) IBInspectable UIColor *textColor;
 @property (nonatomic, copy) IBInspectable UIColor *labelStrokeColor;
 @property (nonatomic, copy) IBInspectable UIColor *labelFillColor;
+@property (nonatomic, copy) IBInspectable UIColor *targetDeltaChevronColor;
 @property (nonatomic, copy) IBInspectable NSString *title;
 @property (nonatomic, assign) IBInspectable NSInteger scale;
 @property (nonatomic, assign) IBInspectable CGFloat value;

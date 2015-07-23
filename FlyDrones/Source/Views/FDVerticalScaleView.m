@@ -13,8 +13,6 @@
 #pragma mark - Custom Accessors
 
 - (void)setValue:(CGFloat)value {
-    NSLog(@"Altitude:%f", value);
-    
     if (_value == value) {
         return;
     }
@@ -38,33 +36,8 @@
 
 #pragma mark - Overridden methods
 
-- (UIImage *)backgroundImageWithSize:(CGSize)size {
-    const CGRect bounds = CGRectMake(0.0f, 0.0f, size.width, size.height);
-    const float horizontalInsetPercent = 0.0f;
-    const float verticalInsetPercent = 0.0f;
-    
-    const float w = (1.00 - 2 * horizontalInsetPercent) * size.width;
-    const float h = (1.00 - 2 * verticalInsetPercent) * size.height;
-    const float oneScaleY = h/_scale;
-    
-    const CGPoint c = CGPointMake(CGRectGetMidX(bounds) , CGRectGetMidY(bounds));
-    
-    const float tickMajorWidth = w/4;
-    const float tickMinorWidth = w/6;
-    const float tickHeight = roundf(0.005 * h);
-    const float tickBase = c.x - w/2 + tickHeight/2;
-    const float CHEV_SIDE = 0.018 * h;
-    const float fontSizeSmall = 0.28 * w;
-    const float fontSizeLarge = 1.16 * fontSizeSmall;
-    
-    UIGraphicsBeginImageContext(size);
-    
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    //Fill Background
-    CGContextClearRect(context, bounds);
-    CGContextSetFillColorWithColor(context, [self.backgroundColor CGColor]);
-    CGContextFillRect(context, bounds);
+- (void)defaultInitialization {
+    [super defaultInitialization];
     
     if (self.textColor == nil) {
         self.textColor = [UIColor whiteColor];
@@ -73,11 +46,43 @@
     if (self.labelFillColor == nil) {
         self.labelFillColor = [UIColor lightGrayColor];
     }
-
+    
     if (self.labelStrokeColor == nil) {
         self.labelStrokeColor = [UIColor darkGrayColor];
     }
     
+    if (self.targetDeltaChevronColor == nil) {
+        self.targetDeltaChevronColor = [UIColor orangeColor];
+    }
+}
+
+- (UIImage *)backgroundImageWithSize:(CGSize)size {
+    const CGRect bounds = CGRectMake(0.0f, 0.0f, size.width, size.height);
+    const float horizontalInsetPercent = 0.0f;
+    const float verticalInsetPercent = 0.0f;
+    
+    const float w = (1.0f - 2 * horizontalInsetPercent) * size.width;
+    const float h = (1.0f - 2 * verticalInsetPercent) * size.height;
+    const float oneScaleY = h/_scale;
+    
+    const CGPoint c = CGPointMake(CGRectGetMidX(bounds) , CGRectGetMidY(bounds));
+    
+    const float tickMajorWidth = w/4;
+    const float tickMinorWidth = w/6;
+    const float tickHeight = roundf(0.005 * h);
+    const float tickBase = c.x - w/2 + tickHeight/2;
+    const float targetChevronSide = 0.018 * h;
+    const float fontSizeSmall = 0.28 * w;
+    const float fontSizeLarge = 1.16 * fontSizeSmall;
+    
+    UIGraphicsBeginImageContext(size);
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    //Fill Background
+    CGContextClearRect(context, bounds);
+    CGContextSetFillColorWithColor(context, [self.backgroundColor CGColor]);
+    CGContextFillRect(context, bounds);
+
     NSDictionary *smallTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSizeSmall],
                                           NSForegroundColorAttributeName: self.textColor};
     NSDictionary *largeTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSizeLarge],
@@ -133,7 +138,6 @@
     CGContextAddRect(context, CGRectMake(c.x-w/2, c.y-fontSizeLarge / 2, w, fontSizeLarge));
     CGContextDrawPath(context, kCGPathFillStroke);
 
-    
     NSString *valueString;
     if (self.value >= 30) {
         valueString = [NSString stringWithFormat:@"%ld%@", (long)self.value, self.title];
@@ -147,18 +151,22 @@
                                                    c.y - labelAttributedStringSize.height / 2.0f - tickHeight / 2.0f)];
     
     // Draw target chevron
-    if (self.showTargetDelta) {
-        float chevY = c.y - self.targetDelta * oneScaleY;
-        if (chevY > c.y + h/2) chevY = c.y + h/2;
-        if (chevY < c.y - h/2) chevY = c.y - h/2;
+    if (self.showTargetDelta && (self.targetDeltaChevronColor != nil)) {
+        float targetChevronY = c.y - self.targetDelta * oneScaleY;
+        if (targetChevronY > c.y + h/2) {
+            targetChevronY = c.y + h/2;
+        }
+        if (targetChevronY < c.y - h/2) {
+            targetChevronY = c.y - h/2;
+        }
         CGContextBeginPath(context);
-        CGContextMoveToPoint(context,    c.x+w/2-CHEV_SIDE,     chevY);
-        CGContextAddLineToPoint(context, c.x+w/2,               chevY+CHEV_SIDE);
-        CGContextAddLineToPoint(context, c.x+w/2,               chevY-CHEV_SIDE);
-        CGContextAddLineToPoint(context, c.x+w/2-CHEV_SIDE,     chevY);
+        CGContextMoveToPoint(context, c.x + w/2 - targetChevronSide, targetChevronY);
+        CGContextAddLineToPoint(context, c.x + w/2, targetChevronY + targetChevronSide);
+        CGContextAddLineToPoint(context, c.x + w/2, targetChevronY - targetChevronSide);
+        CGContextAddLineToPoint(context, c.x + w/2 - targetChevronSide, targetChevronY);
         CGContextSetLineWidth(context, tickHeight/3);
-        CGContextSetRGBFillColor(context, 1, 0, 0, 1);
-        CGContextSetRGBStrokeColor(context, 1, 0, 0, 1);
+        CGContextSetFillColorWithColor(context, [self.targetDeltaChevronColor CGColor]);
+        CGContextSetStrokeColorWithColor(context, [self.targetDeltaChevronColor CGColor]);
         CGContextDrawPath(context, kCGPathFillStroke);
     }
     

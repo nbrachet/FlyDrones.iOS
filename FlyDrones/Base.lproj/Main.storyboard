@@ -519,7 +519,7 @@
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="color" keyPath="bearingChevronColor">
-                                                <color key="value" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="value" red="1" green="0.4617530156187265" blue="0.0018299291680253793" alpha="1" colorSpace="calibratedRGB"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="color" keyPath="centerPointerColor">
                                                 <color key="value" red="0.1176470588" green="0.27450980390000002" blue="0.82352941180000006" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
@@ -767,12 +767,15 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="scale">
                                         <integer key="value" value="10"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showTargetDelta" value="NO"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showTargetDelta" value="YES"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="value">
                                         <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="smoothBoundaries" value="YES"/>
                                     <userDefinedRuntimeAttribute type="image" keyPath="maskImage" value="VerticalGradient"/>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="targetDeltaChevronColor">
+                                        <color key="value" red="1" green="0.46175301559999998" blue="0.0018299291680000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="imageView" destination="6bR-b4-O14" id="U9C-I6-sOa"/>

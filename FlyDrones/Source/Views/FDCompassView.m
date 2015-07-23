@@ -37,6 +37,18 @@
 
 #pragma mark - Overridden methods
 
+- (void)defaultInitialization {
+    [super defaultInitialization];
+    
+    if (self.numbersColor == nil) {
+        self.numbersColor = [UIColor whiteColor];
+    }
+    
+    if (self.lettersColor == nil) {
+        self.lettersColor = [UIColor whiteColor];
+    }
+}
+
 - (UIImage *)backgroundImageWithSize:(CGSize)size {
     const float oneDegX = 1.0f / 75 * size.width;
     CGPoint centerPoint = CGPointMake(size.width / 2.0f, size.height / 2.0f);
@@ -50,21 +62,12 @@
     
     UIGraphicsBeginImageContext(size);
 
-    
     CGContextRef context = UIGraphicsGetCurrentContext();
     //Fill Background
     CGContextClearRect(context, CGRectMake(0.0f, 0.0f, size.width, size.height));
     CGContextSetFillColorWithColor(context, [self.backgroundColor CGColor]);
     CGContextFillRect(context, CGRectMake(0.0f, 0.0f, size.width, size.height));
-    
-    if (self.numbersColor == nil) {
-        self.numbersColor = [UIColor blackColor];
-    }
-    
-    if (self.lettersColor == nil) {
-        self.lettersColor = [UIColor blackColor];
-    }
-    
+
     NSDictionary *numbersTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSize - 3],
                                             NSForegroundColorAttributeName: self.numbersColor};
     NSDictionary *lettersTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSize],

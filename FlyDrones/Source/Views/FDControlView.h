@@ -15,6 +15,7 @@
 @property (nonatomic, assign,  getter=isSmoothBoundaries) IBInspectable BOOL smoothBoundaries;
 @property (nonatomic, copy) IBInspectable UIImage *maskImage;
 
+- (void)defaultInitialization;
 - (UIImage *)backgroundImageWithSize:(CGSize)size;
 - (void)redraw;
 

@@ -37,6 +37,12 @@
     }
 }
 
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    [super willMoveToSuperview:newSuperview];
+    
+    [self defaultInitialization];
+}
+
 #pragma mark - Custom Accessors
 
 - (void)setEnabled:(BOOL)enabled {
@@ -56,6 +62,9 @@
 }
 
 #pragma mark - Public
+
+- (void)defaultInitialization {
+}
 
 - (UIImage *)backgroundImageWithSize:(CGSize)size {
     return nil;

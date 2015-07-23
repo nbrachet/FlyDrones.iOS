@@ -75,11 +75,6 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     self.leftJoystickView.mode = FDJoystickViewModeSavedVerticalPosition;
     self.leftJoystickView.isSingleActiveAxis = YES;
     
-    self.altitudeVerticalScaleView.title = @"m";
-    self.altitudeVerticalScaleView.scale = 10;
-    self.altitudeVerticalScaleView.value = 0;
-    self.altitudeVerticalScaleView.smoothBoundaries = YES;
-    
     //Correct size of video
     CGSize movieSize = [FDDroneStatus currentStatus].videoSize;
     NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.movieBackgroundView
