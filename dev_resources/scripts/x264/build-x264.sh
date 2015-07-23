@@ -1,5 +1,9 @@
 #!/bin/sh
 
+#Builds the x264 lib
+#As a basis is taken the script developed by Changbeom Ahn
+#https://github.com/kewlbear/x264-ios/blob/master/build-x264.sh
+
 # directories
 SOURCE="x264-snapshot-20141218-2245-stable"
 OUTPUT="x264"
