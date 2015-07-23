@@ -841,13 +841,13 @@
                         <outlet property="batteryButton" destination="n4B-o3-BAE" id="Nzh-75-pZf"/>
                         <outlet property="compassView" destination="3fa-i6-kmk" id="kve-xH-TAC"/>
                         <outlet property="leftJoystickView" destination="Zom-z6-iIl" id="gEH-Hr-LYA"/>
+                        <outlet property="mapButton" destination="CK1-fU-SXs" id="DKN-tb-Tv2"/>
                         <outlet property="menuButton" destination="i1i-UJ-dEo" id="Fn0-wu-jvB"/>
                         <outlet property="movieBackgroundView" destination="eOu-L3-XOm" id="4vT-8I-b0R"/>
                         <outlet property="movieGLView" destination="qeV-g8-0I1" id="5RM-A4-lpH"/>
                         <outlet property="rightJoystickView" destination="N6l-Yh-Btc" id="AKS-PB-7dw"/>
                         <outlet property="systemStatusButton" destination="YYR-sH-XM9" id="Twz-kI-HrA"/>
                         <outlet property="topPanelView" destination="c8e-mR-B3k" id="SV3-xR-QjI"/>
-                        <outlet property="worldwideLocationButton" destination="CK1-fU-SXs" id="8zH-uD-dNa"/>
                         <segue destination="iIS-7C-Pul" kind="popoverPresentation" identifier="ShowBatteryStatus" popoverAnchorView="n4B-o3-BAE" id="9Zx-kf-RhW">
                             <popoverArrowDirection key="popoverArrowDirection" down="YES"/>
                         </segue>

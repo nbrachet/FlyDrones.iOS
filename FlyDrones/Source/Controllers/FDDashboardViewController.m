@@ -21,6 +21,7 @@
 #import "FDCustomModeViewController.h"
 #import "FDEnableArmedViewController.h"
 #import "FDVerticalScaleView.h"
+#import "FDLocationInfoViewController.h"
 
 typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     FDDashboardViewControllerHUDTagWaitingHeartbeat = 8410,
@@ -36,7 +37,9 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 @property (nonatomic, weak) IBOutlet FDCompassView *compassView;
 @property (nonatomic, weak) IBOutlet UIButton *armedStatusButton;
 @property (nonatomic, weak) IBOutlet UIButton *systemStatusButton;
-@property (nonatomic, weak) IBOutlet UIButton *worldwideLocationButton;
+
+@property (nonatomic, weak) IBOutlet UIButton *mapButton;
+@property (nonatomic, assign, getter=isHideMapAfterConnectionRestored) BOOL hideMapAfterConnectionRestored;
 
 @property (nonatomic, weak) IBOutlet UIView *movieBackgroundView;
 
@@ -87,7 +90,8 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     [self.movieBackgroundView addConstraint:constraint];
     
     self.enabledControls = YES;
-    
+    self.mapButton.enabled = NO;
+
     self.lastConnectionTimeInterval = CACurrentMediaTime();
 }
 
@@ -167,7 +171,6 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     self.compassView.enabled = enabledControls;
     self.altitudeVerticalScaleView.enabled = enabledControls;
     self.armedStatusButton.enabled = enabledControls;
-    self.worldwideLocationButton.enabled = enabledControls && CLLocationCoordinate2DIsValid([FDDroneStatus currentStatus].gpsInfo.locationCoordinate);
     
     self.arm = [FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED;
 
@@ -175,7 +178,7 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     self.rightJoystickView.userInteractionEnabled = enabledControls;
     
     if (!enabledControls) {
-        [self dismissPresentedPopoverAnimated:YES];
+        [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:@[NSStringFromClass([FDLocationInfoViewController class])]];
         [self.leftJoystickView resetPosition];
         [self.rightJoystickView resetPosition];
     } else {
@@ -324,10 +327,19 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     tickCounter++;
     
     if (![self.connectionManager isConnectedToControlHost]) {
+        if (self.mapButton.enabled && ![self.presentedViewController isKindOfClass:[FDLocationInfoViewController class]]) {
+            [self dismissPresentedPopoverAnimated:NO ignoredControllersFromClassesNamed:nil];
+            [self performSegueWithIdentifier:@"ShowLocationInfo" sender:self.mapButton];
+            self.hideMapAfterConnectionRestored = YES;
+        }
         if ((tickCounter % 15 == 0)) {
             [self connectToServers];
         }
         return;
+    }
+    if (self.isHideMapAfterConnectionRestored) {
+        self.hideMapAfterConnectionRestored = NO;
+        [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:nil];
     }
 
     self.lastConnectionTimeInterval = CACurrentMediaTime();
@@ -400,8 +412,17 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     self.currentProgressHUD = nil;
 }
 
-- (void)dismissPresentedPopoverAnimated:(BOOL)animated {
-    [self.presentedViewController dismissViewControllerAnimated:animated completion:nil];
+- (void)dismissPresentedPopoverAnimated:(BOOL)animated ignoredControllersFromClassesNamed:(NSArray *)ignoredClassesNamed {
+    BOOL isNeedDismissController = YES;
+    for (NSString *className in ignoredClassesNamed) {
+        if ([self.presentedViewController isKindOfClass:NSClassFromString(className)]) {
+            isNeedDismissController = NO;
+            break;
+        }
+    }
+    if (isNeedDismissController) {
+        [self.presentedViewController dismissViewControllerAnimated:animated completion:nil];
+    }
 }
 
 - (void)requestDataStreams {
@@ -452,7 +473,7 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
-    self.worldwideLocationButton.enabled = self.isEnabledControls && CLLocationCoordinate2DIsValid(locationCoordinate);
+    self.mapButton.enabled = CLLocationCoordinate2DIsValid(locationCoordinate);
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleBatteryRemaining:(CGFloat)batteryRemaining current:(CGFloat)current voltage:(CGFloat)voltage {
@@ -553,14 +574,14 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 - (void)didSelectNewMode:(FDAutoPilotMode)mode {
     NSData *messageData = [self.droneControlManager messageDataWithNewCustomMode:mode];
     [self.connectionManager sendDataToControlServer:messageData];
-    [self dismissPresentedPopoverAnimated:YES];
+    [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:nil];
 }
 
 #pragma mark - FDEnableArmedViewController
 
 - (void)didEnableArmedStatus:(BOOL)armed {
     [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataWithArmedEnable:armed]];
-    [self dismissPresentedPopoverAnimated:YES];
+    [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:nil];
 }
 
 #pragma mark - UIPopoverPresentationControllerDelegate
@@ -576,7 +597,7 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 }
 
 - (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
-    [self dismissPresentedPopoverAnimated:NO];
+    [self dismissPresentedPopoverAnimated:NO ignoredControllersFromClassesNamed:nil];
     return NO;
 }
 
