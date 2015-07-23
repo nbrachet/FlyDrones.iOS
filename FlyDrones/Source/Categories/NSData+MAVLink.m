@@ -7,12 +7,11 @@
 //
 
 #import "NSData+MAVLink.h"
-#import "NSString+MAVLink.h"
 
 @implementation NSData (MAVLink)
 
 + (NSData *)dataWithMAVLinkMessage:(mavlink_message_t *)message {
-//    NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
+    NSLog(@"%@", [NSString stringWithMAVLinkMessage:message]);
     uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
     uint16_t bufferLength = mavlink_msg_to_send_buffer(buffer, message);
     if (!buffer || bufferLength == 0) {

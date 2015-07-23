@@ -42,9 +42,7 @@
 		1B2809321B2B46A40040A4B9 /* UIImage+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B28078D1B2B46A40040A4B9 /* UIImage+Utils.m */; };
 		1B2809331B2B46A40040A4B9 /* FDBatteryStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807901B2B46A40040A4B9 /* FDBatteryStatusViewController.m */; };
 		1B2809341B2B46A40040A4B9 /* FDConnectionSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807921B2B46A40040A4B9 /* FDConnectionSettingsViewController.m */; };
-		1B2809351B2B46A40040A4B9 /* FDCustomModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807941B2B46A40040A4B9 /* FDCustomModeViewController.m */; };
 		1B2809361B2B46A40040A4B9 /* FDDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807961B2B46A40040A4B9 /* FDDashboardViewController.m */; };
-		1B2809371B2B46A40040A4B9 /* FDEnableArmedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807981B2B46A40040A4B9 /* FDEnableArmedViewController.m */; };
 		1B2809381B2B46A40040A4B9 /* FDLeftSideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B28079A1B2B46A40040A4B9 /* FDLeftSideViewController.m */; };
 		1B2809391B2B46A40040A4B9 /* FDLocationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B28079C1B2B46A40040A4B9 /* FDLocationInfoViewController.m */; };
 		1B28093A1B2B46A40040A4B9 /* FDLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B28079E1B2B46A40040A4B9 /* FDLoginViewController.m */; };
@@ -66,6 +64,7 @@
 		1B2809541B2B46A40040A4B9 /* librtp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B2808481B2B46A40040A4B9 /* librtp.a */; };
 		1B2809551B2B46A50040A4B9 /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B28092A1B2B46A40040A4B9 /* libx264.a */; };
 		1B7B8A681B60E62300D6A9E2 /* FDControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B7B8A671B60E62300D6A9E2 /* FDControlView.m */; };
+		1B7B8A6B1B61212800D6A9E2 /* FDOptionsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B7B8A6A1B61212800D6A9E2 /* FDOptionsListViewController.m */; };
 		1BB4C22B1B2B4A3F00C42211 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BB4C22A1B2B4A3F00C42211 /* AVFoundation.framework */; };
 		1BB4C22D1B2B4A4A00C42211 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BB4C22C1B2B4A4A00C42211 /* libc++.dylib */; };
 		1BB4C22F1B2B4A5800C42211 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BB4C22E1B2B4A5800C42211 /* CoreGraphics.framework */; };
@@ -226,12 +225,8 @@
 		1B2807901B2B46A40040A4B9 /* FDBatteryStatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDBatteryStatusViewController.m; sourceTree = "<group>"; };
 		1B2807911B2B46A40040A4B9 /* FDConnectionSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDConnectionSettingsViewController.h; sourceTree = "<group>"; };
 		1B2807921B2B46A40040A4B9 /* FDConnectionSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConnectionSettingsViewController.m; sourceTree = "<group>"; };
-		1B2807931B2B46A40040A4B9 /* FDCustomModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCustomModeViewController.h; sourceTree = "<group>"; };
-		1B2807941B2B46A40040A4B9 /* FDCustomModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDCustomModeViewController.m; sourceTree = "<group>"; };
 		1B2807951B2B46A40040A4B9 /* FDDashboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDashboardViewController.h; sourceTree = "<group>"; };
 		1B2807961B2B46A40040A4B9 /* FDDashboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDashboardViewController.m; sourceTree = "<group>"; };
-		1B2807971B2B46A40040A4B9 /* FDEnableArmedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDEnableArmedViewController.h; sourceTree = "<group>"; };
-		1B2807981B2B46A40040A4B9 /* FDEnableArmedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDEnableArmedViewController.m; sourceTree = "<group>"; };
 		1B2807991B2B46A40040A4B9 /* FDLeftSideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDLeftSideViewController.h; sourceTree = "<group>"; };
 		1B28079A1B2B46A40040A4B9 /* FDLeftSideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDLeftSideViewController.m; sourceTree = "<group>"; };
 		1B28079B1B2B46A40040A4B9 /* FDLocationInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDLocationInfoViewController.h; sourceTree = "<group>"; };
@@ -507,6 +502,8 @@
 		1B28092A1B2B46A40040A4B9 /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libx264.a; sourceTree = "<group>"; };
 		1B7B8A661B60E62300D6A9E2 /* FDControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDControlView.h; sourceTree = "<group>"; };
 		1B7B8A671B60E62300D6A9E2 /* FDControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDControlView.m; sourceTree = "<group>"; };
+		1B7B8A691B61212800D6A9E2 /* FDOptionsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDOptionsListViewController.h; sourceTree = "<group>"; };
+		1B7B8A6A1B61212800D6A9E2 /* FDOptionsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDOptionsListViewController.m; sourceTree = "<group>"; };
 		1BB4C22A1B2B4A3F00C42211 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		1BB4C22C1B2B4A4A00C42211 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		1BB4C22E1B2B4A5800C42211 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -860,12 +857,8 @@
 				1B2807901B2B46A40040A4B9 /* FDBatteryStatusViewController.m */,
 				1B2807911B2B46A40040A4B9 /* FDConnectionSettingsViewController.h */,
 				1B2807921B2B46A40040A4B9 /* FDConnectionSettingsViewController.m */,
-				1B2807931B2B46A40040A4B9 /* FDCustomModeViewController.h */,
-				1B2807941B2B46A40040A4B9 /* FDCustomModeViewController.m */,
 				1B2807951B2B46A40040A4B9 /* FDDashboardViewController.h */,
 				1B2807961B2B46A40040A4B9 /* FDDashboardViewController.m */,
-				1B2807971B2B46A40040A4B9 /* FDEnableArmedViewController.h */,
-				1B2807981B2B46A40040A4B9 /* FDEnableArmedViewController.m */,
 				1B2807991B2B46A40040A4B9 /* FDLeftSideViewController.h */,
 				1B28079A1B2B46A40040A4B9 /* FDLeftSideViewController.m */,
 				1B28079B1B2B46A40040A4B9 /* FDLocationInfoViewController.h */,
@@ -874,6 +867,8 @@
 				1B28079E1B2B46A40040A4B9 /* FDLoginViewController.m */,
 				1B28079F1B2B46A40040A4B9 /* FDRootViewController.h */,
 				1B2807A01B2B46A40040A4B9 /* FDRootViewController.m */,
+				1B7B8A691B61212800D6A9E2 /* FDOptionsListViewController.h */,
+				1B7B8A6A1B61212800D6A9E2 /* FDOptionsListViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1361,6 +1356,7 @@
 				TargetAttributes = {
 					1B2807511B2B465A0040A4B9 = {
 						CreatedOnToolsVersion = 6.3.2;
+						DevelopmentTeam = PVDZWY67J6;
 					};
 				};
 			};
@@ -1452,10 +1448,9 @@
 				1B2809461B2B46A40040A4B9 /* FDCompassView.m in Sources */,
 				1BBBE1BA1B31A1C500021FF4 /* FDMovieGLRenderer.m in Sources */,
 				1B28092C1B2B46A40040A4B9 /* CLLocation+Utils.m in Sources */,
-				1B2809371B2B46A40040A4B9 /* FDEnableArmedViewController.m in Sources */,
 				1B28092F1B2B46A40040A4B9 /* NSFileManager+ANUtils.m in Sources */,
 				1B28094B1B2B46A40040A4B9 /* main.mm in Sources */,
-				1B2809351B2B46A40040A4B9 /* FDCustomModeViewController.m in Sources */,
+				1B7B8A6B1B61212800D6A9E2 /* FDOptionsListViewController.m in Sources */,
 				1B2809331B2B46A40040A4B9 /* FDBatteryStatusViewController.m in Sources */,
 				1B2809411B2B46A40040A4B9 /* FDGPSInfo.m in Sources */,
 				1B2809361B2B46A40040A4B9 /* FDDashboardViewController.m in Sources */,
@@ -1596,7 +1591,7 @@
 			baseConfigurationReference = 70304537241E9E01FE1FA360 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries/parse-library";
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/FlyDrones/Supporting Files/FlyDrones-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1627,7 +1622,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
+				PROVISIONING_PROFILE = "1369a741-ef21-40b7-bd76-5a6b4e6f5319";
 			};
 			name = Debug;
 		};
@@ -1636,7 +1631,7 @@
 			baseConfigurationReference = 95DD9068FDA34E985D8714D9 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries/parse-library";
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/FlyDrones/Supporting Files/FlyDrones-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
@@ -1667,7 +1662,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
+				PROVISIONING_PROFILE = "1369a741-ef21-40b7-bd76-5a6b4e6f5319";
 			};
 			name = Release;
 		};

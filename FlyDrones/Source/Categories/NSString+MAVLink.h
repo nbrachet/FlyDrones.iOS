@@ -12,4 +12,7 @@
 
 + (NSString *)stringWithMAVLinkMessage:(mavlink_message_t *)msg;
 
++ (NSString *)nameFromArducopterMode:(enum ARDUCOPTER_MODE)mode;
++ (enum ARDUCOPTER_MODE)arducopterModeFromName:(NSString *)name;
+
 @end

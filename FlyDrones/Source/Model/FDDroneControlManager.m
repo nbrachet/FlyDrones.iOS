@@ -8,7 +8,6 @@
 
 #import "FDDroneControlManager.h"
 #import "FDFileReader.h"
-#import "NSString+MAVLink.h"
 #import "NSData+MAVLink.h"
 #import "pixhawk.h"
 
@@ -413,10 +412,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
     return [NSData dataWithMAVLinkMessage:&message];
 }
 
-- (NSData *)messageDataWithNewCustomMode:(FDAutoPilotMode)mode {
-    if (mode == FDAutoPilotModeNA) {
-        return nil;
-    }
+- (NSData *)messageDataWithNewCustomMode:(enum ARDUCOPTER_MODE)mode {
     mavlink_message_t message;
     mavlink_msg_set_mode_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                               FDDroneControlManagerMavLinkDefaultComponentId,

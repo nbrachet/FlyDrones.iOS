@@ -18,10 +18,9 @@
 #import "FDDroneStatus.h"
 #import "FDCompassView.h"
 #import "FDJoystickView.h"
-#import "FDCustomModeViewController.h"
-#import "FDEnableArmedViewController.h"
 #import "FDVerticalScaleView.h"
 #import "FDLocationInfoViewController.h"
+#import "FDOptionsListViewController.h"
 
 typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     FDDashboardViewControllerHUDTagWaitingHeartbeat = 8410,
@@ -29,14 +28,17 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     FDDashboardViewControllerHUDTagWarning
 };
 
-@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDCustomModeViewControllerDelegate, FDEnableArmedViewControllerDelegate, UIPopoverPresentationControllerDelegate>
+static NSString * const FDDashboardViewControllerArmedStatusListIdentifier = @"ArmedStatusListIdentifier";
+static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"CustomModesListIdentifier";
+
+@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDOptionsListViewControllerDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *topPanelView;
 @property (nonatomic, weak) IBOutlet UIButton *menuButton;
 @property (nonatomic, weak) IBOutlet FDBatteryButton *batteryButton;
 @property (nonatomic, weak) IBOutlet FDCompassView *compassView;
 @property (nonatomic, weak) IBOutlet UIButton *armedStatusButton;
-@property (nonatomic, weak) IBOutlet UIButton *systemStatusButton;
+@property (nonatomic, weak) IBOutlet UIButton *customModesButton;
 
 @property (nonatomic, weak) IBOutlet UIButton *mapButton;
 @property (nonatomic, assign, getter=isHideMapAfterConnectionRestored) BOOL hideMapAfterConnectionRestored;
@@ -63,6 +65,10 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 @property (nonatomic, assign, getter=isArm) BOOL arm;
 
 @property (nonatomic, weak) MBProgressHUD *currentProgressHUD;
+
+@property (nonatomic, copy) NSArray *customModesOptionsNames;
+@property (nonatomic, copy) NSArray *armedModesOptionsNames;
+
 
 @end
 
@@ -153,11 +159,14 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
         popoverPresentationController.delegate = self;
     }
     
-    if ([destinationViewController isKindOfClass:[FDCustomModeViewController class]]) {
-        [((FDCustomModeViewController *)destinationViewController) setDelegate:self];
-    }
-    if ([destinationViewController isKindOfClass:[FDEnableArmedViewController class]]) {
-        [((FDEnableArmedViewController *)destinationViewController) setDelegate:self];
+    if ([destinationViewController isKindOfClass:[FDOptionsListViewController class]]) {
+        FDOptionsListViewController *optionsListViewController = (FDOptionsListViewController *)destinationViewController;
+        optionsListViewController.delegate = self;
+        if (sender == self.armedStatusButton) {
+            optionsListViewController.identifier = FDDashboardViewControllerArmedStatusListIdentifier;
+        } else if (sender == self.customModesButton) {
+            optionsListViewController.identifier = FDDashboardViewControllerCustomModesListIdentifier;
+        }
     }
 }
 
@@ -167,7 +176,7 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     _enabledControls = enabledControls;
     
     self.batteryButton.enabled = enabledControls;
-    self.systemStatusButton.enabled = enabledControls;
+    self.customModesButton.enabled = enabledControls;
     self.compassView.enabled = enabledControls;
     self.altitudeVerticalScaleView.enabled = enabledControls;
     self.armedStatusButton.enabled = enabledControls;
@@ -208,6 +217,38 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     }
 
     [[FDDroneStatus currentStatus] synchronize];
+}
+
+- (NSArray *)customModesOptionsNames {
+    NSMutableArray *customModesOptionsNames = [@[[NSString nameFromArducopterMode:ARDUCOPTER_MODE_STABILIZE],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_ACRO],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_ALT_HOLD],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_AUTO],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_GUIDED],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_LOITER],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_RTL],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_CIRCLE],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_LAND],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_OF_LOITER],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_DRIFT],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_SPORT],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_FLIP],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_AUTOTUNE],
+                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_POSHOLD]] mutableCopy];
+    enum ARDUCOPTER_MODE currentMode = [FDDroneStatus currentStatus].mavCustomMode;
+    NSString *currentModeName = [NSString nameFromArducopterMode:currentMode];
+    if ([customModesOptionsNames containsObject:currentModeName]) {
+        [customModesOptionsNames removeObject:currentModeName];
+    }
+    _customModesOptionsNames = customModesOptionsNames;
+    return _customModesOptionsNames;
+}
+
+- (NSArray *)armedModesOptionsNames {
+    NSMutableArray *armedModesOptionsNames = [NSMutableArray array];
+    [armedModesOptionsNames addObject:([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) ? @"DISARM" : @"ARM"];
+    _armedModesOptionsNames = armedModesOptionsNames;
+    return _armedModesOptionsNames;
 }
 
 #pragma mark - UIStateRestoration
@@ -498,64 +539,12 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
         [self performSelector:@selector(requestDataStreams) withObject:nil afterDelay:3.0f];
     }
     
-    NSMutableString *sysStatusString = [NSMutableString string];
-    if (mavBaseMode & (uint8_t)MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) {
-        switch (mavCustomMode) {
-            case FDAutoPilotModeAcro:
-                [sysStatusString appendString:@"ACRO"];
-                break;
-            case FDAutoPilotModeAltHold:
-                [sysStatusString appendString:@"ALT_HOLD"];
-                break;
-            case FDAutoPilotModeAuto:
-                [sysStatusString appendString:@"AUTO"];
-                break;
-            case FDAutoPilotModeAutotune:
-                [sysStatusString appendString:@"AUTOTUNE"];
-                break;
-            case FDAutoPilotModeCircle:
-                [sysStatusString appendString:@"CIRCLE"];
-                break;
-            case FDAutoPilotModeDrift:
-                [sysStatusString appendString:@"DRIFT"];
-                break;
-            case FDAutoPilotModeFlip:
-                [sysStatusString appendString:@"FLIP"];
-                break;
-            case FDAutoPilotModeGuided:
-                [sysStatusString appendString:@"GUIDED"];
-                break;
-            case FDAutoPilotModeLand:
-                [sysStatusString appendString:@"LAND"];
-                break;
-            case FDAutoPilotModeLoiter:
-                [sysStatusString appendString:@"LOITER"];
-                break;
-            case FDAutoPilotModeOfLoiter:
-                [sysStatusString appendString:@"OF_LOITER"];
-                break;
-            case FDAutoPilotModePoshold:
-                [sysStatusString appendString:@"POSHOLD"];
-                break;
-            case FDAutoPilotModeRTL:
-                [sysStatusString appendString:@"RTL"];
-                break;
-            case FDAutoPilotModeSport:
-                [sysStatusString appendString:@"SPORT"];
-                break;
-            case FDAutoPilotModeStabilize:
-                [sysStatusString appendString:@"STABILIZE"];
-                break;
-            default:
-                [sysStatusString appendFormat:@"N/A (%d)", mavCustomMode];
-                break;
-        }
-    } else {
-        [sysStatusString appendString:@"N/A"];
+    NSString *customModesButtonTitle = (mavBaseMode & (uint8_t)MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) ? [NSString nameFromArducopterMode:mavCustomMode] : @"N/A";
+    [self.customModesButton setTitle:customModesButtonTitle forState:UIControlStateNormal];
+    if ([self.presentedViewController isKindOfClass:[FDOptionsListViewController class]]) {
+        [(FDOptionsListViewController *)self.presentedViewController updateOptionsNames];
     }
-
-    [self.systemStatusButton setTitle:sysStatusString forState:UIControlStateNormal];
-
+    
     [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagWaitingHeartbeat];
     
     self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
@@ -569,18 +558,37 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     }
 }
 
-#pragma mark - FDCustomModeViewControllerDelegate
+#pragma mark - FDOptionsListViewControllerDelegate
 
-- (void)didSelectNewMode:(FDAutoPilotMode)mode {
-    NSData *messageData = [self.droneControlManager messageDataWithNewCustomMode:mode];
-    [self.connectionManager sendDataToControlServer:messageData];
-    [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:nil];
+- (NSArray *)optionsNamesForOptionsListViewController:(FDOptionsListViewController *)optionsListViewController {
+    NSArray *optionsNames;
+    if ([optionsListViewController.identifier isEqualToString:FDDashboardViewControllerArmedStatusListIdentifier]) {
+        optionsNames = self.armedModesOptionsNames;
+    } else if ([optionsListViewController.identifier isEqualToString:FDDashboardViewControllerCustomModesListIdentifier]) {
+        optionsNames = self.customModesOptionsNames;
+    }
+    return optionsNames;
 }
 
-#pragma mark - FDEnableArmedViewController
-
-- (void)didEnableArmedStatus:(BOOL)armed {
-    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataWithArmedEnable:armed]];
+- (void)optionsListViewController:(FDOptionsListViewController *)optionsListViewController didSelectOptionForIndex:(NSUInteger)optionIndex {
+    NSData *optionMessageData;
+    if ([optionsListViewController.identifier isEqualToString:FDDashboardViewControllerArmedStatusListIdentifier]) {
+        NSArray *armedModesOptionsNames = self.armedModesOptionsNames;
+        NSString *optionName = armedModesOptionsNames[optionIndex];
+        if ([optionName isEqualToString:@"ARM"]) {
+            optionMessageData = [self.droneControlManager messageDataWithArmedEnable:YES];
+        } else if ([optionName isEqualToString:@"DISARM"]) {
+            optionMessageData = [self.droneControlManager messageDataWithArmedEnable:NO];
+        }
+    } else if ([optionsListViewController.identifier isEqualToString:FDDashboardViewControllerCustomModesListIdentifier]) {
+        NSArray *customModesOptionsNames = self.customModesOptionsNames;
+        if (optionIndex >= customModesOptionsNames.count) {
+            return;
+        }
+        enum ARDUCOPTER_MODE selectedMode = [NSString arducopterModeFromName:customModesOptionsNames[optionIndex]];
+        optionMessageData = [self.droneControlManager messageDataWithNewCustomMode:selectedMode];
+    }
+    [self.connectionManager sendDataToControlServer:optionMessageData];
     [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:nil];
 }
 

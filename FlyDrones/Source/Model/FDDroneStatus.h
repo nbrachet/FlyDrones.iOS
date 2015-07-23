@@ -11,32 +11,13 @@
 
 #define FDNotAvailable NSIntegerMin
 
-typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
-    FDAutoPilotModeStabilize = 0,
-    FDAutoPilotModeAcro = 1,
-    FDAutoPilotModeAltHold = 2,
-    FDAutoPilotModeAuto = 3,
-    FDAutoPilotModeGuided = 4,
-    FDAutoPilotModeLoiter = 5,
-    FDAutoPilotModeRTL = 6,
-    FDAutoPilotModeCircle = 7,
-    FDAutoPilotModeLand = 9,
-    FDAutoPilotModeOfLoiter = 10,
-    FDAutoPilotModeDrift = 11,
-    FDAutoPilotModeSport = 13,
-    FDAutoPilotModeFlip = 14,
-    FDAutoPilotModeAutotune = 15,
-    FDAutoPilotModePoshold = 16,
-    FDAutoPilotModeNA = 1000,
-};
-
 @interface FDDroneStatus : NSObject
 
-@property (nonatomic, assign) FDAutoPilotMode mavCustomMode;    // A bitfield for use for autopilot-specific flags.
-@property (nonatomic, assign) uint8_t mavType;                  // MAV_TYPE ENUM
-@property (nonatomic, assign) uint8_t mavAutopilotType;         // MAV_AUTOPILOT ENUM
-@property (nonatomic, assign) uint8_t mavBaseMode;              // MAV_MODE_FLAG ENUM
-@property (nonatomic, assign) uint8_t mavSystemStatus;          // MAV_STATE ENUM
+@property (nonatomic, assign) enum ARDUCOPTER_MODE mavCustomMode;    // A bitfield for use for autopilot-specific flags.
+@property (nonatomic, assign) uint8_t mavType;                      // MAV_TYPE ENUM
+@property (nonatomic, assign) uint8_t mavAutopilotType;             // MAV_AUTOPILOT ENUM
+@property (nonatomic, assign) uint8_t mavBaseMode;                  // MAV_MODE_FLAG ENUM
+@property (nonatomic, assign) uint8_t mavSystemStatus;              // MAV_STATE ENUM
 
 @property (nonatomic, strong) NSMutableDictionary *paramValues;
 
@@ -80,8 +61,5 @@ typedef NS_ENUM(uint32_t, FDAutoPilotMode) {
 + (instancetype)currentStatus;
 - (void)clearStatus;
 - (void)synchronize;
-
-+ (NSString *)nameFromMode:(FDAutoPilotMode)mode;
-+ (FDAutoPilotMode)modeFromName:(NSString *)name;
 
 @end

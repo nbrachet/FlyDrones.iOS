@@ -12,7 +12,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "libavformat/avformat.h"
-#import "mavlink.h"
+#include "MavLink.hh"
+#import "NSString+MAVLink.h"
 
 //Suppress NSLog when in release mode
 #ifdef NDEBUG

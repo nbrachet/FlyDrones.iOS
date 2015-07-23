@@ -32,6 +32,92 @@ static NSString* fieldToNSString(mavlink_message_t *, const mavlink_field_info_t
     return [string copy];
 }
 
++ (NSString *)nameFromArducopterMode:(enum ARDUCOPTER_MODE)mode {
+    NSString *name;
+    switch (mode) {
+        case ARDUCOPTER_MODE_STABILIZE:
+            name = @"STABILIZE";
+            break;
+        case ARDUCOPTER_MODE_ACRO:
+            name = @"ACRO";
+            break;
+        case ARDUCOPTER_MODE_ALT_HOLD:
+            name = @"ALT_HOLD";
+            break;
+        case ARDUCOPTER_MODE_AUTO:
+            name = @"AUTO";
+            break;
+        case ARDUCOPTER_MODE_GUIDED:
+            name = @"GUIDED";
+            break;
+        case ARDUCOPTER_MODE_LOITER:
+            name = @"LOITER";
+            break;
+        case ARDUCOPTER_MODE_RTL:
+            name = @"RTL";
+            break;
+        case ARDUCOPTER_MODE_CIRCLE:
+            name = @"CIRCLE";
+            break;
+        case ARDUCOPTER_MODE_LAND:
+            name = @"LAND";
+            break;
+        case ARDUCOPTER_MODE_OF_LOITER:
+            name = @"OF_LOITER";
+            break;
+        case ARDUCOPTER_MODE_DRIFT:
+            name = @"DRIFT";
+            break;
+        case ARDUCOPTER_MODE_SPORT:
+            name = @"SPORT";
+            break;
+        case ARDUCOPTER_MODE_FLIP:
+            name = @"FLIP";
+            break;
+        case ARDUCOPTER_MODE_AUTOTUNE:
+            name = @"AUTOTUNE";
+            break;
+        case ARDUCOPTER_MODE_POSHOLD:
+            name = @"POSHOLD";
+            break;
+    }
+    return name;
+}
+
++ (enum ARDUCOPTER_MODE)arducopterModeFromName:(NSString *)name {
+    if ([name isEqualToString:@"STABILIZE"]) {
+        return ARDUCOPTER_MODE_STABILIZE;
+    } else if ([name isEqualToString:@"ACRO"]) {
+        return ARDUCOPTER_MODE_ACRO;
+    } else if ([name isEqualToString:@"ALT_HOLD"]) {
+        return ARDUCOPTER_MODE_ALT_HOLD;
+    }  else if ([name isEqualToString:@"GUIDED"]) {
+        return ARDUCOPTER_MODE_GUIDED;
+    } else if ([name isEqualToString:@"LOITER"]) {
+        return ARDUCOPTER_MODE_LOITER;
+    } else if ([name isEqualToString:@"RTL"]) {
+        return ARDUCOPTER_MODE_RTL;
+    } else if ([name isEqualToString:@"CIRCLE"]) {
+        return ARDUCOPTER_MODE_CIRCLE;
+    } else if ([name isEqualToString:@"LAND"]) {
+        return ARDUCOPTER_MODE_LAND;
+    } else if ([name isEqualToString:@"OF_LOITER"]) {
+        return ARDUCOPTER_MODE_OF_LOITER;
+    } else if ([name isEqualToString:@"DRIFT"]) {
+        return ARDUCOPTER_MODE_DRIFT;
+    } else if ([name isEqualToString:@"SPORT"]) {
+        return ARDUCOPTER_MODE_SPORT;
+    } else if ([name isEqualToString:@"FLIP"]) {
+        return ARDUCOPTER_MODE_FLIP;
+    } else if ([name isEqualToString:@"AUTOTUNE"]) {
+        return ARDUCOPTER_MODE_AUTOTUNE;
+    } else if ([name isEqualToString:@"POSHOLD"]) {
+        return ARDUCOPTER_MODE_POSHOLD;
+    } else {
+        return ARDUCOPTER_MODE_AUTO;
+    }
+}
+
 #pragma mark - Private
 
 static NSString* fieldToNSString(mavlink_message_t *message, const mavlink_field_info_t *field) {
