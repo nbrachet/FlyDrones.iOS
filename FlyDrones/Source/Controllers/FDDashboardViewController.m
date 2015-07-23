@@ -202,20 +202,6 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     }
     
     _arm = arm;
-    
-    NSData *controlData;
-    if (arm) {
-        controlData = [self.droneControlManager messageDataWithCaptureSettingsFps:[FDDroneStatus currentStatus].videoFps
-                                                                       resolution:[FDDroneStatus currentStatus].videoResolution
-                                                                          bitrate:[FDDroneStatus currentStatus].videoBitrate];
-    } else {
-        controlData = [self.droneControlManager messageDataForCaptureDisableCommand];
-    }
-    
-    if (controlData.length > 0) {
-        [self.connectionManager sendDataToControlServer:controlData];
-    }
-
     [[FDDroneStatus currentStatus] synchronize];
 }
 
@@ -247,6 +233,8 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 - (NSArray *)armedModesOptionsNames {
     NSMutableArray *armedModesOptionsNames = [NSMutableArray array];
     [armedModesOptionsNames addObject:([FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED) ? @"DISARM" : @"ARM"];
+    [armedModesOptionsNames addObject:@"Start Video"];
+    [armedModesOptionsNames addObject:@"Stop Video"];
     _armedModesOptionsNames = armedModesOptionsNames;
     return _armedModesOptionsNames;
 }
@@ -579,6 +567,12 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
             optionMessageData = [self.droneControlManager messageDataWithArmedEnable:YES];
         } else if ([optionName isEqualToString:@"DISARM"]) {
             optionMessageData = [self.droneControlManager messageDataWithArmedEnable:NO];
+        } else if ([optionName isEqualToString:@"Start Video"]) {
+            optionMessageData = [self.droneControlManager messageDataWithCaptureSettingsFps:[FDDroneStatus currentStatus].videoFps
+                                                                                 resolution:[FDDroneStatus currentStatus].videoResolution
+                                                                                    bitrate:[FDDroneStatus currentStatus].videoBitrate];
+        } else if ([optionName isEqualToString:@"Stop Video"]) {
+            optionMessageData = [self.droneControlManager messageDataForCaptureDisableCommand];
         }
     } else if ([optionsListViewController.identifier isEqualToString:FDDashboardViewControllerCustomModesListIdentifier]) {
         NSArray *customModesOptionsNames = self.customModesOptionsNames;
