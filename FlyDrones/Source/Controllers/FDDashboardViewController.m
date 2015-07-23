@@ -78,6 +78,7 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     self.altitudeVerticalScaleView.title = @"m";
     self.altitudeVerticalScaleView.scale = 10;
     self.altitudeVerticalScaleView.value = 0;
+    self.altitudeVerticalScaleView.smoothBoundaries = YES;
     
     //Correct size of video
     CGSize movieSize = [FDDroneStatus currentStatus].videoSize;

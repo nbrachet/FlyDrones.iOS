@@ -7,22 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FDControlView.h"
 
-@interface FDVerticalScaleView : UIView
+@interface FDVerticalScaleView : FDControlView
 
-@property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, copy) IBInspectable UIColor *textColor;
 @property (nonatomic, copy) IBInspectable UIColor *labelStrokeColor;
 @property (nonatomic, copy) IBInspectable UIColor *labelFillColor;
-
-@property (nonatomic, assign) BOOL enabled;
-
-
-@property (nonatomic, strong) NSString *title;
-@property (nonatomic, assign) NSInteger scale;
-@property (nonatomic, assign) CGFloat value;
-
-@property (nonatomic, assign) BOOL showTargetDelta;
-@property (nonatomic, assign) float targetDelta;
+@property (nonatomic, copy) IBInspectable NSString *title;
+@property (nonatomic, assign) IBInspectable NSInteger scale;
+@property (nonatomic, assign) IBInspectable CGFloat value;
+@property (nonatomic, assign) IBInspectable BOOL showTargetDelta;
+@property (nonatomic, assign) IBInspectable float targetDelta;
 
 @end

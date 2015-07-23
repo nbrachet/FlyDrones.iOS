@@ -7,23 +7,8 @@
 //
 
 #import "FDCompassView.h"
-#import "UIImage+Utils.h"
 
 @implementation FDCompassView
-
-#pragma mark - Lifecycle
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    [self redraw];
-}
-
-- (void)prepareForInterfaceBuilder {
-    [super prepareForInterfaceBuilder];
-    
-    [self redraw];
-}
 
 #pragma mark - Custom Accessors
 
@@ -50,35 +35,9 @@
     }
 }
 
-- (void)setEnabled:(BOOL)enabled {
-    if (enabled == _enabled) {
-        return;
-    }
-    
-    _enabled = enabled;
-    self.alpha = enabled ? 1.0f : 0.4f;
+#pragma mark - Overridden methods
 
-    if (enabled) {
-        [self redraw];
-    } else {
-        UIImage *grayImage = [self.imageView.image convertToGrayscale];
-        self.imageView.image = grayImage;
-    }
-}
-
-#pragma mark - Private
-
-- (void)redraw {
-    if (!self.enabled) {
-        return;
-    }
-    
-    UIImage *image = [self imageCompassWithSize:self.bounds.size];
-    self.imageView.image = image;
-}
-
-- (UIImage *)imageCompassWithSize:(CGSize)size {
-    size = CGSizeMake(size.width * 2.0f, size.height * 2.0f);
+- (UIImage *)backgroundImageWithSize:(CGSize)size {
     const float oneDegX = 1.0f / 75 * size.width;
     CGPoint centerPoint = CGPointMake(size.width / 2.0f, size.height / 2.0f);
     
@@ -97,13 +56,6 @@
     CGContextClearRect(context, CGRectMake(0.0f, 0.0f, size.width, size.height));
     CGContextSetFillColorWithColor(context, [self.backgroundColor CGColor]);
     CGContextFillRect(context, CGRectMake(0.0f, 0.0f, size.width, size.height));
-    
-    // Draw text and tick lines
-    // Draw 360 degrees, centered on current position.
-    // An aircraft compass has:
-    //   * small tick every 5 deg
-    //   * large tick every 10 deg
-    //   * number every 30 deg, with N/S/W/E replacing their respective numbers
     
     if (self.numbersColor == nil) {
         self.numbersColor = [UIColor blackColor];
@@ -180,45 +132,6 @@
         CGContextStrokePath(context);
     }
     CGContextRestoreGState(context);
-    
-    
-    //Draw gradient
-    if (self.firstGradientColor != nil || self.secondGradientColor != nil) {
-        NSArray *colors;
-        if (self.firstGradientColor != nil && self.secondGradientColor != nil) {
-            colors = @[(__bridge id)self.firstGradientColor.CGColor,
-                       (__bridge id)self.secondGradientColor.CGColor];
-        } else if (self.firstGradientColor != nil) {
-            colors = @[(__bridge id)self.firstGradientColor.CGColor,
-                       (__bridge id)[UIColor clearColor].CGColor];
-        } else {
-            colors = @[(__bridge id)[UIColor clearColor].CGColor,
-                       (__bridge id)self.secondGradientColor.CGColor];
-        }
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        CGFloat locations[] = {0.0, 1.0};
-        CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
-        for (int i = 0; i < 2; i++) {
-            CGRect subRect = CGRectMake(((i == 0) ? centerPoint.x - size.width/2 : centerPoint.x + size.width/6),
-                                        centerPoint.y - size.height/2,
-                                        size.width/3,
-                                        size.height);
-            CGPoint startPoint = CGPointMake(CGRectGetMinX(subRect), CGRectGetMinY(subRect));
-            CGPoint endPoint = CGPointMake(CGRectGetMaxX(subRect), CGRectGetMinY(subRect));
-            if (i == 0) {
-                CGPoint tmp = startPoint;
-                startPoint = endPoint;
-                endPoint = tmp;
-            }
-            CGContextSaveGState(context);
-            CGContextAddRect(context, subRect);
-            CGContextClip(context);
-            CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
-            CGContextRestoreGState(context);
-        }
-        CGGradientRelease(gradient);
-        CGColorSpaceRelease(colorSpace);
-    }
     
     CGRect gaugeBoundary = CGRectMake(centerPoint.x - size.width / 2.0f,
                                       centerPoint.y - size.height / 2.0f,

@@ -12,4 +12,6 @@
 
 - (UIImage *)convertToGrayscale;
 
+- (UIImage *)maskedWithImage:(CGImageRef)maskImageRef;
+
 @end

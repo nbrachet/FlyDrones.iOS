@@ -501,10 +501,10 @@
                                         </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3fa-i6-kmk" customClass="FDCompassView">
-                                        <rect key="frame" x="372" y="12" width="280" height="52"/>
+                                        <rect key="frame" x="358" y="12" width="310" height="52"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RzC-gA-E1x">
-                                                <rect key="frame" x="0.0" y="0.0" width="280" height="52"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="310" height="52"/>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -513,7 +513,7 @@
                                             <constraint firstAttribute="height" constant="46" id="7x8-5T-HiJ"/>
                                             <constraint firstAttribute="trailing" secondItem="RzC-gA-E1x" secondAttribute="trailing" id="CFx-JU-DKR"/>
                                             <constraint firstItem="RzC-gA-E1x" firstAttribute="leading" secondItem="3fa-i6-kmk" secondAttribute="leading" id="QB2-Wi-oFL"/>
-                                            <constraint firstAttribute="width" constant="280" id="bMU-OJ-QJk"/>
+                                            <constraint firstAttribute="width" constant="310" id="bMU-OJ-QJk"/>
                                             <constraint firstItem="RzC-gA-E1x" firstAttribute="top" secondItem="3fa-i6-kmk" secondAttribute="top" id="qqe-Rw-cpr"/>
                                             <constraint firstAttribute="bottom" secondItem="RzC-gA-E1x" secondAttribute="bottom" id="wUf-iP-6Fa"/>
                                         </constraints>
@@ -545,6 +545,8 @@
                                             <userDefinedRuntimeAttribute type="number" keyPath="navigationBearing">
                                                 <real key="value" value="0.0"/>
                                             </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="smoothBoundaries" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="maskImage" value="HorizontalGradient"/>
                                         </userDefinedRuntimeAttributes>
                                         <variation key="default">
                                             <mask key="constraints">
@@ -617,7 +619,7 @@
                                 <color key="backgroundColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="centerX" secondItem="3fa-i6-kmk" secondAttribute="centerX" id="0I0-f1-g2N"/>
+                                    <constraint firstAttribute="centerX" secondItem="3fa-i6-kmk" secondAttribute="centerX" constant="-1" id="0I0-f1-g2N"/>
                                     <constraint firstItem="YYR-sH-XM9" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" id="30a-jy-uTn"/>
                                     <constraint firstItem="n4B-o3-BAE" firstAttribute="leading" secondItem="i1i-UJ-dEo" secondAttribute="trailing" constant="16" id="3ZO-4N-zIo"/>
                                     <constraint firstItem="3fa-i6-kmk" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="top" constant="12" id="AVZ-8f-9Gj"/>
@@ -761,6 +763,16 @@
                                     <userDefinedRuntimeAttribute type="color" keyPath="labelFillColor">
                                         <color key="value" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="0.53000000000000003" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="m"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                        <integer key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showTargetDelta" value="NO"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="smoothBoundaries" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="maskImage" value="VerticalGradient"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="imageView" destination="6bR-b4-O14" id="U9C-I6-sOa"/>
@@ -1174,10 +1186,12 @@
         <image name="BatteryLow" width="32" height="32"/>
         <image name="BatteryMedium" width="32" height="32"/>
         <image name="BatteryNA" width="32" height="32"/>
+        <image name="HorizontalGradient" width="100" height="5"/>
         <image name="JoystickBase" width="225" height="225"/>
         <image name="JoystickControl" width="84" height="84"/>
         <image name="MunuIcon" width="32" height="32"/>
         <image name="Settings" width="50" height="50"/>
+        <image name="VerticalGradient" width="5" height="100"/>
         <image name="WorldwideLocation" width="32" height="32"/>
     </resources>
     <color key="tintColor" red="0.094117647060000004" green="0.16862745100000001" blue="0.28235294119999998" alpha="1" colorSpace="calibratedRGB"/>

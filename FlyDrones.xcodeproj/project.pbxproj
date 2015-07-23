@@ -65,6 +65,7 @@
 		1B28094B1B2B46A40040A4B9 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B2807C31B2B46A40040A4B9 /* main.mm */; };
 		1B2809541B2B46A40040A4B9 /* librtp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B2808481B2B46A40040A4B9 /* librtp.a */; };
 		1B2809551B2B46A50040A4B9 /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B28092A1B2B46A40040A4B9 /* libx264.a */; };
+		1B7B8A681B60E62300D6A9E2 /* FDControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B7B8A671B60E62300D6A9E2 /* FDControlView.m */; };
 		1BB4C22B1B2B4A3F00C42211 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BB4C22A1B2B4A3F00C42211 /* AVFoundation.framework */; };
 		1BB4C22D1B2B4A4A00C42211 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BB4C22C1B2B4A4A00C42211 /* libc++.dylib */; };
 		1BB4C22F1B2B4A5800C42211 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BB4C22E1B2B4A5800C42211 /* CoreGraphics.framework */; };
@@ -504,6 +505,8 @@
 		1B2809271B2B46A40040A4B9 /* x264.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x264.h; sourceTree = "<group>"; };
 		1B2809281B2B46A40040A4B9 /* x264_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x264_config.h; sourceTree = "<group>"; };
 		1B28092A1B2B46A40040A4B9 /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libx264.a; sourceTree = "<group>"; };
+		1B7B8A661B60E62300D6A9E2 /* FDControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDControlView.h; sourceTree = "<group>"; };
+		1B7B8A671B60E62300D6A9E2 /* FDControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDControlView.m; sourceTree = "<group>"; };
 		1BB4C22A1B2B4A3F00C42211 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		1BB4C22C1B2B4A4A00C42211 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		1BB4C22E1B2B4A5800C42211 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -907,14 +910,16 @@
 			children = (
 				1B2807B61B2B46A40040A4B9 /* FDBatteryButton.h */,
 				1B2807B71B2B46A40040A4B9 /* FDBatteryButton.m */,
-				1B2807B81B2B46A40040A4B9 /* FDCompassView.h */,
-				1B2807B91B2B46A40040A4B9 /* FDCompassView.m */,
 				1B2807BA1B2B46A40040A4B9 /* FDJoystickView.h */,
 				1B2807BB1B2B46A40040A4B9 /* FDJoystickView.m */,
 				1B2807BC1B2B46A40040A4B9 /* FDMovieGLView.h */,
 				1B2807BD1B2B46A40040A4B9 /* FDMovieGLView.m */,
 				1B2807BE1B2B46A40040A4B9 /* FDOptionTableViewCell.h */,
 				1B2807BF1B2B46A40040A4B9 /* FDOptionTableViewCell.m */,
+				1B7B8A661B60E62300D6A9E2 /* FDControlView.h */,
+				1B7B8A671B60E62300D6A9E2 /* FDControlView.m */,
+				1B2807B81B2B46A40040A4B9 /* FDCompassView.h */,
+				1B2807B91B2B46A40040A4B9 /* FDCompassView.m */,
 				1BF00F7C1B5CF61600D9A51C /* FDVerticalScaleView.h */,
 				1BF00F7D1B5CF61600D9A51C /* FDVerticalScaleView.m */,
 			);
@@ -1456,6 +1461,7 @@
 				1B2809361B2B46A40040A4B9 /* FDDashboardViewController.m in Sources */,
 				1B2809311B2B46A40040A4B9 /* NSString+Network.m in Sources */,
 				1B2809321B2B46A40040A4B9 /* UIImage+Utils.m in Sources */,
+				1B7B8A681B60E62300D6A9E2 /* FDControlView.m in Sources */,
 				1B2809481B2B46A40040A4B9 /* FDMovieGLView.m in Sources */,
 				1B28093A1B2B46A40040A4B9 /* FDLoginViewController.m in Sources */,
 				1B28092E1B2B46A40040A4B9 /* NSData+RTCP.m in Sources */,
@@ -1590,7 +1596,7 @@
 			baseConfigurationReference = 70304537241E9E01FE1FA360 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries/parse-library";
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/FlyDrones/Supporting Files/FlyDrones-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1621,7 +1627,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
+				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
 			};
 			name = Debug;
 		};
@@ -1630,7 +1636,7 @@
 			baseConfigurationReference = 95DD9068FDA34E985D8714D9 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries/parse-library";
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/FlyDrones/Supporting Files/FlyDrones-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
@@ -1661,7 +1667,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
+				PROVISIONING_PROFILE = "78614d42-86b2-449e-a15a-d3cee406778f";
 			};
 			name = Release;
 		};

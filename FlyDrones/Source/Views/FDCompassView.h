@@ -7,23 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FDControlView.h"
 
-@interface FDCompassView : UIView
+@interface FDCompassView : FDControlView
 
-@property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, copy) IBInspectable UIColor *numbersColor;
 @property (nonatomic, copy) IBInspectable UIColor *lettersColor;
 @property (nonatomic, copy) IBInspectable UIColor *centerPointerColor;
 @property (nonatomic, copy) IBInspectable UIColor *centerPointerBorderColor;
 @property (nonatomic, copy) IBInspectable UIColor *bearingChevronColor;
 @property (nonatomic, copy) IBInspectable UIColor *bearingChevronBorderColor;
-@property (nonatomic, copy) IBInspectable UIColor *firstGradientColor;
-@property (nonatomic, copy) IBInspectable UIColor *secondGradientColor;
 @property (nonatomic, assign) IBInspectable CGFloat borderWidth;
 @property (nonatomic, copy) IBInspectable UIColor *borderColor;
 
 @property (nonatomic, assign) IBInspectable CGFloat heading;
 @property (nonatomic, assign) IBInspectable CGFloat navigationBearing;
-@property (nonatomic, assign) BOOL enabled;
 
 @end

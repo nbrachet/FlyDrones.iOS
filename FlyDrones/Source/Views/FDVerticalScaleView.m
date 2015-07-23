@@ -7,23 +7,8 @@
 //
 
 #import "FDVerticalScaleView.h"
-#import "UIImage+Utils.h"
 
 @implementation FDVerticalScaleView
-
-#pragma mark - Lifecycle
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    [self redraw];
-}
-
-- (void)prepareForInterfaceBuilder {
-    [super prepareForInterfaceBuilder];
-    
-    [self redraw];
-}
 
 #pragma mark - Custom Accessors
 
@@ -51,43 +36,18 @@
     }
 }
 
-- (void)setEnabled:(BOOL)enabled {
-    if (enabled == _enabled) {
-        return;
-    }
-    
-    _enabled = enabled;
-    self.alpha = enabled ? 1.0f : 0.4f;
-    
-    if (enabled) {
-        [self redraw];
-    } else {
-        UIImage *grayImage = [self.imageView.image convertToGrayscale];
-        self.imageView.image = grayImage;
-    }
-}
+#pragma mark - Overridden methods
 
-#pragma mark - Private
-
-
-- (void)redraw {
-    if (!self.enabled) {
-        return;
-    }
+- (UIImage *)backgroundImageWithSize:(CGSize)size {
+    const CGRect bounds = CGRectMake(0.0f, 0.0f, size.width, size.height);
+    const float horizontalInsetPercent = 0.0f;
+    const float verticalInsetPercent = 0.0f;
     
-    UIImage *image = [self imageWithSize:self.bounds.size];
-    self.imageView.image = image;
-}
-
-- (UIImage *)imageWithSize:(CGSize)size {
-    const float horizontalInsetPercent = 0.0;
-    const float verticalInsetPercent = 0.0;
-    
-    const float w = (1.00 - 2 * horizontalInsetPercent) * self.bounds.size.width;
-    const float h = (1.00 - 2 * verticalInsetPercent) * self.bounds.size.height;
+    const float w = (1.00 - 2 * horizontalInsetPercent) * size.width;
+    const float h = (1.00 - 2 * verticalInsetPercent) * size.height;
     const float oneScaleY = h/_scale;
     
-    const CGPoint c = CGPointMake(CGRectGetMidX(self.bounds) , CGRectGetMidY(self.bounds));
+    const CGPoint c = CGPointMake(CGRectGetMidX(bounds) , CGRectGetMidY(bounds));
     
     const float tickMajorWidth = w/4;
     const float tickMinorWidth = w/6;
@@ -102,9 +62,9 @@
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     //Fill Background
-    CGContextClearRect(context, self.bounds);
+    CGContextClearRect(context, bounds);
     CGContextSetFillColorWithColor(context, [self.backgroundColor CGColor]);
-    CGContextFillRect(context, self.bounds);
+    CGContextFillRect(context, bounds);
     
     if (self.textColor == nil) {
         self.textColor = [UIColor whiteColor];
@@ -183,7 +143,7 @@
     NSAttributedString *valueAttributedString = [[NSAttributedString alloc] initWithString:valueString
                                                                                 attributes:largeTextAttributes];
     CGSize labelAttributedStringSize = [valueAttributedString size];
-    [valueAttributedString drawAtPoint:CGPointMake((self.bounds.size.width - labelAttributedStringSize.width) / 2,
+    [valueAttributedString drawAtPoint:CGPointMake((size.width - labelAttributedStringSize.width) / 2,
                                                    c.y - labelAttributedStringSize.height / 2.0f - tickHeight / 2.0f)];
     
     // Draw target chevron

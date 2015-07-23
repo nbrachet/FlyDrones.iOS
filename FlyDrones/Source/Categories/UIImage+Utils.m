@@ -68,4 +68,15 @@ typedef enum {
     return resultUIImage;
 }
 
+- (UIImage *)maskedWithImage:(CGImageRef)maskImageRef {
+    if (!maskImageRef) {
+        return nil;
+    }
+
+    CGImageRef maskedImageRef = CGImageCreateWithMask([self CGImage], maskImageRef);
+    UIImage *maskedImage = [UIImage imageWithCGImage:maskedImageRef];
+    CGImageRelease(maskedImageRef);
+    return maskedImage;
+}
+
 @end
