@@ -5,8 +5,8 @@
 2. cd FlyDrones.iOS/
 3. pod install ([Getting Started CocoaPods](https://guides.cocoapods.org/using/getting-started.html))
 4. Update ffmpeg and x264 (Optional)
-4.1. cd dev_resources/scripts/
-4.2. ./build_libs.sh
+* cd dev_resources/scripts/
+* /build_libs.sh
 5. Run FlyDrones.xcworkspace in the latest version of Xcode
 6. Clean project: Command-Option-Shift-K or Product->Clean
 
