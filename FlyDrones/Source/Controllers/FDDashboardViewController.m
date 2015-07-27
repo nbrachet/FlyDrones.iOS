@@ -69,7 +69,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 @property (nonatomic, copy) NSArray *customModesOptionsNames;
 @property (nonatomic, copy) NSArray *armedModesOptionsNames;
 
-@property (nonatomic, assign, getter=isRequestDataStreamsSended) BOOL requestDataStreamsSended;
+@property (nonatomic, assign, getter=isRequestDataStreamsSent) BOOL requestDataStreamsSent;
 
 @end
 
@@ -379,7 +379,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
                    activityIndicator:YES];
         if (delayHeartbeatMessageTimeInterval > 3.0f) {
             self.enabledControls = NO;
-            self.requestDataStreamsSended = NO;
+            self.requestDataStreamsSent = NO;
         }
         return;
     }
@@ -521,8 +521,8 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
         [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForParamRequestList]];
     }
     
-    if (self.isRequestDataStreamsSended == NO) {
-        self.requestDataStreamsSended = YES;
+    if (self.isRequestDataStreamsSent == NO) {
+        self.requestDataStreamsSent = YES;
         [self requestDataStreams];
     }
     
