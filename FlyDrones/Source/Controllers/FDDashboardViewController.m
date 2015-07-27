@@ -207,19 +207,12 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
 - (NSArray *)customModesOptionsNames {
     NSMutableArray *customModesOptionsNames = [@[[NSString nameFromArducopterMode:ARDUCOPTER_MODE_STABILIZE],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_ACRO],
                                                  [NSString nameFromArducopterMode:ARDUCOPTER_MODE_ALT_HOLD],
                                                  [NSString nameFromArducopterMode:ARDUCOPTER_MODE_AUTO],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_GUIDED],
                                                  [NSString nameFromArducopterMode:ARDUCOPTER_MODE_LOITER],
                                                  [NSString nameFromArducopterMode:ARDUCOPTER_MODE_RTL],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_CIRCLE],
                                                  [NSString nameFromArducopterMode:ARDUCOPTER_MODE_LAND],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_OF_LOITER],
                                                  [NSString nameFromArducopterMode:ARDUCOPTER_MODE_DRIFT],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_SPORT],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_FLIP],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_AUTOTUNE],
                                                  [NSString nameFromArducopterMode:ARDUCOPTER_MODE_POSHOLD]] mutableCopy];
     enum ARDUCOPTER_MODE currentMode = [FDDroneStatus currentStatus].mavCustomMode;
     NSString *currentModeName = [NSString nameFromArducopterMode:currentMode];
