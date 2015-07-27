@@ -5,7 +5,7 @@
 #https://github.com/kewlbear/x264-ios/blob/master/build-x264.sh
 
 # directories
-SOURCE="x264-snapshot-20141218-2245-stable"
+SOURCE="x264-snapshot-20150726-2245-stable"
 OUTPUT="x264"
 
 TEMP_DIR="temp"
