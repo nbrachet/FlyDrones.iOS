@@ -1,0 +1,47 @@
+
+SNAPSHOT := x264-snapshot-20150726-2245-stable
+
+include ../Makefile.inc
+
+all: include lib/libx264.a lib/pkgconfig
+
+include:    $(firstword $(ARCHS))
+	cp -r $(firstword $(ARCHS))/include include
+
+lib:
+	mkdir $@
+
+lib/libx264.a:  lib $(addsuffix /lib/libx264.a,$(ARCHS))
+	xcrun lipo -create $(addsuffix /lib/libx264.a,$(ARCHS)) -output $@
+
+lib/pkgconfig:  $(firstword $(ARCHS))
+	cp -r $(firstword $(ARCHS))/$@ $@
+
+
+$(ARCHS):  $(SNAPSHOT)
+	-rm -rf $@
+	( cd $(SNAPSHOT) ; \
+	    CC='xcrun --sdk $(call sdk,$@) clang' \
+	    CFLAGS='-arch $@ $(call cpu,$@) $(call fpu,$@) $(call version_min,$@)' \
+	$(if $(filter x86_64 i386,$@),,\
+	    ASFLAGS='-arch $@ $(call cpu,$@) $(call fpu,$@)' \
+	) \
+	        ./configure \
+	            $(call host,$@) \
+	            --enable-pic \
+	            --enable-static \
+	            --disable-gpl \
+	            --disable-cli \
+	            --prefix=$(abspath .)/$@ && \
+	    $(MAKE) && \
+	    $(MAKE) install && \
+	    $(MAKE) clean )
+	touch $@
+
+$(foreach arch,$(ARCHS),$(eval $(arch)/lib/libx264.a: $(arch)))
+
+$(SNAPSHOT): $(SNAPSHOT).tar.bz2
+	tar xvjf $(SNAPSHOT).tar.bz2
+
+$(SNAPSHOT).tar.bz2:
+	wget http://download.videolan.org/pub/x264/snapshots/$(SNAPSHOT).tar.bz2

@@ -1,0 +1,9 @@
+arm64
+armv7
+armv7s
+i386
+x86_64
+include
+lib
+gas-preprocessor.pl
+ffmpeg-*
