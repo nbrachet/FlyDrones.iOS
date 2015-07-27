@@ -69,6 +69,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 @property (nonatomic, copy) NSArray *customModesOptionsNames;
 @property (nonatomic, copy) NSArray *armedModesOptionsNames;
 
+@property (nonatomic, assign, getter=isRequestDataStreamsSended) BOOL requestDataStreamsSended;
 
 @end
 
@@ -378,6 +379,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
                    activityIndicator:YES];
         if (delayHeartbeatMessageTimeInterval > 3.0f) {
             self.enabledControls = NO;
+            self.requestDataStreamsSended = NO;
         }
         return;
     }
@@ -387,10 +389,10 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
     //send control data
     NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
-                                                                roll:self.rightJoystickView.stickHorisontalValue
-                                                              thrust:self.leftJoystickView.stickVerticalValue
-                                                                 yaw:self.leftJoystickView.stickHorisontalValue
-                                                      sequenceNumber:1];
+                                                                    roll:self.rightJoystickView.stickHorisontalValue
+                                                                  thrust:self.leftJoystickView.stickVerticalValue
+                                                                     yaw:self.leftJoystickView.stickHorisontalValue
+                                                          sequenceNumber:1];
     [self.connectionManager sendDataToControlServer:controlData];
 }
 
@@ -517,7 +519,11 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     if (firstHeartbeatMessage && !(mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED)) {
         firstHeartbeatMessage = NO;
         [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForParamRequestList]];
-        [self performSelector:@selector(requestDataStreams) withObject:nil afterDelay:3.0f];
+    }
+    
+    if (self.isRequestDataStreamsSended == NO) {
+        self.requestDataStreamsSended = YES;
+        [self requestDataStreams];
     }
     
     NSString *customModesButtonTitle = (mavBaseMode & (uint8_t)MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) ? [NSString nameFromArducopterMode:mavCustomMode] : @"N/A";
