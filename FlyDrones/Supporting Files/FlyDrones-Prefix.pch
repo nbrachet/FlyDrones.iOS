@@ -22,7 +22,7 @@
 
 #define kDefaultVideoSize CGSizeMake(1280, 720)
 #define kDefaultVideoFps 25
-#define kDefaultVideoResolution 0.4f
+#define kDefaultVideoResolution 1.25f
 
 #define ParseApplicationID @"ZynF8lZVcwF9hhJSMJ2uosi3gRIlzbayvsMcQBcS"
 #define ParseClientKey @"nKR9tHdgRT4kBx7UWTI1md0fETk1LI7zVEsMepyT"

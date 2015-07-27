@@ -95,7 +95,7 @@ static NSString * const BitrateKey = @"BitRateKey";
     if ([userDefaults objectForKey:BitrateKey]) {
         self.bitrateTextField.text = [userDefaults objectForKey:BitrateKey];
     } else {
-        self.bitrateTextField.text = @"0";
+        self.bitrateTextField.text = [NSString stringWithFormat:@"%d", (int)kDefaultVideoResolution];
     }
 }
 
