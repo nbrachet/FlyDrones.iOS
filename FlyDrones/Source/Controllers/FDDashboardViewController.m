@@ -374,8 +374,8 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     CFTimeInterval delayHeartbeatMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedHeartbeatMessageTimeInterval;
     if (delayHeartbeatMessageTimeInterval > 2.0f) {
         [self showProgressHUDWithTag:FDDashboardViewControllerHUDTagWaitingHeartbeat
-                           labelText:NSLocalizedString(@"Waiting heartbeat message", @"Waiting heartbeat message")
-                     detailLabelText:[NSString stringWithFormat:@"%.1f sec", delayHeartbeatMessageTimeInterval]
+                           labelText:NSLocalizedString(@"Waiting for heartbeat message", @"Waiting for heartbeat message")
+                     detailLabelText:[NSString stringWithFormat:@"%.0f sec", delayHeartbeatMessageTimeInterval]
                    activityIndicator:YES];
         if (delayHeartbeatMessageTimeInterval > 3.0f) {
             self.enabledControls = NO;
