@@ -9,8 +9,8 @@
 #import "FDMovieDecoder.h"
 #import "FDDroneStatus.h"
 
-static NSUInteger FDMovieDecoderMaxOperationInQueue = 5;
-static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 1;
+static NSUInteger FDMovieDecoderMaxOperationInQueue = 7;
+static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
 
 @interface FDMovieDecoder () {
     struct AVCodec *videoCodec;
