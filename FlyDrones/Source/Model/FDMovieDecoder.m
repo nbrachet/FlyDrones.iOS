@@ -136,31 +136,27 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
 }
 
 - (void)parseData:(NSData *)data {
-    if (data.length == 0) {
-        return;
-    }
-    
-    NSMutableData *parsingData = [NSMutableData dataWithData:data];
-    
-    while (parsingData.length > 0) {
+    int dataLen = (int)data.length;
+    const uint8_t* dataBytes = (const uint8_t*)[data bytes];
+    while (dataLen > 0) {
         @autoreleasepool {
-            const uint8_t *parsingDataBytes = (const uint8_t*)[parsingData bytes];
-            uint8_t *parsedData = NULL;
+            uint8_t* parsedData = NULL;
             int parsedDataSize = 0;
             int length = av_parser_parse2(videoCodecParserContext,
                                           videoCodecContext,
                                           &parsedData,                 //output data
                                           &parsedDataSize,             //output data size
-                                          &parsingDataBytes[0],        //input data
-                                          (int)[parsingData length],   //input data size
-                                          0,                           //PTS
-                                          0,                           //DTS
-                                          AV_NOPTS_VALUE);
-            if (length > 0) {
-                [parsingData replaceBytesInRange:NSMakeRange(0, length) withBytes:NULL length:0];
-            }
+                                          dataBytes,                   //input data
+                                          dataLen,                     //input data size
+                                          0,                           //pts
+                                          0,                           //dts
+                                          AV_NOPTS_VALUE);             //pos
             if (parsedDataSize > 0) {
                 [self decodeFrameData:parsedData size:parsedDataSize];
+            }
+            if (length > 0) {
+                dataLen -= length;
+                dataBytes += length;
             }
         }
     }
