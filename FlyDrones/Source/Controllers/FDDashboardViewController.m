@@ -507,11 +507,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading altitude:(CGFloat)altitude airspeed:(CGFloat)airspeed groundspeed:(CGFloat)groundspeed climbRate:(CGFloat)climbRate throttleSetting:(CGFloat)throttleSetting {
     self.compassView.heading = heading;
     self.altitudeVerticalScaleView.value = altitude;
-}
-
-- (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleNavigationInfo:(CGFloat)navigationBearing altitudeError:(CGFloat)altitudeError {
-    self.compassView.navigationBearing = navigationBearing;
-    self.altitudeVerticalScaleView.targetDelta = altitudeError;
+    self.altitudeVerticalScaleView.targetDelta = altitude + climbRate;
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleHeartbeatInfo:(uint32_t)mavCustomMode mavType:(uint8_t)mavType mavAutopilotType:(uint8_t)mavAutopilotType mavBaseMode:(uint8_t)mavBaseMode mavSystemStatus:(uint8_t)mavSystemStatus {

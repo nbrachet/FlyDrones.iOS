@@ -142,7 +142,7 @@
                                       size.height);
     
     // Draw bearing chevron
-    if (self.bearingChevronColor != nil) {
+    if (self.showNavigationBearing && self.bearingChevronColor != nil) {
         float bearingError = (self.navigationBearing - self.heading);
         if (bearingError > 180) {
             bearingError -= 360;
@@ -190,7 +190,6 @@
         CGContextSetLineWidth(context, self.borderWidth);
         CGContextStrokePath(context);
     }
-    
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
