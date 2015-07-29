@@ -1,4 +1,6 @@
 
+# Inspired from https://github.com/kewlbear/FFmpeg-iOS-build-script/blob/master/build-ffmpeg.sh
+
 RELEASE := 2.7.2
 
 include ../Makefile.inc
@@ -6,6 +8,12 @@ include ../Makefile.inc
 LIBS := avcodec avfilter avutil swresample avdevice avformat postproc swscale
 
 all: include $(foreach lib,$(LIBS),lib/lib$(lib).a) lib/pkgconfig
+
+install: include $(foreach lib,$(LIBS),lib/lib$(lib).a) lib/pkgconfig
+	-rm -rf $(TOP)/Librairies/ffmpeg/include $(TOP)/Librairies/ffmpeg/lib
+	cp -r include $(TOP)/Libraries/ffmpeg/
+	cp -r lib $(TOP)/Libraries/ffmpeg/
+
 
 include:    $(firstword $(ARCHS))
 	cp -r $(firstword $(ARCHS))/include include

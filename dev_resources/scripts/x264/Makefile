@@ -1,9 +1,17 @@
 
+# Inspired from https://github.com/kewlbear/x264-ios/blob/master/build-x264.sh
+
 SNAPSHOT := x264-snapshot-20150726-2245-stable
 
 include ../Makefile.inc
 
 all: include lib/libx264.a lib/pkgconfig
+
+install: include lib/libx264.a lib/pkgconfig
+	-rm -rf $(TOP)/Librairies/x264/include $(TOP)/Librairies/x264/lib
+	cp -r include $(TOP)/Libraries/x264/
+	cp -r lib $(TOP)/Libraries/x264/
+
 
 include:    $(firstword $(ARCHS))
 	cp -r $(firstword $(ARCHS))/include include
