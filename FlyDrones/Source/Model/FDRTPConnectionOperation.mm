@@ -22,7 +22,11 @@ static size_t roundup(size_t x, size_t y);
 - (void)main {
     @autoreleasepool {
         logger.level(Logger::LEVEL_WARN);
-        
+#ifndef NDEBUG
+        (void) logger.open("com.flydrones", "app");
+        logger.add_log_file(STDERR_FILENO);
+#endif
+
         struct sockaddr_in socketAddress;
         if (UDP::resolve_sockaddr_in(&socketAddress, [self.host UTF8String], (unsigned)self.port) == -1) {
             return;
