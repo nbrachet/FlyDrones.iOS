@@ -21,7 +21,5 @@
 @property (nonatomic, copy) IBInspectable UIColor *borderColor;
 
 @property (nonatomic, assign) IBInspectable CGFloat heading;
-@property (nonatomic, assign) IBInspectable CGFloat navigationBearing;
-@property (nonatomic, assign) IBInspectable BOOL showNavigationBearing;
 
 @end

@@ -23,18 +23,6 @@
     }
 }
 
-- (void)setNavigationBearing:(CGFloat)navigationBearing {
-    if (_navigationBearing == navigationBearing  || navigationBearing < 0 || navigationBearing > 360) {
-        return;
-    }
-    
-    _navigationBearing = navigationBearing;
-    
-    if (self.enabled) {
-        [self redraw];
-    }
-}
-
 #pragma mark - Overridden methods
 
 - (void)defaultInitialization {
@@ -117,41 +105,15 @@
             [attributedText drawAtPoint:CGPointMake(x - textSize.width / 2.0f, 0)];
         }
     }
-    
-    // Draw centre pointer
-    CGContextSaveGState(context);
-    CGContextSetShadow (context, CGSizeMake (tickWidth, tickWidth), 2.5f);
-    for (NSUInteger i = 0; i < 2; i++) {
-        CGContextBeginPath(context);
-        CGContextMoveToPoint(context, centerPoint.x, centerPoint.y - size.height / 2.0f);
-        CGContextAddLineToPoint(context, centerPoint.x, centerPoint.y + size.height / 2.0f);
-        if (i == 0) {
-            CGContextSetLineWidth(context, tickWidth);
-            CGContextSetStrokeColorWithColor(context, self.centerPointerBorderColor.CGColor);
-        } else {
-            CGContextSetLineWidth(context, tickWidth / 3.0f);
-            CGContextSetStrokeColorWithColor(context, self.centerPointerColor.CGColor);
-        }
-        CGContextStrokePath(context);
-    }
-    CGContextRestoreGState(context);
-    
+
     CGRect gaugeBoundary = CGRectMake(centerPoint.x - size.width / 2.0f,
                                       centerPoint.y - size.height / 2.0f,
                                       size.width,
                                       size.height);
     
     // Draw bearing chevron
-    if (self.showNavigationBearing && self.bearingChevronColor != nil) {
-        float bearingError = (self.navigationBearing - self.heading);
-        if (bearingError > 180) {
-            bearingError -= 360;
-        }
-        if (bearingError < -180) {
-            bearingError += 360;
-        }
-        
-        float chevronX = centerPoint.x + bearingError * oneDegX;
+    if (self.bearingChevronColor != nil) {
+        float chevronX = centerPoint.x;
         if (chevronX > centerPoint.x + size.width / 2.0f) {
             chevronX = centerPoint.x + size.width / 2.0f;
         }
