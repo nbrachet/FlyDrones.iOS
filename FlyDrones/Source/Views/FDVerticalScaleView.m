@@ -119,7 +119,7 @@
         
         // Draw the "numbers"
         if (i % 2 == 0) {
-            NSString *labelString = [NSString stringWithFormat:@"%ld", (long)round(tickVal)];
+            NSString *labelString = [NSString stringWithFormat:@"%.0f", tickVal];
             NSAttributedString *labelAttributedString = [[NSAttributedString alloc] initWithString:labelString
                                                                                         attributes:smallTextAttributes];
             CGSize labelAttributedStringSize = [labelAttributedString size];
@@ -140,7 +140,7 @@
 
     NSString *valueString;
     if (self.value >= 30) {
-        valueString = [NSString stringWithFormat:@"%ld%@", (long)self.value, self.title];
+        valueString = [NSString stringWithFormat:@"%.0f%@", self.value, self.title];
     } else {
         valueString = [NSString stringWithFormat:@"%.1f%@", self.value, self.title];
     }
