@@ -24,7 +24,7 @@
 #define kDefaultVideoFps 25
 #define kDefaultVideoResolution 1.25f
 
-#define ParseApplicationID @"ZynF8lZVcwF9hhJSMJ2uosi3gRIlzbayvsMcQBcS"
-#define ParseClientKey @"nKR9tHdgRT4kBx7UWTI1md0fETk1LI7zVEsMepyT"
+#define ParseApplicationID @"GGz4nwwcqUsAzJPlQ1fu8WYP74hptMw4xBJ6xcNA"
+#define ParseClientKey @"10RAbOZyNqo45z4vxvmRCCX6FSSXUUyZolcyPkvj"
 
 #endif
