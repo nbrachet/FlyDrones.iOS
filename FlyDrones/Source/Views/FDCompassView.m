@@ -46,7 +46,7 @@
     const float tickMinorHeight = size.height / 6.0f;
     const float tickWidth = size.width * 0.01f;
     const float chevronSide = size.width * 0.018f;
-    const float fontSize = size.height * 0.6f;
+    const float fontSize = size.height * 0.5f;
     
     UIGraphicsBeginImageContext(size);
 
@@ -56,7 +56,7 @@
     CGContextSetFillColorWithColor(context, [self.backgroundColor CGColor]);
     CGContextFillRect(context, CGRectMake(0.0f, 0.0f, size.width, size.height));
 
-    NSDictionary *numbersTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSize - 3],
+    NSDictionary *numbersTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSize*0.7f],
                                             NSForegroundColorAttributeName: self.numbersColor};
     NSDictionary *lettersTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSize],
                                             NSForegroundColorAttributeName: self.lettersColor};
@@ -89,20 +89,23 @@
         if (angle % 30 == 0) {
             NSMutableAttributedString *attributedText;
             CGSize textSize;
+            CGFloat height;
             if (angle % 90 == 0) {
                 // Compass points
                 NSArray *array = @[@"N", @"E", @"S", @"W"];
                 attributedText = [[NSMutableAttributedString alloc] initWithString:array[angle / 90] attributes:lettersTextAttributes];
                 textSize = [attributedText size];
+                height = 0;
             } else {
                 // Plain old number
                 NSString *numberString = [NSString stringWithFormat:@"%ld", (long)angle];
                 attributedText = [[NSMutableAttributedString alloc] initWithString:numberString attributes:numbersTextAttributes];
-                textSize = [attributedText size];
                 [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:@"°" attributes:numbersTextAttributes]];
+                textSize = [attributedText size];
+                height = tickMajorHeight / 2;
             }
             
-            [attributedText drawAtPoint:CGPointMake(x - textSize.width / 2.0f, 0)];
+            [attributedText drawAtPoint:CGPointMake(x - textSize.width / 2.0f, height)];
         }
     }
 
