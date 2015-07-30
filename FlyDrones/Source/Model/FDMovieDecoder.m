@@ -36,9 +36,10 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
 - (instancetype)init {
     self = [super init];
     if (self) {
-        videoCodecContext = NULL;
-        videoCodecParserContext = NULL;
-        
+        if (![self initializeCodec]) {
+            return nil;
+        }
+
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.name = @"Movie decode queue";
         self.operationQueue.maxConcurrentOperationCount = 1;
@@ -61,10 +62,6 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
         return;
     }
     
-    if (![self isCodecInitialized]) {
-        [self initializeCodecWith:data];
-    }
-    
     if ([self isSkipDecode]) {
         return;
     }
@@ -78,7 +75,7 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
         
         [strongSelf parseData:data];
     }];
-    
+
 //    NSLog(@"Tasks count:%lu", (unsigned long)self.operationQueue.operationCount);
 }
 
@@ -92,23 +89,14 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
     return videoCodecContext && videoCodecParserContext;
 }
 
-- (void)initializeCodecWith:(NSData *)data {
+- (BOOL)initializeCodec {
     videoCodec = avcodec_find_decoder(CODEC_ID_H264);
     
     videoCodecContext = avcodec_alloc_context3(videoCodec);
-    
-    // Note: for H.264 RTSP streams, the width and height are usually not specified (width and height are 0).
-    // These fields will become filled in once the first frame is decoded and the SPS is processed.
-    videoCodecContext->width = (int)[FDDroneStatus currentStatus].videoSize.width;
-    videoCodecContext->height = (int)[FDDroneStatus currentStatus].videoSize.height;
-    
-    videoCodecContext->extradata = av_malloc(data.length);
-    videoCodecContext->extradata_size = (int)data.length;
-    [data getBytes:videoCodecContext->extradata length:videoCodecContext->extradata_size];
     videoCodecContext->pix_fmt = PIX_FMT_YUV420P;
-    
+
     //we can receive truncated frames
-    if(videoCodec->capabilities & CODEC_CAP_TRUNCATED) {
+    if (videoCodec->capabilities & CODEC_CAP_TRUNCATED) {
         videoCodecContext->flags |= CODEC_FLAG_TRUNCATED;
     }
     
@@ -119,6 +107,7 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
         NSLog(@"Failed to initialize decoder");
         [self deinitializeCodec];
     }
+    return isInitializedDecoder;
 }
 
 - (void)deinitializeCodec {
