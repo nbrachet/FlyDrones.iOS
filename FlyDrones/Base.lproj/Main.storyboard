@@ -542,9 +542,6 @@
                                             <userDefinedRuntimeAttribute type="color" keyPath="lettersColor">
                                                 <color key="value" red="0.98039215686274506" green="0.11764705882352941" blue="0.11764705882352941" alpha="1" colorSpace="calibratedRGB"/>
                                             </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="navigationBearing">
-                                                <real key="value" value="0.0"/>
-                                            </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="smoothBoundaries" value="YES"/>
                                             <userDefinedRuntimeAttribute type="image" keyPath="maskImage" value="HorizontalGradient"/>
                                         </userDefinedRuntimeAttributes>

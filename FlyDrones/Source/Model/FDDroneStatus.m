@@ -75,12 +75,6 @@ static NSString * const ParamValuesKey = @"paramValues";
     self.heading = FDNotAvailable;
     self.throttleSetting = FDNotAvailable;
     
-    self.navigationBearing = FDNotAvailable;
-    self.altitudeError = FDNotAvailable;
-    self.temperature = FDNotAvailable;
-    self.absolutePressure = FDNotAvailable;
-    self.differentialPressure = FDNotAvailable;
-    
     self.gpsInfo = [[FDGPSInfo alloc] init];
     self.gpsInfo.locationCoordinate = kCLLocationCoordinate2DInvalid;
 }
