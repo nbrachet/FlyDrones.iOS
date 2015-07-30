@@ -123,15 +123,7 @@ static size_t roundup(size_t x, size_t y);
         return;
     }
     
-    __weak __typeof(self) weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        __strong __typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-        
-        [strongSelf.delegate rtpConnectionOperation:strongSelf didReceiveData:data];
-    });
+    [self.delegate rtpConnectionOperation:self didReceiveData:data];
 }
 
 #pragma mark - Helpers
