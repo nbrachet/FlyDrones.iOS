@@ -191,6 +191,8 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
         [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:@[NSStringFromClass([FDLocationInfoViewController class])]];
         [self.leftJoystickView resetPosition];
         [self.rightJoystickView resetPosition];
+        [self.armedStatusButton setTitle:@"N/A" forState:UIControlStateNormal];
+        [self.customModesButton setTitle:@"N/A" forState:UIControlStateNormal];
     } else {
         NSString *armedStatusButtonTitle = self.isArm ? @"ARMED" : @"DISARMED";
         [self.armedStatusButton setTitle:armedStatusButtonTitle forState:UIControlStateNormal];
