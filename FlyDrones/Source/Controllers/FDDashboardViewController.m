@@ -452,14 +452,10 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 }
 
 - (void)requestDataStreams {
-    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_ALL start:NO]];
-    
-    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_RAW_SENSORS start:YES]];
-    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_RC_CHANNELS start:YES]];
-    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_RAW_CONTROLLER start:YES]];
+    // Requests MAVLINK_MSG_ID_SYS_STATUS and MAVLINK_MSG_ID_GPS_RAW_INT messages
     [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_EXTENDED_STATUS start:YES]];
+    // Request MAVLINK_MSG_ID_VFR_HUD messages
     [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_EXTRA2 start:YES]];
-    [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForRequestDataStream:MAV_DATA_STREAM_EXTRA3 start:YES]];
 }
 
 #pragma mark - UIAlertViewDelegate
