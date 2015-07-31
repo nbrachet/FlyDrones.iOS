@@ -40,26 +40,29 @@ static size_t roundup(size_t x, size_t y);
             return;
         }
         
-        size_t bufferSize = rtp.rcvbufsiz() + sizeof(H264::START_SEQUENCE);
-        void* buffer = malloc(bufferSize + FF_INPUT_BUFFER_PADDING_SIZE); // ffmpeg requires additionally allocated bytes at the end of the input bitstream for decoding
-        if (!buffer) {
-            return;
-        }
-        memcpy(buffer, &H264::START_SEQUENCE, sizeof(H264::START_SEQUENCE));
+        size_t bufferSize = roundup(rtp.rcvbufsiz() + sizeof(H264::START_SEQUENCE) + FF_INPUT_BUFFER_PADDING_SIZE, getpagesize());  // ffmpeg requires additionally allocated bytes at the end of the input bitstream for decoding
+        LOGGER_DEBUG("bufferSize set to %.1fiB", (float)bufferSize);
+        void* buffer = NULL;
 
         struct timeval tv0 = {0, 0};
 
         while (!self.isCancelled) {
             @autoreleasepool {
                 if (tv0.tv_sec == 0) {
-                    if (rtp.send((void*) NULL, 0, MSG_DONTWAIT, NULL, &socketAddress) == -1) {
+                    (void) rtp.send((void*) NULL, 0, MSG_DONTWAIT, NULL, &socketAddress);
+                }
+
+                if (!buffer) {
+                    buffer = malloc(bufferSize);
+                    if (!buffer) {
+                        LOGGER_PERROR("malloc(%zu)", bufferSize);
                         break;
                     }
                 }
-                
+
                 struct timeval timeout = {1, 0};
                 ssize_t receivedDataSize = rtp.recv(reinterpret_cast<char*>(buffer) + sizeof(H264::START_SEQUENCE),
-                                                    bufferSize - sizeof(H264::START_SEQUENCE),
+                                                    bufferSize - sizeof(H264::START_SEQUENCE) - FF_INPUT_BUFFER_PADDING_SIZE,
                                                     &timeout);
                 if (receivedDataSize == -1) {
                     if (errno == EINTR) {
@@ -75,19 +78,6 @@ static size_t roundup(size_t x, size_t y);
                     break;
                 }
                 
-                if ((size_t)receivedDataSize >= bufferSize - sizeof(H264::START_SEQUENCE)) {
-                    const size_t newBufferSize = roundup(receivedDataSize + sizeof(H264::START_SEQUENCE) + FF_INPUT_BUFFER_PADDING_SIZE, getpagesize());
-                    receivedDataSize = bufferSize - sizeof(H264::START_SEQUENCE);
-                    bufferSize = newBufferSize - FF_INPUT_BUFFER_PADDING_SIZE;
-                    
-                    LOGGER_NOTICE("Increasing bufsiz to %.1fiB", (float)newBufferSize);
-                    
-                    buffer = realloc(buffer, newBufferSize);
-                    if (!buffer) {
-                        break;
-                    }
-                }
-                
                 if (receivedDataSize == 0) {
                     continue;
                 }
@@ -95,12 +85,28 @@ static size_t roundup(size_t x, size_t y);
                 if (tv0.tv_sec == 0) {
                     if (gettimeofday(&tv0, NULL) == -1) {
                         LOGGER_PERROR("gettimeofday");
-                        break;
+                        tv0.tv_sec = 0;
                     }
                 }
                 
+                if ((size_t)receivedDataSize >= bufferSize - sizeof(H264::START_SEQUENCE - FF_INPUT_BUFFER_PADDING_SIZE)) {
+                    const size_t newBufferSize = roundup(receivedDataSize + sizeof(H264::START_SEQUENCE) + FF_INPUT_BUFFER_PADDING_SIZE, getpagesize());
+                    receivedDataSize = bufferSize - sizeof(H264::START_SEQUENCE) - FF_INPUT_BUFFER_PADDING_SIZE;
+                    bufferSize = newBufferSize;
+                    LOGGER_DEBUG("Increasing bufferSize to %.1fiB", (float)bufferSize);
+                }
+
+                memcpy(buffer, &H264::START_SEQUENCE, sizeof(H264::START_SEQUENCE));
                 receivedDataSize += sizeof(H264::START_SEQUENCE);
-                NSData *receivedData = [NSData dataWithBytes:buffer length:receivedDataSize];
+                memset(reinterpret_cast<char*>(buffer) + receivedDataSize, 0, sizeof(uint32_t));
+
+                NSData *receivedData = [[NSData alloc] initWithBytesNoCopy:buffer
+                                                                    length:receivedDataSize
+                                                               deallocator:^(void *bytes, NSUInteger length) {
+                                                                   free(bytes);
+                                                               }];
+                buffer = NULL;
+
                 [self notifyOnReceivingData:receivedData];
             }
         }
