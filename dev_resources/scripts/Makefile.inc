@@ -2,6 +2,7 @@
 # note: list available sdk's with `xcodebuild -showsdks`
 VERSION_MIN := 8.0
 ARCHS := armv7 armv7s arm64 x86_64 i386
+#DEBUG := YES
 
 TOP := ../../..
 

@@ -42,7 +42,7 @@ $(ARCHS):   ffmpeg-$(RELEASE) gas-preprocessor.pl \
 	        --target-os=darwin \
 	        --arch=$@ \
 	        --enable-cross-compile \
-	        --disable-debug \
+            $(if $(DEBUG),,--disable-debug) \
 	        --disable-programs \
 	        --disable-doc \
 	        --enable-pic \

@@ -38,6 +38,7 @@ $(ARCHS):  $(SNAPSHOT)
 	            $(call host,$@) \
 	            --enable-pic \
 	            --enable-static \
+                $(if $(DEBUG),--enable-debug,) \
 	            --disable-gpl \
 	            --disable-cli \
 	            --prefix=$(abspath .)/$@ && \
