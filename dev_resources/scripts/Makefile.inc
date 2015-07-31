@@ -17,9 +17,19 @@ $(if $(filter armv7 armv7s,$(1)),\
 )
 endef
 
+# http://iossupportmatrix.com/
+#
+# armv7 -> A4 (iPad 1st gen) -> cortex-a8 + neon
+#          A5 (iPad 2, iPad mini) -> cortex-a9 + neon
+# armv7s -> A6X -> swift
+# arm64 -> A7
+
 define cpu
-$(if $(filter armv7s,$(1)),\
-    -mcpu=swift,\
+$(if $(filter armv7,$(1)),\
+    -mcpu=cortex-a9,\
+    $(if $(filter armv7s,$(1)),\
+        -mcpu=swift,\
+    )\
 )
 endef
 
