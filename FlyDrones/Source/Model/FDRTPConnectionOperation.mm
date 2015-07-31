@@ -9,6 +9,9 @@
 #import "FDRTPConnectionOperation.h"
 #import "RTP.h"
 
+// see FF_INPUT_BUFFER_PADDING_SIZE in libavcodec/avcodec.h
+#define FF_INPUT_BUFFER_PADDING_SIZE 32
+
 static size_t roundup(size_t x, size_t y);
 
 @interface FDRTPConnectionOperation ()
@@ -38,7 +41,7 @@ static size_t roundup(size_t x, size_t y);
         }
         
         size_t bufferSize = rtp.rcvbufsiz() + sizeof(H264::START_SEQUENCE);
-        void* buffer = malloc(bufferSize);
+        void* buffer = malloc(bufferSize + FF_INPUT_BUFFER_PADDING_SIZE); // ffmpeg requires additionally allocated bytes at the end of the input bitstream for decoding
         if (!buffer) {
             return;
         }
@@ -73,13 +76,13 @@ static size_t roundup(size_t x, size_t y);
                 }
                 
                 if ((size_t)receivedDataSize >= bufferSize - sizeof(H264::START_SEQUENCE)) {
-                    const size_t newBufferSize = roundup(receivedDataSize + sizeof(H264::START_SEQUENCE), getpagesize());
+                    const size_t newBufferSize = roundup(receivedDataSize + sizeof(H264::START_SEQUENCE) + FF_INPUT_BUFFER_PADDING_SIZE, getpagesize());
                     receivedDataSize = bufferSize - sizeof(H264::START_SEQUENCE);
-                    bufferSize = newBufferSize;
+                    bufferSize = newBufferSize - FF_INPUT_BUFFER_PADDING_SIZE;
                     
-                    LOGGER_NOTICE("Increasing bufsiz to %.1fiB", (float)bufferSize);
+                    LOGGER_NOTICE("Increasing bufsiz to %.1fiB", (float)newBufferSize);
                     
-                    buffer = realloc(buffer, bufferSize);
+                    buffer = realloc(buffer, newBufferSize);
                     if (!buffer) {
                         break;
                     }
