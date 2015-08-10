@@ -9,7 +9,7 @@
 #import "FDMovieDecoder.h"
 #import "FDDroneStatus.h"
 
-static NSUInteger FDMovieDecoderMaxOperationInQueue = 7;
+static NSUInteger FDMovieDecoderMaxOperationInQueue = 5;
 static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
 
 @interface FDMovieDecoder () {
