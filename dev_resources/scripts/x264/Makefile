@@ -1,7 +1,7 @@
 
 # Inspired from https://github.com/kewlbear/x264-ios/blob/master/build-x264.sh
 
-SNAPSHOT := x264-snapshot-20150726-2245-stable
+SNAPSHOT := x264-snapshot-20150806-2245-stable
 
 include ../Makefile.inc
 
