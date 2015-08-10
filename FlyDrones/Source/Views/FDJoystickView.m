@@ -36,7 +36,7 @@ typedef NS_ENUM(NSUInteger, FDJoystickViewDirection) {
 
 #pragma mark - Custom Accessors
 
-- (CGFloat)stickHorisontalValue {
+- (CGFloat)stickHorizontalValue {
     return -self.prevTouchViewPosition.x / CGRectGetMidX(self.backgroundImageView.bounds);
 }
 

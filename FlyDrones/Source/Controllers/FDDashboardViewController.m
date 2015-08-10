@@ -391,9 +391,9 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
     //send control data
     NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
-                                                                    roll:self.rightJoystickView.stickHorisontalValue
+                                                                    roll:self.rightJoystickView.stickHorizontalValue
                                                                   thrust:self.leftJoystickView.stickVerticalValue
-                                                                     yaw:self.leftJoystickView.stickHorisontalValue
+                                                                     yaw:self.leftJoystickView.stickHorizontalValue
                                                           sequenceNumber:1];
     [self.connectionManager sendDataToControlServer:controlData];
 }

@@ -23,7 +23,7 @@ typedef NS_ENUM(NSUInteger, FDJoystickViewMode) {
 @property (nonatomic, assign) FDJoystickViewMode mode;
 @property (nonatomic, assign) BOOL isSingleActiveAxis;
 
-- (CGFloat)stickHorisontalValue;
+- (CGFloat)stickHorizontalValue;
 - (CGFloat)stickVerticalValue;
 - (void)resetPosition;
 
