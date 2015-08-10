@@ -107,10 +107,6 @@
 #pragma mark - FDRTPConnectionOperationDelegate
 
 - (void)rtpConnectionOperation:(FDRTPConnectionOperation *)rtpConnectionOperation didReceiveData:(NSData *)data {
-    if (data.length == 0) {
-        return;
-    }
-    
     if (self.delegate == nil) {
         return;
     }

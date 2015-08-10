@@ -467,10 +467,6 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 #pragma mark - FDConnectionManagerDelegate
 
 - (void)connectionManager:(FDConnectionManager *)connectionManager didReceiveVideoData:(NSData *)data {
-    if (data.length == 0) {
-        return;
-    }
-
     [self.movieDecoder parseAndDecodeInputData:data];
 }
 

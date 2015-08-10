@@ -120,14 +120,9 @@ static size_t roundup(size_t x, size_t y);
 #pragma mark - Private
 
 - (void)notifyOnReceivingData:(NSData *)data {
-    if (data.length == 0) {
-        return;
-    }
-    
     if (self.delegate == nil) {
         return;
     }
-    
     if (![self.delegate respondsToSelector:@selector(rtpConnectionOperation:didReceiveData:)]) {
         return;
     }
