@@ -28,7 +28,13 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
 
 + (void)initialize {
     [super initialize];
-    
+
+#ifndef NDEBUG
+    av_log_set_level(AV_LOG_VERBOSE);
+#else
+    av_log_set_level(AV_LOG_INFO);
+#endif
+
     av_register_all();
     avcodec_register_all();
 }
