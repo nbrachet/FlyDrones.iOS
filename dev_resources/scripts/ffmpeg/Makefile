@@ -9,6 +9,14 @@ LIBS := avcodec avfilter avutil swresample avdevice avformat postproc swscale
 
 all: include $(foreach lib,$(LIBS),lib/lib$(lib).a) lib/pkgconfig
 
+clean:
+	( cd ffmpeg-$(RELEASE) ; $(MAKE) clean )
+	-rm -rf $(ARCHS)
+	-rm -rf include lib
+
+distclean: clean
+	( cd ffmpeg-$(RELEASE) ; $(MAKE) distclean )
+
 install: include $(foreach lib,$(LIBS),lib/lib$(lib).a) lib/pkgconfig
 	-rm -rf $(TOP)/Librairies/ffmpeg/include $(TOP)/Librairies/ffmpeg/lib
 	cp -r include $(TOP)/Libraries/ffmpeg/

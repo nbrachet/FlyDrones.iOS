@@ -7,6 +7,14 @@ include ../Makefile.inc
 
 all: include lib/libx264.a lib/pkgconfig
 
+clean:
+	( cd $(SNAPSHOT) ; $(MAKE) clean )
+	-rm -rf $(ARCHS)
+	-rm -rf include lib
+
+distclean: clean
+	( cd $(SNAPSHOT) ; $(MAKE) distclean )
+
 install: include lib/libx264.a lib/pkgconfig
 	-rm -rf $(TOP)/Librairies/x264/include $(TOP)/Librairies/x264/lib
 	cp -r include $(TOP)/Libraries/x264/
