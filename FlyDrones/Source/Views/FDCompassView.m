@@ -79,7 +79,7 @@
         CGContextBeginPath(context);
         const float y = (angle % 10 == 0) ? tickBase - tickMajorHeight : tickBase - tickMinorHeight;
         CGContextMoveToPoint(context, x, y);
-        CGContextAddLineToPoint (context, x, tickBase);
+        CGContextAddLineToPoint(context, x, tickBase);
         CGContextStrokePath(context);
         CGContextBeginPath(context);
         CGContextAddArc(context, x, y, tickWidth / 2.0f, 0, M_PI * 2.0f, 1);
