@@ -19,6 +19,8 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
 }
 
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
+@property (atomic) NSUInteger operationCountOnMainThread;
+@property (atomic, readonly, getter=operationCount) NSUInteger operationCount;
 
 @end
 
@@ -46,6 +48,8 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
             return nil;
         }
 
+        self.operationCountOnMainThread = 0;
+
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.name = @"Movie decode queue";
         self.operationQueue.maxConcurrentOperationCount = 1;
@@ -68,10 +72,18 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
         return;
     }
     
-    if ([self isSkipDecode]) {
+    if (self.operationCount > FDMovieDecoderMaxOperationInQueue) {
+        NSLog(@"Tasks count:%lu", (unsigned long)self.operationCount);
+//        [self.operationQueue cancelAllOperations];
+//        [self.operationQueue waitUntilAllOperationsAreFinished];
         return;
     }
-    
+#ifndef NDEBUG
+    if (self.operationCount > FDMovieDecoderMaxOperationFromSkipRender || self.operationCountOnMainThread > 1) {
+        NSLog(@"Tasks count:%lu %lu", (unsigned long)self.operationCount, (unsigned long)self.operationCountOnMainThread);
+    }
+#endif
+
     __weak __typeof(self)weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         __strong __typeof(weakSelf) strongSelf = weakSelf;
@@ -130,11 +142,18 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
     }
 }
 
+- (BOOL)isCancelled {
+    return [self.operationQueue.operations.firstObject isCancelled];
+}
+
 - (void)parseData:(NSData *)data {
     int dataLen = (int)data.length;
     const uint8_t* dataBytes = (const uint8_t*)[data bytes];
     while (dataLen > 0) {
-        @autoreleasepool {
+        /* @autoreleasepool */ {
+//            if ([self isCancelled])
+//                break;
+
             uint8_t* parsedData = NULL;
             int parsedDataSize = 0;
             int length = av_parser_parse2(videoCodecParserContext,
@@ -170,27 +189,34 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
     packet.stream_index = 0;
     packet.pts = AV_NOPTS_VALUE;
     packet.dts = AV_NOPTS_VALUE;
-    
-    while(packet.size > 0) {
-        @autoreleasepool {
+
+    NSOperationQueue* mainQueue = [NSOperationQueue mainQueue];
+    while (packet.size > 0) {
+        /* @autoreleasepool */ {
             __block struct AVFrame *decodedFrame = av_frame_alloc();
-            int isGotPicture;
-            int length = avcodec_decode_video2(videoCodecContext, decodedFrame, &isGotPicture, &packet);
+            int gotPicture;
+            int length = avcodec_decode_video2(videoCodecContext, decodedFrame, &gotPicture, &packet);
             if (length < 0) {
                 av_frame_free(&decodedFrame);
                 NSLog(@"Decode video error, skip packet");
                 break;
             }
-            if (isGotPicture && ![self isSkipRender]) {
+            if (length > 0 && gotPicture && self.operationCount <= FDMovieDecoderMaxOperationFromSkipRender) {
                 __weak __typeof(self)weakSelf = self;
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [mainQueue addOperationWithBlock:^{
                     __strong __typeof(weakSelf) strongSelf = weakSelf;
                     if (strongSelf == nil) {
                         return;
                     }
 
-                    [strongSelf.delegate movieDecoder:strongSelf decodedVideoFrame:*decodedFrame];
-                    av_frame_free(&decodedFrame);
+                    @try {
+                        strongSelf.operationCountOnMainThread += 1;
+                        [strongSelf.delegate movieDecoder:strongSelf decodedVideoFrame:*decodedFrame];
+                    }
+                    @finally {
+                        av_frame_free(&decodedFrame);
+                        strongSelf.operationCountOnMainThread -= 1;
+                    }
                 }];
             } else {
                 av_frame_free(&decodedFrame);
@@ -200,23 +226,14 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
             packet.data += length;
         }
     }
+
     av_free_packet(&packet);
 }
 
-- (BOOL)isSkipDecode {
-    BOOL isSkipDecode;
+- (NSUInteger)operationCount {
     @synchronized(self) {
-        isSkipDecode = self.operationQueue.operationCount > FDMovieDecoderMaxOperationInQueue;
+        return self.operationQueue.operationCount + self.operationCountOnMainThread;
     }
-    return isSkipDecode;
-}
-
-- (BOOL)isSkipRender {
-    BOOL isSkipRender;
-    @synchronized(self) {
-        isSkipRender = self.operationQueue.operationCount > FDMovieDecoderMaxOperationFromSkipRender;
-    }
-    return isSkipRender;
 }
 
 @end
