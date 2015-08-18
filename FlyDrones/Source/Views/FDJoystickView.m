@@ -65,28 +65,29 @@ typedef NS_ENUM(NSUInteger, FDJoystickViewDirection) {
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (self.isTracking == NO) {
+        return;
+    }
+
+    CGPoint viewMiddlePoint = CGPointMake(CGRectGetMidX(self.backgroundImageView.bounds), CGRectGetMidY(self.backgroundImageView.bounds));
+    CGPoint touchViewMiddlePoint = CGPointMake(CGRectGetMidX(self.touchImageView.bounds), CGRectGetMidY(self.touchImageView.bounds));
     for (UITouch *touch in touches) {
-        if (self.isTracking == NO) {
-            return;
-        }
-        
         CGPoint touchPoint = [touch locationInView:self.backgroundImageView];
         CGPoint previousTouchPoint = [touch previousLocationInView:self.backgroundImageView];
         
-        CGPoint viewMiddlePoint = CGPointMake(CGRectGetMidX(self.backgroundImageView.bounds), CGRectGetMidY(self.backgroundImageView.bounds));
-        CGPoint touchViewMiddlePoint = CGPointMake(CGRectGetMidX(self.touchImageView.bounds), CGRectGetMidY(self.touchImageView.bounds));
         CGSize firstTouchDelta = CGSizeMake(self.firstTouchPoint.x - touchViewMiddlePoint.x,
                                             self.firstTouchPoint.y - touchViewMiddlePoint.y);
         CGPoint touchViewCenterPoint = CGPointMake(viewMiddlePoint.x - touchPoint.x + firstTouchDelta.width,
                                                    viewMiddlePoint.y - touchPoint.y + firstTouchDelta.height);
         
         CGPoint convertedTouchViewCenterPoint = CGPointMake(touchViewCenterPoint.x + viewMiddlePoint.x, touchViewCenterPoint.y + viewMiddlePoint.y);
+
+        //Limit movement inside view
+
         CGFloat distance = [self distanceBetweenPoint:viewMiddlePoint andPoint:convertedTouchViewCenterPoint];
-        CGFloat angle = -atan2f(-touchViewCenterPoint.x, -touchViewCenterPoint.y) - M_PI_2;
-        
-        //Limitation
-        float radius = viewMiddlePoint.x;
+        CGFloat radius = viewMiddlePoint.x;
         if (distance > radius) {
+            CGFloat angle = -atan2f(-touchViewCenterPoint.x, -touchViewCenterPoint.y) - M_PI_2;
             touchViewCenterPoint = CGPointMake(cos(angle) * radius ,sin(angle) * radius);
         }
         
