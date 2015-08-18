@@ -62,8 +62,9 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 @property (nonatomic, strong) FDDroneControlManager *droneControlManager;
 
 @property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, assign) CFTimeInterval lastReceivedHeartbeatMessageTimeInterval;
 @property (nonatomic, assign) CFTimeInterval lastConnectionTimeInterval;
+@property (nonatomic, assign) CFTimeInterval lastReceivedHeartbeatMessageTimeInterval;
+@property (nonatomic, assign) CFTimeInterval lastReceivedVFRInfoMessageTimeInterval;
 
 @property (nonatomic, assign, getter=isArm) BOOL arm;
 
@@ -71,8 +72,6 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
 @property (nonatomic, copy) NSArray *customModesOptionsNames;
 @property (nonatomic, copy) NSArray *armedModesOptionsNames;
-
-@property (nonatomic, assign, getter=isRequestDataStreamsSent) BOOL requestDataStreamsSent;
 
 @end
 
@@ -95,11 +94,9 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
                                                                  multiplier:movieSize.width/movieSize.height
                                                                    constant:0.0f];
     [self.movieBackgroundView addConstraint:constraint];
-    
-    self.enabledControls = YES;
-    self.mapButton.enabled = NO;
 
-    self.lastConnectionTimeInterval = CACurrentMediaTime();
+    self.enabledControls = YES; // draw compass and altitude
+    self.mapButton.enabled = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -186,7 +183,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
     self.leftJoystickView.userInteractionEnabled = enabledControls;
     self.rightJoystickView.userInteractionEnabled = enabledControls;
-    
+
     if (!enabledControls) {
         [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:@[NSStringFromClass([FDLocationInfoViewController class])]];
         [self.leftJoystickView resetPosition];
@@ -305,11 +302,10 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     }
     
     if (![self.connectionManager isConnectedToControlHost]) {
-        self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
-        CFTimeInterval disconnectedTimeInterval = CACurrentMediaTime() - self.lastConnectionTimeInterval;
-        if (disconnectedTimeInterval >= 2.0f) {
-            self.enabledControls = NO;
-        }
+        self.lastReceivedHeartbeatMessageTimeInterval = 0;
+        self.lastReceivedVFRInfoMessageTimeInterval = 0;
+        self.lastConnectionTimeInterval = CACurrentMediaTime();
+
         [self showProgressHUDWithTag:FDDashboardViewControllerHUDTagConnectingToTCPServer
                            labelText:NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server")
                      detailLabelText:nil
@@ -330,8 +326,6 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 }
 
 - (void)startTimer {
-    self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
-
     [self stopTimer];
     
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1f
@@ -362,32 +356,36 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
         }
         return;
     }
+
+    [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagConnectingToTCPServer];
+
     if (self.isHideMapAfterConnectionRestored) {
         self.hideMapAfterConnectionRestored = NO;
         [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:nil];
     }
 
-    self.lastConnectionTimeInterval = CACurrentMediaTime();
-    
     if (tickCounter % 10 == 0) {
         [self.connectionManager sendDataToControlServer:[self.droneControlManager heartbeatData]];
     }
     
-    CFTimeInterval delayHeartbeatMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedHeartbeatMessageTimeInterval;
-    if (delayHeartbeatMessageTimeInterval > 2.0f) {
+    CFTimeInterval heartbeatMessageTimeInterval = CACurrentMediaTime() - (self.lastReceivedHeartbeatMessageTimeInterval == 0 ? self.lastConnectionTimeInterval : self.lastReceivedHeartbeatMessageTimeInterval);
+    if (heartbeatMessageTimeInterval > 5.0f || self.lastReceivedHeartbeatMessageTimeInterval == 0) {
         [self showProgressHUDWithTag:FDDashboardViewControllerHUDTagWaitingHeartbeat
                            labelText:NSLocalizedString(@"Waiting for heartbeat message", @"Waiting for heartbeat message")
-                     detailLabelText:[NSString stringWithFormat:@"%.0f sec", delayHeartbeatMessageTimeInterval]
+                     detailLabelText:[NSString stringWithFormat:@"%.0f sec", heartbeatMessageTimeInterval]
                    activityIndicator:YES];
-        if (delayHeartbeatMessageTimeInterval > 3.0f) {
-            self.enabledControls = NO;
-            self.requestDataStreamsSent = NO;
-        }
+        self.enabledControls = NO;
         return;
     }
-    
+
     [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagWaitingHeartbeat];
-    [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagConnectingToTCPServer];
+
+    if (tickCounter % 10 == 0) {
+        CFTimeInterval delayVFRInfoMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedVFRInfoMessageTimeInterval;
+        if (delayVFRInfoMessageTimeInterval > 5.0f) {
+            [self requestDataStreams];
+        }
+    }
 
     //send control data
     NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
@@ -504,6 +502,8 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleVFRInfoForHeading:(NSUInteger)heading altitude:(CGFloat)altitude airspeed:(CGFloat)airspeed groundspeed:(CGFloat)groundspeed climbRate:(CGFloat)climbRate throttleSetting:(CGFloat)throttleSetting {
+    self.lastReceivedVFRInfoMessageTimeInterval = CACurrentMediaTime();
+
     self.compassView.heading = heading;
     self.altitudeVerticalScaleView.value = altitude;
     self.altitudeVerticalScaleView.targetDelta = climbRate;
@@ -515,12 +515,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
         firstHeartbeatMessage = NO;
         [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForParamRequestList]];
     }
-    
-    if (self.isRequestDataStreamsSent == NO) {
-        self.requestDataStreamsSent = YES;
-        [self requestDataStreams];
-    }
-    
+
     NSString *customModesButtonTitle = (mavBaseMode & (uint8_t)MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) ? [NSString nameFromArducopterMode:mavCustomMode] : @"N/A";
     [self.customModesButton setTitle:customModesButtonTitle forState:UIControlStateNormal];
     if ([self.presentedViewController isKindOfClass:[FDOptionsListViewController class]]) {
