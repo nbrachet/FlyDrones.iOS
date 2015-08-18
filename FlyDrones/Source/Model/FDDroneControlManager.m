@@ -277,7 +277,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                 
             //pitch
             NSInteger pitchRCValueIndex = [[currentStatus.paramValues objectForKey:@"RCMAP_PITCH"] integerValue];
-            NSInteger pitchRCValue = [self rcValueFromManualControlValue:pitch rcChannelIndex:pitchRCValueIndex];
+            NSInteger pitchRCValue = [self rcValueFromManualControlValue:-pitch rcChannelIndex:pitchRCValueIndex]; // pitch is reversed in APMCopter
             [rcChannelsRaw replaceObjectAtIndex:(pitchRCValueIndex - 1) withObject:@(pitchRCValue)];
             
             //roll
