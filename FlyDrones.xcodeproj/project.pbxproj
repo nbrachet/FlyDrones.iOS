@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01CC730A1B794238007A7107 /* FDJoystickView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CC73081B794238007A7107 /* FDJoystickView2.m */; };
 		1B14759E1B57DB1200E5B413 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1475981B57DB1200E5B413 /* Bolts.framework */; };
 		1B14759F1B57DB1200E5B413 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1475991B57DB1200E5B413 /* Parse.framework */; };
 		1B1475A01B57DB1200E5B413 /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B14759A1B57DB1200E5B413 /* ParseCrashReporting.framework */; };
@@ -85,6 +86,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01CC73081B794238007A7107 /* FDJoystickView2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDJoystickView2.m; sourceTree = "<group>"; };
+		01CC73091B794238007A7107 /* FDJoystickView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDJoystickView2.h; sourceTree = "<group>"; };
 		1B1475981B57DB1200E5B413 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		1B1475991B57DB1200E5B413 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		1B14759A1B57DB1200E5B413 /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseCrashReporting.framework; sourceTree = "<group>"; };
@@ -907,6 +910,8 @@
 				1B2807B71B2B46A40040A4B9 /* FDBatteryButton.m */,
 				1B2807BA1B2B46A40040A4B9 /* FDJoystickView.h */,
 				1B2807BB1B2B46A40040A4B9 /* FDJoystickView.m */,
+				01CC73091B794238007A7107 /* FDJoystickView2.h */,
+				01CC73081B794238007A7107 /* FDJoystickView2.m */,
 				1B2807BC1B2B46A40040A4B9 /* FDMovieGLView.h */,
 				1B2807BD1B2B46A40040A4B9 /* FDMovieGLView.m */,
 				1B2807BE1B2B46A40040A4B9 /* FDOptionTableViewCell.h */,
@@ -1448,6 +1453,7 @@
 				1BBBE1BA1B31A1C500021FF4 /* FDMovieGLRenderer.m in Sources */,
 				1B28092C1B2B46A40040A4B9 /* CLLocation+Utils.m in Sources */,
 				1B28092F1B2B46A40040A4B9 /* NSFileManager+ANUtils.m in Sources */,
+				01CC730A1B794238007A7107 /* FDJoystickView2.m in Sources */,
 				1B28094B1B2B46A40040A4B9 /* main.mm in Sources */,
 				1B7B8A6B1B61212800D6A9E2 /* FDOptionsListViewController.m in Sources */,
 				1B2809331B2B46A40040A4B9 /* FDBatteryStatusViewController.m in Sources */,

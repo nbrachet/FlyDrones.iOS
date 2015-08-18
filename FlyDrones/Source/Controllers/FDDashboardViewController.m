@@ -18,6 +18,7 @@
 #import "FDDroneStatus.h"
 #import "FDCompassView.h"
 #import "FDJoystickView.h"
+#import "FDJoystickView2.h"
 #import "FDVerticalScaleView.h"
 #import "FDLocationInfoViewController.h"
 #import "FDOptionsListViewController.h"
@@ -51,7 +52,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
 @property (nonatomic, weak) IBOutlet FDVerticalScaleView *altitudeVerticalScaleView;
 
-@property (nonatomic, weak) IBOutlet FDJoystickView *leftJoystickView;
+@property (nonatomic, weak) IBOutlet FDJoystickView2 *leftJoystickView;
 @property (nonatomic, weak) IBOutlet FDJoystickView *rightJoystickView;
 
 @property (nonatomic, assign, getter=isEnabledControls) BOOL enabledControls;
@@ -83,10 +84,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     [super viewDidLoad];
     
     [self customSetup];
-    
-    self.leftJoystickView.mode = FDJoystickViewModeSavedVerticalPosition;
-    self.leftJoystickView.isSingleActiveAxis = YES;
-    
+
     //Correct size of video
     CGSize movieSize = [FDDroneStatus currentStatus].videoSize;
     NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.movieBackgroundView
