@@ -456,16 +456,14 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         maxRCValue = [[currentStatus.paramValues objectForKey:maxValueKey] floatValue];
     }
     
-    NSInteger reverse = 1;
     NSString *reverseValueKey = [NSString stringWithFormat:@"RC%ld_REV", (long)rcChannelIndex];
     if ([currentStatus.paramValues objectForKey:reverseValueKey] != nil) {
-        reverse = [[currentStatus.paramValues objectForKey:reverseValueKey] integerValue];
+        NSInteger reverse = [[currentStatus.paramValues objectForKey:reverseValueKey] integerValue];
+        if (reverse == -1) {
+            value = -value;
+        }
     }
-    
-    if (reverse == -1) {
-        value = -value;
-    }
-    
+
     NSInteger rcValue = trimRCValue;
     
     if (value > 0) {
@@ -480,6 +478,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
     if (rcValue > maxRCValue) {
         rcValue = maxRCValue;
     }
+
     return rcValue;
 }
 
