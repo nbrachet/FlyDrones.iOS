@@ -18,6 +18,8 @@
 @interface FDMovieDecoder : NSObject
 
 @property (nonatomic, weak) id <FDMovieDecoderDelegate> delegate;
+@property (nonatomic, readonly) int width;
+@property (nonatomic, readonly) int height;
 
 - (void)parseAndDecodeInputData:(NSData *)data;
 - (void)stopDecode;

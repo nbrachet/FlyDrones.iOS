@@ -166,6 +166,9 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
                                           0,                           //dts
                                           AV_NOPTS_VALUE);             //pos
             if (parsedDataSize > 0) {
+                _width = videoCodecContext->width;
+                _height = videoCodecContext->height;
+
                 [self decodeFrameData:parsedData size:parsedDataSize];
             }
             if (length > 0) {

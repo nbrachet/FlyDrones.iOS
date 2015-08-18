@@ -31,7 +31,9 @@ typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
 static NSString * const FDDashboardViewControllerArmedStatusListIdentifier = @"ArmedStatusListIdentifier";
 static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"CustomModesListIdentifier";
 
-@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDOptionsListViewControllerDelegate, UIPopoverPresentationControllerDelegate>
+@interface FDDashboardViewController () <FDConnectionManagerDelegate, FDMovieDecoderDelegate, FDDroneControlManagerDelegate, UIAlertViewDelegate, FDOptionsListViewControllerDelegate, UIPopoverPresentationControllerDelegate> {
+    CGSize _frameSize;
+}
 
 @property (nonatomic, weak) IBOutlet UIView *topPanelView;
 @property (nonatomic, weak) IBOutlet UIButton *menuButton;
@@ -481,6 +483,11 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 #pragma mark - FDMovieDecoderDelegate
 
 - (void)movieDecoder:(FDMovieDecoder *)movieDecoder decodedVideoFrame:(AVFrame)videoFrame {
+    if (movieDecoder.width > 0 && movieDecoder.height > 0
+            && (_frameSize.width != movieDecoder.width || _frameSize.height != movieDecoder.height)) {
+        _frameSize = CGSizeMake(movieDecoder.width, movieDecoder.height);
+        [self.movieGLView frameSize:_frameSize];
+    }
     [self.movieGLView renderVideoFrame:videoFrame];
 }
 

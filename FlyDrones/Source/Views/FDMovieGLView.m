@@ -23,6 +23,8 @@ typedef NS_ENUM(GLuint, FDMovieGLViewShaderAttribute) {
     GLint _backingHeight;
     GLuint _program;
     GLint _uniformMatrix;
+    GLint _frameWidth;
+    GLint _frameHeight;
     GLfloat _vertices[8];
 }
 
@@ -57,6 +59,12 @@ typedef NS_ENUM(GLuint, FDMovieGLViewShaderAttribute) {
 
 #pragma mark - Public
 
+- (void)frameSize:(CGSize)frameSize {
+    _frameWidth = frameSize.width;
+    _frameHeight = frameSize.height;
+    [self updateVertices];
+}
+
 - (void)renderVideoFrame:(AVFrame)videoFrame {
     if (!videoFrame.data[0] ||
         !videoFrame.data[1] ||
@@ -81,7 +89,7 @@ typedef NS_ENUM(GLuint, FDMovieGLViewShaderAttribute) {
     if (![self.renderer setVideoFrame:videoFrame]) {
         return;
     };
-    
+
     @try {
         if ([self.renderer prepareRender]) {
             GLfloat modelviewProj[16];
@@ -107,8 +115,10 @@ typedef NS_ENUM(GLuint, FDMovieGLViewShaderAttribute) {
 
 - (void)setContentMode:(UIViewContentMode)contentMode {
     [super setContentMode:contentMode];
-    
-    [self updateVertices];
+
+    if (_backingWidth > 0 && _backingHeight > 0) {
+        [self updateVertices];
+    }
 }
 
 #pragma mark - Lifecycle
@@ -171,6 +181,11 @@ typedef NS_ENUM(GLuint, FDMovieGLViewShaderAttribute) {
         return;
     }
 
+    _frameWidth = _backingWidth;
+    _frameHeight = _backingHeight;
+    // no need to update vertices here... they'll be updated in layoutSubviews
+
+#if 0
     _vertices[0] = -1.0f;  // x0
     _vertices[1] = -1.0f;  // y0
     _vertices[2] = 1.0f;  // ..
@@ -179,6 +194,7 @@ typedef NS_ENUM(GLuint, FDMovieGLViewShaderAttribute) {
     _vertices[5] = 1.0f;
     _vertices[6] = 1.0f;  // x3
     _vertices[7] = 1.0f;  // y3
+#endif
 
     NSLog(@"OK setup GL");
 }
@@ -251,14 +267,30 @@ typedef NS_ENUM(GLuint, FDMovieGLViewShaderAttribute) {
 }
 
 - (void)updateVertices {
+
+    if (_frameWidth == _backingWidth && _frameHeight == _backingHeight) { // includes init case where everything is == 0
+NSLog(@"scale factor w: 1 h: 1");
+        _vertices[0] = -1.0f;  // x0
+        _vertices[1] = -1.0f;  // y0
+        _vertices[2] = 1.0f;  // ..
+        _vertices[3] = -1.0f;
+        _vertices[4] = -1.0f;
+        _vertices[5] = 1.0f;
+        _vertices[6] = 1.0f;  // x3
+        _vertices[7] = 1.0f;  // y3
+        return;
+    }
+
     const BOOL fit = (self.contentMode == UIViewContentModeScaleAspectFit);
-    const float width = [FDDroneStatus currentStatus].videoSize.width;
-    const float height = [FDDroneStatus currentStatus].videoSize.height;
+    const float width = _frameWidth; // [FDDroneStatus currentStatus].videoSize.width;
+    const float height = _frameHeight; // [FDDroneStatus currentStatus].videoSize.height;
     const float dH = (float) _backingHeight / height;
     const float dW = (float) _backingWidth / width;
     const float dd = fit ? MIN(dH, dW) : MAX(dH, dW);
     const float h = (height * dd / (float)_backingHeight);
     const float w = (width * dd / (float)_backingWidth);
+
+NSLog(@"scale factor w: %g h: %g", w, h);
 
     _vertices[0] = -w;
     _vertices[1] = -h;
