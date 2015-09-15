@@ -24,6 +24,11 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
 
 @end
 
+static void FFLog(void* context, int level, const char* format, va_list args) {
+    NSString* message = [[NSString alloc] initWithFormat: [NSString stringWithUTF8String: format] arguments: args];
+    NSLog(@"FFmpeg: %@", [message stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]]);
+}
+
 @implementation FDMovieDecoder
 
 #pragma mark - Lifecycle
@@ -36,6 +41,7 @@ static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
 #else
     av_log_set_level(AV_LOG_INFO);
 #endif
+    av_log_set_callback(FFLog);
 
     av_register_all();
     avcodec_register_all();
