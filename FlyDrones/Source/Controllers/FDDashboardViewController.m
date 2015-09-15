@@ -84,6 +84,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     
     [self customSetup];
 
+#if 0
     //Correct size of video
     CGSize movieSize = [FDDroneStatus currentStatus].videoSize;
     NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.movieBackgroundView
@@ -94,6 +95,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
                                                                  multiplier:movieSize.width/movieSize.height
                                                                    constant:0.0f];
     [self.movieBackgroundView addConstraint:constraint];
+#endif
 
     self.enabledControls = YES; // draw compass and altitude
     self.mapButton.enabled = NO;
