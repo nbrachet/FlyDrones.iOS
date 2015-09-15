@@ -36,7 +36,7 @@ endef
 
 define fpu
 $(if $(filter armv7%,$(1)),\
-    -mfpu=neon,\
+    -mfpu=neon -mfloat-abi=softfp,\
 )
 endef
 

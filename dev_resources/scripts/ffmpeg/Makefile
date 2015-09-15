@@ -49,6 +49,9 @@ $(ARCHS):   ffmpeg-$(RELEASE) gas-preprocessor.pl \
 	        --extra-ldflags='-arch $@ $(call cpu,$@) $(call fpu,$@) $(call version_min,$@) -L../../x264/lib' \
 	        --target-os=darwin \
 	        --arch=$@ \
+	        $(if $(filter arm64,$@),,--cpu=$(patsubst -mcpu=%,%,$(call cpu,$@))) \
+	        $(if $(filter %neon,$(call fpu,$@)),--enable-neon,) \
+	        --disable-armv5te --disable-armv6 --disable-armv6t2 \
 	        --enable-cross-compile \
             $(if $(DEBUG),,--disable-debug) \
 	        --disable-programs \
