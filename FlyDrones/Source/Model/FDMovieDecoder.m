@@ -9,6 +9,9 @@
 #import "FDMovieDecoder.h"
 #import "FDDroneStatus.h"
 
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
 static NSUInteger FDMovieDecoderMaxOperationInQueue = 5;
 static NSUInteger FDMovieDecoderMaxOperationFromSkipRender = 3;
 
@@ -119,11 +122,29 @@ static void FFLog(void* context, int level, const char* format, va_list args) {
     videoCodecContext = avcodec_alloc_context3(videoCodec);
     videoCodecContext->pix_fmt = PIX_FMT_YUV420P;
 
+    videoCodecContext->flags |= CODEC_FLAG_LOW_DELAY;
+
     //we can receive truncated frames
-    if (videoCodec->capabilities & CODEC_CAP_TRUNCATED) {
-        videoCodecContext->flags |= CODEC_FLAG_TRUNCATED;
+//    if (videoCodec->capabilities & CODEC_CAP_TRUNCATED) {
+//        videoCodecContext->flags |= CODEC_FLAG_TRUNCATED;
+//    }
+
+    if ((videoCodec->capabilities & CODEC_CAP_AUTO_THREADS) == 0) {
+
+        unsigned int ncpu;
+        size_t len = sizeof(ncpu);
+        if (sysctlbyname("hw.ncpu", &ncpu, &len, NULL, 0) != 0)
+        {
+            NSLog(@"sysctlbyname(hw.ncpu): %s", strerror(errno));
+            ncpu = 1;
+        }
+        if (ncpu > 2)
+            videoCodecContext->thread_count = ncpu - 2;
+        else
+            videoCodecContext->thread_count = ncpu;
     }
-    
+    videoCodecContext->thread_type &= ~FF_THREAD_FRAME;
+
     videoCodecParserContext = av_parser_init(AV_CODEC_ID_H264);
     
     BOOL isInitializedDecoder = (avcodec_open2(videoCodecContext, videoCodec, NULL) < 0) ? NO : YES;
