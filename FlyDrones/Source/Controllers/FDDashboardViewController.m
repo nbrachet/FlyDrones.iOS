@@ -351,7 +351,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
             [self performSegueWithIdentifier:@"ShowLocationInfo" sender:self.mapButton];
             self.hideMapAfterConnectionRestored = YES;
         }
-        if ((tickCounter % 15 == 0)) {
+        if ((tickCounter % 15 == 0)) { // every 1.5s
             [self connectToServers];
         }
         return;
@@ -364,7 +364,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
         [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:nil];
     }
 
-    if (tickCounter % 10 == 0) {
+    if (tickCounter % 10 == 0) { // every 1s
         [self.connectionManager sendDataToControlServer:[self.droneControlManager heartbeatData]];
     }
     
@@ -380,20 +380,21 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
     [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagWaitingHeartbeat];
 
-    if (tickCounter % 10 == 0) {
+    if (tickCounter % 10 == 0) { // every 1s
         CFTimeInterval delayVFRInfoMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedVFRInfoMessageTimeInterval;
         if (delayVFRInfoMessageTimeInterval > 5.0f) {
             [self requestDataStreams];
         }
     }
 
-    //send control data
-    NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
-                                                                    roll:self.rightJoystickView.stickHorizontalValue
-                                                                  thrust:self.leftJoystickView.stickVerticalValue
-                                                                     yaw:self.leftJoystickView.stickHorizontalValue
-                                                          sequenceNumber:1];
-    [self.connectionManager sendDataToControlServer:controlData];
+    if (tickCounter % 2 == 0) { // every 0.2s
+        //send control data
+        NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
+                                                                        roll:self.rightJoystickView.stickHorizontalValue
+                                                                      thrust:self.leftJoystickView.stickVerticalValue
+                                                                         yaw:self.leftJoystickView.stickHorizontalValue];
+        [self.connectionManager sendDataToControlServer:controlData];
+    }
 }
 
 - (void)showProgressHUDWithTag:(NSUInteger)tag labelText:(NSString *)labelText detailLabelText:(NSString *)detailLabelText activityIndicator:(BOOL)activityIndicator {
