@@ -4,6 +4,8 @@
 
 #include <errno.h>
 #include <pthread.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #ifdef __linux__
@@ -386,6 +388,7 @@ public:
     Thread()
         : _thread(0)
         , _thread_valid(false)
+        , _name(NULL)
     {
         errno = pthread_attr_init(&_attr);
         if (errno != 0)
@@ -404,6 +407,21 @@ public:
         (void) pthread_attr_destroy(&_attr);
 
         (void) cancel();
+
+        if (_name)
+            free((void*)_name);
+    }
+
+    void name(const char* name)
+    {
+        if (_name)
+            free((void*)_name);
+        _name = name == NULL ? NULL : strdup(name);
+    }
+
+    const char* name() const
+    {
+        return _name;
     }
 
     int priority() const
@@ -681,6 +699,15 @@ private:
 
             pthread_cleanup_push(cleanup_routine, NULL);
 
+                if (that->_name)
+                {
+#ifdef __APPLE__
+                    pthread_setname_np(that->_name);
+#elif defined(__USE_GNU)
+                    pthread_setname_np(pthread_self(), that->_name);
+#endif
+                }
+
                 that->run();
 
             pthread_cleanup_pop(1);
@@ -703,6 +730,7 @@ private:
     pthread_t _thread;
     bool _thread_valid;
     pthread_attr_t _attr;
+    const char* _name;
 };
 
 ///////////////////////////////////////////////////////////////////////

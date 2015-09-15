@@ -1111,7 +1111,9 @@ private:
                 t1 = t;
                 const double elapsed = ::elapsed(t0, t1);
                 out << '\n'
-                    << '\t' << it->first.ntp() << PrintF(" -%.1fs", elapsed) << PrintF("/%.1fs", (rtp_ts0 - it->first.rtp_ts) / 90000.0) << ':'; // FIXME: frequency
+                    << '\t' << it->first.ntp()
+                    << PrintF(" -%.1fs", elapsed) << PrintF("/%.1fs", (rtp_ts0 - it->first.rtp_ts) / 90000.0) // FIXME: frequency
+                    << " (" << it->second.lsr << "):";
             }
             out << " [ssrc=" << PrintF("%08x", it->first.ssrc) << " psent=" << it->first.psent << " lost=" << it->second.lost << ']';
         }

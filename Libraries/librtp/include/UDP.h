@@ -984,7 +984,9 @@ private:
         Monitor(unsigned seconds, UDPBounded* that)
             : TimerTask(seconds, seconds)
             , _that(that)
-        {}
+        {
+            this->name("UDPBounded::Monitor");
+        }
 
     protected:
 

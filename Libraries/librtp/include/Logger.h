@@ -203,6 +203,14 @@ public:
 
 
 #ifdef LOGGER_OSTREAM
+    static const std::locale& default_locale()
+    {
+        // Seems it takes a while (at least on iOS) to call std::locale("")
+        // so cache it
+        static const std::locale env = std::locale(""); // FIXME: thread safety
+        return env;
+    }
+
     class OStream
         : public std::ostream
     {
@@ -224,27 +232,54 @@ public:
 
         OStream& imbue(const char* name)
         {
-            std::locale mylocale(name);
-            (void) std::ostream::imbue(mylocale);
+            if (name != NULL && *name == '\0') // ""
+                return imbue(default_locale());
+            else
+                return imbue(std::locale(name));
+        }
+
+        OStream& imbue(const std::locale& loc)
+        {
+            (void) std::ostream::imbue(loc);
             return *this;
+        }
+
+        OStream& imbue()
+        {
+            return this->imbue(default_locale());
         }
     };
 
+    template <typename T>
     class Imbue
     {
     public:
 
-        Imbue(const char* name)
-            : _name(name)
+        Imbue(T x)
+            : _x(x)
         {}
 
-        const char* _name;
+        T _x;
     };
 
-    friend std::ostream& operator<<(std::ostream& out, const Imbue& rhs)
+    friend std::ostream& operator<<(std::ostream& out, const Imbue<const char*>& rhs)
     {
-        std::locale mylocale(rhs._name);
-        (void) out.imbue(mylocale);
+        if (rhs._x != NULL && *rhs._x == '\0') // ""
+            (void) out.imbue(default_locale());
+        else
+            (void) out.imbue(std::locale(rhs._x));
+        return out;
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const Imbue<const std::locale&>& rhs)
+    {
+        (void) out.imbue(rhs._x);
+        return out;
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const Imbue<void>& rhs)
+    {
+        (void) out.imbue(default_locale());
         return out;
     }
 #endif
@@ -663,6 +698,12 @@ private:
 #endif
 };
 
+#ifdef LOGGER_OSTREAM
+template <>
+class Logger::Imbue<void>
+{};
+#endif
+
 ///////////////////////////////////////////////////////////////////////
 //
 // FileLoggerImpl -- directs Logger oputput to a file
@@ -974,16 +1015,16 @@ LOGGER_CONVINIENCE(debug,     DEBUG)
 //  - LOGGER_ODEBUG(cdbg) << "Hello Debug" << " World!" << std::flush;
 
 #ifdef LOGGER_OSTREAM
-#    define LOGGER_OFATAL(x)            Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_FATAL, 4));       x.imbue("C") << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue("")
-#    define LOGGER_OALERT(x)            Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_ALERT, 4));       x.imbue("C") << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue("")
-#    define LOGGER_OCRITICAL(x)         Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_CRITICAL, 4));    x.imbue("C") << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue("")
-#    define LOGGER_OERROR(x)            Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_ERROR, 4));       x.imbue("C") << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue("")
+#    define LOGGER_OFATAL(x)            Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_FATAL, 4));       x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
+#    define LOGGER_OALERT(x)            Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_ALERT, 4));       x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
+#    define LOGGER_OCRITICAL(x)         Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_CRITICAL, 4));    x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
+#    define LOGGER_OERROR(x)            Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_ERROR, 4));       x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
 
-#    define LOGGER_OWARN(x)             Logger::OStream x(logger.streambuf(Logger::LEVEL_WARN));                        x.imbue("C") << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue("")
+#    define LOGGER_OWARN(x)             Logger::OStream x(logger.streambuf(Logger::LEVEL_WARN));                        x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
 
-#    define LOGGER_ONOTICE(x)           Logger::OStream x(logger.streambuf(Logger::LEVEL_NOTICE));                      x.imbue("")
-#    define LOGGER_OINFO(x)             Logger::OStream x(logger.streambuf(Logger::LEVEL_INFO));                        x.imbue("")
-#    define LOGGER_ODEBUG(x)            Logger::OStream x(logger.streambuf(Logger::LEVEL_DEBUG));                       x.imbue("")
+#    define LOGGER_ONOTICE(x)           Logger::OStream x(logger.streambuf(Logger::LEVEL_NOTICE));                      x.imbue()
+#    define LOGGER_OINFO(x)             Logger::OStream x(logger.streambuf(Logger::LEVEL_INFO));                        x.imbue()
+#    define LOGGER_ODEBUG(x)            Logger::OStream x(logger.streambuf(Logger::LEVEL_DEBUG));                       x.imbue()
 #endif
 
 ///////////////////////////////////////////////////////////////////////
@@ -1353,6 +1394,33 @@ public:
 
         return out;
     }
+
+private:
+
+    class StashLocale
+        : public std::ostream
+    {
+    public:
+
+        StashLocale(std::ostream& os)
+            : std::ostream(os.rdbuf())
+            , _os(os)
+            , _l(os.getloc())
+        {
+            copyfmt(os);
+        }
+
+        ~StashLocale()
+        {
+            _os.copyfmt(*this);
+            _os.imbue(_l);
+        }
+
+    private:
+
+        std::ostream& _os;
+        std::locale _l;
+    };
 
 private:
 

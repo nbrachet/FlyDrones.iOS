@@ -1441,7 +1441,10 @@ public:
             if (name)
             {
 #ifdef LOGGER_OSTREAM
-                LOGGER_ODEBUG(odbg) << name << " = " << *tv;
+                if (LOGGER_IS_DEBUG())
+                {
+                    LOGGER_ODEBUG(odbg) << name << " = " << *tv;
+                }
 #else
                 if (tv->tv_sec > 0)
                     if (tv->tv_usec > 0)
@@ -2001,7 +2004,7 @@ private:
 
 protected:
 
-    size_t _msg_controllen;
+    socklen_t _msg_controllen;
     void* _msg_control;
 };
 

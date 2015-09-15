@@ -33,18 +33,20 @@ public:
         , _dest(dest)
     {}
 
-    virtual ssize_t send(const void* buf, size_t len,
+    virtual ssize_t send(const void* buffer, size_t buflen,
                          int flags,
+                         struct timeval* timeout = NULL,
                          const struct sockaddr_in* dest = NULL)
     {
         struct iovec iovec;
-        iovec.iov_base = const_cast<void*>(buf);
-        iovec.iov_len = len;
-        return sendv(&iovec, 1, flags, dest);
+        iovec.iov_base = const_cast<void*>(buffer);
+        iovec.iov_len = buflen;
+        return sendv(&iovec, 1, flags, timeout, dest);
     }
 
-    virtual ssize_t sendv(struct iovec* iov, unsigned iovlen,
+    virtual ssize_t sendv(struct iovec* iov, unsigned iovcnt,
                           int flags,
+                          struct timeval* timeout = NULL,
                           const struct sockaddr_in* dest = NULL)
     {
         struct msghdr msg;
@@ -52,22 +54,33 @@ public:
         msg.msg_name = dest ? (void*)dest : (void*)_dest.addr();
         msg.msg_namelen = sizeof(struct sockaddr_in);
         msg.msg_iov = const_cast<struct iovec*>(iov);
-        msg.msg_iovlen = iovlen;
+        msg.msg_iovlen = iovcnt;
 
-        ssize_t n = ::sendmsg(_sockfd, &msg, flags);
+        if (timeout)
+        {
+            switch (wait_for_output(timeout))
+            {
+            case -1:
+            case 0:     return -1;
+            case 1:     break;
+            default:    UNREACHABLE();
+            }
+        }
+
+        const ssize_t n = ::sendmsg(_sockfd, &msg, flags | (timeout ? MSG_DONTWAIT : 0));
         if (n == -1)
             LOGGER_PERROR("sendmsg");
         return n;
     }
 
-    virtual ssize_t recv(void* buffer, size_t len,
+    virtual ssize_t recv(void* buffer, size_t buflen,
                          int flags,
                          struct timeval* timeout = NULL,
                          struct sockaddr_in* src = NULL)
     {
         struct iovec iov;
         iov.iov_base = buffer;
-        iov.iov_len = len;
+        iov.iov_len = buflen;
         return recvv(&iov, 1, flags, timeout, src);
     }
 
@@ -127,6 +140,30 @@ public:
             return n;
         }
         UNREACHABLE();
+    }
+
+    virtual ssize_t /*Socket::*/ write(const void* buffer, size_t buflen,
+                                       struct timeval* timeout = NULL)
+    {
+        return send(buffer, buflen, 0, timeout);
+    }
+
+    virtual ssize_t /*Socket::*/ writev(struct iovec* iov, unsigned iovcnt,
+                                        struct timeval* timeout = NULL)
+    {
+        return sendv(iov, iovcnt, 0, timeout);
+    }
+
+    virtual ssize_t /*Socket::*/ read(void* buffer, size_t buflen,
+                                      struct timeval* timeout = NULL)
+    {
+        return recv(buffer, buflen, 0, timeout);
+    }
+
+    virtual ssize_t /*Socket::*/ readv(struct iovec* iov, unsigned iovcnt,
+                                       struct timeval* timeout = NULL)
+    {
+        return recvv(iov, iovcnt, 0, timeout);
     }
 
 private:
