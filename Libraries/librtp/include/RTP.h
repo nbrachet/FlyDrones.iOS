@@ -64,11 +64,7 @@ protected:
             this->cc = cc;
         }
 
-        void resize(unsigned cc)
-        {
-            this->cc = cc;
-        }
-
+        // length (in bytes)
         size_t length() const
         {
             return sizeof(*this) + cc * sizeof(uint32_t);
@@ -127,8 +123,6 @@ protected:
 
 struct RTCP
 {
-protected:
-
     enum
     {
         RTCP_SR   = 200,            /* Sender Report */
@@ -155,9 +149,9 @@ protected:
 
         Header()
         {
-            memset(this, 0, sizeof(*this));
+            memset(this, 0, sizeof(Header));
             version = RTP::VERSION;
-            length = sizeof(*this);
+            length = sizeof(Header) / sizeof(uint32_t) - 1;
         }
 
         void hton()
@@ -220,11 +214,10 @@ protected:
 
         RRPacket(unsigned _count = 0)
         {
-            memset(&this->ssrc, 0, sizeof(*this) - sizeof(Header) + _count * sizeof(RRItem));
+            memset(&this->ssrc, 0, sizeof(RRPacket) - sizeof(Header) + _count * sizeof(RRItem));
             pt = RTCP_RR;
             count = _count;
-            length = sizeof(*this) + count * sizeof(RRItem);
-            memset(items, 0, count * sizeof(RRItem));
+            length = (sizeof(RRPacket) + count * sizeof(RRItem)) / sizeof(uint32_t) - 1;
         }
 
 #define RRPacket_alloca(count) new (count, reinterpret_cast<RTCP::RRPacket*>(alloca(sizeof(RTCP::RRPacket) + (count) * sizeof(RTCP::RRItem)))) RTCP::RRPacket(count)
@@ -242,7 +235,7 @@ protected:
             if (count != _count)
             {
                 count = _count;
-                length = sizeof(*this) + count * sizeof(RRItem);
+                length = (sizeof(RRPacket) + count * sizeof(RRItem)) / sizeof(uint32_t) - 1;
             }
         }
 
@@ -280,6 +273,13 @@ protected:
             return NULL;
         }
 
+        void* extensions()
+        {
+            const size_t offset = sizeof(RRPacket) + count * sizeof(RRItem);
+            return (1 + length) * sizeof(uint32_t) <= offset ? NULL
+                                                             : reinterpret_cast<char*>(this) + offset;
+        }
+
         void hton()
         {
             Header::hton();
@@ -311,10 +311,10 @@ protected:
 
         SRPacket(unsigned _count = 0)
         {
-            memset(&this->ssrc, 0, sizeof(*this) - sizeof(Header) + _count * sizeof(RRItem));
+            memset(&this->ssrc, 0, sizeof(SRPacket) - sizeof(Header) + _count * sizeof(RRItem));
             pt = RTCP_SR;
             count = _count;
-            length = sizeof(*this) + count * sizeof(RRItem);
+            length = (sizeof(SRPacket) + count * sizeof(RRItem)) / sizeof(uint32_t) - 1;
         }
 
 #define SRPacket_alloca(count) new (count, reinterpret_cast<RTCP::SRPacket*>(alloca(sizeof(RTCP::SRPacket) + (count) * sizeof(RTCP::RRItem)))) RTCP::SRPacket(count)
@@ -327,20 +327,12 @@ protected:
             return p;
         }
 
-#if 0
-        // call with: new(count) SRPacket(count)
-        void* operator new(size_t n, unsigned count) throw()
-        {
-            return calloc(1, n + count * sizeof(RRItem));
-        }
-#endif
-
         void resize(unsigned _count)
         {
             if (count != _count)
             {
                 count = _count;
-                length = sizeof(*this) + count * sizeof(RRItem);
+                length = (sizeof(SRPacket) + count * sizeof(RRItem)) / sizeof(uint32_t) - 1;
             }
         }
 
@@ -374,6 +366,13 @@ protected:
             LOGGER_ASSERT1(pt == RTCP_SR, pt);
             LOGGER_ASSERT2(i < count, i, count);
             return &items[i];
+        }
+
+        void* extensions()
+        {
+            const size_t offset = sizeof(SRPacket) + count * sizeof(RRItem);
+            return (1 + length) * sizeof(uint32_t) <= offset ? NULL
+                                                             : reinterpret_cast<char*>(this) + offset;
         }
 
         void hton()
@@ -411,10 +410,10 @@ protected:
 
         ByePacket(unsigned _count = 0)
         {
+            memset(items, 0, count * sizeof(RRItem));
             pt = RTCP_BYE;
             count = _count;
-            length = sizeof(*this) + count * sizeof(uint32_t);
-            memset(items, 0, count * sizeof(RRItem));
+            length = (sizeof(ByePacket) + count * sizeof(uint32_t)) / sizeof(uint32_t) - 1;
         }
 
         uint32_t src(unsigned i) const
@@ -450,6 +449,7 @@ protected:
         {
             memset(&this->src, 0, sizeof(*this) - sizeof(Header));
             pt = RTCP_APP;
+            length = sizeof(AppPacket) / sizeof(uint32_t) - 1;
         }
 
         void hton()
@@ -465,21 +465,30 @@ protected:
         }
     } __attribute__ ((__packed__));
 
-
-    static uint16_t length(const Header* hdr)
+    // length (in bytes)
+    static size_t length(const Header* hdr)
     {
+        const size_t len = (hdr->length + 1) * sizeof(uint32_t);
+
+#ifndef NDEBUG
         switch (hdr->pt)
         {
-        case RTCP_SR:       return sizeof(SRPacket) + hdr->count * sizeof(RRItem);
-        case RTCP_RR:       return sizeof(RRPacket) + hdr->count * sizeof(RRItem);
-//         case RTCP_SDES:     return;
-        case RTCP_BYE:      return sizeof(ByePacket) + hdr->count * sizeof(uint32_t);
-        case RTCP_APP:      return sizeof(AppPacket) + hdr->count * sizeof(char);
-        default:            UNREACHABLE();
-                            return 0;
+        case RTCP_SR:       LOGGER_ASSERT2(len >= sizeof(SRPacket) + hdr->count * sizeof(RRItem), len, sizeof(SRPacket) + hdr->count * sizeof(RRItem));
+                            break;
+        case RTCP_RR:       LOGGER_ASSERT2(len >= sizeof(RRPacket) + hdr->count * sizeof(RRItem), len, sizeof(RRPacket) + hdr->count * sizeof(RRItem));
+                            break;
+//         case RTCP_SDES:     break;
+        case RTCP_BYE:      LOGGER_ASSERT2(len >= sizeof(ByePacket) + hdr->count * sizeof(uint32_t), len, sizeof(ByePacket) + hdr->count * sizeof(uint32_t));
+                            break;
+        case RTCP_APP:      LOGGER_ASSERT2(len >= sizeof(AppPacket) + hdr->count * sizeof(char), len, sizeof(AppPacket) + hdr->count * sizeof(char));
+                            break;
         }
+#endif
+
+        return len;
     }
 
+    // WARNING: ntoh() doesn't deal with SRPacket/RRPacket extensions
     static void ntoh(Header* hdr)
     {
         switch (hdr->pt)
@@ -488,8 +497,8 @@ protected:
                             return;
         case RTCP_RR:       reinterpret_cast<RRPacket*>(hdr)->ntoh();
                             return;
-//         case RTCP_SDES:     reinterpret_cast<SDESPacket*>(hdr)->ntoh();
-//                             return;
+        case RTCP_SDES:     LOGGER_ASSERT(!"NOT IMPLEMENTED");
+                            return;
         case RTCP_BYE:      reinterpret_cast<ByePacket*>(hdr)->ntoh();
                             return;
         case RTCP_APP:      reinterpret_cast<AppPacket*>(hdr)->ntoh();
@@ -498,6 +507,7 @@ protected:
         }
     }
 
+    // WARNING: hton() doesn't deal with SRPacket/RRPacket extensions
     static void hton(Header* hdr)
     {
         switch (hdr->pt)
@@ -506,8 +516,8 @@ protected:
                             return;
         case RTCP_RR:       reinterpret_cast<RRPacket*>(hdr)->hton();
                             return;
-//         case RTCP_SDES:     reinterpret_cast<SDESPacket*>(hdr)->hton();
-//                             return;
+        case RTCP_SDES:     LOGGER_ASSERT(!"NOT IMPLEMENTED");
+                            return;
         case RTCP_BYE:      reinterpret_cast<ByePacket*>(hdr)->hton();
                             return;
         case RTCP_APP:      reinterpret_cast<AppPacket*>(hdr)->hton();
@@ -529,7 +539,6 @@ protected:
         case RTCP_SDES:     return out << "SDES";
         case RTCP_BYE:      return out << "BYE";
         case RTCP_APP:      return out << "APP";
-
         default:            return out << "pt=" << hdr->pt;
         }
     }
@@ -552,7 +561,7 @@ public:
                          struct timeval* timeout = NULL,
                          const struct sockaddr_in* dest = NULL)
     {
-        const size_t len = hdr->length;
+        const size_t len = RTCP::length(hdr);
         hton(hdr);
         return UDPSender::send(hdr, len, flags, timeout, dest);
     }
@@ -585,18 +594,10 @@ public:
 
             ntoh(hdr);
 
-            if (hdr->length != n)
+            const size_t len = RTCP::length(hdr);
+            if ((ssize_t)len > n)
             {
-                LOGGER_WARN("Ignoring RTCP msg: invalid read: %'zd != %'hu", n, hdr->length);
-                if (timeout && (timeout->tv_sec > 0 || timeout->tv_usec > 0))
-                    continue;
-                else
-                    return 0;
-            }
-
-            if (hdr->length != RTCP::length(hdr))
-            {
-                LOGGER_WARN("Ignoring RTCP msg: invalid length: %'hu != %'hu", hdr->length, RTCP::length(hdr));
+                LOGGER_WARN("Ignoring RTCP msg: truncated: %'zd > %'zd", len, n);
                 if (timeout && (timeout->tv_sec > 0 || timeout->tv_usec > 0))
                     continue;
                 else
@@ -765,27 +766,50 @@ private:
     struct SRPacket1
         : public RTCP::SRPacket
     {
+        /* profile-specific extensions
+           properly aligned only if count == 0!
+         */
+        uint32_t        session;    /* ssrc in RTP header packets */
         uint32_t        last_seq;   /* extended last seq. no. sent */
 
         SRPacket1()
             : RTCP::SRPacket(0)
-        {}
+            , session(0)
+            , last_seq(0)
+        {
+            length = sizeof(SRPacket1) / sizeof(uint32_t) - 1;
+        }
 
         SRPacket1(const SRPacket1& rhs)
             : RTCP::SRPacket(rhs)
         {
             memcpy(this, &rhs, sizeof(SRPacket1));
-            count = 0;
-            length = sizeof(RTCP::SRPacket); // FIXME: that's going to be trouble
+            LOGGER_ASSERT1(count == 0, count);
+            LOGGER_ASSERT2(length == sizeof(SRPacket1) / sizeof(uint32_t) - 1, length, sizeof(SRPacket1) / sizeof(uint32_t) - 1);
         }
 
         SRPacket1(const RTCP::SRPacket& rhs)
             : RTCP::SRPacket(rhs)
+            , session(0)
             , last_seq(0)
         {
             memcpy(this, &rhs, sizeof(RTCP::SRPacket));
             count = 0;
-            length = sizeof(RTCP::SRPacket); // FIXME: that's going to be trouble
+            length = sizeof(SRPacket1) / sizeof(uint32_t) - 1;
+        }
+
+        void hton()
+        {
+            SRPacket::hton();
+            session = htonl(session);
+            last_seq = htonl(last_seq);
+        }
+
+        void ntoh()
+        {
+            SRPacket::ntoh();
+            session = ntohl(session);
+            last_seq = ntohl(last_seq);
         }
 
         // order by ntp_sec, ntp_frac, ssrc
@@ -856,14 +880,14 @@ protected:
     virtual void remove_socket(UpgradableRWLock::WriterGuard& wguard,
                                const UDP* udp);
 
-    // add new entry into ratio
+    // add new ssrc into ratio
     static void scale_up(std::map<uint32_t, float>& ratio, uint32_t ssrc);
 
     // add new entries from b into a
     static void scale_up(std::map<uint32_t, float>& a,
                          const std::map<uint32_t, float>& b);
 
-    // remove entry from ratio
+    // remove ssrc from ratio
     static void scale_down(std::map<uint32_t, float>& ratio, uint32_t ssrc);
 
     int wait_for_available_output_locked(UpgradableRWLock::ReaderWriterGuard& rwguard,

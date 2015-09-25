@@ -49,7 +49,8 @@ static size_t roundup(size_t x, size_t y);
         while (!self.isCancelled) {
             @autoreleasepool {
                 if (tv0.tv_sec == 0) {
-                    (void) rtp.send((void*) NULL, 0, MSG_DONTWAIT, NULL, &socketAddress);
+                    RTCP::RRPacket rtcp;
+                    (void) rtp.send(&rtcp, MSG_DONTWAIT, NULL, &socketAddress);
                 }
 
                 if (!buffer) {
