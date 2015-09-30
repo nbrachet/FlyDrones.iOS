@@ -20,7 +20,6 @@ typedef NS_ENUM(NSUInteger, FDJoystickViewDirection) {
 @property (nonatomic, assign) CGPoint firstTouchPoint;
 @property (nonatomic, assign) CGPoint prevTouchViewPosition;
 @property (nonatomic, assign) BOOL isTracking;
-@property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) FDJoystickViewDirection direction;
 @property (nonatomic, assign) CFTimeInterval lastMovedEventTimeInterval;
 
