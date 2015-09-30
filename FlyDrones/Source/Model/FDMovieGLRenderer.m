@@ -51,10 +51,7 @@
 }
 
 - (BOOL)setVideoFrame:(AVFrame)frame {
-    if (!frame.data ||
-        !frame.linesize ||
-        frame.height < 1 ||
-        frame.width < 1) {
+    if (frame.height < 1 || frame.width < 1) {
         return NO;
     }
     
