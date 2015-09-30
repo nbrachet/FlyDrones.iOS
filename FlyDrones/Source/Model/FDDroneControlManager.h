@@ -41,7 +41,6 @@ extern NSString * const FDDroneControlManagerDidHandleSystemInfoNotification;
 - (void)parseInputData:(NSData *)data;
 
 - (NSData *)messageDataWithPitch:(CGFloat)pitch roll:(CGFloat)roll thrust:(CGFloat)thrust yaw:(CGFloat)yaw;
-- (BOOL)isRCMapDataVilid;
 - (NSData *)heartbeatData;
 - (NSData *)messageDataWithNewCustomMode:(enum ARDUCOPTER_MODE)mode;
 - (NSData *)messageDataWithArmedEnable:(BOOL)armed;
