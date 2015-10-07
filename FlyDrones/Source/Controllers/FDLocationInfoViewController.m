@@ -9,6 +9,7 @@
 #import "FDLocationInfoViewController.h"
 #import "FDDroneControlManager.h"
 #import "CLLocation+Utils.h"
+
 #import <MapKit/MapKit.h>
 
 @interface FDLocationInfoViewController () <MKMapViewDelegate>
@@ -71,9 +72,11 @@
 
     if (!CLLocationCoordinate2DIsValid(locationCoordinate) || gpsInfo.fixType < 1) {
         [self.mapView removeAnnotations:self.mapView.annotations];
-        self.satelliteInfoLabel.text = @"Satellites:N/A HDOP:N/A";
+        self.satelliteInfoLabel.text = @"N/A";
         return;
     }
+
+    self.satelliteInfoLabel.text = [NSString stringWithFormat:@"%0.6f,%0.6f ±%0.1f (%lu)", gpsInfo.locationCoordinate.latitude, gpsInfo.locationCoordinate.longitude, gpsInfo.hdop, (unsigned long)gpsInfo.satelliteCount];
     
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate];
     CLLocation *prevLocation = [[CLLocation alloc] initWithCoordinate:self.prevRegionLocationCoordinate];
@@ -83,16 +86,13 @@
         [self.mapView setRegion:region animated:NO];
         self.prevRegionLocationCoordinate = locationCoordinate;
     }
-    self.satelliteInfoLabel.text = [NSString stringWithFormat:@"Satellites:%lu HDOP:%0.1f", (unsigned long)gpsInfo.satelliteCount, gpsInfo.hdop];;
-    
+
     if (distance > 1) {
         [self.mapView removeAnnotations:self.mapView.annotations];
         if (gpsInfo.fixType != 1) {
             MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
             annotation.coordinate = locationCoordinate;
             [self.mapView addAnnotation:annotation];
-        } else {
-            self.satelliteInfoLabel.text = @"Satellites:N/A HDOP:N/A";
         }
     }
 }
@@ -108,9 +108,9 @@
     MKAnnotationView *annotationView = (MKAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewIdentifier];
     if (annotationView == nil) {
         annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewIdentifier];
+        annotationView.image = [UIImage imageNamed:@"Helicopter"];
     }
     
-    annotationView.image = [UIImage imageNamed:@"Helicopter"];
     annotationView.annotation = annotation;
     
     return annotationView;
