@@ -7,6 +7,10 @@
 //
 
 #import "FDRTPConnectionOperation.h"
+
+#if !defined(NDEBUG) && !defined(DEBUG)
+#  define NDEBUG
+#endif
 #import "RTP.h"
 
 // see FF_INPUT_BUFFER_PADDING_SIZE in libavcodec/avcodec.h
@@ -25,7 +29,7 @@ static size_t roundup(size_t x, size_t y);
 - (void)main {
     @autoreleasepool {
         logger.level(Logger::LEVEL_WARN);
-#ifndef NDEBUG
+#ifdef DEBUG
         (void) logger.open("com.flydrones", "app");
         logger.add_log_file(STDERR_FILENO);
 #endif

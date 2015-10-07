@@ -39,7 +39,7 @@ static void FFLog(void* context, int level, const char* format, va_list args) {
 + (void)initialize {
     [super initialize];
 
-#ifndef NDEBUG
+#ifdef DEBUG
     av_log_set_level(AV_LOG_VERBOSE);
 #else
     av_log_set_level(AV_LOG_INFO);
@@ -87,7 +87,7 @@ static void FFLog(void* context, int level, const char* format, va_list args) {
 //        [self.operationQueue waitUntilAllOperationsAreFinished];
         return;
     }
-#ifndef NDEBUG
+#ifdef DEBUG
     if (self.operationCount > FDMovieDecoderMaxOperationFromSkipRender || self.operationCountOnMainThread > 1) {
         NSLog(@"Tasks count:%lu %lu", (unsigned long)self.operationCount, (unsigned long)self.operationCountOnMainThread);
     }

@@ -16,7 +16,7 @@
 #import "NSString+MAVLink.h"
 
 //Suppress NSLog when in release mode
-#ifdef NDEBUG
+#ifndef DEBUG
     #define NSLog(...)
 #endif
 
