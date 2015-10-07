@@ -44,7 +44,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 @property (nonatomic, weak) IBOutlet UIButton *customModesButton;
 
 @property (nonatomic, weak) IBOutlet UIButton *mapButton;
-@property (nonatomic, assign, getter=isHideMapAfterConnectionRestored) BOOL hideMapAfterConnectionRestored;
+@property (nonatomic, assign, getter=isHideMapAfterHeartbeatRestored) BOOL hideMapAfterHeartbeatRestored;
 
 @property (nonatomic, weak) IBOutlet UIView *movieBackgroundView;
 
@@ -142,10 +142,6 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     
     [[FDDroneStatus currentStatus] synchronize];
     [[FDDroneStatus currentStatus] clearStatus];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -262,15 +258,15 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 }
 
 - (void)registerForNotifications {
-    [[NSNotificationCenter defaultCenter]addObserver:self
-                                            selector:@selector(applicationDidEnterBackground)
-                                                name:UIApplicationDidEnterBackgroundNotification
-                                              object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidEnterBackground)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self
-                                            selector:@selector(applicationDidBecomeActive)
-                                                name:UIApplicationDidBecomeActiveNotification
-                                              object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidBecomeActive)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
 }
 
 - (void)unregisterFromNotifications {
@@ -330,11 +326,11 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 - (void)startTimer {
     [self stopTimer];
     
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1f
-                                                  target:self
-                                                selector:@selector(timerTick:)
-                                                userInfo:nil
-                                                 repeats:YES];
+    self.timer = [NSTimer timerWithTimeInterval:0.1f
+                                         target:self
+                                       selector:@selector(timerTick:)
+                                       userInfo:nil
+                                        repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
 }
 
@@ -351,20 +347,16 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
         if (self.mapButton.enabled && ![self.presentedViewController isKindOfClass:[FDLocationInfoViewController class]]) {
             [self dismissPresentedPopoverAnimated:NO ignoredControllersFromClassesNamed:nil];
             [self performSegueWithIdentifier:@"ShowLocationInfo" sender:self.mapButton];
-            self.hideMapAfterConnectionRestored = YES;
+            self.hideMapAfterHeartbeatRestored = YES;
         }
         if ((tickCounter % 15 == 0)) { // every 1.5s
             [self connectToServers];
         }
+
         return;
     }
 
     [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagConnectingToTCPServer];
-
-    if (self.isHideMapAfterConnectionRestored) {
-        self.hideMapAfterConnectionRestored = NO;
-        [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:nil];
-    }
 
     if (tickCounter % 10 == 0) { // every 1s
         [self.connectionManager sendDataToControlServer:[self.droneControlManager heartbeatData]];
@@ -372,15 +364,27 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     
     CFTimeInterval heartbeatMessageTimeInterval = CACurrentMediaTime() - (self.lastReceivedHeartbeatMessageTimeInterval == 0 ? self.lastConnectionTimeInterval : self.lastReceivedHeartbeatMessageTimeInterval);
     if (heartbeatMessageTimeInterval > 5.0f || self.lastReceivedHeartbeatMessageTimeInterval == 0) {
+        if (self.mapButton.enabled && ![self.presentedViewController isKindOfClass:[FDLocationInfoViewController class]]) {
+            [self dismissPresentedPopoverAnimated:NO ignoredControllersFromClassesNamed:nil];
+            [self performSegueWithIdentifier:@"ShowLocationInfo" sender:self.mapButton];
+            self.hideMapAfterHeartbeatRestored = YES;
+        }
+
         [self showProgressHUDWithTag:FDDashboardViewControllerHUDTagWaitingHeartbeat
                            labelText:NSLocalizedString(@"Waiting for heartbeat message", @"Waiting for heartbeat message")
                      detailLabelText:[NSString stringWithFormat:@"%.0f sec", heartbeatMessageTimeInterval]
                    activityIndicator:YES];
+
         self.enabledControls = NO;
         return;
     }
 
     [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagWaitingHeartbeat];
+
+    if (self.isHideMapAfterHeartbeatRestored) {
+        self.hideMapAfterHeartbeatRestored = NO;
+        [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:nil];
+    }
 
     if (tickCounter % 10 == 0) { // every 1s
         CFTimeInterval delayVFRInfoMessageTimeInterval = CACurrentMediaTime() - self.lastReceivedVFRInfoMessageTimeInterval;
