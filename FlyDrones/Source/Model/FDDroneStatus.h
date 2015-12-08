@@ -44,6 +44,7 @@
 @property (nonatomic, assign) NSUInteger videoFps;
 @property (nonatomic, assign) CGFloat videoResolution;
 @property (nonatomic, assign) CGFloat videoBitrate;
+@property (nonatomic, assign) CGFloat altitudeMin;
 
 + (instancetype)alloc __attribute__((unavailable("alloc not available")));
 + (instancetype)allocWithZone __attribute__((unavailable("allocWithZone not available")));

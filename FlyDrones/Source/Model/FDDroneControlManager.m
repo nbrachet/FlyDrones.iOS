@@ -359,10 +359,10 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                                   FDDroneControlManagerMavLinkDefaultComponentId,
                                   &message,
                                   FDDroneControlManagerMavLinkDefaultTargetSystem,
-                                  MAV_COMP_ID_ALL,
-                                  2500, //MAV_CMD_VIDEO_START_CAPTURE
-                                  0,
-                                  0,    //Camera ID (0 for all cameras)
+                                  MAV_TYPE_ONBOARD_CONTROLLER, // target_componet: HACK: talk to onboard controller
+                                  MAV_CMD_VIDEO_START_CAPTURE,
+                                  0,    // confirmation
+                                  0,    // Camera ID (0 for all cameras)
                                   fps,
                                   resolution,
                                   bitrate,
@@ -378,13 +378,32 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                                   FDDroneControlManagerMavLinkDefaultComponentId,
                                   &message,
                                   FDDroneControlManagerMavLinkDefaultTargetSystem,
-                                  MAV_COMP_ID_ALL,
-                                  2501, //MAV_CMD_VIDEO_STOP_CAPTURE
+                                  MAV_TYPE_ONBOARD_CONTROLLER, // target_componet: HACK: talk to onboard controller
+                                  MAV_CMD_VIDEO_STOP_CAPTURE,
+                                  0,    // confirmation
+                                  0,    // Camera ID (0 for all cameras)
                                   0,
-                                  0,    //Camera ID (0 for all cameras)
                                   0,
                                   0,
                                   0,
+                                  0,
+                                  0);
+    return [NSData dataWithMAVLinkMessage:&message];
+}
+
+- (NSData *)messageDataForGuidedLimitsAltitudeMin:(NSUInteger)altitudeMin {
+    mavlink_message_t message;
+    mavlink_msg_command_long_pack(FDDroneControlManagerMavLinkDefaultSystemId,
+                                  FDDroneControlManagerMavLinkDefaultComponentId,
+                                  &message,
+                                  FDDroneControlManagerMavLinkDefaultTargetSystem,
+                                  MAV_TYPE_ONBOARD_CONTROLLER, // target_componet: HACK: talk to onboard controller
+                                  MAV_CMD_DO_GUIDED_LIMITS,
+                                  0,            // confirmation
+                                  0,            // timeout. 0 = no timeout
+                                  altitudeMin,  // absolute altitude min (in meters). 0 = no limit
+                                  0,            // absolute altitude max (in meters). 0 = no limit
+                                  0,            // horizontal move limit (in meters). 0 = no limit
                                   0,
                                   0,
                                   0);

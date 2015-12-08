@@ -46,6 +46,7 @@ extern NSString * const FDDroneControlManagerDidHandleSystemInfoNotification;
 - (NSData *)messageDataWithArmedEnable:(BOOL)armed;
 - (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps resolution:(CGFloat)resolution bitrate:(CGFloat)bitrate;
 - (NSData *)messageDataForCaptureDisableCommand;
+- (NSData *)messageDataForGuidedLimitsAltitudeMin:(NSUInteger)altitudeMin;
 - (NSData *)messageDataForParamRequestList;
 - (NSData *)messageDataForRequestDataStream:(enum MAV_DATA_STREAM)stream start:(BOOL)start;
 

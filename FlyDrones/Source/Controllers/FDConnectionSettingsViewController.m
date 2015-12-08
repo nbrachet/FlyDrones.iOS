@@ -26,6 +26,7 @@ static NSString * const ResolutionWKey = @"ResolutionWKey";
 static NSString * const ResolutionHKey = @"ResolutionHKey";
 static NSString * const FPSKey = @"FPSKey";
 static NSString * const BitrateKey = @"BitRateKey";
+static NSString * const AltitudeMinKey = @"AltitudeMinKey";
 
 @interface FDConnectionSettingsViewController ()
 
@@ -39,6 +40,7 @@ static NSString * const BitrateKey = @"BitRateKey";
 @property (nonatomic, weak) IBOutlet UITextField *resolutionHTextField;
 @property (nonatomic, weak) IBOutlet UITextField *fpsTextField;
 @property (nonatomic, weak) IBOutlet UITextField *bitrateTextField;
+@property (nonatomic, weak) IBOutlet UITextField *altitudeMinTextField;
 
 @end
 
@@ -95,9 +97,17 @@ static NSString * const BitrateKey = @"BitRateKey";
     if ([userDefaults objectForKey:BitrateKey]) {
         self.bitrateTextField.text = [userDefaults objectForKey:BitrateKey];
     } else {
-        self.bitrateTextField.text = [NSString stringWithFormat:@"%d", (int)kDefaultVideoResolution];
+        self.bitrateTextField.text = [NSString stringWithFormat:@"%d", (int)kDefaultVideoBitrate];
+    }
+
+    if ([userDefaults objectForKey:AltitudeMinKey]) {
+        self.altitudeMinTextField.text = [userDefaults objectForKey:AltitudeMinKey];
+    } else {
+        self.altitudeMinTextField.text = [NSString stringWithFormat:@"%d", (int)kDefaultAltitudeMin];
     }
 }
+
+#pragma mark -
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
     if ([identifier isEqualToString:@"ShowDashboard"]) {
@@ -110,6 +120,7 @@ static NSString * const BitrateKey = @"BitRateKey";
         NSString *resolutionH = self.resolutionHTextField.text;
         NSString *fps = self.fpsTextField.text;
         NSString *bitrate = self.bitrateTextField.text;
+        NSString *altitudeMin = self.altitudeMinTextField.text;
         
         if (hostForUDPConnection.length == 0 ||
             portForUDPConnection.length == 0 ||
@@ -118,7 +129,8 @@ static NSString * const BitrateKey = @"BitRateKey";
             resolutionH.length == 0 ||
             resolutionW.length == 0 ||
             fps.length == 0 ||
-            bitrate.length == 0) {
+            bitrate.length == 0 ||
+            altitudeMin.length == 0) {
             [[[UIAlertView alloc] initWithTitle:@"Warning" message:@"Please fill all fields correctly" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
             return NO;
         }
@@ -133,6 +145,7 @@ static NSString * const BitrateKey = @"BitRateKey";
         [userDefaults setObject:resolutionH forKey:ResolutionHKey];
         [userDefaults setObject:fps forKey:FPSKey];
         [userDefaults setObject:bitrate forKey:BitrateKey];
+        [userDefaults setObject:altitudeMin forKey:AltitudeMinKey];
         
         FDDroneStatus *currentDroneStatus = [FDDroneStatus currentStatus];
         currentDroneStatus.pathForUDPConnection = hostForUDPConnection;
@@ -144,6 +157,7 @@ static NSString * const BitrateKey = @"BitRateKey";
         currentDroneStatus.videoFps = [fps integerValue];
         currentDroneStatus.videoResolution = currentDroneStatus.videoSize.width * currentDroneStatus.videoSize.height / 1000.0f / 1000.0f;
         currentDroneStatus.videoBitrate = [bitrate floatValue];
+        currentDroneStatus.altitudeMin = [altitudeMin floatValue];
     }
     return YES;
 }
