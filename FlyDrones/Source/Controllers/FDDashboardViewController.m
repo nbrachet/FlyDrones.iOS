@@ -65,8 +65,9 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 @property (nonatomic, assign) CFTimeInterval lastConnectionTimeInterval;
 @property (nonatomic, assign) CFTimeInterval lastReceivedHeartbeatMessageTimeInterval;
 @property (nonatomic, assign) CFTimeInterval lastReceivedVFRInfoMessageTimeInterval;
+@property (nonatomic, assign, getter=isHeartbeatConnected) BOOL heartbeatConnected;
 
-@property (nonatomic, assign, getter=isArm) BOOL arm;
+@property (nonatomic, assign, getter=isArmed) BOOL armed;
 
 @property (nonatomic, weak) MBProgressHUD *currentProgressHUD;
 
@@ -129,17 +130,16 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     
     [self stopTimer];
     [self unregisterFromNotifications];
-    
+
     [self.movieDecoder stopDecode];
     self.movieDecoder = nil;
-    
+
     [self.connectionManager closeConnections];
     self.connectionManager = nil;
-    self.movieDecoder = nil;
     self.droneControlManager = nil;
-    
+
     [self hideProgressHUD];
-    
+
     [[FDDroneStatus currentStatus] synchronize];
     [[FDDroneStatus currentStatus] clearStatus];
 }
@@ -177,7 +177,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     self.altitudeVerticalScaleView.enabled = enabledControls;
     self.armedStatusButton.enabled = enabledControls;
     
-    self.arm = [FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED;
+    self.armed = [FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED;
 
     self.leftJoystickView.userInteractionEnabled = enabledControls;
     self.rightJoystickView.userInteractionEnabled = enabledControls;
@@ -189,17 +189,17 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
         [self.armedStatusButton setTitle:@"N/A" forState:UIControlStateNormal];
         [self.customModesButton setTitle:@"N/A" forState:UIControlStateNormal];
     } else {
-        NSString *armedStatusButtonTitle = self.isArm ? @"ARMED" : @"DISARMED";
+        NSString *armedStatusButtonTitle = self.isArmed ? @"ARMED" : @"DISARMED";
         [self.armedStatusButton setTitle:armedStatusButtonTitle forState:UIControlStateNormal];
     }
 }
 
-- (void)setArm:(BOOL)arm {
-    if (_arm == arm) {
+- (void)setArmed:(BOOL)armed {
+    if (_armed == armed) {
         return;
     }
     
-    _arm = arm;
+    _armed = armed;
     [[FDDroneStatus currentStatus] synchronize];
 }
 
@@ -303,6 +303,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
         self.lastReceivedHeartbeatMessageTimeInterval = 0;
         self.lastReceivedVFRInfoMessageTimeInterval = 0;
         self.lastConnectionTimeInterval = CACurrentMediaTime();
+        self.heartbeatConnected = NO;
 
         [self showProgressHUDWithTag:FDDashboardViewControllerHUDTagConnectingToTCPServer
                            labelText:NSLocalizedString(@"Connecting to TCP server", @"Connecting to TCP server")
@@ -349,7 +350,8 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
             [self performSegueWithIdentifier:@"ShowLocationInfo" sender:self.mapButton];
             self.hideMapAfterHeartbeatRestored = YES;
         }
-        if ((tickCounter % 15 == 0)) { // every 1.5s
+
+        if ((tickCounter % 20 == 0)) { // every 2s
             [self connectToServers];
         }
 
@@ -375,15 +377,14 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
                      detailLabelText:[NSString stringWithFormat:@"%.0f sec", heartbeatMessageTimeInterval]
                    activityIndicator:YES];
 
+        self.heartbeatConnected = NO;
         self.enabledControls = NO;
         return;
     }
 
-    [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagWaitingHeartbeat];
-
-    if (self.isHideMapAfterHeartbeatRestored) {
-        self.hideMapAfterHeartbeatRestored = NO;
-        [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:nil];
+    if (!self.isHeartbeatConnected) {
+        self.heartbeatConnected = YES;
+        [self onHeartbeatConnection];
     }
 
     if (tickCounter % 10 == 0) { // every 1s
@@ -400,6 +401,23 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
                                                                       thrust:self.leftJoystickView.stickVerticalValue
                                                                          yaw:self.leftJoystickView.stickHorizontalValue];
         [self.connectionManager sendDataToControlServer:controlData];
+    }
+}
+
+- (void)onHeartbeatConnection {
+    [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagWaitingHeartbeat];
+
+    if (self.isHideMapAfterHeartbeatRestored) {
+        self.hideMapAfterHeartbeatRestored = NO;
+        [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:nil];
+    }
+
+    if (!self.isArmed) {
+        CGFloat altitudeMin = [FDDroneStatus currentStatus].altitudeMin;
+        if (altitudeMin > 0)
+            [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForGuidedLimitsAltitudeMin:altitudeMin]];
+
+        [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForParamRequestList]];
     }
 }
 
@@ -517,19 +535,13 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 }
 
 - (void)droneControlManager:(FDDroneControlManager *)droneControlManager didHandleHeartbeatInfo:(uint32_t)mavCustomMode mavType:(uint8_t)mavType mavAutopilotType:(uint8_t)mavAutopilotType mavBaseMode:(uint8_t)mavBaseMode mavSystemStatus:(uint8_t)mavSystemStatus {
-    static BOOL firstHeartbeatMessage = YES;
-    if (firstHeartbeatMessage && !(mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED)) {
-        firstHeartbeatMessage = NO;
-        [self.connectionManager sendDataToControlServer:[self.droneControlManager messageDataForParamRequestList]];
-    }
-
     NSString *customModesButtonTitle = (mavBaseMode & (uint8_t)MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) ? [NSString nameFromArducopterMode:mavCustomMode] : @"N/A";
     [self.customModesButton setTitle:customModesButtonTitle forState:UIControlStateNormal];
     if ([self.presentedViewController isKindOfClass:[FDOptionsListViewController class]]) {
         [(FDOptionsListViewController *)self.presentedViewController updateOptionsNames];
     }
     
-    [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagWaitingHeartbeat];
+//    [self hideProgressHUDWithTag:FDDashboardViewControllerHUDTagWaitingHeartbeat];
     
     self.lastReceivedHeartbeatMessageTimeInterval = CACurrentMediaTime();
     self.enabledControls = YES;
