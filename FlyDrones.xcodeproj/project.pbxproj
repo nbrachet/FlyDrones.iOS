@@ -7,6 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0164FB8C1BBC390500C28FF7 /* Button_DisclosureAccessory.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB7F1BBC390500C28FF7 /* Button_DisclosureAccessory.png */; };
+		0164FB8D1BBC390500C28FF7 /* CalloutPopoverBottomLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB801BBC390500C28FF7 /* CalloutPopoverBottomLeft.png */; };
+		0164FB8E1BBC390500C28FF7 /* CalloutPopoverBottomMiddle.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB811BBC390500C28FF7 /* CalloutPopoverBottomMiddle.png */; };
+		0164FB8F1BBC390500C28FF7 /* CalloutPopoverBottomRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB821BBC390500C28FF7 /* CalloutPopoverBottomRight.png */; };
+		0164FB901BBC390500C28FF7 /* CalloutPopoverDownArrows.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB831BBC390500C28FF7 /* CalloutPopoverDownArrows.png */; };
+		0164FB911BBC390500C28FF7 /* CalloutPopoverLeftArrows.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB841BBC390500C28FF7 /* CalloutPopoverLeftArrows.png */; };
+		0164FB921BBC390500C28FF7 /* CalloutPopoverMiddleLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB851BBC390500C28FF7 /* CalloutPopoverMiddleLeft.png */; };
+		0164FB931BBC390500C28FF7 /* CalloutPopoverMiddleMiddle.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB861BBC390500C28FF7 /* CalloutPopoverMiddleMiddle.png */; };
+		0164FB941BBC390500C28FF7 /* CalloutPopoverMiddleRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB871BBC390500C28FF7 /* CalloutPopoverMiddleRight.png */; };
+		0164FB951BBC390500C28FF7 /* CalloutPopoverTopLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB881BBC390500C28FF7 /* CalloutPopoverTopLeft.png */; };
+		0164FB961BBC390500C28FF7 /* CalloutPopoverTopMiddle.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB891BBC390500C28FF7 /* CalloutPopoverTopMiddle.png */; };
+		0164FB971BBC390500C28FF7 /* CalloutPopoverTopRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB8A1BBC390500C28FF7 /* CalloutPopoverTopRight.png */; };
+		0164FB981BBC390500C28FF7 /* CalloutTableBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 0164FB8B1BBC390500C28FF7 /* CalloutTableBackground.png */; };
+		0164FBA81BBC39EC00C28FF7 /* GIKAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0164FB9B1BBC39EC00C28FF7 /* GIKAnnotation.m */; };
+		0164FBA91BBC39EC00C28FF7 /* GIKAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0164FB9D1BBC39EC00C28FF7 /* GIKAnnotationView.m */; };
+		0164FBAA1BBC39EC00C28FF7 /* GIKCalloutAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0164FB9F1BBC39EC00C28FF7 /* GIKCalloutAnnotation.m */; };
+		0164FBAB1BBC39EC00C28FF7 /* GIKCalloutContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0164FBA11BBC39EC00C28FF7 /* GIKCalloutContentView.m */; };
+		0164FBAC1BBC39EC00C28FF7 /* GIKCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0164FBA31BBC39EC00C28FF7 /* GIKCalloutView.m */; };
+		0164FBAD1BBC39EC00C28FF7 /* GIKMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0164FBA51BBC39EC00C28FF7 /* GIKMapViewController.m */; };
+		0164FBAE1BBC39EC00C28FF7 /* GIKPinAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0164FBA71BBC39EC00C28FF7 /* GIKPinAnnotationView.m */; };
+		01C87A6C1BBB3201002231C4 /* FDCheckoutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C87A6B1BBB3201002231C4 /* FDCheckoutView.m */; };
 		01CC730A1B794238007A7107 /* FDJoystickView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CC73081B794238007A7107 /* FDJoystickView2.m */; };
 		1B14759E1B57DB1200E5B413 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1475981B57DB1200E5B413 /* Bolts.framework */; };
 		1B14759F1B57DB1200E5B413 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1475991B57DB1200E5B413 /* Parse.framework */; };
@@ -17,7 +38,6 @@
 		1B1475A91B57DB6500E5B413 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1475A81B57DB6500E5B413 /* CFNetwork.framework */; };
 		1B1475AB1B57DB6B00E5B413 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1475AA1B57DB6B00E5B413 /* AudioToolbox.framework */; };
 		1B1475AD1B57DB7500E5B413 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1475AC1B57DB7500E5B413 /* Security.framework */; };
-		1B1475AF1B57DB7D00E5B413 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1475AE1B57DB7D00E5B413 /* StoreKit.framework */; };
 		1B1475B11B57DB8800E5B413 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1475B01B57DB8800E5B413 /* SystemConfiguration.framework */; };
 		1B1475B31B57DB9800E5B413 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1475B21B57DB9800E5B413 /* libsqlite3.dylib */; };
 		1B1475B51B57DBD700E5B413 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1475B41B57DBD700E5B413 /* QuartzCore.framework */; };
@@ -86,6 +106,35 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0164FB7F1BBC390500C28FF7 /* Button_DisclosureAccessory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Button_DisclosureAccessory.png; path = "gik-animated-callout/Resources/Images/Button_DisclosureAccessory.png"; sourceTree = "<group>"; };
+		0164FB801BBC390500C28FF7 /* CalloutPopoverBottomLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutPopoverBottomLeft.png; path = "gik-animated-callout/Resources/Images/CalloutPopoverBottomLeft.png"; sourceTree = "<group>"; };
+		0164FB811BBC390500C28FF7 /* CalloutPopoverBottomMiddle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutPopoverBottomMiddle.png; path = "gik-animated-callout/Resources/Images/CalloutPopoverBottomMiddle.png"; sourceTree = "<group>"; };
+		0164FB821BBC390500C28FF7 /* CalloutPopoverBottomRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutPopoverBottomRight.png; path = "gik-animated-callout/Resources/Images/CalloutPopoverBottomRight.png"; sourceTree = "<group>"; };
+		0164FB831BBC390500C28FF7 /* CalloutPopoverDownArrows.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutPopoverDownArrows.png; path = "gik-animated-callout/Resources/Images/CalloutPopoverDownArrows.png"; sourceTree = "<group>"; };
+		0164FB841BBC390500C28FF7 /* CalloutPopoverLeftArrows.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutPopoverLeftArrows.png; path = "gik-animated-callout/Resources/Images/CalloutPopoverLeftArrows.png"; sourceTree = "<group>"; };
+		0164FB851BBC390500C28FF7 /* CalloutPopoverMiddleLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutPopoverMiddleLeft.png; path = "gik-animated-callout/Resources/Images/CalloutPopoverMiddleLeft.png"; sourceTree = "<group>"; };
+		0164FB861BBC390500C28FF7 /* CalloutPopoverMiddleMiddle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutPopoverMiddleMiddle.png; path = "gik-animated-callout/Resources/Images/CalloutPopoverMiddleMiddle.png"; sourceTree = "<group>"; };
+		0164FB871BBC390500C28FF7 /* CalloutPopoverMiddleRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutPopoverMiddleRight.png; path = "gik-animated-callout/Resources/Images/CalloutPopoverMiddleRight.png"; sourceTree = "<group>"; };
+		0164FB881BBC390500C28FF7 /* CalloutPopoverTopLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutPopoverTopLeft.png; path = "gik-animated-callout/Resources/Images/CalloutPopoverTopLeft.png"; sourceTree = "<group>"; };
+		0164FB891BBC390500C28FF7 /* CalloutPopoverTopMiddle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutPopoverTopMiddle.png; path = "gik-animated-callout/Resources/Images/CalloutPopoverTopMiddle.png"; sourceTree = "<group>"; };
+		0164FB8A1BBC390500C28FF7 /* CalloutPopoverTopRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutPopoverTopRight.png; path = "gik-animated-callout/Resources/Images/CalloutPopoverTopRight.png"; sourceTree = "<group>"; };
+		0164FB8B1BBC390500C28FF7 /* CalloutTableBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CalloutTableBackground.png; path = "gik-animated-callout/Resources/Images/CalloutTableBackground.png"; sourceTree = "<group>"; };
+		0164FB9A1BBC39EC00C28FF7 /* GIKAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIKAnnotation.h; path = "gik-animated-callout/Classes/GIK/GIKAnnotation.h"; sourceTree = "<group>"; };
+		0164FB9B1BBC39EC00C28FF7 /* GIKAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIKAnnotation.m; path = "gik-animated-callout/Classes/GIK/GIKAnnotation.m"; sourceTree = "<group>"; };
+		0164FB9C1BBC39EC00C28FF7 /* GIKAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIKAnnotationView.h; path = "gik-animated-callout/Classes/GIK/GIKAnnotationView.h"; sourceTree = "<group>"; };
+		0164FB9D1BBC39EC00C28FF7 /* GIKAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIKAnnotationView.m; path = "gik-animated-callout/Classes/GIK/GIKAnnotationView.m"; sourceTree = "<group>"; };
+		0164FB9E1BBC39EC00C28FF7 /* GIKCalloutAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIKCalloutAnnotation.h; path = "gik-animated-callout/Classes/GIK/GIKCalloutAnnotation.h"; sourceTree = "<group>"; };
+		0164FB9F1BBC39EC00C28FF7 /* GIKCalloutAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIKCalloutAnnotation.m; path = "gik-animated-callout/Classes/GIK/GIKCalloutAnnotation.m"; sourceTree = "<group>"; };
+		0164FBA01BBC39EC00C28FF7 /* GIKCalloutContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIKCalloutContentView.h; path = "gik-animated-callout/Classes/GIK/GIKCalloutContentView.h"; sourceTree = "<group>"; };
+		0164FBA11BBC39EC00C28FF7 /* GIKCalloutContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIKCalloutContentView.m; path = "gik-animated-callout/Classes/GIK/GIKCalloutContentView.m"; sourceTree = "<group>"; };
+		0164FBA21BBC39EC00C28FF7 /* GIKCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIKCalloutView.h; path = "gik-animated-callout/Classes/GIK/GIKCalloutView.h"; sourceTree = "<group>"; };
+		0164FBA31BBC39EC00C28FF7 /* GIKCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIKCalloutView.m; path = "gik-animated-callout/Classes/GIK/GIKCalloutView.m"; sourceTree = "<group>"; };
+		0164FBA41BBC39EC00C28FF7 /* GIKMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIKMapViewController.h; path = "gik-animated-callout/Classes/GIK/GIKMapViewController.h"; sourceTree = "<group>"; };
+		0164FBA51BBC39EC00C28FF7 /* GIKMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIKMapViewController.m; path = "gik-animated-callout/Classes/GIK/GIKMapViewController.m"; sourceTree = "<group>"; };
+		0164FBA61BBC39EC00C28FF7 /* GIKPinAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIKPinAnnotationView.h; path = "gik-animated-callout/Classes/GIK/GIKPinAnnotationView.h"; sourceTree = "<group>"; };
+		0164FBA71BBC39EC00C28FF7 /* GIKPinAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GIKPinAnnotationView.m; path = "gik-animated-callout/Classes/GIK/GIKPinAnnotationView.m"; sourceTree = "<group>"; };
+		01C87A6B1BBB3201002231C4 /* FDCheckoutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDCheckoutView.m; sourceTree = "<group>"; };
+		01C87A6D1BBB3232002231C4 /* FDCheckoutView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDCheckoutView.h; sourceTree = "<group>"; };
 		01CC73081B794238007A7107 /* FDJoystickView2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDJoystickView2.m; sourceTree = "<group>"; };
 		01CC73091B794238007A7107 /* FDJoystickView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDJoystickView2.h; sourceTree = "<group>"; };
 		1B1475981B57DB1200E5B413 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
@@ -97,7 +146,6 @@
 		1B1475A81B57DB6500E5B413 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		1B1475AA1B57DB6B00E5B413 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		1B1475AC1B57DB7500E5B413 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		1B1475AE1B57DB7D00E5B413 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		1B1475B01B57DB8800E5B413 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1B1475B21B57DB9800E5B413 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		1B1475B41B57DBD700E5B413 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -244,7 +292,7 @@
 		1B2807A51B2B46A40040A4B9 /* FDConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConnectionManager.m; sourceTree = "<group>"; };
 		1B2807A61B2B46A40040A4B9 /* FDDroneControlManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDroneControlManager.h; sourceTree = "<group>"; };
 		1B2807A71B2B46A40040A4B9 /* FDDroneControlManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDroneControlManager.m; sourceTree = "<group>"; };
-		1B2807A81B2B46A40040A4B9 /* FDDroneStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDroneStatus.h; sourceTree = "<group>"; };
+		1B2807A81B2B46A40040A4B9 /* FDDroneStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDroneStatus.h; sourceTree = "<group>"; usesTabs = 0; };
 		1B2807A91B2B46A40040A4B9 /* FDDroneStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDDroneStatus.m; sourceTree = "<group>"; };
 		1B2807AA1B2B46A40040A4B9 /* FDFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFileReader.h; sourceTree = "<group>"; };
 		1B2807AB1B2B46A40040A4B9 /* FDFileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFileReader.m; sourceTree = "<group>"; };
@@ -540,7 +588,6 @@
 				1B1475BD1B57DFE200E5B413 /* AdSupport.framework in Frameworks */,
 				1B1475B71B57DBEB00E5B413 /* libstdc++.6.dylib in Frameworks */,
 				1BB4C2311B2B4A6700C42211 /* CoreLocation.framework in Frameworks */,
-				1B1475AF1B57DB7D00E5B413 /* StoreKit.framework in Frameworks */,
 				1BB4C22F1B2B4A5800C42211 /* CoreGraphics.framework in Frameworks */,
 				1B1475B31B57DB9800E5B413 /* libsqlite3.dylib in Frameworks */,
 				1B1475A01B57DB1200E5B413 /* ParseCrashReporting.framework in Frameworks */,
@@ -581,6 +628,72 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0164FB6C1BBC388700C28FF7 /* GIKAnimatedCallout */ = {
+			isa = PBXGroup;
+			children = (
+				0164FB991BBC391A00C28FF7 /* Frameworks */,
+				0164FB7D1BBC38E900C28FF7 /* Resources */,
+				0164FB6D1BBC38A400C28FF7 /* Classes */,
+			);
+			name = GIKAnimatedCallout;
+			sourceTree = "<group>";
+		};
+		0164FB6D1BBC38A400C28FF7 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				0164FB9A1BBC39EC00C28FF7 /* GIKAnnotation.h */,
+				0164FB9B1BBC39EC00C28FF7 /* GIKAnnotation.m */,
+				0164FB9C1BBC39EC00C28FF7 /* GIKAnnotationView.h */,
+				0164FB9D1BBC39EC00C28FF7 /* GIKAnnotationView.m */,
+				0164FB9E1BBC39EC00C28FF7 /* GIKCalloutAnnotation.h */,
+				0164FB9F1BBC39EC00C28FF7 /* GIKCalloutAnnotation.m */,
+				0164FBA01BBC39EC00C28FF7 /* GIKCalloutContentView.h */,
+				0164FBA11BBC39EC00C28FF7 /* GIKCalloutContentView.m */,
+				0164FBA21BBC39EC00C28FF7 /* GIKCalloutView.h */,
+				0164FBA31BBC39EC00C28FF7 /* GIKCalloutView.m */,
+				0164FBA41BBC39EC00C28FF7 /* GIKMapViewController.h */,
+				0164FBA51BBC39EC00C28FF7 /* GIKMapViewController.m */,
+				0164FBA61BBC39EC00C28FF7 /* GIKPinAnnotationView.h */,
+				0164FBA71BBC39EC00C28FF7 /* GIKPinAnnotationView.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		0164FB7D1BBC38E900C28FF7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0164FB7E1BBC38F300C28FF7 /* Images */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		0164FB7E1BBC38F300C28FF7 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				0164FB7F1BBC390500C28FF7 /* Button_DisclosureAccessory.png */,
+				0164FB801BBC390500C28FF7 /* CalloutPopoverBottomLeft.png */,
+				0164FB811BBC390500C28FF7 /* CalloutPopoverBottomMiddle.png */,
+				0164FB821BBC390500C28FF7 /* CalloutPopoverBottomRight.png */,
+				0164FB831BBC390500C28FF7 /* CalloutPopoverDownArrows.png */,
+				0164FB841BBC390500C28FF7 /* CalloutPopoverLeftArrows.png */,
+				0164FB851BBC390500C28FF7 /* CalloutPopoverMiddleLeft.png */,
+				0164FB861BBC390500C28FF7 /* CalloutPopoverMiddleMiddle.png */,
+				0164FB871BBC390500C28FF7 /* CalloutPopoverMiddleRight.png */,
+				0164FB881BBC390500C28FF7 /* CalloutPopoverTopLeft.png */,
+				0164FB891BBC390500C28FF7 /* CalloutPopoverTopMiddle.png */,
+				0164FB8A1BBC390500C28FF7 /* CalloutPopoverTopRight.png */,
+				0164FB8B1BBC390500C28FF7 /* CalloutTableBackground.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		0164FB991BBC391A00C28FF7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1B1475971B57DB1200E5B413 /* parse-library */ = {
 			isa = PBXGroup;
 			children = (
@@ -908,6 +1021,8 @@
 			children = (
 				1B2807B61B2B46A40040A4B9 /* FDBatteryButton.h */,
 				1B2807B71B2B46A40040A4B9 /* FDBatteryButton.m */,
+				01C87A6D1BBB3232002231C4 /* FDCheckoutView.h */,
+				01C87A6B1BBB3201002231C4 /* FDCheckoutView.m */,
 				1B2807BA1B2B46A40040A4B9 /* FDJoystickView.h */,
 				1B2807BB1B2B46A40040A4B9 /* FDJoystickView.m */,
 				01CC73091B794238007A7107 /* FDJoystickView2.h */,
@@ -941,6 +1056,7 @@
 		1B2807C41B2B46A40040A4B9 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0164FB6C1BBC388700C28FF7 /* GIKAnimatedCallout */,
 				1B1475971B57DB1200E5B413 /* parse-library */,
 				1B16509A1B3E10CB00E2BF44 /* ffmpeg */,
 				1B2808331B2B46A40040A4B9 /* librtp */,
@@ -1296,7 +1412,6 @@
 				1B1475B41B57DBD700E5B413 /* QuartzCore.framework */,
 				1B1475B21B57DB9800E5B413 /* libsqlite3.dylib */,
 				1B1475B01B57DB8800E5B413 /* SystemConfiguration.framework */,
-				1B1475AE1B57DB7D00E5B413 /* StoreKit.framework */,
 				1B1475AC1B57DB7500E5B413 /* Security.framework */,
 				1B1475AA1B57DB6B00E5B413 /* AudioToolbox.framework */,
 				1B1475A81B57DB6500E5B413 /* CFNetwork.framework */,
@@ -1356,11 +1471,17 @@
 		1B28074A1B2B465A0040A4B9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = QArea;
 				TargetAttributes = {
 					1B2807511B2B465A0040A4B9 = {
 						CreatedOnToolsVersion = 6.3.2;
+						DevelopmentTeam = WME4E4GHEG;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -1387,11 +1508,24 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0164FB931BBC390500C28FF7 /* CalloutPopoverMiddleMiddle.png in Resources */,
+				0164FB941BBC390500C28FF7 /* CalloutPopoverMiddleRight.png in Resources */,
 				1BB4C2441B2B4DD200C42211 /* Main.storyboard in Resources */,
+				0164FB971BBC390500C28FF7 /* CalloutPopoverTopRight.png in Resources */,
 				1BB4C2431B2B4DD200C42211 /* LaunchScreen.xib in Resources */,
+				0164FB8C1BBC390500C28FF7 /* Button_DisclosureAccessory.png in Resources */,
+				0164FB961BBC390500C28FF7 /* CalloutPopoverTopMiddle.png in Resources */,
 				1BBBE1BC1B31B04400021FF4 /* VertexShader.glsl in Resources */,
+				0164FB8F1BBC390500C28FF7 /* CalloutPopoverBottomRight.png in Resources */,
 				1B28092B1B2B46A40040A4B9 /* Images.xcassets in Resources */,
+				0164FB951BBC390500C28FF7 /* CalloutPopoverTopLeft.png in Resources */,
+				0164FB8E1BBC390500C28FF7 /* CalloutPopoverBottomMiddle.png in Resources */,
+				0164FB8D1BBC390500C28FF7 /* CalloutPopoverBottomLeft.png in Resources */,
+				0164FB901BBC390500C28FF7 /* CalloutPopoverDownArrows.png in Resources */,
 				1BBBE1BE1B31B06400021FF4 /* YUVFragmentShader.glsl in Resources */,
+				0164FB911BBC390500C28FF7 /* CalloutPopoverLeftArrows.png in Resources */,
+				0164FB981BBC390500C28FF7 /* CalloutTableBackground.png in Resources */,
+				0164FB921BBC390500C28FF7 /* CalloutPopoverMiddleLeft.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1449,13 +1583,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B28093F1B2B46A40040A4B9 /* FDDroneStatus.m in Sources */,
+				0164FBAD1BBC39EC00C28FF7 /* GIKMapViewController.m in Sources */,
+				0164FBA81BBC39EC00C28FF7 /* GIKAnnotation.m in Sources */,
 				1B2809461B2B46A40040A4B9 /* FDCompassView.m in Sources */,
 				1BBBE1BA1B31A1C500021FF4 /* FDMovieGLRenderer.m in Sources */,
 				1B28092C1B2B46A40040A4B9 /* CLLocation+Utils.m in Sources */,
+				01C87A6C1BBB3201002231C4 /* FDCheckoutView.m in Sources */,
 				1B28092F1B2B46A40040A4B9 /* NSFileManager+ANUtils.m in Sources */,
 				01CC730A1B794238007A7107 /* FDJoystickView2.m in Sources */,
 				1B28094B1B2B46A40040A4B9 /* main.mm in Sources */,
 				1B7B8A6B1B61212800D6A9E2 /* FDOptionsListViewController.m in Sources */,
+				0164FBAE1BBC39EC00C28FF7 /* GIKPinAnnotationView.m in Sources */,
 				1B2809331B2B46A40040A4B9 /* FDBatteryStatusViewController.m in Sources */,
 				1B2809411B2B46A40040A4B9 /* FDGPSInfo.m in Sources */,
 				1B2809361B2B46A40040A4B9 /* FDDashboardViewController.m in Sources */,
@@ -1469,14 +1607,18 @@
 				1B2809381B2B46A40040A4B9 /* FDLeftSideViewController.m in Sources */,
 				1B2809301B2B46A40040A4B9 /* NSString+MAVLink.m in Sources */,
 				1B28092D1B2B46A40040A4B9 /* NSData+MAVLink.m in Sources */,
+				0164FBAB1BBC39EC00C28FF7 /* GIKCalloutContentView.m in Sources */,
 				1B28093C1B2B46A40040A4B9 /* AppDelegate.m in Sources */,
 				1B2809491B2B46A40040A4B9 /* FDOptionTableViewCell.m in Sources */,
 				1B2809401B2B46A40040A4B9 /* FDFileReader.m in Sources */,
 				1BF00F7E1B5CF61600D9A51C /* FDVerticalScaleView.m in Sources */,
+				0164FBA91BBC39EC00C28FF7 /* GIKAnnotationView.m in Sources */,
 				1B2809421B2B46A40040A4B9 /* FDMovieDecoder.m in Sources */,
 				1B28093D1B2B46A40040A4B9 /* FDConnectionManager.m in Sources */,
+				0164FBAA1BBC39EC00C28FF7 /* GIKCalloutAnnotation.m in Sources */,
 				1B2809451B2B46A40040A4B9 /* FDBatteryButton.m in Sources */,
 				1B2809431B2B46A40040A4B9 /* FDRTPConnectionOperation.mm in Sources */,
+				0164FBAC1BBC39EC00C28FF7 /* GIKCalloutView.m in Sources */,
 				1B2809471B2B46A40040A4B9 /* FDJoystickView.m in Sources */,
 				1B28093E1B2B46A40040A4B9 /* FDDroneControlManager.m in Sources */,
 				1B28093B1B2B46A40040A4B9 /* FDRootViewController.m in Sources */,
@@ -1524,8 +1666,10 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = "";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
@@ -1569,6 +1713,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = "";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1597,8 +1742,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries/parse-library";
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/FlyDrones/Supporting Files/FlyDrones-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1608,7 +1756,7 @@
 					"$(PROJECT_DIR)/Libraries/x264/include",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/FlyDrones/Supporting Files/Info.plist";
-				LD_NO_PIE = YES;
+				LD_NO_PIE = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1626,8 +1774,9 @@
 					"-l\"Pods-SWRevealViewController\"",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "tv.flydrones.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -1637,6 +1786,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries/parse-library";
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/FlyDrones/Supporting Files/FlyDrones-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
@@ -1649,7 +1800,7 @@
 					"$(PROJECT_DIR)/Libraries/x264/include",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/FlyDrones/Supporting Files/Info.plist";
-				LD_NO_PIE = YES;
+				LD_NO_PIE = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1666,8 +1817,9 @@
 					"-l\"Pods-SWRevealViewController\"",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "tv.flydrones.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eaa0d5fc-3641-4524-a8a5-1f03113cc211";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

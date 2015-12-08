@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "FDLoginViewController.h"
+
 #import <Parse/Parse.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 
@@ -16,6 +18,39 @@
 
 @implementation AppDelegate
 
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    NSLog(@"Calling Application Bundle ID: %@", sourceApplication);
+    NSLog(@"URL:%@", url);
+
+    [self setupParseWithOptions:nil];
+
+    self.token = [url host];
+
+#if 0
+    NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+    NSArray<NSURLQueryItem *> *queryItems = [components queryItems];
+    for (NSURLQueryItem *item in queryItems) {
+        if ([item.name isEqualToString:@"token"])
+            self.token = item.value;
+    }
+#endif
+
+    if ([self.window.rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+        for (UIViewController *viewController in navigationController.viewControllers) {
+            if ([viewController isKindOfClass:FDLoginViewController.class]) {
+                [navigationController popToViewController:viewController animated:YES];
+                break;
+            }
+        }
+//        [navigationController popToRootViewControllerAnimated:YES];
+    }
+
+    return YES;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self setupParseWithOptions:launchOptions];

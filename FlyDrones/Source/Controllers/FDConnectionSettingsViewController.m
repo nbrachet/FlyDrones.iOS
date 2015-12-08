@@ -162,4 +162,8 @@ static NSString * const AltitudeMinKey = @"AltitudeMinKey";
     return YES;
 }
 
+- (IBAction)swipeRight:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 @end

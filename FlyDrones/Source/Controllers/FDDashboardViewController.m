@@ -6,22 +6,25 @@
 //  Copyright (c) 2015 Oleksii Naboichenko. All rights reserved.
 //
 
-#import "FDDashboardViewController.h"
 #import <DDPopoverBackgroundView/DDPopoverBackgroundView.h>
-#import <SWRevealViewController/SWRevealViewController.h>
 #import <MBProgressHUD/MBProgressHUD.h>
-#import "FDMovieDecoder.h"
-#import "FDMovieGLView.h"
-#import "FDConnectionManager.h"
-#import "FDDroneControlManager.h"
+#import <SWRevealViewController/SWRevealViewController.h>
+
 #import "FDBatteryButton.h"
-#import "FDDroneStatus.h"
 #import "FDCompassView.h"
+#import "FDConnectionManager.h"
+#import "FDConnectionSettingsViewController.h"
+#import "FDDashboardViewController.h"
+#import "FDDroneControlManager.h"
+#import "FDDroneStatus.h"
 #import "FDJoystickView.h"
 #import "FDJoystickView2.h"
-#import "FDVerticalScaleView.h"
 #import "FDLocationInfoViewController.h"
+#import "FDLoginViewcontroller.h"
+#import "FDMovieDecoder.h"
+#import "FDMovieGLView.h"
 #import "FDOptionsListViewController.h"
+#import "FDVerticalScaleView.h"
 
 typedef NS_ENUM(NSUInteger, FDDashboardViewControllerHUDTag) {
     FDDashboardViewControllerHUDTagWaitingHeartbeat = 8410,
@@ -275,17 +278,51 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
 - (void)applicationDidEnterBackground {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
+
     [self stopTimer];
+
     [self.connectionManager closeConnections];
     self.connectionManager = nil;
-    
+
     [[FDDroneStatus currentStatus] synchronize];
+    [[FDDroneStatus currentStatus] clearStatus];
+
+    [self dismissPresentedPopoverAnimated:NO ignoredControllersFromClassesNamed:nil];
 }
 
 - (void)applicationDidBecomeActive {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
+
+    [self popViewController];
+
     [self connectToServers];
     [self startTimer];
+}
+
+- (void)popViewController {
+
+    // search for FDConnectionSettingsViewController
+    for (UIViewController *parent = self; parent != nil; parent = [parent parentViewController]) {
+        for (UIViewController *viewController in parent.navigationController.viewControllers) {
+            if ([viewController isKindOfClass:FDConnectionSettingsViewController.class]) {
+                [parent.navigationController popToViewController:viewController animated:YES];
+                return;
+            }
+        }
+    }
+
+    // not found. Search for FDLoginViewController
+    for (UIViewController *parent = self; parent != nil; parent = [parent parentViewController]) {
+        for (UIViewController *viewController in parent.navigationController.viewControllers) {
+            if ([viewController isKindOfClass:FDLoginViewController.class]) {
+                [parent.navigationController popToViewController:viewController animated:YES];
+                return;
+            }
+        }
+    }
+
+    // still not found. Restart this view
+    // note: [self.navigationController popToRootViewControllerAnimated:YES] presents this view anyway
 }
 
 - (void)connectToServers {
