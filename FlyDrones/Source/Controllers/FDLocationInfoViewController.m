@@ -57,9 +57,9 @@
         mapView = [[MKMapView alloc] initWithFrame:self.mapBackgroundView.bounds];
         mapView.mapType = MKMapTypeSatellite;
         mapView.showsPointsOfInterest = NO;
-        mapView.pitchEnabled = NO;
-        mapView.zoomEnabled = NO;
-        mapView.scrollEnabled = NO;
+        mapView.pitchEnabled = YES;
+        mapView.zoomEnabled = YES;
+        mapView.scrollEnabled = YES;
         mapView.rotateEnabled = NO;
         mapView.showsUserLocation = NO;
     });
@@ -70,7 +70,7 @@
     FDGPSInfo *gpsInfo = [FDDroneStatus currentStatus].gpsInfo;
     CLLocationCoordinate2D locationCoordinate = gpsInfo.locationCoordinate;
 
-    if (!CLLocationCoordinate2DIsValid(locationCoordinate) || gpsInfo.fixType < 1) {
+    if (!CLLocationCoordinate2DIsValid(locationCoordinate) || gpsInfo.fixType <= 1) {
         [self.mapView removeAnnotations:self.mapView.annotations];
         self.satelliteInfoLabel.text = @"N/A";
         return;
