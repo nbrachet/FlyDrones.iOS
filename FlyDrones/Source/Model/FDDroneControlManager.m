@@ -445,14 +445,26 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         }
     }
 
+    CGFloat epsilon = (maxRCValue - minRCValue) * 0.01f; // 1% of range
+    if (trimRCValue <= minRCValue + epsilon || trimRCValue >= maxRCValue - epsilon) {
+        trimRCValue = roundf((maxRCValue + minRCValue) / 2); // default to mid trim
+
+        [currentStatus.paramValues setObject:[NSNumber numberWithFloat:trimRCValue] forKey:trimValueKey];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(droneControlManager:didHandleErrorMessage:)]) {
+                [self.delegate droneControlManager:self didHandleErrorMessage:[NSString stringWithFormat:@"invalid value for %@", trimValueKey]];
+            }
+        });
+    }
+
     NSInteger rcValue = trimRCValue;
-    
     if (value > 0) {
         rcValue += (maxRCValue - trimRCValue) * value;
     } else if (value < 0) {
         rcValue -= (minRCValue - trimRCValue) * value;
     }
-    
+
     if (rcValue < minRCValue) {
         rcValue = minRCValue;
     }
