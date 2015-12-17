@@ -245,7 +245,8 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 - (NSData *)messageDataWithPitch:(CGFloat)pitch
                             roll:(CGFloat)roll
                           thrust:(CGFloat)thrust
-                             yaw:(CGFloat)yaw {
+                             yaw:(CGFloat)yaw
+                      cameraTilt:(CGFloat)tilt {
 
 //        NSMutableArray *rcChannelsRaw = [NSMutableArray array];
 //        for (int i = 0; i < 8; i++) {
@@ -290,6 +291,10 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         NSInteger yawRCValueIndex = [obj integerValue];
         NSInteger yawRCValue = [self rcValueFromManualControlValue:yaw rcChannelIndex:yawRCValueIndex];
         [rcChannelsRaw replaceObjectAtIndex:(yawRCValueIndex - 1) withObject:@(yawRCValue)];
+
+        //tilt
+        NSInteger tiltRCValue = [self rcValueFromManualControlValue:tilt rcChannelIndex:6];
+        [rcChannelsRaw replaceObjectAtIndex:5 withObject:@(tiltRCValue)];
     }
 
     mavlink_message_t message;

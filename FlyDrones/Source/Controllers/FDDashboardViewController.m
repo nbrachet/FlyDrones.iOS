@@ -57,6 +57,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
 @property (nonatomic, weak) IBOutlet FDJoystickView2 *leftJoystickView;
 @property (nonatomic, weak) IBOutlet FDJoystickView *rightJoystickView;
+@property (nonatomic, assign) CGFloat cameraTiltStart, cameraTilt;
 
 @property (nonatomic, assign, getter=isEnabledControls) BOOL enabledControls;
 
@@ -103,6 +104,8 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
     self.enabledControls = YES; // draw compass and altitude
     self.mapButton.enabled = NO;
+
+    self.cameraTilt = 0;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -182,13 +185,15 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     
     self.armed = [FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED;
 
+#ifndef DEBUG
     self.leftJoystickView.userInteractionEnabled = enabledControls;
     self.rightJoystickView.userInteractionEnabled = enabledControls;
+#endif
 
     if (!enabledControls) {
         [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:@[NSStringFromClass([FDLocationInfoViewController class])]];
-        [self.leftJoystickView resetPosition];
-        [self.rightJoystickView resetPosition];
+//        [self.leftJoystickView resetPosition];
+//        [self.rightJoystickView resetPosition];
         [self.armedStatusButton setTitle:@"N/A" forState:UIControlStateNormal];
         [self.customModesButton setTitle:@"N/A" forState:UIControlStateNormal];
     } else {
@@ -436,7 +441,8 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
         NSData *controlData = [self.droneControlManager messageDataWithPitch:self.rightJoystickView.stickVerticalValue
                                                                         roll:self.rightJoystickView.stickHorizontalValue
                                                                       thrust:self.leftJoystickView.stickVerticalValue
-                                                                         yaw:self.leftJoystickView.stickHorizontalValue];
+                                                                         yaw:self.leftJoystickView.stickHorizontalValue
+                                                                  cameraTilt:self.cameraTilt];
         [self.connectionManager sendDataToControlServer:controlData];
     }
 }
@@ -646,6 +652,29 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 - (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
     [self dismissPresentedPopoverAnimated:NO ignoredControllersFromClassesNamed:nil];
     return NO;
+}
+
+#pragma mark - UIPanGestureRecognizer
+
+- (IBAction)onPan:(id)sender {
+    UIPanGestureRecognizer* recognizer = sender;
+    CGPoint translatedPoint = [recognizer translationInView:self.view];
+
+    UIGestureRecognizerState state = [recognizer state];
+    if (state == UIGestureRecognizerStateBegan) {
+        self.cameraTiltStart = translatedPoint.y;
+        return;
+    }
+
+    CGFloat length = (translatedPoint.y - self.cameraTiltStart);
+    CGFloat range = self.view.bounds.size.height - self.topPanelView.bounds.size.height;
+    self.cameraTilt += length / range;
+    if (self.cameraTilt > 1)
+        self.cameraTilt = 1;
+    else if (self.cameraTilt < -1)
+        self.cameraTilt = -1;
+
+    self.cameraTiltStart = translatedPoint.y;
 }
 
 @end
