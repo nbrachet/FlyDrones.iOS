@@ -186,15 +186,8 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
     
     self.armed = [FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED;
 
-#ifndef DEBUG
-    self.leftJoystickView.userInteractionEnabled = enabledControls;
-    self.rightJoystickView.userInteractionEnabled = enabledControls;
-#endif
-
     if (!enabledControls) {
         [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:@[NSStringFromClass([FDLocationInfoViewController class])]];
-//        [self.leftJoystickView resetPosition];
-//        [self.rightJoystickView resetPosition];
         [self.armedStatusButton setTitle:@"N/A" forState:UIControlStateNormal];
         [self.customModesButton setTitle:@"N/A" forState:UIControlStateNormal];
     } else {
