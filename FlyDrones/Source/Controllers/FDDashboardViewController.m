@@ -50,13 +50,14 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 @property (nonatomic, assign, getter=isHideMapAfterHeartbeatRestored) BOOL hideMapAfterHeartbeatRestored;
 
 @property (nonatomic, weak) IBOutlet UIView *movieBackgroundView;
-
 @property (nonatomic, weak) IBOutlet FDMovieGLView *movieGLView;
 
 @property (nonatomic, weak) IBOutlet FDVerticalScaleView *altitudeVerticalScaleView;
 
 @property (nonatomic, weak) IBOutlet FDJoystickView2 *leftJoystickView;
 @property (nonatomic, weak) IBOutlet FDJoystickView *rightJoystickView;
+@property (nonatomic, weak) IBOutlet UIView *gestureView;
+
 @property (nonatomic, assign) CGFloat cameraTiltStart, cameraTilt;
 
 @property (nonatomic, assign, getter=isEnabledControls) BOOL enabledControls;
@@ -385,7 +386,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 - (void)timerTick:(NSTimer *)timer {
     static NSUInteger tickCounter = 0;
     tickCounter++;
-    
+
     if (![self.connectionManager isConnectedToControlHost]) {
         if (self.mapButton.enabled && ![self.presentedViewController isKindOfClass:[FDLocationInfoViewController class]]) {
             [self dismissPresentedPopoverAnimated:NO ignoredControllersFromClassesNamed:nil];
@@ -641,7 +642,7 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
 - (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController {
     popoverPresentationController.backgroundColor = [UIColor clearColor];
-    popoverPresentationController.passthroughViews = @[self.leftJoystickView, self.rightJoystickView];
+    popoverPresentationController.passthroughViews = @[self.leftJoystickView, self.rightJoystickView, self.gestureView];
     popoverPresentationController.popoverBackgroundViewClass = [DDPopoverBackgroundView class];
     [DDPopoverBackgroundView setTintColor:self.topPanelView.backgroundColor];
     [DDPopoverBackgroundView setShadowEnabled:NO];

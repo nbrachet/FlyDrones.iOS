@@ -451,16 +451,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="JoystickYawBase" translatesAutoresizingMaskIntoConstraints="NO" id="zWf-97-RWB">
-                                <rect key="frame" x="0.0" y="0.0" width="225" height="84"/>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="JoystickLeftBase" translatesAutoresizingMaskIntoConstraints="NO" id="uvQ-D8-tic">
-                                <rect key="frame" x="0.0" y="0.0" width="225" height="225"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="225" id="4ki-Fy-b2k"/>
-                                    <constraint firstAttribute="height" constant="225" id="dHW-7K-eHE"/>
-                                </constraints>
-                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eOu-L3-XOm" userLabel="Movie Background View">
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                                 <subviews>
@@ -468,9 +458,6 @@
                                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         <gestureRecognizers/>
-                                        <connections>
-                                            <outletCollection property="gestureRecognizers" destination="wt3-YW-5hF" appends="YES" id="E9O-Bf-n1K"/>
-                                        </connections>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -712,6 +699,12 @@
                                     <outlet property="imageView" destination="6bR-b4-O14" id="U9C-I6-sOa"/>
                                 </connections>
                             </view>
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ae5-0h-3pB" userLabel="Gesture View">
+                                <rect key="frame" x="0.0" y="64" width="1024" height="704"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="wt3-YW-5hF" appends="YES" id="SAL-ay-D0o"/>
+                                </connections>
+                            </view>
                             <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zom-z6-iIl" userLabel="Left Joystick View" customClass="FDJoystickView2">
                                 <rect key="frame" x="24" y="395" width="309" height="309"/>
                                 <subviews>
@@ -803,16 +796,25 @@
                         <constraints>
                             <constraint firstItem="c8e-mR-B3k" firstAttribute="top" secondItem="VWN-Yu-ZJD" secondAttribute="bottom" id="1ZY-7Y-wK0"/>
                             <constraint firstItem="qDH-KT-wm8" firstAttribute="top" secondItem="N6l-Yh-Btc" secondAttribute="bottom" constant="64" id="2HP-Bw-Lx3"/>
+                            <constraint firstItem="ae5-0h-3pB" firstAttribute="leading" secondItem="Zkl-Bm-4wD" secondAttribute="leading" id="3gf-Cp-df1"/>
                             <constraint firstItem="Zkl-Bm-4wD" firstAttribute="leading" secondItem="uB9-Yc-A79" secondAttribute="leading" id="6Hq-rr-wNy"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ae5-0h-3pB" secondAttribute="trailing" constant="-20" id="BfK-2I-xZ7"/>
                             <constraint firstItem="c8e-mR-B3k" firstAttribute="leading" secondItem="uB9-Yc-A79" secondAttribute="leading" id="EYg-ON-WGF"/>
                             <constraint firstAttribute="centerX" secondItem="eOu-L3-XOm" secondAttribute="centerX" id="Glt-PS-vvk"/>
                             <constraint firstItem="qDH-KT-wm8" firstAttribute="top" secondItem="Zom-z6-iIl" secondAttribute="bottom" constant="64" id="IMD-pS-LBz"/>
                             <constraint firstAttribute="trailing" secondItem="N6l-Yh-Btc" secondAttribute="trailing" constant="24" id="QUg-Vl-5a6"/>
+                            <constraint firstItem="ae5-0h-3pB" firstAttribute="trailing" secondItem="c8e-mR-B3k" secondAttribute="trailing" id="RSu-g0-Buh"/>
                             <constraint firstAttribute="trailing" secondItem="c8e-mR-B3k" secondAttribute="trailing" id="UYA-n1-tvz"/>
+                            <constraint firstItem="qDH-KT-wm8" firstAttribute="top" secondItem="ae5-0h-3pB" secondAttribute="bottom" id="WNS-r7-Wl5"/>
+                            <constraint firstAttribute="trailing" secondItem="ae5-0h-3pB" secondAttribute="trailing" id="aWD-Al-WlP"/>
+                            <constraint firstItem="ae5-0h-3pB" firstAttribute="leading" secondItem="uB9-Yc-A79" secondAttribute="leading" id="anO-1O-mdz"/>
+                            <constraint firstItem="ae5-0h-3pB" firstAttribute="bottom" secondItem="qDH-KT-wm8" secondAttribute="top" id="cyP-2B-mij"/>
                             <constraint firstItem="eOu-L3-XOm" firstAttribute="top" secondItem="VWN-Yu-ZJD" secondAttribute="bottom" id="dsF-lS-FY9"/>
                             <constraint firstAttribute="trailing" secondItem="eOu-L3-XOm" secondAttribute="trailing" id="fYq-ub-XLE"/>
                             <constraint firstItem="qDH-KT-wm8" firstAttribute="top" secondItem="eOu-L3-XOm" secondAttribute="bottom" id="icz-Iu-sze"/>
+                            <constraint firstItem="ae5-0h-3pB" firstAttribute="top" secondItem="Zkl-Bm-4wD" secondAttribute="top" id="lE1-EF-bzP"/>
                             <constraint firstItem="Zkl-Bm-4wD" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="bottom" id="p33-n4-utr"/>
+                            <constraint firstItem="ae5-0h-3pB" firstAttribute="top" secondItem="c8e-mR-B3k" secondAttribute="bottom" id="qd0-Pa-3Ci"/>
                             <constraint firstItem="eOu-L3-XOm" firstAttribute="leading" secondItem="uB9-Yc-A79" secondAttribute="leading" id="rJH-cL-bcP"/>
                             <constraint firstItem="Zom-z6-iIl" firstAttribute="leading" secondItem="uB9-Yc-A79" secondAttribute="leading" constant="24" id="tfb-81-lrA"/>
                             <constraint firstAttribute="centerY" secondItem="eOu-L3-XOm" secondAttribute="centerY" id="utO-X0-8ih"/>
@@ -821,6 +823,11 @@
                             <mask key="constraints">
                                 <exclude reference="Glt-PS-vvk"/>
                                 <exclude reference="utO-X0-8ih"/>
+                                <exclude reference="3gf-Cp-df1"/>
+                                <exclude reference="BfK-2I-xZ7"/>
+                                <exclude reference="RSu-g0-Buh"/>
+                                <exclude reference="cyP-2B-mij"/>
+                                <exclude reference="lE1-EF-bzP"/>
                             </mask>
                         </variation>
                     </view>
@@ -839,6 +846,7 @@
                         <outlet property="batteryButton" destination="n4B-o3-BAE" id="Nzh-75-pZf"/>
                         <outlet property="compassView" destination="3fa-i6-kmk" id="kve-xH-TAC"/>
                         <outlet property="customModesButton" destination="YYR-sH-XM9" id="Qld-BD-WX0"/>
+                        <outlet property="gestureView" destination="ae5-0h-3pB" id="nMO-pS-3y6"/>
                         <outlet property="leftJoystickView" destination="Zom-z6-iIl" id="gEH-Hr-LYA"/>
                         <outlet property="mapButton" destination="CK1-fU-SXs" id="DKN-tb-Tv2"/>
                         <outlet property="menuButton" destination="i1i-UJ-dEo" id="Fn0-wu-jvB"/>
@@ -1119,8 +1127,6 @@
         <image name="HorizontalGradient" width="100" height="5"/>
         <image name="JoystickBase" width="225" height="225"/>
         <image name="JoystickControl" width="84" height="84"/>
-        <image name="JoystickLeftBase" width="225" height="225"/>
-        <image name="JoystickYawBase" width="225" height="84"/>
         <image name="Landing" width="256" height="256"/>
         <image name="MunuIcon" width="32" height="32"/>
         <image name="Settings" width="50" height="50"/>
