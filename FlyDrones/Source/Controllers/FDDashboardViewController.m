@@ -659,6 +659,10 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
         self.cameraTiltStart = translatedPoint.y;
         return;
     }
+    if (state == UIGestureRecognizerStateCancelled) {
+        self.cameraTilt = self.cameraTiltStart;
+        return;
+    }
 
     CGFloat length = (translatedPoint.y - self.cameraTiltStart);
     CGFloat range = self.view.bounds.size.height - self.topPanelView.bounds.size.height;
