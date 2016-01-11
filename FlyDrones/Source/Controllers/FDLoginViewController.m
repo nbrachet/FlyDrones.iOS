@@ -172,10 +172,33 @@
             break;
         }
     }
-    if (allSame) {
-        [self performSegueWithIdentifier:@"showSettingsViewController" sender:self];
+    if (allSame && c0 == 'N') {
+        if (c0 == 'N') // only 'NNNN-NNNN'
+            [self performSegueWithIdentifier:@"showSettingsViewController" sender:self];
         return;
     }
+
+    // any other token is valid (for now)
+
+        FDDroneStatus *currentDroneStatus = [FDDroneStatus currentStatus];
+        currentDroneStatus.pathForUDPConnection = kDefaultServerHost;
+        currentDroneStatus.portForUDPConnection = [kDefaultServerPort integerValue];
+        currentDroneStatus.pathForTCPConnection = kDefaultServerHost;
+        currentDroneStatus.portForTCPConnection = [kDefaultServerPort integerValue];
+
+        currentDroneStatus.videoSize = kDefaultVideoSize;
+        currentDroneStatus.videoFps = kDefaultVideoFps;
+        currentDroneStatus.videoResolution = currentDroneStatus.videoSize.width * currentDroneStatus.videoSize.height / 1000.0f / 1000.0f;
+        currentDroneStatus.videoBitrate = kDefaultVideoBitrate;
+        currentDroneStatus.altitudeMin = kDefaultAltitudeMin;
+
+        currentDroneStatus.isUserAdmin = FALSE;
+
+        [currentDroneStatus synchronize];
+
+        [self performSegueWithIdentifier:@"showRootViewController" sender:self];
+
+    return;
 
     // validate token with server
 
@@ -351,6 +374,8 @@ shouldChangeCharactersInRange:(NSRange)range
             if (altitudeMin)
                 currentDroneStatus.altitudeMin = altitudeMin.integerValue;
         }
+
+        currentDroneStatus.isUserAdmin = FALSE;
 
         [self performSegueWithIdentifier:@"showRootViewController" sender:self];
     } else {

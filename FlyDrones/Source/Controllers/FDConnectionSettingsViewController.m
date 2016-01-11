@@ -9,19 +9,10 @@
 #import "FDConnectionSettingsViewController.h"
 #import "FDDroneStatus.h"
 
-static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"192.168.1.80";
-//static NSString * const FDConnectionSettingsViewControllerCustomUDPHost = @"108.26.177.27";
 static NSString * const UDPHostKey = @"UDPHostKey";
-
-static NSString * const FDConnectionSettingsViewControllerCustomUDPPort = @"5556";
 static NSString * const UDPPortKey = @"UDPPortKey";
-
-static NSString * const FDConnectionSettingsViewControllerCustomTCPHost = @"192.168.1.80";
 static NSString * const TCPHostKey = @"TCPHostKey";
-
-static NSString * const FDConnectionSettingsViewControllerCustomTCPPort = @"5555";
 static NSString * const TCPPortKey = @"TCPPortKey";
-
 static NSString * const ResolutionWKey = @"ResolutionWKey";
 static NSString * const ResolutionHKey = @"ResolutionHKey";
 static NSString * const FPSKey = @"FPSKey";
@@ -55,25 +46,25 @@ static NSString * const AltitudeMinKey = @"AltitudeMinKey";
     if ([userDefaults objectForKey:UDPHostKey]) {
         self.hostForConnectionTextField.text = [userDefaults objectForKey:UDPHostKey];
     } else {
-        self.hostForConnectionTextField.text = FDConnectionSettingsViewControllerCustomUDPHost;
+        self.hostForConnectionTextField.text = kDefaultServerHost;
     }
     
     if ([userDefaults objectForKey:UDPPortKey]) {
         self.portForConnectionTextField.text = [userDefaults objectForKey:UDPPortKey];
     } else {
-        self.portForConnectionTextField.text = FDConnectionSettingsViewControllerCustomUDPPort;
+        self.portForConnectionTextField.text = kDefaultServerPort;
     }
     
     if ([userDefaults objectForKey:TCPHostKey]) {
         self.hostForTCPConnectionTextField.text = [userDefaults objectForKey:TCPHostKey];
     } else {
-        self.hostForTCPConnectionTextField.text = FDConnectionSettingsViewControllerCustomTCPHost;
+        self.hostForTCPConnectionTextField.text = kDefaultServerHost;
     }
     
     if ([userDefaults objectForKey:TCPPortKey]) {
         self.portForTCPConnectionTextField.text = [userDefaults objectForKey:TCPPortKey];
     } else {
-        self.portForTCPConnectionTextField.text = FDConnectionSettingsViewControllerCustomTCPPort;
+        self.portForTCPConnectionTextField.text = kDefaultServerPort;
     }
     
     if ([userDefaults objectForKey:ResolutionWKey]) {
@@ -134,7 +125,7 @@ static NSString * const AltitudeMinKey = @"AltitudeMinKey";
             [[[UIAlertView alloc] initWithTitle:@"Warning" message:@"Please fill all fields correctly" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
             return NO;
         }
-        
+
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         [userDefaults setObject:hostForUDPConnection forKey:UDPHostKey];
         [userDefaults setObject:portForUDPConnection forKey:UDPPortKey];
@@ -158,6 +149,8 @@ static NSString * const AltitudeMinKey = @"AltitudeMinKey";
         currentDroneStatus.videoResolution = currentDroneStatus.videoSize.width * currentDroneStatus.videoSize.height / 1000.0f / 1000.0f;
         currentDroneStatus.videoBitrate = [bitrate floatValue];
         currentDroneStatus.altitudeMin = [altitudeMin floatValue];
+
+        currentDroneStatus.isUserAdmin = TRUE;
     }
     return YES;
 }

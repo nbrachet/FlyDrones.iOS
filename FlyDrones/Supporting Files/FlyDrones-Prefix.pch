@@ -20,10 +20,12 @@
     #define NSLog(...)
 #endif
 
-#define kDefaultVideoSize CGSizeMake(1280, 720)
-#define kDefaultVideoFps 25
-#define kDefaultVideoBitrate 1.25f
-#define kDefaultAltitudeMin 35
+#define kDefaultServerHost (@"108.26.177.27")
+#define kDefaultServerPort (@"5556")
+#define kDefaultVideoSize CGSizeMake(1024, 768)
+#define kDefaultVideoFps 20
+#define kDefaultVideoBitrate 4.00f
+#define kDefaultAltitudeMin 30
 
 #define ParseApplicationID @"GGz4nwwcqUsAzJPlQ1fu8WYP74hptMw4xBJ6xcNA"
 #define ParseClientKey @"10RAbOZyNqo45z4vxvmRCCX6FSSXUUyZolcyPkvj"

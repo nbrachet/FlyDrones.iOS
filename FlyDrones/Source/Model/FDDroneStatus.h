@@ -34,7 +34,6 @@
 
 @property (nonatomic, strong) FDGPSInfo *gpsInfo;
 
-
 //temponary
 @property (nonatomic, copy) NSString *pathForUDPConnection;
 @property (nonatomic, assign) NSInteger portForUDPConnection;
@@ -45,6 +44,8 @@
 @property (nonatomic, assign) CGFloat videoResolution;
 @property (nonatomic, assign) CGFloat videoBitrate;
 @property (nonatomic, assign) CGFloat altitudeMin;
+
+@property (nonatomic, assign) BOOL isUserAdmin;
 
 + (instancetype)alloc __attribute__((unavailable("alloc not available")));
 + (instancetype)allocWithZone __attribute__((unavailable("allocWithZone not available")));

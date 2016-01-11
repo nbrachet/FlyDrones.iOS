@@ -177,14 +177,16 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 
 - (void)setEnabledControls:(BOOL)enabledControls {
     _enabledControls = enabledControls;
-    
+
+    FDDroneStatus *currentDroneStatus = [FDDroneStatus currentStatus];
+
     self.batteryButton.enabled = enabledControls;
     self.customModesButton.enabled = enabledControls;
     self.compassView.enabled = enabledControls;
     self.altitudeVerticalScaleView.enabled = enabledControls;
-    self.armedStatusButton.enabled = enabledControls;
+    self.armedStatusButton.enabled = currentDroneStatus.isUserAdmin && enabledControls;
     
-    self.armed = [FDDroneStatus currentStatus].mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED;
+    self.armed = currentDroneStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED;
 
     if (!enabledControls) {
         [self dismissPresentedPopoverAnimated:YES ignoredControllersFromClassesNamed:@[NSStringFromClass([FDLocationInfoViewController class])]];
@@ -206,14 +208,21 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
 }
 
 - (NSArray *)customModesOptionsNames {
-    NSMutableArray *customModesOptionsNames = [@[[NSString nameFromArducopterMode:ARDUCOPTER_MODE_STABILIZE],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_ALT_HOLD],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_AUTO],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_LOITER],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_RTL],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_LAND],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_DRIFT],
-                                                 [NSString nameFromArducopterMode:ARDUCOPTER_MODE_POSHOLD]] mutableCopy];
+    NSMutableArray *customModesOptionsNames;
+    if ([FDDroneStatus currentStatus].isUserAdmin) {
+        customModesOptionsNames = [@[[NSString nameFromArducopterMode:ARDUCOPTER_MODE_STABILIZE],
+                                     [NSString nameFromArducopterMode:ARDUCOPTER_MODE_ALT_HOLD],
+                                     [NSString nameFromArducopterMode:ARDUCOPTER_MODE_AUTO],
+                                     [NSString nameFromArducopterMode:ARDUCOPTER_MODE_LOITER],
+                                     [NSString nameFromArducopterMode:ARDUCOPTER_MODE_RTL],
+                                     [NSString nameFromArducopterMode:ARDUCOPTER_MODE_LAND],
+                                     [NSString nameFromArducopterMode:ARDUCOPTER_MODE_DRIFT],
+                                     [NSString nameFromArducopterMode:ARDUCOPTER_MODE_POSHOLD]] mutableCopy];
+    } else {
+        customModesOptionsNames = [@[[NSString nameFromArducopterMode:ARDUCOPTER_MODE_LOITER],
+                                     [NSString nameFromArducopterMode:ARDUCOPTER_MODE_RTL]] mutableCopy];
+    }
+
     enum ARDUCOPTER_MODE currentMode = [FDDroneStatus currentStatus].mavCustomMode;
     NSString *currentModeName = [NSString nameFromArducopterMode:currentMode];
     if ([customModesOptionsNames containsObject:currentModeName]) {
