@@ -262,35 +262,47 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 
         //pitch
         id obj = [currentStatus.paramValues objectForKey:@"RCMAP_PITCH"];
-        if (obj == nil)
+        if (obj == nil) {
+            NSLog(@"no value for RCMAP_PITCH");
             return nil;
+        }
         NSInteger pitchRCValueIndex = [obj integerValue];
         NSInteger pitchRCValue = [self rcValueFromManualControlValue:-pitch rcChannelIndex:pitchRCValueIndex]; // pitch is reversed in APMCopter
         [rcChannelsRaw replaceObjectAtIndex:(pitchRCValueIndex - 1) withObject:@(pitchRCValue)];
+        NSLog(@"pitch: %d=%d", pitchRCValueIndex-1, pitchRCValue);
 
         //roll
         obj = [currentStatus.paramValues objectForKey:@"RCMAP_ROLL"];
-        if (obj == nil)
+        if (obj == nil) {
+            NSLog(@"no value for RCMAP_ROLL");
             return nil;
+        }
         NSInteger rollRCValueIndex = [obj integerValue];
         NSInteger rollRCValue = [self rcValueFromManualControlValue:roll rcChannelIndex:rollRCValueIndex];
         [rcChannelsRaw replaceObjectAtIndex:(rollRCValueIndex - 1) withObject:@(rollRCValue)];
+        NSLog(@"roll: %d=%d", rollRCValueIndex-1, rollRCValue);
 
         //throttle
         obj = [currentStatus.paramValues objectForKey:@"RCMAP_THROTTLE"];
-        if (obj == nil)
+        if (obj == nil) {
+            NSLog(@"no value for RCMAP_THROTTLE");
             return nil;
+        }
         NSInteger throttleRCValueIndex = [obj integerValue];
         NSInteger throttleRCValue = [self rcValueFromManualControlValue:thrust rcChannelIndex:throttleRCValueIndex];
         [rcChannelsRaw replaceObjectAtIndex:(throttleRCValueIndex - 1) withObject:@(throttleRCValue)];
+        NSLog(@"throttle: %d=%d", throttleRCValueIndex-1, throttleRCValue);
 
         //yaw
         obj = [currentStatus.paramValues objectForKey:@"RCMAP_YAW"];
-        if (obj == nil)
+        if (obj == nil) {
+            NSLog(@"no value for RCMAP_YAW");
             return nil;
+        }
         NSInteger yawRCValueIndex = [obj integerValue];
         NSInteger yawRCValue = [self rcValueFromManualControlValue:yaw rcChannelIndex:yawRCValueIndex];
         [rcChannelsRaw replaceObjectAtIndex:(yawRCValueIndex - 1) withObject:@(yawRCValue)];
+        NSLog(@"yaw: %d=%d", yawRCValueIndex-1, yawRCValue);
 
         //tilt
         NSInteger tiltRCValue = [self rcValueFromManualControlValue:tilt rcChannelIndex:6];
