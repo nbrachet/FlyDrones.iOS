@@ -76,8 +76,18 @@
         return;
     }
 
-    self.satelliteInfoLabel.text = [NSString stringWithFormat:@"%0.6f,%0.6f ±%0.1f (%lu)", gpsInfo.locationCoordinate.latitude, gpsInfo.locationCoordinate.longitude, gpsInfo.hdop, (unsigned long)gpsInfo.satelliteCount];
-    
+    if (gpsInfo.hdop != UINT16_MAX) {
+        if (gpsInfo.satelliteCount != 255)
+            self.satelliteInfoLabel.text = [NSString stringWithFormat:@"%0.6f,%0.6f ±%0.1f (%lu)", gpsInfo.locationCoordinate.latitude, gpsInfo.locationCoordinate.longitude, gpsInfo.hdop, (unsigned long)gpsInfo.satelliteCount];
+        else
+            self.satelliteInfoLabel.text = [NSString stringWithFormat:@"%0.6f,%0.6f ±%0.1f", gpsInfo.locationCoordinate.latitude, gpsInfo.locationCoordinate.longitude, gpsInfo.hdop];
+    } else {
+        if (gpsInfo.satelliteCount != 255)
+            self.satelliteInfoLabel.text = [NSString stringWithFormat:@"%0.6f,%0.6f (%lu)", gpsInfo.locationCoordinate.latitude, gpsInfo.locationCoordinate.longitude, (unsigned long)gpsInfo.satelliteCount];
+        else
+            self.satelliteInfoLabel.text = [NSString stringWithFormat:@"%0.6f,%0.6f", gpsInfo.locationCoordinate.latitude, gpsInfo.locationCoordinate.longitude];
+    }
+
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate];
     CLLocation *prevLocation = [[CLLocation alloc] initWithCoordinate:self.prevRegionLocationCoordinate];
     CLLocationDistance distance = [location distanceFromLocation:prevLocation];

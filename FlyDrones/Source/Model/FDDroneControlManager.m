@@ -149,7 +149,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
             }
             droneStatus.gpsInfo.locationCoordinate = locationCoordinate;
             droneStatus.gpsInfo.satelliteCount = gpsRawIntPkt.satellites_visible;
-            droneStatus.gpsInfo.hdop = gpsRawIntPkt.eph/100.0f;
+            droneStatus.gpsInfo.hdop = gpsRawIntPkt.eph != UINT16_MAX ? gpsRawIntPkt.eph/100.0f : gpsRawIntPkt.eph;
             droneStatus.gpsInfo.fixType = gpsRawIntPkt.fix_type;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleLocationCoordinateNotification object:self];
