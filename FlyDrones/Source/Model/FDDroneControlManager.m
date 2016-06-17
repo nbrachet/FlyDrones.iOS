@@ -118,9 +118,9 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                 (sysStatus.current_battery < 0 && sysStatus.current_battery != -1)) {
                 break;
             }
-            droneStatus.batteryRemaining = sysStatus.battery_remaining / 100.0f;
-            droneStatus.batteryAmperage = sysStatus.current_battery / 100.0f;
-            droneStatus.batteryVoltage = sysStatus.voltage_battery / 1000.0f;
+            droneStatus.batteryRemaining = sysStatus.battery_remaining == -1 ? -1 : sysStatus.battery_remaining / 100.0f;
+            droneStatus.batteryAmperage = sysStatus.current_battery == -1 ? -1 : sysStatus.current_battery / 100.0f;
+            droneStatus.batteryVoltage = sysStatus.voltage_battery == UINT16_MAX ? UINT16_MAX : sysStatus.voltage_battery / 1000.0f;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:FDDroneControlManagerDidHandleBatteryStatusNotification object:self];

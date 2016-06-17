@@ -64,9 +64,9 @@ static NSString * const ParamValuesKey = @"paramValues";
 }
 
 - (void)clearStatus {
-    self.batteryRemaining = FDNotAvailable;
-    self.batteryVoltage = FDNotAvailable;
-    self.batteryAmperage = FDNotAvailable;
+    self.batteryRemaining = -1;
+    self.batteryVoltage = UINT16_MAX;
+    self.batteryAmperage = -1;
     
     self.altitude = FDNotAvailable;
     self.airspeed = FDNotAvailable;
