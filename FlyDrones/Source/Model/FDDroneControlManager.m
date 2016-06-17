@@ -248,10 +248,6 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                              yaw:(CGFloat)yaw
                       cameraTilt:(CGFloat)tilt {
 
-//        NSMutableArray *rcChannelsRaw = [NSMutableArray array];
-//        for (int i = 0; i < 8; i++) {
-//            [rcChannelsRaw addObject:@(0)];
-//        }
     NSMutableArray *rcChannelsRaw = [NSMutableArray arrayWithObjects:@(0), @(0), @(0), @(0), @(0), @(0), @(0), @(0), nil];
 
     FDDroneStatus *currentStatus = [FDDroneStatus currentStatus];
@@ -269,7 +265,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         NSInteger pitchRCValueIndex = [obj integerValue];
         NSInteger pitchRCValue = [self rcValueFromManualControlValue:-pitch rcChannelIndex:pitchRCValueIndex]; // pitch is reversed in APMCopter
         [rcChannelsRaw replaceObjectAtIndex:(pitchRCValueIndex - 1) withObject:@(pitchRCValue)];
-        NSLog(@"pitch: %d=%d", pitchRCValueIndex-1, pitchRCValue);
+        //NSLog(@"pitch: %d=%d", pitchRCValueIndex-1, pitchRCValue);
 
         //roll
         obj = [currentStatus.paramValues objectForKey:@"RCMAP_ROLL"];
@@ -280,7 +276,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         NSInteger rollRCValueIndex = [obj integerValue];
         NSInteger rollRCValue = [self rcValueFromManualControlValue:roll rcChannelIndex:rollRCValueIndex];
         [rcChannelsRaw replaceObjectAtIndex:(rollRCValueIndex - 1) withObject:@(rollRCValue)];
-        NSLog(@"roll: %d=%d", rollRCValueIndex-1, rollRCValue);
+        //NSLog(@"roll: %d=%d", rollRCValueIndex-1, rollRCValue);
 
         //throttle
         obj = [currentStatus.paramValues objectForKey:@"RCMAP_THROTTLE"];
@@ -291,7 +287,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         NSInteger throttleRCValueIndex = [obj integerValue];
         NSInteger throttleRCValue = [self rcValueFromManualControlValue:thrust rcChannelIndex:throttleRCValueIndex];
         [rcChannelsRaw replaceObjectAtIndex:(throttleRCValueIndex - 1) withObject:@(throttleRCValue)];
-        NSLog(@"throttle: %d=%d", throttleRCValueIndex-1, throttleRCValue);
+        //NSLog(@"throttle: %d=%d", throttleRCValueIndex-1, throttleRCValue);
 
         //yaw
         obj = [currentStatus.paramValues objectForKey:@"RCMAP_YAW"];
@@ -302,7 +298,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         NSInteger yawRCValueIndex = [obj integerValue];
         NSInteger yawRCValue = [self rcValueFromManualControlValue:yaw rcChannelIndex:yawRCValueIndex];
         [rcChannelsRaw replaceObjectAtIndex:(yawRCValueIndex - 1) withObject:@(yawRCValue)];
-        NSLog(@"yaw: %d=%d", yawRCValueIndex-1, yawRCValue);
+        //NSLog(@"yaw: %d=%d", yawRCValueIndex-1, yawRCValue);
 
         //tilt
         NSInteger tiltRCValue = [self rcValueFromManualControlValue:tilt rcChannelIndex:6];
