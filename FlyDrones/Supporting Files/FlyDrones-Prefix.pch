@@ -20,11 +20,11 @@
     #define NSLog(...)
 #endif
 
-#define kDefaultServerHost (@"108.26.177.27")
+#define kDefaultServerHost (@"146.115.138.57")
 #define kDefaultServerPort (@"5556")
 #define kDefaultVideoSize CGSizeMake(1024, 768)
 #define kDefaultVideoFps 20
-#define kDefaultVideoBitrate 4.00f
+#define kDefaultVideoBitrate 2.50f
 #define kDefaultAltitudeMin 30
 
 #define ParseApplicationID @"GGz4nwwcqUsAzJPlQ1fu8WYP74hptMw4xBJ6xcNA"
