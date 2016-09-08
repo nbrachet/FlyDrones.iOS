@@ -148,8 +148,6 @@
 #pragma - Actions
 
 - (IBAction)buttonTapped:(id)sender {
-    NSLog(@"Button Tapped");
-
     // keep current token valid for 30min
 
     if ([validToken isEqualToString:self.tokenTextField.text]
