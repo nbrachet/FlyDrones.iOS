@@ -252,9 +252,9 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
 
     FDDroneStatus *currentStatus = [FDDroneStatus currentStatus];
     @synchronized(currentStatus) {
-        if (!(currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED)) {
-            return nil;
-        }
+//        if (!(currentStatus.mavBaseMode & (uint8_t)MAV_MODE_FLAG_SAFETY_ARMED)) {
+//            return nil;
+//        }
 
         //pitch
         id obj = [currentStatus.paramValues objectForKey:@"RCMAP_PITCH"];
