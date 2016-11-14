@@ -47,6 +47,7 @@ enum ARDUCOPTER_MODE
 #include <iostream>
 
 #include <stdio.h> // snprintf
+#include <string.h> // strnlen
 
 #ifndef NDEBUG
 #  include <stdlib.h> // abort
@@ -54,7 +55,7 @@ enum ARDUCOPTER_MODE
 
     ///////////////////////////////////////////////////////////////////
 
-namespace {
+namespace MavLink {
 
 class IOSFlags
 {
@@ -69,7 +70,6 @@ public:
         : _s(s)
         , _flags(s.setf(f))
     {}
-
 
     explicit IOSFlags(std::ios_base& s, std::ios_base::fmtflags f, std::ios_base::fmtflags m)
         : _s(s)
@@ -262,7 +262,11 @@ operator<<(std::ostream& out, MAV_AUTOPILOT autopilot)
 #define DO(x)   case MAV_AUTOPILOT_##x: return out << #x;
 
         DO(GENERIC)
+#ifdef MAVLINK_ENABLED_PIXHAWK
         DO(PIXHAWK)
+#else
+        DO(RESERVED) // used to be PIXHAWK
+#endif
         DO(SLUGS)
         DO(ARDUPILOTMEGA)
         DO(OPENPILOT)
@@ -278,6 +282,7 @@ operator<<(std::ostream& out, MAV_AUTOPILOT autopilot)
         DO(AUTOQUAD)
         DO(ARMAZILA)
         DO(AEROB)
+        DO(ASLUAV)
 
 #undef DO
 
@@ -463,22 +468,24 @@ operator<<(std::ostream& out, const mavlink_sys_status_t& msg)
     if (! out)
         return out;
 
-    IOSFlags iosflags(out, std::ios_base::fixed, std::ios_base::floatfield);
-    IOSPrecision precision(out);
+    MavLink::IOSFlags iosflags(out, std::ios_base::fixed, std::ios_base::floatfield);
+    MavLink::IOSPrecision precision(out);
 
     out << "onboard_control_sensors_present=" << _MavSysStatusSensor(msg.onboard_control_sensors_present) << ' '
         << "onboard_control_sensors_enabled=" << _MavSysStatusSensor(msg.onboard_control_sensors_present, msg.onboard_control_sensors_enabled) << ' '
         << "onboard_control_sensors_health=" << _MavSysStatusSensor(msg.onboard_control_sensors_enabled, msg.onboard_control_sensors_health) << ' '
         << "load=" << std::setprecision(1) << msg.load / 10.0 << "% "
-        << "voltage_battery=" << std::setprecision(3) << msg.voltage_battery * 0.001 << "V "
-        << "current_battery=" << std::setprecision(2) << msg.current_battery * 0.01 << "A "
-        << "drop_rate_comm=" << std::setprecision(2) << msg.drop_rate_comm / 100.0 << "% "
+        << "voltage_battery=" << std::setprecision(3) << msg.voltage_battery * 0.001 << "V ";
+    if (msg.current_battery != -1)
+        out << "current_battery=" << std::setprecision(2) << msg.current_battery * 0.01 << "A ";
+    out << "drop_rate_comm=" << std::setprecision(2) << msg.drop_rate_comm / 100.0 << "% "
         << "errors_comm=" << msg.errors_comm << ' '
         << "errors_count1=" << msg.errors_count1 << ' '
         << "errors_count2=" << msg.errors_count2 << ' '
         << "errors_count3=" << msg.errors_count3 << ' '
-        << "errors_count4=" << msg.errors_count4 << ' '
-        << "battery_remaining=" << (unsigned)msg.battery_remaining << '%';
+        << "errors_count4=" << msg.errors_count4 << ' ';
+    if (msg.battery_remaining != -1)
+        out << "battery_remaining=" << (unsigned)msg.battery_remaining << '%';
     return out;
 }
 
@@ -490,8 +497,8 @@ operator<<(std::ostream& out, const mavlink_battery_status_t& msg)
     if (! out)
         return out;
 
-    IOSFlags iosflags(out, std::ios_base::fixed, std::ios_base::floatfield);
-    IOSPrecision precision(out);
+    MavLink::IOSFlags iosflags(out, std::ios_base::fixed, std::ios_base::floatfield);
+    MavLink::IOSPrecision precision(out);
 
     if (msg.current_consumed != -1)
         out << "current_consumed=" << msg.current_consumed << "mAh ";
@@ -573,82 +580,118 @@ operator<<(std::ostream& out, MAV_CMD cmd)
     {
 #define DO(x)   case MAV_CMD_##x: return out << #x;
 
-        DO(NAV_WAYPOINT)
-        DO(NAV_LOITER_UNLIM)
-        DO(NAV_LOITER_TURNS)
-        DO(NAV_LOITER_TIME)
-        DO(NAV_RETURN_TO_LAUNCH)
-        DO(NAV_LAND)
-        DO(NAV_TAKEOFF)
-        DO(NAV_CONTINUE_AND_CHANGE_ALT)
-        DO(NAV_LOITER_TO_ALT)
-        DO(NAV_ROI)
-        DO(NAV_PATHPLANNING)
-        DO(NAV_SPLINE_WAYPOINT)
-        DO(NAV_GUIDED_ENABLE)
-        DO(NAV_LAST)
-        DO(CONDITION_DELAY)
-        DO(CONDITION_CHANGE_ALT)
-        DO(CONDITION_DISTANCE)
-        DO(CONDITION_YAW)
-        DO(CONDITION_LAST)
-        DO(DO_SET_MODE)
-        DO(DO_JUMP)
-        DO(DO_CHANGE_SPEED)
-        DO(DO_SET_HOME)
-        DO(DO_SET_PARAMETER)
-        DO(DO_SET_RELAY)
-        DO(DO_REPEAT_RELAY)
-        DO(DO_SET_SERVO)
-        DO(DO_REPEAT_SERVO)
-        DO(DO_FLIGHTTERMINATION)
-        DO(DO_LAND_START)
-        DO(DO_RALLY_LAND)
-        DO(DO_GO_AROUND)
-        DO(DO_CONTROL_VIDEO)
-        DO(DO_SET_ROI)
-        DO(DO_DIGICAM_CONFIGURE)
-        DO(DO_DIGICAM_CONTROL)
-        DO(DO_MOUNT_CONFIGURE)
-        DO(DO_MOUNT_CONTROL)
-        DO(DO_SET_CAM_TRIGG_DIST)
-        DO(DO_FENCE_ENABLE)
-        DO(DO_PARACHUTE)
-        DO(DO_INVERTED_FLIGHT)
-        DO(DO_MOUNT_CONTROL_QUAT)
-        DO(DO_GUIDED_MASTER)
-        DO(DO_GUIDED_LIMITS)
-        DO(DO_LAST)
-        DO(PREFLIGHT_CALIBRATION)
-        DO(PREFLIGHT_SET_SENSOR_OFFSETS)
-        DO(PREFLIGHT_STORAGE)
-        DO(PREFLIGHT_REBOOT_SHUTDOWN)
-        DO(OVERRIDE_GOTO)
-        DO(MISSION_START)
-        DO(COMPONENT_ARM_DISARM)
-        DO(START_RX_PAIR)
-        DO(REQUEST_AUTOPILOT_CAPABILITIES)
-        DO(IMAGE_START_CAPTURE)
-        DO(IMAGE_STOP_CAPTURE)
-        DO(DO_TRIGGER_CONTROL)
-        DO(VIDEO_START_CAPTURE)
-        DO(VIDEO_STOP_CAPTURE)
-        DO(PANORAMA_CREATE)
-        DO(PAYLOAD_PREPARE_DEPLOY)
-        DO(PAYLOAD_CONTROL_DEPLOY)
+        DO(NAV_WAYPOINT)                    // 16
+        DO(NAV_LOITER_UNLIM)                // 17
+        DO(NAV_LOITER_TURNS)                // 18
+        DO(NAV_LOITER_TIME)                 // 19
+        DO(NAV_RETURN_TO_LAUNCH)            // 20
+        DO(NAV_LAND)                        // 21
+        DO(NAV_TAKEOFF)                     // 22
+        DO(NAV_LAND_LOCAL)                  // 23
+        DO(NAV_TAKEOFF_LOCAL)               // 24
+        DO(NAV_FOLLOW)                      // 25
+        DO(NAV_CONTINUE_AND_CHANGE_ALT)     // 30
+        DO(NAV_LOITER_TO_ALT)               // 31
+        DO(DO_FOLLOW)                       // 32
+        DO(DO_FOLLOW_REPOSITION)            // 33
+        DO(NAV_ROI)                         // 80
+        DO(NAV_PATHPLANNING)                // 81
+        DO(NAV_SPLINE_WAYPOINT)             // 82
+        DO(NAV_VTOL_TAKEOFF)                // 84
+        DO(NAV_VTOL_LAND)                   // 85
+        DO(NAV_GUIDED_ENABLE)               // 92
+        DO(NAV_DELAY)                       // 93
+        DO(NAV_LAST)                        // 95
+        DO(CONDITION_DELAY)                 // 112
+        DO(CONDITION_CHANGE_ALT)            // 113
+        DO(CONDITION_DISTANCE)              // 114
+        DO(CONDITION_YAW)                   // 115
+        DO(CONDITION_LAST)                  // 159
+        DO(DO_SET_MODE)                     // 176
+        DO(DO_JUMP)                         // 177
+        DO(DO_CHANGE_SPEED)                 // 178
+        DO(DO_SET_HOME)                     // 179
+        DO(DO_SET_PARAMETER)                // 180
+        DO(DO_SET_RELAY)                    // 181
+        DO(DO_REPEAT_RELAY)                 // 182
+        DO(DO_SET_SERVO)                    // 183
+        DO(DO_REPEAT_SERVO)                 // 184
+        DO(DO_FLIGHTTERMINATION)            // 185
+        DO(DO_LAND_START)                   // 189
+        DO(DO_RALLY_LAND)                   // 190
+        DO(DO_GO_AROUND)                    // 191
+        DO(DO_REPOSITION)                   // 192
+        DO(DO_PAUSE_CONTINUE)               // 193
+        DO(DO_CONTROL_VIDEO)                // 200
+        DO(DO_SET_ROI)                      // 201
+        DO(DO_DIGICAM_CONFIGURE)            // 202
+        DO(DO_DIGICAM_CONTROL)              // 203
+        DO(DO_MOUNT_CONFIGURE)              // 204
+        DO(DO_MOUNT_CONTROL)                // 205
+        DO(DO_SET_CAM_TRIGG_DIST)           // 206
+        DO(DO_FENCE_ENABLE)                 // 207
+        DO(DO_PARACHUTE)                    // 208
+        DO(DO_INVERTED_FLIGHT)              // 210
+        DO(DO_MOUNT_CONTROL_QUAT)           // 220
+        DO(DO_GUIDED_MASTER)                // 221
+        DO(DO_GUIDED_LIMITS)                // 222
+        DO(DO_LAST)                         // 240
+        DO(PREFLIGHT_CALIBRATION)           // 241
+        DO(PREFLIGHT_SET_SENSOR_OFFSETS)    // 242
+        DO(PREFLIGHT_UAVCAN)                // 243
+        DO(PREFLIGHT_STORAGE)               // 245
+        DO(PREFLIGHT_REBOOT_SHUTDOWN)       // 246
+        DO(OVERRIDE_GOTO)                   // 252
+        DO(MISSION_START)                   // 300
+        DO(COMPONENT_ARM_DISARM)            // 400
+        DO(GET_HOME_POSITION)               // 410
+        DO(START_RX_PAIR)                   // 500
+        DO(GET_MESSAGE_INTERVAL)            // 510
+        DO(SET_MESSAGE_INTERVAL)            // 511
+        DO(REQUEST_AUTOPILOT_CAPABILITIES)  // 520
+        DO(IMAGE_START_CAPTURE)             // 2000
+        DO(IMAGE_STOP_CAPTURE)              // 2001
+        DO(DO_TRIGGER_CONTROL)              // 2003
+        DO(VIDEO_START_CAPTURE)             // 2500
+        DO(VIDEO_STOP_CAPTURE)              // 2501
+        DO(PANORAMA_CREATE)                 // 2800
+        DO(DO_VTOL_TRANSITION)              // 3000
+        DO(PAYLOAD_PREPARE_DEPLOY)          // 30001
+        DO(PAYLOAD_CONTROL_DEPLOY)          // 30002
+        DO(WAYPOINT_USER_1)                 // 31000
+        DO(WAYPOINT_USER_2)                 // 31001
+        DO(WAYPOINT_USER_3)                 // 31002
+        DO(WAYPOINT_USER_4)                 // 31003
+        DO(WAYPOINT_USER_5)                 // 31004
+        DO(SPATIAL_USER_1)                  // 31005
+        DO(SPATIAL_USER_2)                  // 31006
+        DO(SPATIAL_USER_3)                  // 31007
+        DO(SPATIAL_USER_4)                  // 31008
+        DO(SPATIAL_USER_5)                  // 31009
+        DO(USER_1)                          // 31010
+        DO(USER_2)                          // 31011
+        DO(USER_3)                          // 31012
+        DO(USER_4)                          // 31013
+        DO(USER_5)                          // 31014
 
 #ifdef MAVLINK_ENABLED_ARDUPILOTMEGA
-        DO(DO_MOTOR_TEST)
-        DO(DO_GRIPPER)
-        DO(DO_START_MAG_CAL)
-        DO(DO_ACCEPT_MAG_CAL)
-        DO(DO_CANCEL_MAG_CAL)
-#endif
-
-#ifdef MAVLINK_ENABLED_PIXHAWK
-        DO(DO_START_SEARCH)
-        DO(DO_FINISH_SEARCH)
-        DO(NAV_SWEEP)
+        DO(NAV_ALTITUDE_WAIT)               // 83
+        DO(DO_MOTOR_TEST)                   // 209
+        DO(DO_GRIPPER)                      // 211
+        DO(DO_AUTOTUNE_ENABLE)              // 212
+        DO(POWER_OFF_INITIATED)             // 42000
+        DO(SOLO_BTN_FLY_CLICK)              // 42001
+        DO(SOLO_BTN_FLY_HOLD)               // 42002
+        DO(SOLO_BTN_PAUSE_CLICK)            // 42003
+        DO(DO_START_MAG_CAL)                // 42424
+        DO(DO_ACCEPT_MAG_CAL)               // 42425
+        DO(DO_CANCEL_MAG_CAL)               // 42426
+        DO(SET_FACTORY_TEST_MODE)           // 42427
+        DO(DO_SEND_BANNER)                  // 42428
+        DO(GIMBAL_RESET)                    // 42501
+        DO(GIMBAL_AXIS_CALIBRATION_STATUS)  // 42502
+        DO(GIMBAL_REQUEST_AXIS_CALIBRATION) // 42503
+        DO(GIMBAL_FULL_RESET)               // 42505
 #endif
 
 #undef DO
@@ -741,7 +784,7 @@ operator<<(std::ostream& out, const mavlink_message_t& msg)
     if (! out)
         return out;
 
-    IOSWidth width(out);
+    MavLink::IOSWidth width(out);
 
     out << "SEQ:" << std::setw(3) << (unsigned)msg.seq
         << " SYSID:" << std::setw(3) << (unsigned)msg.sysid
@@ -789,10 +832,10 @@ operator<<(std::ostream& out, const mavlink_message_t& msg)
             {
                 out << '"';
                 const char* s = _MAV_PAYLOAD(&msg) + field->wire_offset;
-                if (s[field->array_length - 1] != '\0')
-                    out.write(s, field->array_length);
-                else
+                if (strnlen(s, field->array_length) < field->array_length)
                     out << s;
+                else
+                    out.write(s, field->array_length);
                 out << '"';
                 break;
             }

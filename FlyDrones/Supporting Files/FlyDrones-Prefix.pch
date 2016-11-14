@@ -25,6 +25,7 @@
 #define kDefaultVideoSize CGSizeMake(1024, 768)
 #define kDefaultVideoFps 20
 #define kDefaultVideoBitrate 2.50f
+#define kDefaultVideoPeakrate 1.50f
 #define kDefaultAltitudeMin 30
 
 #define ParseApplicationID @"GGz4nwwcqUsAzJPlQ1fu8WYP74hptMw4xBJ6xcNA"

@@ -188,6 +188,7 @@
         currentDroneStatus.videoFps = kDefaultVideoFps;
         currentDroneStatus.videoResolution = currentDroneStatus.videoSize.width * currentDroneStatus.videoSize.height / 1000.0f / 1000.0f;
         currentDroneStatus.videoBitrate = kDefaultVideoBitrate;
+        currentDroneStatus.videoPeakrate = kDefaultVideoPeakrate;
         currentDroneStatus.altitudeMin = kDefaultAltitudeMin;
 
         currentDroneStatus.isUserAdmin = FALSE;
@@ -363,6 +364,7 @@ shouldChangeCharactersInRange:(NSRange)range
         currentDroneStatus.videoFps = ((NSNumber *)[video objectForKey:@"fps"]).integerValue;
         currentDroneStatus.videoResolution = currentDroneStatus.videoSize.width * currentDroneStatus.videoSize.height / 1000.0f / 1000.0f;
         currentDroneStatus.videoBitrate = ((NSNumber *)[video objectForKey:@"bitrate"]).integerValue;
+        currentDroneStatus.videoPeakrate = ((NSNumber *)[video objectForKey:@"peakrate"]).integerValue;
 
         currentDroneStatus.altitudeMin = 0;
 

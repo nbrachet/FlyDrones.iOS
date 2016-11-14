@@ -301,8 +301,9 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
         //NSLog(@"yaw: %d=%d", yawRCValueIndex-1, yawRCValue);
 
         //tilt
-        NSInteger tiltRCValue = [self rcValueFromManualControlValue:tilt rcChannelIndex:6];
-        [rcChannelsRaw replaceObjectAtIndex:5 withObject:@(tiltRCValue)];
+        NSInteger tiltRCValue = [self rcValueFromManualControlValue:tilt rcChannelIndex:8];
+        [rcChannelsRaw replaceObjectAtIndex:7 withObject:@(tiltRCValue)];
+        NSLog(@"tilt: 7=%ld", (long)tiltRCValue);
     }
 
     mavlink_message_t message;
@@ -366,7 +367,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
     return [NSData dataWithMAVLinkMessage:&message];
 }
 
-- (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps resolution:(CGFloat)resolution bitrate:(CGFloat)bitrate {
+- (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps resolution:(CGFloat)resolution bitrate:(CGFloat)bitrate peakrate:(CGFloat)peakrate{
     mavlink_message_t message;
     mavlink_msg_command_long_pack(FDDroneControlManagerMavLinkDefaultSystemId,
                                   FDDroneControlManagerMavLinkDefaultComponentId,
@@ -379,7 +380,7 @@ CGFloat static const FDDroneControlManagerMavLinkDefaultTargetSystem = 1;
                                   fps,
                                   resolution,
                                   bitrate,
-                                  0,
+                                  peakrate,
                                   0,
                                   0);
     return [NSData dataWithMAVLinkMessage:&message];

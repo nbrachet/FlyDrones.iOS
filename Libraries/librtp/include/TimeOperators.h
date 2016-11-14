@@ -79,6 +79,15 @@ timespec_to_timeval(const struct timespec& ts, struct timeval& tv)
     tv.tv_usec = (suseconds_t) (ts.tv_nsec / 1000);
 }
 
+static inline struct timeval
+timespec_to_timeval(const struct timespec& ts)
+{
+    struct timeval tv;
+    tv.tv_sec = ts.tv_sec;
+    tv.tv_usec = (suseconds_t) (ts.tv_nsec / 1000);
+    return tv;
+}
+
 inline struct timeval&
 operator+=(struct timeval& a, const struct timeval& b)
 {
@@ -133,8 +142,7 @@ operator-(struct timeval a, const struct timeval b)
 inline struct timeval&
 operator-=(struct timeval& a, const struct timespec& b)
 {
-    struct timeval c;
-    timespec_to_timeval(b, c);
+    struct timeval c = timespec_to_timeval(b);
     return a -= c;
 }
 
@@ -240,6 +248,15 @@ timeval_to_timespec(const struct timeval& tv, struct timespec& ts)
     ts.tv_nsec = tv.tv_usec * 1000;
 }
 
+static inline struct timespec
+timeval_to_timespec(const struct timeval& tv)
+{
+    struct timespec ts;
+    ts.tv_sec = tv.tv_sec;
+    ts.tv_nsec = tv.tv_usec * 1000;
+    return ts;
+}
+
 inline struct timespec&
 operator+=(struct timespec& a, const struct timespec& b)
 {
@@ -269,8 +286,7 @@ operator-=(struct timespec& a, const struct timespec& b)
 inline struct timespec&
 operator-=(struct timespec& a, const struct timeval& b)
 {
-    struct timespec c;
-    timeval_to_timespec(b, c);
+    struct timespec c = timeval_to_timespec(b);
     return a -= c;
 }
 
@@ -341,6 +357,7 @@ elapsed(struct timespec a, const struct timespec& b)
 ///////////////////////////////////////////////////////////////////////
 //                                                                   //
 //                            HiResTimer                             //
+//                            LowResTimer                            //
 //                                                                   //
 ///////////////////////////////////////////////////////////////////////
 
@@ -409,9 +426,56 @@ private:
         struct timeval tv;
         if (gettimeofday(&tv, NULL) == -1)
             LOGGER_PWARN("gettimeofday");
-        ts->tv_sec = tv.tv_sec;
-        tv->tv_nsec = tv.tv_usec * 1000;
+        timeval_to_timespec(tv, *ts);
 #endif
+    }
+};
+
+class LowResTimer
+    : public timeval
+{
+public:
+
+    LowResTimer()
+    {
+        reset();
+    }
+
+    LowResTimer(const struct timeval& other)
+        : timeval(other)
+    {}
+
+    void reset()
+    {
+        timestamp(this);
+    }
+
+    unsigned long elapsedus(const LowResTimer& other = LowResTimer()) const
+    {
+        return ::elapsedus(other, *this);
+    }
+
+    unsigned long elapsedms(const LowResTimer& other = LowResTimer()) const
+    {
+        return ::elapsedms(other, *this);
+    }
+
+    unsigned long elapseds(const LowResTimer& other = LowResTimer()) const
+    {
+        return ::elapseds(other, *this);
+    }
+
+    double elapsed(const LowResTimer& other = LowResTimer()) const
+    {
+        return ::elapsed(other, *this);
+    }
+
+private:
+
+    static void timestamp(struct timeval* tv)
+    {
+        if (gettimeofday(tv, NULL) == -1)
+            LOGGER_PWARN("gettimeofday");
     }
 };
 

@@ -102,7 +102,6 @@
 		1BF6BD741B46746D006070F0 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BF6BD731B46746D006070F0 /* CoreVideo.framework */; };
 		1BF6BD761B46748B006070F0 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BF6BD751B46748B006070F0 /* CoreAudio.framework */; };
 		1BF6BD781B4674D0006070F0 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BF6BD771B4674D0006070F0 /* CoreMedia.framework */; };
-		3615D47AE22ED3C2B56F5BC2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA185FED822BB0394783C28D /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -575,9 +574,8 @@
 		1BF6BD731B46746D006070F0 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		1BF6BD751B46748B006070F0 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		1BF6BD771B4674D0006070F0 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		68D49BB46970CD85CBE220CC /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		AEE381D049A09B2F3148526E /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		BA185FED822BB0394783C28D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		334C87158BFDAF08A00E16AC /* Pods-FlyDrones.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlyDrones.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlyDrones/Pods-FlyDrones.release.xcconfig"; sourceTree = "<group>"; };
+		AC9E1B0115E458E1495F7074 /* Pods-FlyDrones.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlyDrones.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FlyDrones/Pods-FlyDrones.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -621,7 +619,6 @@
 				1B2809551B2B46A50040A4B9 /* libx264.a in Frameworks */,
 				1B1651111B3E10CB00E2BF44 /* libpostproc.a in Frameworks */,
 				1B16510D1B3E10CB00E2BF44 /* libavdevice.a in Frameworks */,
-				3615D47AE22ED3C2B56F5BC2 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,7 +628,6 @@
 		0164FB6C1BBC388700C28FF7 /* GIKAnimatedCallout */ = {
 			isa = PBXGroup;
 			children = (
-				0164FB991BBC391A00C28FF7 /* Frameworks */,
 				0164FB7D1BBC38E900C28FF7 /* Resources */,
 				0164FB6D1BBC38A400C28FF7 /* Classes */,
 			);
@@ -685,13 +681,6 @@
 				0164FB8B1BBC390500C28FF7 /* CalloutTableBackground.png */,
 			);
 			name = Images;
-			sourceTree = "<group>";
-		};
-		0164FB991BBC391A00C28FF7 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		1B1475971B57DB1200E5B413 /* parse-library */ = {
@@ -902,7 +891,7 @@
 				1B2807C41B2B46A40040A4B9 /* Libraries */,
 				1B2807531B2B465A0040A4B9 /* Products */,
 				A1711AA7402FEBC1D3F503F0 /* Frameworks */,
-				AEC7FD841529630DE2821C1A /* Pods */,
+				26287CEA62EF13799A4F7002 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1402,6 +1391,15 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
+		26287CEA62EF13799A4F7002 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				AC9E1B0115E458E1495F7074 /* Pods-FlyDrones.debug.xcconfig */,
+				334C87158BFDAF08A00E16AC /* Pods-FlyDrones.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		A1711AA7402FEBC1D3F503F0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1428,18 +1426,8 @@
 				1BB4C22E1B2B4A5800C42211 /* CoreGraphics.framework */,
 				1BB4C22C1B2B4A4A00C42211 /* libc++.dylib */,
 				1BB4C22A1B2B4A3F00C42211 /* AVFoundation.framework */,
-				BA185FED822BB0394783C28D /* libPods.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		AEC7FD841529630DE2821C1A /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				AEE381D049A09B2F3148526E /* Pods.debug.xcconfig */,
-				68D49BB46970CD85CBE220CC /* Pods.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1449,12 +1437,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1B2807751B2B465B0040A4B9 /* Build configuration list for PBXNativeTarget "FlyDrones" */;
 			buildPhases = (
-				6033539EFD545B14FE85ED4F /* Check Pods Manifest.lock */,
+				C8C1B7C25BFB3919145809D3 /* [CP] Check Pods Manifest.lock */,
 				1B28074E1B2B465A0040A4B9 /* Sources */,
 				1B28074F1B2B465A0040A4B9 /* Frameworks */,
 				1B2807501B2B465A0040A4B9 /* Resources */,
 				1BB144441B4BB322005E97E2 /* ShellScript */,
-				8389D0B680D263306251B0D3 /* Copy Pods Resources */,
+				9A37A4DE8E0F201DFAEEE6E2 /* [CP] Embed Pods Frameworks */,
+				9E0B791B4E5E6D5C3FBE043C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1545,34 +1534,49 @@
 			shellPath = /bin/sh;
 			shellScript = "echo \"Parse Crash Reporting\"\nexport PATH=/usr/local/bin:$PATH\nCLOUD_CODE_DIR=${PROJECT_DIR}/parse\n\nif [ -d ${CLOUD_CODE_DIR} ]; then\n    cd ${CLOUD_CODE_DIR}\n    parse symbols ${TARGET_NAME} --path=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n    echo \"Finished uploading symbol\"\nelse\n    echo \"Unable to upload symbols\"\nfi";
 		};
-		6033539EFD545B14FE85ED4F /* Check Pods Manifest.lock */ = {
+		9A37A4DE8E0F201DFAEEE6E2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FlyDrones/Pods-FlyDrones-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8389D0B680D263306251B0D3 /* Copy Pods Resources */ = {
+		9E0B791B4E5E6D5C3FBE043C /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FlyDrones/Pods-FlyDrones-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C8C1B7C25BFB3919145809D3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1688,7 +1692,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "573f8a58-50c0-4123-8594-1c43f08f78de";
@@ -1731,7 +1735,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE = "573f8a58-50c0-4123-8594-1c43f08f78de";
 				SDKROOT = iphoneos;
@@ -1742,11 +1746,12 @@
 		};
 		1B2807761B2B465B0040A4B9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AEE381D049A09B2F3148526E /* Pods.debug.xcconfig */;
+			baseConfigurationReference = AC9E1B0115E458E1495F7074 /* Pods-FlyDrones.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = WME4E4GHEG;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries/parse-library";
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/FlyDrones/Supporting Files/FlyDrones-Prefix.pch";
@@ -1772,10 +1777,6 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
-					"-l\"Pods-CocoaAsyncSocket\"",
-					"-l\"Pods-DDPopoverBackgroundView\"",
-					"-l\"Pods-MBProgressHUD\"",
-					"-l\"Pods-SWRevealViewController\"",
 					"-all_load",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "tv.flydrones.$(PRODUCT_NAME:rfc1034identifier)";
@@ -1786,11 +1787,12 @@
 		};
 		1B2807771B2B465B0040A4B9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 68D49BB46970CD85CBE220CC /* Pods.release.xcconfig */;
+			baseConfigurationReference = 334C87158BFDAF08A00E16AC /* Pods-FlyDrones.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = WME4E4GHEG;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries/parse-library";
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/FlyDrones/Supporting Files/FlyDrones-Prefix.pch";
@@ -1815,10 +1817,6 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
-					"-l\"Pods-CocoaAsyncSocket\"",
-					"-l\"Pods-DDPopoverBackgroundView\"",
-					"-l\"Pods-MBProgressHUD\"",
-					"-l\"Pods-SWRevealViewController\"",
 					"-all_load",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "tv.flydrones.$(PRODUCT_NAME:rfc1034identifier)";

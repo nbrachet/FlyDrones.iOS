@@ -44,7 +44,7 @@ extern NSString * const FDDroneControlManagerDidHandleSystemInfoNotification;
 - (NSData *)heartbeatData;
 - (NSData *)messageDataWithNewCustomMode:(enum ARDUCOPTER_MODE)mode;
 - (NSData *)messageDataWithArmedEnable:(BOOL)armed;
-- (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps resolution:(CGFloat)resolution bitrate:(CGFloat)bitrate;
+- (NSData *)messageDataWithCaptureSettingsFps:(NSInteger)fps resolution:(CGFloat)resolution bitrate:(CGFloat)bitrate peakrate:(CGFloat)peakrate;
 - (NSData *)messageDataForCaptureDisableCommand;
 - (NSData *)messageDataForGuidedLimitsAltitudeMin:(NSUInteger)altitudeMin;
 - (NSData *)messageDataForParamRequestList;

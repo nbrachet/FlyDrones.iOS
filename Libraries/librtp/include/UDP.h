@@ -22,10 +22,19 @@
  * Per RFC 768, September, 1981.
  */
 struct udphdr {
-        u_short uh_sport;               /* source port */
-        u_short uh_dport;               /* destination port */
-        u_short uh_ulen;                /* udp length */
-        u_short uh_sum;                 /* udp checksum */
+    u_short uh_sport;   /* source port */
+    u_short uh_dport;   /* destination port */
+    u_short uh_ulen;    /* udp length */
+    u_short uh_sum;     /* udp checksum */
+};
+#endif
+
+#ifndef __linux__
+#  include <sys/socket.h>
+
+struct mmsghdr {
+   struct msghdr msg_hdr;   /* Message header */
+   unsigned int  msg_len;   /* Number of received bytes for header */
 };
 #endif
 
@@ -155,6 +164,10 @@ public:
                           int flags,
                           struct timeval* timeout = NULL,
                           const struct sockaddr_in* dest = NULL);
+
+    int sendm(struct mmsghdr* msgvec, unsigned vlen,
+              int flags,
+              struct timeval* timeout = NULL);
 
     virtual ssize_t /*Socket::*/ write(const void* buffer, size_t buflen,
                                        struct timeval* timeout = NULL)
@@ -365,6 +378,10 @@ public:
                           struct timeval* timeout = NULL,
                           struct sockaddr_in* src = NULL);
 
+    int recvm(struct mmsghdr* msgvec, unsigned vlen,
+              int flags,
+              struct timeval* timeout = NULL);
+
     virtual ssize_t /*Socket::*/ read(void* buffer, size_t buflen,
                                       struct timeval* timeout = NULL)
     {
@@ -466,7 +483,6 @@ public:
     virtual ~UDPBounded()
     {
         (void) _monitor.cancel();
-        (void) _monitor.join(); // TODO: timeout
 
         UpgradableRWLock::ReaderWriterGuard wrguard(_lock, true);
 
@@ -981,11 +997,13 @@ private:
     {
     public:
 
-        Monitor(unsigned seconds, UDPBounded* that)
+        Monitor(time_t seconds, UDPBounded* that)
             : TimerTask(seconds, seconds)
             , _that(that)
         {
+#ifndef __linux
             this->name("UDPBounded::Monitor");
+#endif
         }
 
     protected:

@@ -6,9 +6,12 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #ifdef __linux__
+#  include <signal.h>
+
 // pthread.h doesn't define PTHREAD_STACK_MIN on linux but limits.h does?!
 #  include <limits.h>
 #endif
@@ -681,6 +684,18 @@ protected:
         return 0;
     }
 
+    unsigned long nanosleep(unsigned long nsec)
+    {
+        struct timespec ts;
+        ts.tv_sec = (time_t)(nsec / 1000000000UL);
+        ts.tv_nsec = (long)(nsec % 1000000000UL);
+        if (::nanosleep(&ts, &ts) == -1)
+        {
+            LOGGER_PERROR("nanosleep");
+            return ts.tv_sec * 1000000000UL + ts.tv_nsec;
+        }
+        return 0;
+    }
 
 private:
 
@@ -739,26 +754,115 @@ private:
 //                                                                   //
 ///////////////////////////////////////////////////////////////////////
 
+#ifdef __linux__
+
+class TimerTask
+{
+public:
+
+    TimerTask(time_t delaySec, time_t periodSec)
+    {
+        _its.it_value.tv_sec = delaySec;
+        _its.it_value.tv_nsec = delaySec == 0 ? 1 : 0;
+        _its.it_interval.tv_sec = periodSec;
+        _its.it_interval.tv_nsec = 0;
+
+        timer_create();
+    }
+
+    TimerTask(const struct timespec& delay, const struct timespec& period)
+    {
+        if (delay.tv_sec == 0 && delay.tv_nsec == 0)
+        {
+            // no initial delay... but timer still needs to be armed
+            _its.it_value.tv_sec = 0;
+            _its.it_value.tv_nsec = 1;
+        }
+        else
+        {
+            _its.it_value = delay;
+        }
+        _its.it_interval = period;
+
+        timer_create();
+    }
+
+    virtual ~TimerTask()
+    {
+        if (timer_delete(_timer) == -1)
+            LOGGER_PWARN("timer_delete");
+    }
+
+    int start()
+    {
+        return timer_settime(_timer, 0, &_its, NULL);
+    }
+
+    int cancel()
+    {
+        struct itimerspec its;
+        memset(&its, 0, sizeof its);
+        return timer_settime(_timer, 0, &its, NULL);
+    }
+
+protected:
+
+    static void notify_function(union sigval sival)
+    {
+        TimerTask* that = reinterpret_cast<TimerTask*>(sival.sival_ptr);
+        that->execute();
+    }
+
+    virtual void execute() =0;
+
+private:
+
+    void timer_create()
+    {
+        struct sigevent sev;
+        sev.sigev_notify = SIGEV_THREAD;
+        sev.sigev_notify_function = TimerTask::notify_function;
+        sev.sigev_value.sival_ptr = this;
+        sev.sigev_notify_attributes = NULL;
+        if (::timer_create(CLOCK_MONOTONIC, &sev, &_timer) == -1)
+            LOGGER_PERROR("timer_create");
+    }
+
+private:
+
+    /*const*/ struct itimerspec _its;
+    timer_t _timer;
+};
+
+#else
+
 class TimerTask
     : public Thread
 {
 public:
 
-    TimerTask(unsigned periodSec)
-        : _delay(0)
-        , _period(periodSec)
+    TimerTask(time_t delaySec, time_t periodSec)
+        : _delay(toTimespec(delaySec))
+        , _period(toTimespec(periodSec))
     {}
 
-    TimerTask(unsigned initialDelaySec, unsigned periodSec)
-        : _delay(initialDelaySec)
-        , _period(periodSec)
+    TimerTask(const struct timespec& delay, const struct timespec& period)
+        : _delay(delay)
+        , _period(period)
     {}
+
+    int cancel()
+    {
+        if (Thread::cancel() == -1)
+            return -1;
+        return Thread::join();
+    }
 
 protected:
 
     virtual void run()
     {
-        if (_delay > 0)
+        if (_delay.tv_sec > 0 || _delay.tv_nsec > 0)
             sleep(_delay);
 
         for (;;)
@@ -773,7 +877,7 @@ protected:
             if (errno != 0)
                 LOGGER_PWARN("pthread_setcancelstate(PTHREAD_CANCEL_ENABLE)");
 
-            if (_period == 0)
+            if (_period.tv_sec == 0 && _period.tv_nsec == 0)
                 break;
 
             sleep(_period);
@@ -784,58 +888,109 @@ protected:
 
 private:
 
-    const unsigned _delay;
-    const unsigned _period;
+    int sleep(const struct timespec& req)
+    {
+        struct timespec ts = req;
+        for (;;)
+        {
+            if (::nanosleep(&ts, &ts) == -1)
+            {
+                if (errno == EINTR)
+                    continue;
+                LOGGER_PERROR("nanosleep");
+                return -1;
+            }
+            return 0;
+        }
+        UNREACHABLE();
+        return 0;
+    }
+
+    static const timespec toTimespec(time_t sec)
+    {
+        struct timespec ts;
+        ts.tv_sec = sec;
+        ts.tv_nsec = 0;
+        return ts;
+    }
+
+private:
+
+    const struct timespec _delay;
+    const struct timespec _period;
 };
+
+#endif
 
 ///////////////////////////////////////////////////////////////////////
 //                                                                   //
 // MilliTimerTask                                                    //
+// MicroTimerTask                                                    //
+// NanoTimerTask                                                     //
 //                                                                   //
 ///////////////////////////////////////////////////////////////////////
 
 class MilliTimerTask
-    : public Thread
+    : public TimerTask
 {
 public:
 
-    MilliTimerTask(unsigned periodMilliSec)
-        : _delay(0)
-        , _period(periodMilliSec)
+    MilliTimerTask(unsigned delayMilliSec,
+                   unsigned periodMilliSec)
+        : TimerTask(toTimespec(delayMilliSec), toTimespec(periodMilliSec))
     {}
-
-    MilliTimerTask(unsigned initialDelayMilliSec, unsigned periodMilliSec)
-        : _delay(initialDelayMilliSec * (useconds_t)1000)
-        , _period(periodMilliSec * (useconds_t)1000)
-    {}
-
-protected:
-
-    virtual void run()
-    {
-        if (_delay > 0)
-            usleep(_delay);
-
-        if (_period == 0)
-        {
-            execute();
-            return;
-        }
-
-        for (;;)
-        {
-            execute();
-
-            usleep(_period);
-        }
-    }
-
-    virtual void execute() =0;
 
 private:
 
-    const useconds_t _delay;
-    const useconds_t _period;
+    static const timespec toTimespec(unsigned msec)
+    {
+        struct timespec ts;
+        ts.tv_sec = (time_t)(msec / 1000U);
+        ts.tv_nsec = (long)(msec % 1000U) * 1000000;
+        return ts;
+    }
+};
+
+class MicroTimerTask
+    : public TimerTask
+{
+public:
+
+    MicroTimerTask(unsigned delayMicroSec,
+                   unsigned periodMicroSec)
+        : TimerTask(toTimespec(delayMicroSec), toTimespec(periodMicroSec))
+    {}
+
+private:
+
+    static const timespec toTimespec(unsigned usec)
+    {
+        struct timespec ts;
+        ts.tv_sec = (time_t)(usec / 1000000U);
+        ts.tv_nsec = (long)(usec % 1000000U) * 1000;
+        return ts;
+    }
+};
+
+class NanoTimerTask
+    : public TimerTask
+{
+public:
+
+    NanoTimerTask(unsigned long delayNanoSec,
+                  unsigned long periodNanoSec)
+        : TimerTask(toTimespec(delayNanoSec), toTimespec(periodNanoSec))
+    {}
+
+private:
+
+    static const timespec toTimespec(unsigned long nsec)
+    {
+        struct timespec ts;
+        ts.tv_sec = (time_t)(nsec / 1000000000UL);
+        ts.tv_nsec = (long)(nsec % 1000000000UL);
+        return ts;
+    }
 };
 
 #endif

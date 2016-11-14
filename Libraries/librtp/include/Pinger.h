@@ -73,15 +73,17 @@ class PingTask
 public:
 
     PingTask(const struct sockaddr_in& target,
-             unsigned seconds)
-        : TimerTask(seconds)
+             time_t seconds)
+        : TimerTask(0, seconds)
         , _target(target.sin_addr, 0)
         , _reset(true)
         , _icmp()
         , _proto(_icmp ? "ICMP" : "UDP")
     {
+#ifndef __linux__
         priority(priority() - 1);
         stacksize(16 * 1024);
+#endif
     }
 
     virtual int start()
@@ -118,7 +120,9 @@ protected:
         const int n = ping(&timeout);
         if (n <= 0)
         {
+#ifndef __linux__
             testcancel();
+#endif
             traceroute(&timeout);
         }
     }

@@ -473,14 +473,19 @@ public:
                     struct scm_timestamping t;
                     memcpy(&t, CMSG_DATA(cmsg), sizeof(struct scm_timestamping));
 
-                    if (t.hwtimetrans.tv_sec > 0 && t.hwtimetrans.tv_nsec > 0)
+                    if (t.ts[0].tv_sec > 0 || t.ts[0].tv_nsec > 0) // systime
                     {
-                        *ts = t.hwtimetrans;
+                        *ts = t.ts[0];
                         break;
                     }
-                    else if (t.systime.tv_sec > 0 && t.systime.tv_nsec > 0)
+                    else if (t.ts[2].tv_sec > 0 || t.ts[2].tv_nsec > 0) // hwtimeraw
                     {
-                        *ts = t.systime;
+                        *ts = t.ts[2];
+                        break;
+                    }
+                    else if (t.ts[1].tv_sec > 0 || t.ts[1].tv_nsec > 0) // hwtimetrans
+                    {
+                        *ts = t.ts[1];
                         break;
                     }
                 }

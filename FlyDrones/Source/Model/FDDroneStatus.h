@@ -43,6 +43,7 @@
 @property (nonatomic, assign) NSUInteger videoFps;
 @property (nonatomic, assign) CGFloat videoResolution;
 @property (nonatomic, assign) CGFloat videoBitrate;
+@property (nonatomic, assign) CGFloat videoPeakrate;
 @property (nonatomic, assign) CGFloat altitudeMin;
 
 @property (nonatomic, assign) BOOL isUserAdmin;

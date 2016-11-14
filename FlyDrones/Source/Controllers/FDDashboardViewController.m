@@ -624,7 +624,8 @@ static NSString * const FDDashboardViewControllerCustomModesListIdentifier = @"C
         } else if ([optionName isEqualToString:@"Start Video"]) {
             optionMessageData = [self.droneControlManager messageDataWithCaptureSettingsFps:[FDDroneStatus currentStatus].videoFps
                                                                                  resolution:[FDDroneStatus currentStatus].videoResolution
-                                                                                    bitrate:[FDDroneStatus currentStatus].videoBitrate];
+                                                                                    bitrate:[FDDroneStatus currentStatus].videoBitrate
+                                                                                   peakrate:[FDDroneStatus currentStatus].videoPeakrate];
         } else if ([optionName isEqualToString:@"Stop Video"]) {
             optionMessageData = [self.droneControlManager messageDataForCaptureDisableCommand];
         }

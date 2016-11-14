@@ -34,9 +34,14 @@
 
 #  include <algorithm>
 #  include <locale>
+#  include <limits>
 #  include <ostream>
 #  include <sstream>
 #  include <iomanip>
+
+#  ifndef SIZE_MAX
+#    define SIZE_MAX std::numeric_limits<size_t>::max()
+#  endif
 #endif
 
 #ifndef __printflike
@@ -211,6 +216,22 @@ public:
         return env;
     }
 
+    static const std::locale& C_locale()
+    {
+        static const std::locale env = std::locale("C"); // FIXME: thread safety
+        return env;
+    }
+
+    static const std::locale locale(const char* name)
+    {
+        if (name != NULL && *name == '\0') // ""
+            return default_locale();
+        else if (name != NULL && *name == 'C' && *(name+1) == '\0')
+            return C_locale();
+        else
+            return std::locale(name);
+    }
+
     class OStream
         : public std::ostream
     {
@@ -232,10 +253,7 @@ public:
 
         OStream& imbue(const char* name)
         {
-            if (name != NULL && *name == '\0') // ""
-                return imbue(default_locale());
-            else
-                return imbue(std::locale(name));
+            return imbue(locale(name));
         }
 
         OStream& imbue(const std::locale& loc)
@@ -247,6 +265,29 @@ public:
         OStream& imbue()
         {
             return this->imbue(default_locale());
+        }
+
+        template<typename T>
+        friend OStream& operator<<(OStream& out, const T& v)
+        {
+            static_cast<std::ostream&>(out) << v;
+            return out;
+        }
+
+        OStream& operator<<(std::ostream& (*manip)(std::ostream&))
+        {
+            std::ostream::operator<<(manip);
+            return *this;
+        }
+        OStream& operator<<(std::ios& (*manip)(std::ios&))
+        {
+            std::ostream::operator<<(manip);
+            return *this;
+        }
+        OStream& operator<<(std::ios_base& (*manip)(std::ios_base&))
+        {
+            std::ostream::operator<<(manip);
+            return *this;
         }
     };
 
@@ -264,10 +305,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream& out, const Imbue<const char*>& rhs)
     {
-        if (rhs._x != NULL && *rhs._x == '\0') // ""
-            (void) out.imbue(default_locale());
-        else
-            (void) out.imbue(std::locale(rhs._x));
+        (void) out.imbue(locale(rhs._x));
         return out;
     }
 
@@ -546,14 +584,21 @@ public:
 
 public:
 
-    std::streambuf* streambuf(int level) const
+    std::streambuf* streambuf(int level, const char* prefix = NULL) const
     {
-        return is_enabled(level) ? new LoggerStreamBuf(level, this) : NULL;
+        return is_enabled(level) ? new LoggerStreamBuf(level, this, prefix)
+                                 : NULL;
     }
 
-    std::streambuf* streambufwithbacktrace(int level, unsigned skip) const
+    std::streambuf* streambufwithbacktrace(int level,
+                                           unsigned skip = 1,
+                                           const char* prefix = NULL) const
     {
-        return is_enabled(level) ? new LoggerWithBacktraceStreamBuf(level, this, skip) : NULL;
+        return is_enabled(level) ? new LoggerWithBacktraceStreamBuf(level,
+                                                                    this,
+                                                                    skip,
+                                                                    prefix)
+                                 : NULL;
     }
 
 private:
@@ -617,10 +662,13 @@ private:
     {
     public:
 
-        LoggerStreamBuf(int level, const LoggerImpl* impl)
+        LoggerStreamBuf(int level,
+                        const LoggerImpl* impl,
+                        const char* prefix = NULL)
             : std::stringbuf(std::ios_base::out)
             , _level(level)
             , _impl(impl)
+            , _prefix(prefix)
         {}
 
         virtual ~LoggerStreamBuf()
@@ -636,8 +684,25 @@ private:
             {
                 std::string s = str();
                 if (*(s.rbegin()) == '\n')
-                    s.resize(s.size() - 1);
-                _impl->log(_level, "%s", s.c_str());
+                    s.resize(s.size() - 1); // ignore last \n
+
+                if (_prefix)
+                {
+                    for (size_t pos = 0; pos < s.size(); )
+                    {
+                        size_t len = s.find('\n', pos);
+                        const std::string ss = s.substr(pos, len);
+                        _impl->log(_level, "%s%s", _prefix, ss.c_str());
+                        if (len == std::string::npos)
+                            break;
+                        pos += len;
+                    }
+                }
+                else
+                {
+                    _impl->log(_level, "%s", s.c_str());
+                }
+
                 str(""); // reset string
             }
             return 0;
@@ -647,6 +712,7 @@ private:
 
         const int _level;
         const LoggerImpl* _impl;
+        const char* _prefix;
     };
 
     class LoggerWithBacktraceStreamBuf
@@ -656,8 +722,9 @@ private:
 
         LoggerWithBacktraceStreamBuf(int level,
                                      const LoggerImpl* impl,
-                                     unsigned skip = 1)
-            : LoggerStreamBuf(level, impl)
+                                     unsigned skip = 1,
+                                     const char* prefix = NULL)
+            : LoggerStreamBuf(level, impl, prefix)
             , _skip(skip)
         {}
 
@@ -1013,18 +1080,19 @@ LOGGER_CONVINIENCE(debug,     DEBUG)
 //
 // Example:
 //  - LOGGER_ODEBUG(cdbg) << "Hello Debug" << " World!" << std::flush;
+//  - LOGGER_ODEBUG(cdbg, "Hello ") << "World!\nBase!" << std::flush;
 
 #ifdef LOGGER_OSTREAM
-#    define LOGGER_OFATAL(x)            Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_FATAL, 4));       x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
-#    define LOGGER_OALERT(x)            Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_ALERT, 4));       x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
-#    define LOGGER_OCRITICAL(x)         Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_CRITICAL, 4));    x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
-#    define LOGGER_OERROR(x)            Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_ERROR, 4));       x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
+#    define LOGGER_OFATAL(x, ...)       Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_FATAL, ## __VA_ARGS__, 4));       x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
+#    define LOGGER_OALERT(x, ...)       Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_ALERT, ## __VA_ARGS__, 4));       x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
+#    define LOGGER_OCRITICAL(x, ...)    Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_CRITICAL, ## __VA_ARGS__, 4));    x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
+#    define LOGGER_OERROR(x, ...)       Logger::OStream x(logger.streambufwithbacktrace(Logger::LEVEL_ERROR, ## __VA_ARGS__, 4));       x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
 
-#    define LOGGER_OWARN(x)             Logger::OStream x(logger.streambuf(Logger::LEVEL_WARN));                        x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
+#    define LOGGER_OWARN(x, ...)        Logger::OStream x(logger.streambuf(Logger::LEVEL_WARN, ## __VA_ARGS__));                        x.imbue(std::locale::classic()) << __SHORT_FILE__ << ':' << __LINE__ << ": " << Logger::Imbue<void>()
 
-#    define LOGGER_ONOTICE(x)           Logger::OStream x(logger.streambuf(Logger::LEVEL_NOTICE));                      x.imbue()
-#    define LOGGER_OINFO(x)             Logger::OStream x(logger.streambuf(Logger::LEVEL_INFO));                        x.imbue()
-#    define LOGGER_ODEBUG(x)            Logger::OStream x(logger.streambuf(Logger::LEVEL_DEBUG));                       x.imbue()
+#    define LOGGER_ONOTICE(x, ...)      Logger::OStream x(logger.streambuf(Logger::LEVEL_NOTICE, ## __VA_ARGS__));                      x.imbue()
+#    define LOGGER_OINFO(x, ...)        Logger::OStream x(logger.streambuf(Logger::LEVEL_INFO, ## __VA_ARGS__));                        x.imbue()
+#    define LOGGER_ODEBUG(x, ...)       Logger::OStream x(logger.streambuf(Logger::LEVEL_DEBUG, ## __VA_ARGS__));                       x.imbue()
 #endif
 
 ///////////////////////////////////////////////////////////////////////
@@ -1208,6 +1276,358 @@ LOGGER_CONVINIENCE(debug,     DEBUG)
 #else
 #  define UNREACHABLE()     assert(!"Unreachable!"), __builtin_unreachable()
 #endif
+
+///////////////////////////////////////////////////////////////////////
+//
+// IOSFlags
+//   IOSDec, IOSOct, IOSHex
+//   IOSScientific, IOSFixed
+//   IOSLeft, IOSRight, IOSInternal
+//   IOSBoolAlpha
+//   IOSShowBase
+//   IOSShowPoint
+//   IOSShowPos
+//   IOSUppercase
+// IOSFill
+// IOSPrecision
+// IOSWidth
+// IOSLocale
+//
+
+#ifdef LOGGER_OSTREAM
+
+class IOSFlags
+{
+public:
+
+    explicit IOSFlags(std::ios_base& s)
+        : _s(s)
+        , _flags(s.flags())
+    {}
+
+    IOSFlags(std::ios_base& s,
+             std::ios_base::fmtflags f)
+        : _s(s)
+        , _flags(s.setf(f))
+    {}
+
+    IOSFlags(std::ios_base& s,
+             std::ios_base::fmtflags f,
+             std::ios_base::fmtflags m)
+        : _s(s)
+        , _flags(s.setf(f, m))
+    {}
+
+    IOSFlags(std::ios_base& s,
+             std::ios_base::fmtflags f,
+             bool setf)
+        : _s(s)
+        , _flags(setf ? s.setf(f) : s.flags(f))
+    {
+        if (! setf)
+            _s.unsetf(f);
+    }
+
+    ~IOSFlags()
+    {
+        restore();
+    }
+
+    void restore()
+    {
+        _s.flags(_flags);
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const IOSFlags& flags)
+    {
+        out.flags(flags._flags);
+        return out;
+    }
+
+private:
+
+    std::ios_base&                  _s;
+    const std::ios_base::fmtflags   _flags;
+};
+
+class IOSDec
+    : public IOSFlags
+{
+public:
+
+    explicit IOSDec(std::ios_base& s)
+        : IOSFlags(s, std::ios_base::dec, std::ios_base::basefield)
+    {}
+};
+
+class IOSOct
+    : public IOSFlags
+{
+public:
+
+    explicit IOSOct(std::ios_base& s)
+        : IOSFlags(s, std::ios_base::oct, std::ios_base::basefield)
+    {}
+};
+
+class IOSHex
+    : public IOSFlags
+{
+public:
+
+    explicit IOSHex(std::ios_base& s)
+        : IOSFlags(s, std::ios_base::hex, std::ios_base::basefield)
+    {}
+};
+
+class IOSScientific
+    : public IOSFlags
+{
+public:
+
+    explicit IOSScientific(std::ios_base& s)
+        : IOSFlags(s, std::ios_base::scientific, std::ios_base::floatfield)
+    {}
+};
+
+class IOSFixed
+    : public IOSFlags
+{
+public:
+
+    explicit IOSFixed(std::ios_base& s)
+        : IOSFlags(s, std::ios_base::fixed, std::ios_base::floatfield)
+    {}
+};
+
+class IOSLeft
+    : public IOSFlags
+{
+public:
+
+    explicit IOSLeft(std::ios_base& s)
+        : IOSFlags(s, std::ios_base::left, std::ios_base::adjustfield)
+    {}
+};
+
+class IOSRight
+    : public IOSFlags
+{
+public:
+
+    explicit IOSRight(std::ios_base& s)
+        : IOSFlags(s, std::ios_base::right, std::ios_base::adjustfield)
+    {}
+};
+
+class IOSInternal
+    : public IOSFlags
+{
+public:
+
+    explicit IOSInternal(std::ios_base& s)
+        : IOSFlags(s, std::ios_base::internal, std::ios_base::adjustfield)
+    {}
+};
+
+class IOSBoolAlpha
+    : public IOSFlags
+{
+public:
+
+    explicit IOSBoolAlpha(std::ios_base& s, bool setf = true)
+        : IOSFlags(s, std::ios_base::boolalpha, setf)
+    {}
+};
+
+class IOSShowBase
+    : public IOSFlags
+{
+public:
+
+    explicit IOSShowBase(std::ios_base& s, bool setf = true)
+        : IOSFlags(s, std::ios_base::showbase, setf)
+    {}
+};
+
+class IOSShowPoint
+    : public IOSFlags
+{
+public:
+
+    explicit IOSShowPoint(std::ios_base& s, bool setf = true)
+        : IOSFlags(s, std::ios_base::showpoint, setf)
+    {}
+};
+
+class IOSShowPos
+    : public IOSFlags
+{
+public:
+
+    explicit IOSShowPos(std::ios_base& s, bool setf = true)
+        : IOSFlags(s, std::ios_base::showpos, setf)
+    {}
+};
+
+class IOSUppercase
+    : public IOSFlags
+{
+public:
+
+    explicit IOSUppercase(std::ios_base& s, bool setf = true)
+        : IOSFlags(s, std::ios_base::uppercase, setf)
+    {}
+};
+
+
+class IOSFill
+{
+public:
+
+    explicit IOSFill(std::basic_ios<char>& s)
+        : _s(s)
+        , _fill(s.fill())
+    {}
+
+    IOSFill(std::basic_ios<char>& s, char f)
+        : _s(s)
+        , _fill(s.fill(f))
+    {}
+
+    ~IOSFill()
+    {
+        restore();
+    }
+
+    void restore()
+    {
+        _s.fill(_fill);
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const IOSFill& fill)
+    {
+        return out << std::setfill(fill._fill);
+    }
+
+private:
+
+    std::basic_ios<char>&   _s;
+    const char              _fill;
+};
+
+class IOSPrecision
+{
+public:
+
+    explicit IOSPrecision(std::ios_base& s)
+        : _s(s)
+        , _precision(s.precision())
+    {}
+
+    IOSPrecision(std::ios_base& s, std::streamsize p)
+        : _s(s)
+        , _precision(s.precision(p))
+    {}
+
+    ~IOSPrecision()
+    {
+        restore();
+    }
+
+    void restore()
+    {
+        _s.precision(_precision);
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const IOSPrecision& precision)
+    {
+        return out << std::setprecision(precision._precision);
+    }
+
+private:
+
+    std::ios_base&          _s;
+    const std::streamsize   _precision;
+};
+
+class IOSWidth
+{
+public:
+
+    explicit IOSWidth(std::ios_base& s)
+        : _s(s)
+        , _width(s.width())
+    {}
+
+    IOSWidth(std::ios_base& s, std::streamsize w)
+        : _s(s)
+        , _width(s.width(w))
+    {}
+
+    ~IOSWidth()
+    {
+        restore();
+    }
+
+    void restore()
+    {
+        _s.width(_width);
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const IOSWidth& width)
+    {
+        return out << std::setw(width._width);
+    }
+
+private:
+
+    std::ios_base&          _s;
+    const std::streamsize   _width;
+};
+
+class IOSLocale
+{
+public:
+
+    explicit IOSLocale(std::ios_base& s)
+        : _s(s)
+        , _locale(s.getloc())
+    {}
+
+    IOSLocale(std::ios_base& s, const std::locale& loc)
+        : _s(s)
+        , _locale(s.imbue(loc))
+    {}
+
+    IOSLocale(std::ios_base& s, const char* name)
+        : _s(s)
+        , _locale(s.imbue(Logger::locale(name)))
+    {}
+
+    ~IOSLocale()
+    {
+        restore();
+    }
+
+    void restore()
+    {
+        _s.imbue(_locale);
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const IOSLocale& locale)
+    {
+        out.imbue(locale._locale);
+        return out;
+    }
+
+private:
+
+    std::ios_base&      _s;
+    const std::locale   _locale;
+};
+
+#endif // LOGGER_OSTREAM
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -1454,6 +1874,126 @@ private:
 
     char* _s;
 };
+
+#endif // LOGGER_OSTREAM
+
+///////////////////////////////////////////////////////////////////////
+//
+// XXD -- prints memory (almost) like xxd
+//
+// Examples:
+//  1- LOGGER_ODEBUG(cdbg) << XXD(buf, size);
+//  2- LOGGER_ODEBUG(cdbg) << Xxd<4>(ptr);
+//  3- LOGGER_ODEBUG(cdbg) << Xxd<8, 128>(buf, size);
+//  4- LOGGER_ODEBUG(cdbg) << XXD(buf, size, 0, len1)
+//                         << XXD(buf, size, len1, len2);
+//
+
+#ifdef LOGGER_OSTREAM
+
+template <unsigned GROUPS = 2, unsigned COLS = 80>
+class Xxd
+{
+public:
+
+    Xxd(const void* buf, size_t size, size_t offset = 0, size_t len = SIZE_MAX)
+        : _buf(buf), _size(size)
+        , _offset(offset), _len(len == SIZE_MAX ? size - offset : len)
+    {
+        LOGGER_ASSERT3(_offset + _len <= _size, _offset, _len, _size);
+    }
+
+    template<typename T>
+    explicit Xxd(const T* buf)
+        : _buf(buf), _size(sizeof(T))
+        , _offset(0), _len(sizeof(T))
+    {}
+
+    friend std::ostream& operator<<(std::ostream& out, const Xxd& xxd)
+    {
+        // how many bytes fit in cols (n)?
+        //
+        // first: how many digits do we need for the offset (h)?
+        //   pick between 2 (size < 2^8), 4 (size < 2^16), 6 (size < 2^24), 8
+        //
+        // a line is:
+        //   000000: 0000 0000 0000 ... xxxxxx
+        //   <----> <-----------------> <---->
+        //      h  1  (2*n + n/group)  1   n
+        //
+        // so line length is: h + 1 + (2*n + n/groups) + 1 + n
+        // therefore: n = (cols - h - 2) * groups / (3 * groups + 1)
+        //
+        // and keep n as multiple of 8
+
+        if (! xxd._buf || xxd._len == 0)
+            return out;
+
+        const size_t h = xxd._size < (1<<8) ? 2
+                                            : (xxd._size < (1<<16) ? 4
+                                                                   : (xxd._size < (1<<24) ? 6 : 8));
+        if (COLS <= h+2)
+            return out;
+
+        const size_t n = ((int)((COLS - h - 2) * GROUPS / (3 * GROUPS + 1)) / 8) * 8;
+        if (n == 0)
+            return out;
+
+        IOSFill fill(out, '0');
+        IOSWidth width(out);
+        IOSHex hex(out);
+
+        const uint8_t* buf = reinterpret_cast<const uint8_t*>(xxd._buf) + xxd._offset;
+        for (size_t len = xxd._len; len > 0; )
+        {
+            out << std::setw(h)
+                << (buf - reinterpret_cast<const uint8_t*>(xxd._buf))
+                << ':';
+
+            const size_t m = n < len ? n : len;
+
+            size_t i;
+            for (i = 0; i < m; i++)
+            {
+                if ((i % GROUPS) == 0)
+                    out << ' ';
+                out << std::setw(2) << (unsigned)buf[i];
+            }
+
+            if (xxd._size > n)
+            {
+                for ( ; i < n; i++)
+                {
+                    if ((i % GROUPS) == 0)
+                        out << ' ';
+                    out << "  ";
+                }
+            }
+            out << ' ';
+
+            for (size_t i = 0; i < m; i++)
+            {
+                out << (char)(isprint(buf[i]) ? buf[i] : '.');
+            }
+
+            out << std::endl;
+
+            buf += m;
+            len -= m;
+        }
+
+        return out;
+    }
+
+private:
+
+    const void* _buf;
+    const size_t _size;
+    const size_t _offset;
+    const size_t _len;
+};
+
+typedef Xxd<> XXD;
 
 #endif // LOGGER_OSTREAM
 

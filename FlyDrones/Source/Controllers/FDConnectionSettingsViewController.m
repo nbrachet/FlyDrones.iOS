@@ -17,6 +17,7 @@ static NSString * const ResolutionWKey = @"ResolutionWKey";
 static NSString * const ResolutionHKey = @"ResolutionHKey";
 static NSString * const FPSKey = @"FPSKey";
 static NSString * const BitrateKey = @"BitRateKey";
+static NSString * const PeakrateKey = @"PeakRateKey";
 static NSString * const AltitudeMinKey = @"AltitudeMinKey";
 
 @interface FDConnectionSettingsViewController ()
@@ -31,6 +32,7 @@ static NSString * const AltitudeMinKey = @"AltitudeMinKey";
 @property (nonatomic, weak) IBOutlet UITextField *resolutionHTextField;
 @property (nonatomic, weak) IBOutlet UITextField *fpsTextField;
 @property (nonatomic, weak) IBOutlet UITextField *bitrateTextField;
+@property (nonatomic, weak) IBOutlet UITextField *peakrateTextField;
 @property (nonatomic, weak) IBOutlet UITextField *altitudeMinTextField;
 
 @end
@@ -91,6 +93,12 @@ static NSString * const AltitudeMinKey = @"AltitudeMinKey";
         self.bitrateTextField.text = [NSString stringWithFormat:@"%d", (int)kDefaultVideoBitrate];
     }
 
+    if ([userDefaults objectForKey:PeakrateKey]) {
+        self.peakrateTextField.text = [userDefaults objectForKey:PeakrateKey];
+    } else {
+        self.peakrateTextField.text = [NSString stringWithFormat:@"%d", (int)kDefaultVideoPeakrate];
+    }
+
     if ([userDefaults objectForKey:AltitudeMinKey]) {
         self.altitudeMinTextField.text = [userDefaults objectForKey:AltitudeMinKey];
     } else {
@@ -111,6 +119,7 @@ static NSString * const AltitudeMinKey = @"AltitudeMinKey";
         NSString *resolutionH = self.resolutionHTextField.text;
         NSString *fps = self.fpsTextField.text;
         NSString *bitrate = self.bitrateTextField.text;
+        NSString *peakrate = self.peakrateTextField.text;
         NSString *altitudeMin = self.altitudeMinTextField.text;
         
         if (hostForUDPConnection.length == 0 ||
@@ -136,6 +145,7 @@ static NSString * const AltitudeMinKey = @"AltitudeMinKey";
         [userDefaults setObject:resolutionH forKey:ResolutionHKey];
         [userDefaults setObject:fps forKey:FPSKey];
         [userDefaults setObject:bitrate forKey:BitrateKey];
+        [userDefaults setObject:peakrate forKey:PeakrateKey];
         [userDefaults setObject:altitudeMin forKey:AltitudeMinKey];
         
         FDDroneStatus *currentDroneStatus = [FDDroneStatus currentStatus];
@@ -148,6 +158,7 @@ static NSString * const AltitudeMinKey = @"AltitudeMinKey";
         currentDroneStatus.videoFps = [fps integerValue];
         currentDroneStatus.videoResolution = currentDroneStatus.videoSize.width * currentDroneStatus.videoSize.height / 1000.0f / 1000.0f;
         currentDroneStatus.videoBitrate = [bitrate floatValue];
+        currentDroneStatus.videoPeakrate = [peakrate floatValue];
         currentDroneStatus.altitudeMin = [altitudeMin floatValue];
 
         currentDroneStatus.isUserAdmin = TRUE;

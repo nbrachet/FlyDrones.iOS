@@ -48,11 +48,16 @@
 #  include <linux/pkt_sched.h>
 #  include <linux/sockios.h>
 
+  #if ! HAVE_SCM_TIMESTAMPING
     struct scm_timestamping {
+    #if 0
         struct timespec systime;
         struct timespec hwtimetrans;
         struct timespec hwtimeraw;
+    #endif
+        struct timespec ts[3];
     };
+  #endif
 
 // it's just too hard to include <linux/if.h>!
 #  define IFF_LOWER_UP    0x10000         /* driver signals L1 up         */

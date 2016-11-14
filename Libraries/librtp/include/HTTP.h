@@ -50,7 +50,7 @@ public:
 
         *((char*)buffer + n) = '\0';
 
-        LOGGER_DEBUG("< %*s", (unsigned)n, buffer);
+        LOGGER_DEBUG("< %*s", (unsigned)n, (char*)buffer);
 
         return n;
     }
